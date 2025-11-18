@@ -37,14 +37,14 @@
   },
   {
     "id": 4,
-    "title": "2nd Saturday Open Session",
+    "title": "Volunteer Session",
     "date": "2025-11-23",
     "time": "12:00 PM - 3:00 PM",
     "people": 6,
     "maxPeople": 15,
     "location": "Main Center - 5621 Bunker Blvd, Watauga, TX 76148",
     "image": "images/events/saturday-session.jpg",
-    "description": "Monthly 2nd Saturday open volunteer session. Drop in anytime during our open hours to help process eyeglasses.",
+    "description": "Open volunteer session. Drop in anytime during our open hours to help process eyeglasses.",
     "contact": "volunteer@2e2erc.org"
   },
   {
