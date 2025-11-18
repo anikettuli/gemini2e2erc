@@ -20,7 +20,9 @@ class Router {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
                 const tab = btn.getAttribute('data-tab');
-                window.location.hash = tab;
+                // Use pushState to prevent default browser scrolling to anchor
+                history.pushState(null, null, '#' + tab);
+                window.dispatchEvent(new Event('hashchange'));
             });
         });
 
@@ -80,7 +82,9 @@ class Router {
         }
 
         // Scroll to top
-        window.scrollTo(0, 0);
+        setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 10);
     }
 }
 
