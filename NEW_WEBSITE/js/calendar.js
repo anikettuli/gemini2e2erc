@@ -217,7 +217,7 @@ class EventCalendar {
                     <div class="event-content">
                         <h4>${event.title}</h4>
                         <div class="event-details">
-                            <div class="event-detail" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            <div class="event-detail">
                                 <strong>📅 Date:</strong> ${this.formatDate(event.date)}
                             </div>
                             <div class="event-detail">
