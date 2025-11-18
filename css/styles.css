@@ -1231,64 +1231,6 @@ input[type="text"],
                 gap: 1rem;
             }
 
-            .stat-box {
-                padding: 1rem;
-            }
-
-            .stat-box .number {
-                font-size: 2rem;
-            }
-
-            .stat-box .label {
-                font-size: 0.8rem;
-            }
-
-            .two-column {
-                gap: 1.25rem;
-            }
-
-            .image-placeholder {
-                min-height: 200px;
-            }
-
-            table {
-                font-size: 0.8rem;
-                margin: 1rem 0;
-            }
-
-            table th,
-            table td {
-                padding: 0.5rem;
-            }
-
-            .map-container {
-                height: 300px;
-                margin: 1rem 0;
-            }
-
-            .form-group {
-                margin-bottom: 1.25rem;
-            }
-
-            label {
-                font-size: 0.9rem;
-                margin-bottom: 0.4rem;
-            }
-
-            input[type="text"],
-            input[type="email"],
-            input[type="tel"],
-            select,
-            textarea {
-                font-size: 16px;
-                padding: 0.75rem;
-                border-radius: 5px;
-            }
-
-            textarea {
-                min-height: 100px;
-            }
-
             .location-row {
                 grid-template-columns: 1fr;
                 gap: 0.5rem;
@@ -1976,36 +1918,62 @@ input[type="text"],
             margin-top: 0;
         }
 
-        @media (max-width: 768px) {
-            .calendar-section {
-                padding: 1rem;
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
+        /* Gallery Carousel */
+        .gallery-container {
+            width: 100%;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 1rem 0;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none; /* Firefox */
+        }
 
-            .calendar-header h3 {
-                font-size: 1.2rem;
-            }
+        .gallery-container::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
 
-            .calendar-weekdays div {
-                font-size: 0.85rem;
-                padding: 0.25rem;
-            }
+        .gallery-track {
+            display: inline-flex;
+            gap: 1rem;
+        }
 
-            .day-number {
-                font-size: 0.9rem;
-            }
+        .gallery-track img {
+            height: 300px;
+            width: auto;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
 
-            .events-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
+        .gallery-track img:hover {
+            transform: scale(1.02);
+        }
 
-            .event-modal {
-                padding: 1rem;
-            }
+        /* Board Members Grid */
+        .board-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
 
-            .event-modal-content {
-                padding: 1.5rem;
-            }
+        .board-member {
+            text-align: center;
+        }
+
+        .board-member img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow);
+            border: 3px solid var(--white);
+        }
+
+        .board-member h4 {
+            font-size: 1rem;
+            color: var(--primary-color);
+            margin: 0;
         }
