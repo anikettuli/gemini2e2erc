@@ -40,7 +40,7 @@ class EventCalendar {
 
     async loadEvents() {
         try {
-            const response = await fetch('events.json');
+            const response = await fetch('data/events.json');
             this.events = await response.json();
             // Sort events by date
             this.events.sort((a, b) => new Date(a.date) - new Date(b.date));
