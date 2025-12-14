@@ -17,11 +17,43 @@ The following files are referenced or needed by the website but might be missing
 - [ ] **group-volunteer-form.pdf** - Group Volunteer Form.
 - [x] **ERC-Life-Membership-Application.pdf** - (Removed from site display, but file exists).
 
-## Content Updates Needed
-- [x] Update all emails to `2e2erc1854@gmail.com`.
-- [x] Update all phone numbers to `(817) 710-5403`.
-- [x] Use default logo for events without images.
-- [x] Remove "ERC Bylaws" from Contacts/About section.
-- [x] Remove "Life Membership Application" from Services section.
-- [ ] Review `data/events.json` and update with real upcoming events.
-- [ ] Add real photos to `gallery/` folder.
+## Priority Tasks (Dec 14, 2025)
+
+- [x] **1. Change all emails to 2e2erc1854@gmail.com**
+    - Status: Completed. Global config and data files updated.
+
+- [ ] **2. Board of Directors Sections**
+    - Requirement: Split into ‘Current Board of Directors’ and ‘Previous Board Members’.
+    - Action: Change headers. Add new directors names with E2ERC logo (placeholder).
+    - Note: Barb to send list of names and pictures. Pics to be added later.
+
+- [ ] **3. 2nd Saturday Event Logo**
+    - Requirement: Use specific logo for the 2nd Saturday event.
+
+- [ ] **4. Robson Ranch Events**
+    - Requirement: Add more events.
+    - Note: Barb to send details. Only dates change. (Marked as "Later").
+
+- [ ] **5. Mission Request Form**
+    - Requirement: Update form under "About Us".
+    - Note: New form to be sent by Mike.
+
+- [ ] **6. Location List**
+    - Requirement: Remove categories/headings. Sort alphabetically.
+    - Note: Mike to send the latest list.
+
+- [x] **7. Remove Life Membership Application**
+    - Status: Completed. Removed from Services section.
+
+- [ ] **8. Announcements Placeholder**
+    - Requirement: Add placeholder at top of front page for greetings/closures.
+    - Note: Marked as "Later".
+
+- [x] **9. Remove ERC Bylaws**
+    - Status: Completed. Removed from Contacts section.
+
+- [ ] **10. Backup Current Website**
+    - Requirement: Move current website to a backup folder.
+
+- [ ] **11. Launch New Website**
+    - Requirement: Final deployment steps.
