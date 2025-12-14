@@ -26,5 +26,5 @@ jobs:
             **/.git*
             **/.git*/**
             **/node_modules/**
-            data/**
             data/signups.json
+            data/geo_cache.json

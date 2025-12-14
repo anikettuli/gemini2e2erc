@@ -27,5 +27,14 @@ This file controls the testimonials section on the Home page.
     - `author`: Name of the person.
     - `organization`: Their organization or title.
 
+## 5. Locations (`locations.json`)
+This file controls the "Drop-Off Locations" map and list.
+- **Format:** List of objects.
+- **Fields:**
+    - `name`: Name of the location (e.g., "Advanced Vision Care").
+    - `address`: Full address (e.g., "4919 South Hulen Street, Fort Worth, TX 76132").
+    - `phone`: Phone number (e.g., "(817) 370-2100").
+- **Note:** You do NOT need to provide coordinates (`lat`/`lng`). The website automatically calculates them using the address (via US Census Bureau API).
+
 ## Signups File
 - **Do NOT edit `signups.json`**. This file is automatically updated when people sign up on the website.
