@@ -1,4 +1,5 @@
 <?php
+require_once 'config.php';
 header('Content-Type: application/json');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -79,12 +80,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $message .= "Time: " . $events[$eventIndex]['time'] . "\n";
     $message .= "Location: " . $events[$eventIndex]['location'] . "\n\n";
     $message .= "We look forward to seeing you!\n\nLions District 2-E2 ERC";
-    $headers = "From: info@2e2erc.org";
+    $headers = "From: " . $GLOBAL_EMAIL;
 
     mail($to, $subject, $message, $headers);
 
     // Notify Admin
-    mail("info@2e2erc.org", "New Volunteer Signup: $name", "Event: " . $events[$eventIndex]['title'] . "\nName: $name\nEmail: $email", $headers);
+    mail($GLOBAL_EMAIL, "New Volunteer Signup: $name", "Event: " . $events[$eventIndex]['title'] . "\nName: $name\nEmail: $email", $headers);
 
     echo json_encode(['success' => true, 'message' => 'Registration successful!', 'newCount' => $events[$eventIndex]['people']]);
 

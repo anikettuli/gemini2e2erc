@@ -1,4 +1,5 @@
 <?php
+require_once 'config.php';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // 1. Sanitize Input
     $name = strip_tags(trim($_POST["name"]));
@@ -6,7 +7,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $message = trim($_POST["message"]);
 
     // 2. Configuration
-    $recipient = "info@2e2erc.org"; 
+    $recipient = $GLOBAL_EMAIL; 
     $subject = "New Contact Message from $name";
     
     // 3. Build Email Content

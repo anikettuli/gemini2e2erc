@@ -143,9 +143,9 @@ class EventCalendar {
             eventsHTML += `
                 <div class="event-card ${isFull ? 'event-full' : ''}">
                     <div class="event-image">
-                        <img src="${event.image || 'images/placeholder-event.svg'}" 
+                        <img src="${event.image || SITE_CONFIG.defaultImage}" 
                              alt="${event.title}"
-                             onerror="this.src='images/placeholder-event.svg'">
+                             onerror="this.src='${SITE_CONFIG.defaultImage}'">
                         ${isFull ? '<div class="event-full-badge">FULL</div>' : ''}
                     </div>
                     <div class="event-content">
@@ -210,8 +210,9 @@ class EventCalendar {
             eventsHTML += `
                 <div class="event-card ${isFull ? 'event-full' : ''}">
                     <div class="event-image">
-                        <img src="${event.image || 'images/placeholder-event.svg'}" 
-                             alt="${event.title}">
+                        <img src="${event.image || SITE_CONFIG.defaultImage}" 
+                             alt="${event.title}"
+                             onerror="this.src='${SITE_CONFIG.defaultImage}'">
                         ${isFull ? '<span class="event-full-badge">Full</span>' : ''}
                     </div>
                     <div class="event-content">
