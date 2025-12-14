@@ -1,14 +1,15 @@
-# Downloads Directory
+# How to Add Downloads
 
-This directory contains downloadable PDF files for the website:
+This folder is for general files like brochures, newsletters, or reports.
 
-## Files to Upload:
+## How to Add a File
+1. **Save your document as a PDF**.
+2. **Rename the file** to be simple.
+   - **Good Name:** `Annual-Report-2024.pdf`
+   - **Bad Name:** `Report.pdf` (Too vague)
+   - **Rule:** Use dashes `-` instead of spaces.
+3. **Upload the file** into this `downloads` folder.
 
-1. **ERC-Brochure.pdf** - Organization brochure with mission and process information
-2. **Helen-Keller-Award-Application.pdf** - Award application form for Lions Club members
-3. **Annual-Report.pdf** - Annual report (if available)
-4. **Mission-Request-Form.pdf** - Form for missions requesting eyeglasses
-
-Upload PDF files here and reference them in the HTML with paths like:
-- `downloads/ERC-Brochure.pdf`
-- `downloads/Helen-Keller-Award-Application.pdf`
+## After Uploading
+The file will be available at:
+`downloads/Your-File-Name.pdf`

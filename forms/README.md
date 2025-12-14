@@ -1,9 +1,15 @@
-# Forms Directory
+# How to Add Forms
 
-This directory is for storing downloadable forms such as:
-- Volunteer Registration Form
-- Mission Partner Application
-- Collection Box Request Form
-- Group Volunteer Form
+This folder is for PDF forms that people can download.
 
-Upload PDF files here to make them available on the website.
+## How to Add a New Form
+1. **Save your form as a PDF**.
+2. **Rename the file** to be simple and clear.
+   - **Good Name:** `Volunteer-Form.pdf`
+   - **Bad Name:** `Vol Form Final Version 2 (1).pdf`
+   - **Rule:** Use dashes `-` instead of spaces.
+3. **Upload the file** into this `forms` folder.
+
+## After Uploading
+Once the file is here, you (or the web developer) can link to it on the website using the address:
+`forms/Your-File-Name.pdf`
