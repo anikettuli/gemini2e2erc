@@ -1,27 +1,31 @@
-# How to Update Events
+# How to Update Website Content
 
-This folder contains the data for the website's calendar. The file you need to edit is named `events.json`.
+This folder contains the data files that power the dynamic content on the website.
 
-## How to Add a New Event
-1. Open the file `events.json`.
-2. You will see a list of events. Each event looks like a block of text surrounded by curly braces `{ }`.
-3. To add a new event, copy an existing block (from `{` to `}`), add a comma `,` after the last event, and paste your new block.
-4. Change the text inside the quotes `""` to match your new event.
+## 1. Events (`events.json`)
+This file controls the calendar and upcoming events list.
+- **Format:** List of event objects.
+- **Fields:** `id`, `title`, `date` (YYYY-MM-DD), `time`, `location`, `description`, `image`, `people` (current count), `maxPeople`.
 
-### Example of an Event Block:
-```json
-{
-    "title": "Saturday Work Day",
-    "start": "2025-05-10",
-    "description": "Join us for sorting glasses! 8am - 12pm."
-}
-```
+## 2. Board Members (`board.json`)
+This file controls the "Board of Directors" section on the About page.
+- **Format:** List of objects.
+- **Fields:**
+    - `name`: Name of the board member.
+    - `image`: Path to their photo (e.g., "images/board/Jim-Cook.jpg").
 
-### Important Rules
-- **Do NOT remove the quotes `""`**. Every piece of text must be inside quotes.
-- **Dates must be YYYY-MM-DD**. For example: "2025-12-25".
-- **Don't forget the comma**. If you have multiple events, there must be a comma `,` between the closing brace `}` of one event and the opening brace `{` of the next.
-- **No comma after the last event**. The very last `}` in the list should NOT have a comma after it.
+## 3. Partners (`partners.json`)
+This file controls the "Our Partners & Friends" list on the Get Involved page.
+- **Format:** Simple list of strings.
+- **Example:** `["Partner A", "Partner B", "Partner C"]`
+
+## 4. Testimonials (`testimonials.json`)
+This file controls the testimonials section on the Home page.
+- **Format:** List of objects.
+- **Fields:**
+    - `text`: The quote itself.
+    - `author`: Name of the person.
+    - `organization`: Their organization or title.
 
 ## Signups File
 - **Do NOT edit `signups.json`**. This file is automatically updated when people sign up on the website.
