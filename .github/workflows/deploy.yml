@@ -24,7 +24,7 @@ jobs:
 
       - name: Deploy via rsync (excluding data folder)
         run: |
-          rsync -avz --delete \
+          rsync -avz -e "ssh -vvv" --delete \
             --exclude='data/' \
             --exclude='.git*' \
             --exclude='node_modules/' \
