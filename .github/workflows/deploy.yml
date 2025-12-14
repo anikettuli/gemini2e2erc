@@ -1,32 +1,30 @@
-name: Deploy to Server
+name: Deploy to cPanel
 
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
-  deploy:
+  web-deploy:
+    name: Deploy
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup SSH key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
-
-      - name: Deploy via rsync (excluding data folder)
-        run: |
-          rsync -avz -e "ssh -vvv" --delete \
-            --exclude='data/' \
-            --exclude='.git*' \
-            --exclude='node_modules/' \
-            --exclude='.github/' \
-            ./ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/public_html/test/2e2erc/
+      - name: Get latest code
+        uses: actions/checkout@v4
+      
+      - name: Sync files
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          # We assume your FTP account is rooted to the correct folder. 
+          # If not, change './' to 'test/2e2erc/'
+          server-dir: ./
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            data/**
+            data/signups.json
