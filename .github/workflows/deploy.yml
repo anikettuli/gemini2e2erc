@@ -29,4 +29,4 @@ jobs:
             --exclude='.git*' \
             --exclude='node_modules/' \
             --exclude='.github/' \
-            ./ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/public_html/
+            ./ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/public_html/test/2e2erc/
