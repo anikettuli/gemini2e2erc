@@ -40,7 +40,8 @@ function getCoordinates($address) {
     // 1. Try US Census API
     $url = "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address={$encodedAddr}&benchmark=Public_AR_Current&format=json";
     
-    $ctx = stream_context_create(['http' => ['timeout' => 5]]);
+    // Reduced timeout to 2 seconds to prevent long hangs
+    $ctx = stream_context_create(['http' => ['timeout' => 2]]);
     $response = @file_get_contents($url, false, $ctx);
     
     if ($response) {
@@ -79,25 +80,36 @@ function getCoordinates($address) {
     return null;
 }
 
+$geocodeLimit = 2; // Max new geocodes per request
+$newGeocodesCount = 0;
+
 // Process Locations
 foreach ($locations as &$loc) {
     $address = $loc['address'];
     
     // Check Cache
     if (isset($cache[$address])) {
-        $loc['lat'] = $cache[$address]['lat'];
-        $loc['lng'] = $cache[$address]['lng'];
+        // Only use if valid coordinates
+        if ($cache[$address]['lat'] !== null && $cache[$address]['lng'] !== null) {
+            $loc['lat'] = $cache[$address]['lat'];
+            $loc['lng'] = $cache[$address]['lng'];
+        }
     } else {
-        // Not in cache, fetch it
-        $coords = getCoordinates($address);
-        
-        if ($coords) {
-            $loc['lat'] = $coords['lat'];
-            $loc['lng'] = $coords['lng'];
+        // Not in cache. Only fetch if limit not reached.
+        if ($newGeocodesCount < $geocodeLimit) {
+            $coords = getCoordinates($address);
             
-            // Save to cache
-            $cache[$address] = $coords;
+            if ($coords) {
+                $loc['lat'] = $coords['lat'];
+                $loc['lng'] = $coords['lng'];
+                $cache[$address] = $coords;
+            } else {
+                // Cache failure to prevent constant retries
+                // If address is fixed in JSON, key changes, so it will retry
+                $cache[$address] = ['lat' => null, 'lng' => null];
+            }
             $cacheUpdated = true;
+            $newGeocodesCount++;
         }
     }
 }
