@@ -213,12 +213,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Reload events to update count
                     if (window.eventCalendar) {
                         await window.eventCalendar.loadEvents();
-                        // Refresh the current view if an event is selected
-                        // This is a bit tricky without knowing which day was selected, 
-                        // but reloading the calendar is a safe bet.
                         window.eventCalendar.renderCalendar();
-                        // If we are viewing a specific day, we might want to refresh that view too
-                        // For now, just closing the modal is good feedback.
+                        window.eventCalendar.renderUpcomingEvents();
+                        
+                        // Reset the day view to ensure no stale data is shown
+                        const eventsDisplay = document.getElementById('eventsDisplay');
+                        if (eventsDisplay) {
+                            eventsDisplay.innerHTML = `
+                                <div class="events-display-empty">
+                                    <p style="font-size: 1.1rem; margin: 0;">📅</p>
+                                    <p>Select a date to view events</p>
+                                </div>
+                            `;
+                        }
                     }
                 } else {
                     alert('Error: ' + result.message);
