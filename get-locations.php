@@ -84,33 +84,50 @@ $geocodeLimit = 2; // Max new geocodes per request
 $newGeocodesCount = 0;
 
 // Process Locations
+$retryInterval = 86400; // 24 hours in seconds
+
 foreach ($locations as &$loc) {
     $address = $loc['address'];
+    $shouldGeocode = false;
     
     // Check Cache
     if (isset($cache[$address])) {
-        // Only use if valid coordinates
+        // If valid coordinates exist, use them
         if ($cache[$address]['lat'] !== null && $cache[$address]['lng'] !== null) {
             $loc['lat'] = $cache[$address]['lat'];
             $loc['lng'] = $cache[$address]['lng'];
+        } else {
+            // Failed entry. Check if we should retry (older than 24h)
+            $lastChecked = isset($cache[$address]['timestamp']) ? $cache[$address]['timestamp'] : 0;
+            if ((time() - $lastChecked) > $retryInterval) {
+                $shouldGeocode = true;
+            }
         }
     } else {
-        // Not in cache. Only fetch if limit not reached.
-        if ($newGeocodesCount < $geocodeLimit) {
-            $coords = getCoordinates($address);
-            
-            if ($coords) {
-                $loc['lat'] = $coords['lat'];
-                $loc['lng'] = $coords['lng'];
-                $cache[$address] = $coords;
-            } else {
-                // Cache failure to prevent constant retries
-                // If address is fixed in JSON, key changes, so it will retry
-                $cache[$address] = ['lat' => null, 'lng' => null];
-            }
-            $cacheUpdated = true;
-            $newGeocodesCount++;
+        // Not in cache, treat as new
+        $shouldGeocode = true;
+    }
+
+    // Attempt Geocoding
+    if ($shouldGeocode && $newGeocodesCount < $geocodeLimit) {
+        $coords = getCoordinates($address);
+        
+        $entry = [
+            'lat' => null, 
+            'lng' => null, 
+            'timestamp' => time()
+        ];
+
+        if ($coords) {
+            $loc['lat'] = $coords['lat'];
+            $loc['lng'] = $coords['lng'];
+            $entry['lat'] = $coords['lat'];
+            $entry['lng'] = $coords['lng'];
         }
+        
+        $cache[$address] = $entry;
+        $cacheUpdated = true;
+        $newGeocodesCount++;
     }
 }
 
