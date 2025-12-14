@@ -1,3 +1,3 @@
 Old_site_wordpress_archive
-data/events.json
-data/signups.json
+.gitignore
+/data
