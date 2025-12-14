@@ -153,20 +153,15 @@ class ThemeManager {
 document.addEventListener('DOMContentLoaded', () => {
     new Router();
     new ThemeManager();
-});
 
-// Form submission handler
-function handleSubmit(event) {
-    event.preventDefault();
-    const formData = {
-        name: document.getElementById('name').value,
-        email: document.getElementById('email').value,
-        phone: document.getElementById('phone').value,
-        subject: document.getElementById('subject').value,
-        message: document.getElementById('message').value,
-        subscribe: document.getElementById('subscribe').checked
-    };
-    
-    alert('Thank you for your message! We will get back to you soon.\n\nForm Data:\n' + JSON.stringify(formData, null, 2));
-    event.target.reset();
-}
+    // Check for email status from PHP redirection
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('status') === 'success') {
+        alert('Thank you! Your message has been sent.');
+        // Clean the URL but keep the hash if present
+        const newUrl = window.location.pathname + window.location.hash;
+        window.history.replaceState({}, document.title, newUrl);
+    } else if (urlParams.get('status') === 'error') {
+        alert('Sorry, there was an error sending your message. Please try again.');
+    }
+});
