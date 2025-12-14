@@ -100,7 +100,7 @@ body {
     border-radius: 12px;
     box-shadow: var(--shadow-lg);
     width: 90%;
-    max-width: 500px;
+    max-width: 650px;
     position: relative;
     animation: slideIn 0.3s ease-out;
 }
