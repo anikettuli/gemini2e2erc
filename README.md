@@ -1,97 +1,91 @@
-# District 2-E2 ERC Website
+# Lions District 2-E2 Eyeglass Recycling Center (ERC) Website
 
-A modern, responsive eyeglass recycling center website with dark mode support, professional duotone design, and optimized performance.
+A modern, responsive, and accessible website for the District 2-E2 Eyeglass Recycling Center. This project serves as the digital hub for volunteer coordination, donation information, and event management.
 
-## Quick Start
+## 🛠 Technical Stack
 
-### File Structure
+### Frontend
+- **HTML5**: Semantic markup with accessibility (WCAG AAA) in mind.
+- **CSS3**: Custom styling with CSS Variables for theming (Light/Dark mode).
+- **JavaScript (ES6+)**: Vanilla JS for DOM manipulation, routing, and dynamic content loading.
+- **MapLibre GL JS**: Open-source mapping library for displaying drop-off locations.
+
+### Backend
+- **PHP**: Server-side scripting for form processing and administrative functions.
+    - `register-volunteer.php`: Handles volunteer signups and stores data in JSON.
+    - `send-email.php`: Processes contact form submissions.
+    - `admin-view.php`: Protected interface for viewing volunteer data.
+- **JSON**: Flat-file database structure for storing content and form submissions.
+
+### Data Architecture
+Content is decoupled from the HTML structure and stored in the `data/` directory:
+- `events.json`: Calendar events.
+- `board.json`: Board of Directors profiles.
+- `partners.json`: Mission partners.
+- `signups.json`: Volunteer registration database (generated).
+
+## 📂 Project Structure
+
+```text
+├── admin-view.php          # Admin dashboard for volunteer management
+├── config.php              # Server-side configuration
+├── index.html              # Single Page Application (SPA) entry point
+├── register-volunteer.php  # Volunteer form processor
+├── send-email.php          # Contact form processor
+├── css/
+│   └── styles.css          # Main stylesheet (includes Dark Mode)
+├── data/                   # JSON data stores
+│   ├── board.json
+│   ├── events.json
+│   └── signups.json        # Writable file for volunteer data
+├── js/
+│   ├── app.js              # Core logic: Routing, Theme, UI
+│   ├── calendar.js         # Event calendar rendering logic
+│   ├── config.js           # Client-side configuration (Email, Phone)
+│   ├── dynamic-content.js  # JSON fetcher and renderer
+│   └── locations.js        # MapLibre configuration and location data
+└── images/                 # Optimized assets
 ```
-index.html          - Main HTML file (structure only)
-css/
-    styles.css      - External stylesheet (all visual design)
-js/
-    app.js          - Router, Theme Manager, and UI logic
-    calendar.js     - Event calendar functionality
-    locations.js    - Map and location data
-data/
-    events.json     - Event data source
-images/             - Optimized SVG assets
-```
 
-### Key Features
+## 🌟 Key Functionality
 
-✅ **Hash-based routing** - URLs like `#home`, `#about`, `#services` persist on page reload
-✅ **Dark mode toggle** - 🌙/☀️ button in header, remembers user preference
-✅ **Responsive design** - Works on 280px phones to 1200px+ desktops
-✅ **Duotone aesthetic** - Black/white/grey with green accents
-✅ **Touch-friendly** - 44px minimum button sizes
-✅ **Accessible** - WCAG AAA contrast compliant
-✅ **50+ drop-off locations** - With map integration (MapLibre GL)
-✅ **Modular Architecture** - Separation of concerns (HTML, CSS, JS, Data)
+### 1. Hash-Based Routing
+The site uses a lightweight SPA architecture. Navigation is handled via URL hashes (e.g., `#home`, `#get-involved`). `app.js` listens for hash changes to toggle visibility of content sections without page reloads.
 
-## Design System
+### 2. Dynamic Content Loading
+To allow non-technical updates, content sections like the Board of Directors, Partners, and Events are fetched from JSON files in the `data/` folder and rendered client-side by `dynamic-content.js`.
 
-### Color Palette
+### 3. Volunteer Management System
+- **Registration**: Users submit the volunteer form (`#get-involved`).
+- **Processing**: `register-volunteer.php` validates inputs and appends the entry to `data/signups.json`.
+- **Administration**: `admin-view.php` provides a table view of all signups. *Note: Ensure this file is secured in production.*
 
-**Light Mode:**
-- Background: #ffffff (white)
-- Text: #1a1a1a (black)
-- Accents: #0fbe7c (green)
-- Borders: #e0e0e0 (light grey)
+### 4. Interactive Map
+The Locations tab features an interactive map powered by MapLibre GL. It renders markers for drop-off locations defined in `js/locations.js`.
 
-**Dark Mode:**
-- Background: #1a1a1a (black)
-- Text: #e8e8e8 (light grey)
-- Accents: #0fbe7c (green) - same as light mode
-- Borders: #404040 (dark grey)
+### 5. Dark Mode
+A system-aware theme toggle allows users to switch between Light and Dark modes. Preferences are persisted in `localStorage`.
 
-### Responsive Breakpoints
-- 280px (extra small phones)
-- 360px (small phones)
-- 480px (larger phones)
-- 768px (tablets)
-- 1024px (small laptops)
-- 1200px+ (desktops)
+## 🚀 Setup & Deployment
 
-## Technical Implementation
+### Prerequisites
+- A web server with **PHP 7.4+** support (Apache/Nginx).
+- Write permissions for the `data/` directory (for `signups.json`).
 
-### Architecture
-- **Single Page Application (SPA)** feel without frameworks.
-- **Vanilla JavaScript (ES6+)** for maximum performance and zero dependencies.
-- **CSS Variables** for instant theming (Dark/Light mode).
-- **Lazy Loading** for heavy assets like maps.
+### Local Development
+1. Clone the repository.
+2. Start a local PHP server:
+   ```bash
+   php -S localhost:8000
+   ```
+3. Open `http://localhost:8000` in your browser.
 
-### Performance
-- **File size**: Extremely lightweight.
-- **Load time**: <1s on 4G.
-- **Lighthouse score**: 95+.
-- **Accessibility**: WCAG AAA.
-- **SEO**: Optimized meta tags.
+### Production Deployment
+1. Upload all files to the public web directory.
+2. **Security**: Ensure `data/signups.json` is protected from direct public access via `.htaccess` or server config, while remaining writable by the PHP script.
+3. **Permissions**: Set write permissions (chmod 664 or 775) on `data/signups.json` so the server can save volunteer registrations.
 
-## Deployment
+## ⚙️ Configuration
 
-1. **Upload**: Upload all files and folders (`css/`, `js/`, `data/`, `images/`, `index.html`) to your web server or hosting provider (e.g., GitHub Pages, Netlify, Vercel).
-2. **Verify**: Ensure the directory structure is preserved.
-3. **Test**: Open the site and check the console for any 404 errors.
-
-## Pending Todos
-
-- [ ] **Backend Integration**: Connect the contact form to a real email service (e.g., Formspree, EmailJS).
-- [ ] **CMS**: Consider a lightweight CMS if event updates become frequent.
-- [ ] **Analytics**: Add Google Analytics or similar privacy-friendly tracking.
-- [ ] **Testing**: Add automated tests for critical paths.
-
-## Browser Support
-
-✅ Chrome 76+
-✅ Firefox 67+
-✅ Safari 12.1+
-✅ Edge 79+
-✅ iOS Safari 12+
-✅ Android Chrome latest
-
----
-
-**Last Updated**: November 18, 2025
-**Version**: 2.1 (Refactored & Modularized)
-**Status**: Production Ready
+- **Client-side**: Edit `js/config.js` to update global contact info (Email, Phone).
+- **Server-side**: Edit `config.php` for email sending settings (SMTP, headers).
