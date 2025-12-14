@@ -1091,6 +1091,31 @@
         </div>
     </main>
 
+    <!-- Volunteer Signup Modal -->
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="modalEventTitle">Sign Up to Volunteer</h2>
+            <p id="modalEventDetails"></p>
+            <form id="volunteerSignupForm">
+                <input type="hidden" id="signupEventId" name="eventId">
+                <div class="form-group">
+                    <label for="signupName">Full Name *</label>
+                    <input type="text" id="signupName" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email Address *</label>
+                    <input type="email" id="signupEmail" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPhone">Phone Number</label>
+                    <input type="tel" id="signupPhone" name="phone">
+                </div>
+                <button type="submit" class="cta-button" style="width: 100%; margin-top: 1rem;">Confirm Registration</button>
+            </form>
+        </div>
+    </div>
+
     <!-- FOOTER -->
     <footer>
         <div class="footer-content">

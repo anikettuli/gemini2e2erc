@@ -164,4 +164,81 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (urlParams.get('status') === 'error') {
         alert('Sorry, there was an error sending your message. Please try again.');
     }
+
+    // Modal Logic
+    const modal = document.getElementById('signupModal');
+    const closeBtn = document.querySelector('.close-modal');
+    const signupForm = document.getElementById('volunteerSignupForm');
+
+    if (closeBtn) {
+        closeBtn.onclick = () => modal.style.display = "none";
+    }
+    
+    window.onclick = (event) => {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    if (signupForm) {
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitBtn = signupForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerText;
+            submitBtn.innerText = "Registering...";
+            submitBtn.disabled = true;
+
+            const formData = {
+                eventId: document.getElementById('signupEventId').value,
+                name: document.getElementById('signupName').value,
+                email: document.getElementById('signupEmail').value,
+                phone: document.getElementById('signupPhone').value
+            };
+
+            try {
+                const response = await fetch('register-volunteer.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('Registration successful! Check your email for confirmation.');
+                    modal.style.display = "none";
+                    signupForm.reset();
+                    // Reload events to update count
+                    if (window.eventCalendar) {
+                        await window.eventCalendar.loadEvents();
+                        // Refresh the current view if an event is selected
+                        // This is a bit tricky without knowing which day was selected, 
+                        // but reloading the calendar is a safe bet.
+                        window.eventCalendar.renderCalendar();
+                        // If we are viewing a specific day, we might want to refresh that view too
+                        // For now, just closing the modal is good feedback.
+                    }
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            } finally {
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+    }
 });
+
+// Global function to open modal (called from calendar.js)
+window.openSignupModal = function(eventId, title, date, time) {
+    const modal = document.getElementById('signupModal');
+    document.getElementById('signupEventId').value = eventId;
+    document.getElementById('modalEventTitle').innerText = "Sign Up: " + title;
+    document.getElementById('modalEventDetails').innerText = `${date} • ${time}`;
+    modal.style.display = "block";
+}

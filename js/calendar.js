@@ -170,9 +170,9 @@ class EventCalendar {
                         </div>
                         <p class="event-description">${event.description}</p>
                         ${!isFull ? `
-                            <a href="mailto:${event.contact}?subject=Volunteer Registration - ${event.title}" class="event-register-btn">
-                                Register to Volunteer
-                            </a>
+                            <button class="event-register-btn" onclick="openSignupModal(${event.id}, '${event.title.replace(/'/g, "\\'")}', '${this.formatDate(event.date)}', '${event.time}')">
+                                Sign Up Now
+                            </button>
                         ` : `
                             <button class="event-register-btn" disabled>Event Full</button>
                         `}
@@ -236,8 +236,7 @@ class EventCalendar {
                         </div>
                         <p class="event-description">${event.description}</p>
                         ${!isFull ? `
-                            <a href="mailto:${event.contact}?subject=Volunteer Registration - ${event.title}" 
-                               class="event-register-btn">Register to Volunteer</a>
+                            <button class="event-register-btn" onclick="openSignupModal(${event.id}, '${event.title.replace(/'/g, "\\'")}', '${this.formatDate(event.date)}', '${event.time}')">Sign Up Now</button>
                         ` : `
                             <button class="event-register-btn" disabled>Event Full</button>
                         `}
