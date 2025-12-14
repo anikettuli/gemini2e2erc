@@ -1648,6 +1648,73 @@ input[type="text"],
             bottom: 8px;
         }
 
+        @media (max-width: 900px) {
+            .calendar-section {
+                grid-template-columns: 1fr;
+                height: auto;
+                gap: 2rem;
+            }
+
+            .calendar-container {
+                max-height: none;
+            }
+
+            .events-display {
+                display: flex;
+                flex-direction: row;
+                overflow-x: auto;
+                gap: 1rem;
+                padding-bottom: 1rem;
+                scroll-snap-type: x mandatory;
+                /* Hide scrollbar for cleaner look */
+                scrollbar-width: none; 
+                -ms-overflow-style: none;
+            }
+            
+            .events-display::-webkit-scrollbar {
+                display: none;
+            }
+
+            .events-display .event-card {
+                min-width: 320px;
+                width: 320px;
+                margin-bottom: 0;
+                scroll-snap-align: start;
+                flex-shrink: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .calendar-section {
+                padding: 1rem;
+            }
+            
+            .calendar-header h3 {
+                font-size: 1.2rem;
+            }
+            
+            .calendar-nav-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 1rem;
+            }
+            
+            .calendar-weekdays div {
+                font-size: 0.8rem;
+                padding: 0.25rem;
+            }
+            
+            .day-number {
+                font-size: 0.9rem;
+            }
+            
+            .event-dot {
+                width: 4px;
+                height: 4px;
+                bottom: 4px;
+            }
+        }
+
         /* Event Cards */
         .events-grid {
             display: grid;
@@ -1758,7 +1825,7 @@ input[type="text"],
         .event-register-btn {
             display: inline-block;
             background: var(--secondary-color);
-            color: var(--text-dark);
+            color: #000000; /* Force black text for contrast on yellow */
             padding: 0.75rem 1.5rem;
             border-radius: 6px;
             text-decoration: none;
@@ -1799,32 +1866,16 @@ input[type="text"],
 
         .events-display .event-card {
             margin-bottom: 1rem;
-            display: grid;
-            grid-template-columns: 575px 1fr;
-            gap: 0;
-            padding: 0;
-            align-items: center;
-            background: var(--white);
-        }
-
-        .events-display .event-card:last-child {
-            margin-bottom: 0;
-        }
-
-        .events-display .event-card .event-content {
-            padding: 1rem 1.5rem;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            height: 100%;
-            min-width: 0;
+            gap: 0;
+            padding: 0;
+            background: var(--white);
         }
 
         .events-display .event-card .event-image {
             width: 100%;
-            aspect-ratio: 4/3;
-            height: auto;
-            overflow: hidden;
+            height: 200px;
         }
 
         .events-display .event-card .event-image img {
