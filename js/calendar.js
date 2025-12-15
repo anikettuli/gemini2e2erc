@@ -8,9 +8,31 @@ class EventCalendar {
 
     async init() {
         await this.loadEvents();
+        this.setCurrentMonthToNextEvent();
         this.renderCalendar();
         this.renderUpcomingEvents();
         this.addEventListeners();
+    }
+
+    setCurrentMonthToNextEvent() {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        // Find the first event that is today or in the future
+        const nextEvent = this.events.find(event => {
+            const eventDate = new Date(event.date);
+            return eventDate >= today;
+        });
+        
+        // If there's an upcoming event, set currentMonth to that event's month
+        // Otherwise, keep current month
+        if (nextEvent) {
+            const eventDate = new Date(nextEvent.date);
+            this.currentMonth = new Date(eventDate.getFullYear(), eventDate.getMonth(), 1);
+        } else {
+            // If no upcoming events, stay on current month
+            this.currentMonth = new Date();
+        }
     }
 
     addEventListeners() {
