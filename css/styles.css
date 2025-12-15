@@ -2171,5 +2171,5 @@ input[type="text"],
         }
 
         :root[data-theme="dark"] .board-member h4 {
-            color: #ffffff;
+            color: #ffffff !important;
         }
