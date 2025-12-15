@@ -2089,39 +2089,56 @@ input[type="text"],
         }
 
         /* Gallery overlay arrows */
-        .gallery-container {
+        .gallery-wrapper {
             position: relative;
+        }
+
+        .gallery-container {
+            /* keep overflow and scrolling on the inner container */
+            width: 100%;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 1rem 0;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none; /* Firefox */
+        }
+
+        .gallery-container::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
         }
 
         .gallery-arrow {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            z-index: 10;
-            background: rgba(0,0,0,0.45);
+            z-index: 50;
+            background: rgba(0,0,0,0.7);
             color: #fff;
             border: none;
-            width: 44px;
-            height: 44px;
+            width: 56px;
+            height: 56px;
+            font-size: 24px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            transition: background 0.2s, transform 0.15s;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.45);
+            transition: background 0.18s, transform 0.12s, opacity 0.12s;
+            opacity: 0.95;
         }
 
         .gallery-arrow:hover {
-            background: rgba(0,0,0,0.6);
-            transform: translateY(-50%) scale(1.03);
+            background: rgba(0,0,0,0.85);
+            transform: translateY(-50%) scale(1.06);
+            opacity: 1;
         }
 
-        .gallery-arrow.left { left: 12px; }
-        .gallery-arrow.right { right: 12px; }
+        .gallery-arrow.left { left: 10px; }
+        .gallery-arrow.right { right: 10px; }
 
         @media (max-width: 640px) {
-            .gallery-arrow { width: 36px; height: 36px; }
+            .gallery-arrow { width: 44px; height: 44px; font-size: 20px; }
             .gallery-track img { height: 220px; }
         }
 

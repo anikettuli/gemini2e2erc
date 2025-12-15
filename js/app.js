@@ -188,32 +188,36 @@ class GalleryManager {
     }
 
     setupGalleryControls() {
-        const container = this.galleryTrack.parentElement;
+        const container = this.galleryTrack.parentElement; // this is the scrolling element
         if (!container) return;
 
-        // Buttons
-        const leftBtn = container.querySelector('.gallery-arrow.left');
-        const rightBtn = container.querySelector('.gallery-arrow.right');
+        // wrapper is the non-scrolling parent that holds arrows
+        const wrapper = this.galleryTrack.closest('.gallery-wrapper') || container.parentElement;
+        if (!wrapper) return;
+
+        // Buttons live on wrapper so they don't move with scroll
+        const leftBtn = wrapper.querySelector('.gallery-arrow.left');
+        const rightBtn = wrapper.querySelector('.gallery-arrow.right');
 
         // Clear any existing timer
         this.stopAutoScroll();
 
-        // Start auto-scroll slowly
-        this.autoScrollStep = 1; // pixels per tick
-        this.autoScrollIntervalMs = 30; // ms between ticks
+        // Start auto-scroll faster
+        this.autoScrollStep = 2; // pixels per tick (increased for speed)
+        this.autoScrollIntervalMs = 20; // ms between ticks (smaller -> faster)
         this.startAutoScroll();
 
-        // Pause on hover or touch
-        container.addEventListener('mouseenter', () => this.stopAutoScroll());
-        container.addEventListener('mouseleave', () => this.startAutoScroll());
-        container.addEventListener('touchstart', () => this.stopAutoScroll());
-        container.addEventListener('touchend', () => this.startAutoScroll());
+        // Pause on hover over wrapper (not the inner scroll) or touch
+        wrapper.addEventListener('mouseenter', () => this.stopAutoScroll());
+        wrapper.addEventListener('mouseleave', () => this.startAutoScroll());
+        wrapper.addEventListener('touchstart', () => this.stopAutoScroll());
+        wrapper.addEventListener('touchend', () => this.startAutoScroll());
 
-        // Arrow controls
+        // Arrow controls (operate on container scroll)
         if (leftBtn) {
             leftBtn.addEventListener('click', () => {
                 this.stopAutoScroll();
-                container.scrollBy({ left: -Math.round(container.clientWidth * 0.75), behavior: 'smooth' });
+                container.scrollBy({ left: -Math.round(container.clientWidth * 0.6), behavior: 'smooth' });
                 // Restart auto-scroll after short delay
                 setTimeout(() => this.startAutoScroll(), 3000);
             });
@@ -221,7 +225,7 @@ class GalleryManager {
         if (rightBtn) {
             rightBtn.addEventListener('click', () => {
                 this.stopAutoScroll();
-                container.scrollBy({ left: Math.round(container.clientWidth * 0.75), behavior: 'smooth' });
+                container.scrollBy({ left: Math.round(container.clientWidth * 0.6), behavior: 'smooth' });
                 setTimeout(() => this.startAutoScroll(), 3000);
             });
         }
