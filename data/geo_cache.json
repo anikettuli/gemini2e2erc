@@ -1,1 +1,2087 @@
-{}
+{
+    "126 S Ranch House Rd, Suite 1000, Aledo TX 76008": {
+        "lat": 32.731733053167,
+        "lng": -97.634204098284,
+        "timestamp": 1765763765
+    },
+    "301 S Fm 1187, Aledo TX 76008": {
+        "lat": 32.689261,
+        "lng": -97.602201,
+        "timestamp": 1765763807
+    },
+    "505 Fm-1187 N, Aledo TX 76008": {
+        "lat": 32.7023223,
+        "lng": -97.6035718,
+        "timestamp": 1765763892
+    },
+    "201 N FM 1187, Aledo, Texas 76008": {
+        "lat": 32.6989445,
+        "lng": -97.6036975,
+        "timestamp": 1765763854
+    },
+    "200 N FM 1187, Aledo, Texas 76008": {
+        "lat": 32.698459,
+        "lng": -97.603267,
+        "timestamp": 1765763927
+    },
+    "990 Bailey Ranch Rd, Aledo, TX 76008": {
+        "lat": 32.7125695,
+        "lng": -97.6146799,
+        "timestamp": 1765763753
+    },
+    "104 Maverick St., Aledo, Tx 76008": {
+        "lat": 32.6949161,
+        "lng": -97.6034043,
+        "timestamp": 1765763762
+    },
+    "3990 N. Collins, Suite 102, Arlington, TX 76005": {
+        "lat": 32.7956177,
+        "lng": -97.0974999,
+        "timestamp": 1765763755
+    },
+    "5520 S. Cooper St., Suite 110, Arlington, TX 76005": {
+        "lat": 32.6570818,
+        "lng": -97.1347013,
+        "timestamp": 1765764111
+    },
+    "726 E. Lamar, Arlington, TX 76011": {
+        "lat": 32.7631087,
+        "lng": -97.1086411,
+        "timestamp": 1765763759
+    },
+    "780 E. Rd. to Six Flags, Arlington, TX 76011": {
+        "lat": 32.75587706564,
+        "lng": -97.100504459088,
+        "timestamp": 1765763778
+    },
+    "333 W. Main, Azle, Texas 76020": {
+        "lat": 32.9009309,
+        "lng": -97.5520641,
+        "timestamp": 1765763783
+    },
+    "2248 Central Drive, Suite 113, Bedford TX 76021": {
+        "lat": 32.8434326,
+        "lng": -97.1328664,
+        "timestamp": 1765763780
+    },
+    "2424 Forest Ridge Dr., Bedford TX 76021": {
+        "lat": 32.8460996,
+        "lng": -97.1417728,
+        "timestamp": 1765763793
+    },
+    "3713 E Harwood Rd., Bedford TX 76021": {
+        "lat": 32.8536144,
+        "lng": -97.1563709,
+        "timestamp": 1765764070
+    },
+    "2400 Airport Freeway, Suite 140, Bedford TX 76022": {
+        "lat": 32.836461,
+        "lng": -97.1303814,
+        "timestamp": 1765763887
+    },
+    "2250 Airport Freeway, Suite 310, Bedford TX 76022": {
+        "lat": 32.836457,
+        "lng": -97.1322557,
+        "timestamp": 1765764109
+    },
+    "2105 Harwood Rd., Suite 126, Bedford, TX 76021": {
+        "lat": 32.8522054,
+        "lng": -97.1342241,
+        "timestamp": 1765763924
+    },
+    "811 NE Alsbury, Suite 100, Burleson, TX 76028": {
+        "lat": 32.5629278,
+        "lng": -97.3236658,
+        "timestamp": 1765763771
+    },
+    "124 W. Renfro St., Burleson, TX 76028": {
+        "lat": 32.5431527,
+        "lng": -97.3225476,
+        "timestamp": 1765763798
+    },
+    "201 NW Renfro  St., Burleson, TX 76028": {
+        "lat": 32.544423,
+        "lng": -97.32672,
+        "timestamp": 1765763801
+    },
+    "1161 SW Wilshire Blvd., Burleson, TX 76028": {
+        "lat": 32.5254975,
+        "lng": -97.3432771,
+        "timestamp": 1765763803
+    },
+    "248 SW Johnson St., Burleson, TX 76028": {
+        "lat": 32.540584664724,
+        "lng": -97.327757959729,
+        "timestamp": 1765763804
+    },
+    "12001 S Freeway, No. 200, Burleson, TX 76028": {
+        "lat": null,
+        "lng": null,
+        "timestamp": 1765763844
+    },
+    "899 NE Alsbury Blvd., Burleson, TX 76028": {
+        "lat": 32.5638186,
+        "lng": -97.3205679,
+        "timestamp": 1765763897
+    },
+    "209 Market St., Burleson, TX 76028": {
+        "lat": 32.5375952,
+        "lng": -97.3342517,
+        "timestamp": 1765763914
+    },
+    "349 NW Renfro St., Burleson, TX 76028": {
+        "lat": 32.5467219,
+        "lng": -97.3294234,
+        "timestamp": 1765763917
+    },
+    "201 West Ellison St., Burleson, TX 76028": {
+        "lat": 32.541911,
+        "lng": -97.323185,
+        "timestamp": 1765763926
+    },
+    "400 East Renfro St., Burleson, TX 76028": {
+        "lat": 32.5435145,
+        "lng": -97.3127611,
+        "timestamp": 1765763984
+    },
+    "651 NE Alsbury Blvd., Burleson, TX 76028": {
+        "lat": 32.5617193,
+        "lng": -97.3274652,
+        "timestamp": 1765764019
+    },
+    "100 SW Wilshire, Burleson, TX 76028": {
+        "lat": 32.5400345,
+        "lng": -97.3318057,
+        "timestamp": 1765764031
+    },
+    "312 East Renfro, No. 107, Burleson, TX 76028": {
+        "lat": 32.543433408286,
+        "lng": -97.315735824074,
+        "timestamp": 1765764114
+    },
+    "130 NW John Jones, No. 216, Burleson, TX 76028": {
+        "lat": 32.521907413913,
+        "lng": -97.349527459069,
+        "timestamp": 1765764125
+    },
+    "951 SW Wilshire Blvd., Burleson, TX 76028": {
+        "lat": 32.5277428,
+        "lng": -97.3377838,
+        "timestamp": 1765764133
+    },
+    "300 E Chambers St, Cleburne TX 76031": {
+        "lat": 32.3469884,
+        "lng": -97.3836251,
+        "timestamp": 1765763795
+    },
+    "1665 Woodard Ave, Suite 209, Cleburne TX 76033": {
+        "lat": 32.3418448,
+        "lng": -97.4256745,
+        "timestamp": 1765763805
+    },
+    "1511 W Henderson St, Cleburne TX 76033": {
+        "lat": 32.339668,
+        "lng": -97.410099,
+        "timestamp": 1765763812
+    },
+    "839 N Nolan River Rd, Cleburne TX 76033": {
+        "lat": 32.3465033,
+        "lng": -97.4274843,
+        "timestamp": 1765763813
+    },
+    "302 W Henderson St, Cleburne TX 76033": {
+        "lat": 32.3473801,
+        "lng": -97.388898,
+        "timestamp": 1765763815
+    },
+    "111 Meadow View Dr, Cleburne TX 76033": {
+        "lat": 32.3331752,
+        "lng": -97.4258557,
+        "timestamp": 1765763818
+    },
+    "108 S. Anglin St., Cleburne TX 76033": {
+        "lat": 32.3465807,
+        "lng": -97.3849072,
+        "timestamp": 1765763819
+    },
+    "512 N Ridgeway Dr, Cleburne TX 76033": {
+        "lat": 32.3463267,
+        "lng": -97.4121724,
+        "timestamp": 1765763832
+    },
+    "2 N Mill St, Cleburne TX 76033": {
+        "lat": 32.346749,
+        "lng": -97.387274,
+        "timestamp": 1765763930
+    },
+    "1403 W Henderson St, Cleburne TX 76033": {
+        "lat": 32.3407757,
+        "lng": -97.4065532,
+        "timestamp": 1765764019
+    },
+    "226 W Katherine P Raines Rd, Cleburne TX 76033": {
+        "lat": 32.3828968,
+        "lng": -97.3968423,
+        "timestamp": 1765764020
+    },
+    "1014 N Nolan River Rd, Suite B, Cleburne TX 76033": {
+        "lat": 32.3550533,
+        "lng": -97.4261993,
+        "timestamp": 1765764028
+    },
+    "1607 W Henderson St, Cleburne TX 76033": {
+        "lat": 32.3380043,
+        "lng": -97.4112458,
+        "timestamp": 1765764084
+    },
+    "3309 N. Main, Cleburne TX 76033": {
+        "lat": 32.410914,
+        "lng": -97.383646,
+        "timestamp": 1765764103
+    },
+    "1510 W Westhill Dr, Cleburne TX 76033": {
+        "lat": 32.3286143,
+        "lng": -97.4175342,
+        "timestamp": 1765764104
+    },
+    "1711 W Henderson St, Cleburne TX 76033": {
+        "lat": 32.3337634,
+        "lng": -97.4244181,
+        "timestamp": 1765764101
+    },
+    "205 S. Caddo St., Cleburne, TX 76031": {
+        "lat": 32.3460649,
+        "lng": -97.3853346,
+        "timestamp": 1765763951
+    },
+    "111 S. Anglin St., Cleburne, TX 76031": {
+        "lat": 32.3466393,
+        "lng": -97.3844471,
+        "timestamp": 1765764037
+    },
+    "3930 Glade Road Suite 122, Colleyville TX 76034": {
+        "lat": 32.8824952,
+        "lng": -97.1027244,
+        "timestamp": 1765763790
+    },
+    "5205 Heritage Avenue, Colleyville TX 76034": {
+        "lat": 32.8846809,
+        "lng": -97.1053371,
+        "timestamp": 1765763821
+    },
+    "5615 Colleyville Blvd., Suite 460, Colleyville TX 76034": {
+        "lat": 32.8910742,
+        "lng": -97.1479148,
+        "timestamp": 1765764055
+    },
+    "6114 Colleyville Blvd, Colleyville TX 76034": {
+        "lat": 32.8977361,
+        "lng": -97.1443983,
+        "timestamp": 1765764098
+    },
+    "4718 Colleyville Blvd., Suite 100, Colleyville, TX 76034": {
+        "lat": 32.8762889,
+        "lng": -97.1609661,
+        "timestamp": 1765763909
+    },
+    "5605 Colleyville Blvd., Colleyville, TX 76034": {
+        "lat": 32.8892842,
+        "lng": -97.1468567,
+        "timestamp": 1765763959
+    },
+    "5611 Colleyville Blvd, Colleyville, TX 76034": {
+        "lat": 32.89069105083,
+        "lng": -97.148911987055,
+        "timestamp": 1765762269
+    },
+    "220 S. Denton Tap Rd., Coppell TX 75019": {
+        "lat": 32.9649541,
+        "lng": -96.9929133,
+        "timestamp": 1765763808
+    },
+    "1221 FM 1187, Crowley, TX 76036": {
+        "lat": 32.572157114167,
+        "lng": -97.342678409837,
+        "timestamp": 1765762269
+    },
+    "303 Washburn, Decatur, TX  76234": {
+        "lat": 33.2325559,
+        "lng": -97.593708,
+        "timestamp": 1765763835
+    },
+    "104 S. Washburn, Decatur, TX  76234": {
+        "lat": 33.23145,
+        "lng": -97.5937529,
+        "timestamp": 1765763849
+    },
+    "104 S. Miller, Decatur, TX  76234": {
+        "lat": 33.2339161,
+        "lng": -97.5844929,
+        "timestamp": 1765763896
+    },
+    "800 US 287, Decatur, TX  76234": {
+        "lat": 33.2291931,
+        "lng": -97.5788525,
+        "timestamp": 1765764130
+    },
+    "110 W. University Dr., Denton TX 76201": {
+        "lat": 33.2306909,
+        "lng": -97.1336446,
+        "timestamp": 1765763986
+    },
+    "201 N Ector Dr., Euless TX 76039": {
+        "lat": 32.838137,
+        "lng": -97.090829,
+        "timestamp": 1765763859
+    },
+    "1401 W Glade Rd,, Euless TX 76039": {
+        "lat": 32.8804275,
+        "lng": -97.105038,
+        "timestamp": 1765764080
+    },
+    "3020 Broadmoor Lane, Suite 300, Flower Mound TX 75022": {
+        "lat": 33.033204,
+        "lng": -97.077253,
+        "timestamp": 1765763785
+    },
+    "1025 Long Prairie Rd., Suite 100, Flower Mound TX 75022": {
+        "lat": 32.9981923,
+        "lng": -97.0663514,
+        "timestamp": 1765763938
+    },
+    "5801 Long Prairie Road, Suite 360, Flower Mound TX 75028": {
+        "lat": 33.0635371,
+        "lng": -97.0819953,
+        "timestamp": 1765763776
+    },
+    "2021 Cross Timbers Rd., Flower Mound TX 75028": {
+        "lat": 33.0336569,
+        "lng": -97.0590758,
+        "timestamp": 1765763833
+    },
+    "6000 Morriss Rd., Flower Mound TX 75028": {
+        "lat": 33.0182646,
+        "lng": -97.0541373,
+        "timestamp": 1765763877
+    },
+    "3851 Long Prairie Rd., Suite 100, Flower Mound TX 75028": {
+        "lat": 33.0377037,
+        "lng": -97.0701794,
+        "timestamp": 1765763903
+    },
+    "1001 Cross Timbers Rd., Suite 1170, Flower Mound TX 75028": {
+        "lat": 33.0413838,
+        "lng": -97.0418668,
+        "timestamp": 1765763904
+    },
+    "2701 W Windsor Dr., Flower Mound TX 75028": {
+        "lat": 33.047168,
+        "lng": -97.0722176,
+        "timestamp": 1765763906
+    },
+    "3551 Justin Rd., Suite 150, Flower Mound TX 75028": {
+        "lat": 33.0714499,
+        "lng": -97.0845719,
+        "timestamp": 1765763994
+    },
+    "3551 Justin Rd., Ste 150, Flower Mound, Texas, 75028": {
+        "lat": 33.0714499,
+        "lng": -97.0845719,
+        "timestamp": 1765763995
+    },
+    "3020 Broadmoor Lane, Suite 300, Flower Mound, TX 75022": {
+        "lat": 33.033204,
+        "lng": -97.077253,
+        "timestamp": 1765763787
+    },
+    "5801 Long Prairie Rd., Suite 360, Flower Mound, TX 75028": {
+        "lat": 33.0635371,
+        "lng": -97.0819953,
+        "timestamp": 1765763773
+    },
+    "6000 Morriss Rd., Flower Mound, TX 75028": {
+        "lat": 33.0182646,
+        "lng": -97.0541373,
+        "timestamp": 1765763878
+    },
+    "3851 Long Prairie, No. 100, Flower Mound, TX 75028": {
+        "lat": 33.037381424404,
+        "lng": -97.069692199315,
+        "timestamp": 1765763901
+    },
+    "2701 W Windsor Dr., Flower Mound, TX 75028": {
+        "lat": 33.047168,
+        "lng": -97.0722176,
+        "timestamp": 1765763907
+    },
+    "2001 Cross Timbers Rd., Flower Mound, TX 75028": {
+        "lat": 33.034392,
+        "lng": -97.057371,
+        "timestamp": 1765763929
+    },
+    "3800 Long Prairie Rd., Flower Mound, TX 75028": {
+        "lat": 33.0373153,
+        "lng": -97.0679055,
+        "timestamp": 1765763958
+    },
+    "500 Flower Mound Rd., No. 108, Flower Mound, TX 75028": {
+        "lat": 33.009974220821,
+        "lng": -97.034255461822,
+        "timestamp": 1765764118
+    },
+    "2021 Cross Timbers Road, Flower Mound, TX 75028": {
+        "lat": 33.0336569,
+        "lng": -97.0590758,
+        "timestamp": 1765764142
+    },
+    "3000 South Hulen Street, Suite 104, Fort Worth TX 76109": {
+        "lat": 32.7051248,
+        "lng": -97.3908887,
+        "timestamp": 1765763869
+    },
+    "4919 South Hulen Street, Fort Worth TX 76132": {
+        "lat": 32.6757755,
+        "lng": -97.3961926,
+        "timestamp": 1765763757
+    },
+    "5300 Overton Ridge Blvd, Fort Worth TX 76132": {
+        "lat": 32.6781262,
+        "lng": -97.4083865,
+        "timestamp": 1765763824
+    },
+    "4800 South Hulen Street, Suite 1520, Hulen Mall, Fort Worth TX 76132": {
+        "lat": 32.677764995973,
+        "lng": -97.395432082284,
+        "timestamp": 1765763865
+    },
+    "6273 Granbury Road, Fort Worth TX 76133": {
+        "lat": 32.6581311,
+        "lng": -97.4014968,
+        "timestamp": 1765763962
+    },
+    "5709 Westcreek Drive, Fort Worth TX 76133": {
+        "lat": 32.6626726,
+        "lng": -97.3617922,
+        "timestamp": 1765764136
+    },
+    "6404 McCart Avenue, Fort Worth TX 76133": {
+        "lat": 32.651641,
+        "lng": -97.3652989,
+        "timestamp": 1765764137
+    },
+    "5860 No.Tarrant Parkway, Suite 108, Fort Worth TX 76137": {
+        "lat": 32.89472676176,
+        "lng": -97.259913359793,
+        "timestamp": 1765764016
+    },
+    "4200 Amon Carter Blvd., Fort Worth TX 76155": {
+        "lat": 32.8248922,
+        "lng": -97.0477582,
+        "timestamp": 1765763788
+    },
+    "9549 Sage Meadow Trail, Alliance Town Center, Fort Worth TX 76177": {
+        "lat": 32.9113553,
+        "lng": -97.3145512,
+        "timestamp": 1765763862
+    },
+    "7201 Boat Club Road, Fort Worth TX 76179": {
+        "lat": 32.8669252,
+        "lng": -97.4267217,
+        "timestamp": 1765763853
+    },
+    "5832 Boat Club Dr., Fort Worth, Texas 76135": {
+        "lat": 32.840134440408,
+        "lng": -97.425236986204,
+        "timestamp": 1765763979
+    },
+    "3016 Texas Sage Trail, Fort Worth, TX 76177": {
+        "lat": 32.9122141,
+        "lng": -97.3130341,
+        "timestamp": 1765763773
+    },
+    "9816 N. Beach Street, Fort Worth, TX 76244": {
+        "lat": 32.9167308,
+        "lng": -97.2895844,
+        "timestamp": 1765763977
+    },
+    "2833 Eldorado Pkwy,, Frisco TX 75033": {
+        "lat": 33.1780581,
+        "lng": -96.8646544,
+        "timestamp": 1765764034
+    },
+    "401 W Garnett St, Gainesville TX 76240": {
+        "lat": 33.620305,
+        "lng": -97.148113,
+        "timestamp": 1765764072
+    },
+    "2020 US Hwy 82, Gainesville, TX 76240": {
+        "lat": 33.6425145,
+        "lng": -97.1237071,
+        "timestamp": 1765763838
+    },
+    "818 US Hwy 82, Gainesville, TX 76240": {
+        "lat": 33.640916,
+        "lng": -97.1384386,
+        "timestamp": 1765763992
+    },
+    "610 NE Big Bend Trail, Glen Rose TX 76043": {
+        "lat": 32.2404001,
+        "lng": -97.7523454,
+        "timestamp": 1765763847
+    },
+    "400 N. E. Big Bend Trail, Glen Rose TX 76043": {
+        "lat": null,
+        "lng": null,
+        "timestamp": 1765763895
+    },
+    "1021 Holden St., Glen Rose TX 76043": {
+        "lat": 32.2422177,
+        "lng": -97.7462609,
+        "timestamp": 1765763910
+    },
+    "209 SW Barnard, Glen Rose TX 76043": {
+        "lat": 32.2266479,
+        "lng": -97.7636019,
+        "timestamp": 1765764059
+    },
+    "2439 E. Hwy 67, Glen Rose TX 76043": {
+        "lat": 32.217503466698,
+        "lng": -97.787686096034,
+        "timestamp": 1765764068
+    },
+    "112 3rd St., Grandview TX 76050": {
+        "lat": 32.2712993,
+        "lng": -97.1792733,
+        "timestamp": 1765763912
+    },
+    "1600 W College,, Suite 390, Grapevine TX 76051": {
+        "lat": 32.935674,
+        "lng": -97.093008,
+        "timestamp": 1765763766
+    },
+    "2430 Justin Rd; FM 407, Highland Village TX 75077": {
+        "lat": 33.073511367478,
+        "lng": -97.065057974508,
+        "timestamp": 1765764011
+    },
+    "1000 Highland Village Rd., Highland Village, TX 75077": {
+        "lat": 33.084855,
+        "lng": -97.0527107,
+        "timestamp": 1765763921
+    },
+    "2430 Justin Rd., Highland Village, TX 75077": {
+        "lat": 33.0735444,
+        "lng": -97.0650852,
+        "timestamp": 1765764002
+    },
+    "2300 Highland Rd., No. 200, Highland Village, TX 75077": {
+        "lat": 33.072490890965,
+        "lng": -97.057671538774,
+        "timestamp": 1765764107
+    },
+    "1601 Village Pkwy., No. 160, Highland Village, TX 75077": {
+        "lat": null,
+        "lng": null,
+        "timestamp": 1765762299
+    },
+    "1101 Melbourne Rd., Suite 3091, North East Mall, Hurst TX 76053": {
+        "lat": 32.828731110199,
+        "lng": -97.197324382005,
+        "timestamp": 1765763868
+    },
+    "556 W Bedford Euless Rd, Suite B, Hurst TX 76053": {
+        "lat": 32.834047,
+        "lng": -97.1781633,
+        "timestamp": 1765763874
+    },
+    "1101 Melbourne Rd., Suite 5000, Hurst TX 76053": {
+        "lat": 32.83031,
+        "lng": -97.2010559,
+        "timestamp": 1765763927
+    },
+    "1400 Precinct Line Road, Hurst TX 76053": {
+        "lat": 32.8366448,
+        "lng": -97.1833149,
+        "timestamp": 1765764079
+    },
+    "5062 NE Mall Blvd, Hurst TX 76053": {
+        "lat": 32.8287458,
+        "lng": -97.2039652,
+        "timestamp": 1765764092
+    },
+    "945 Melbourne Road, Hurst TX 76053": {
+        "lat": 32.8258212,
+        "lng": -97.1985949,
+        "timestamp": 1765764096
+    },
+    "1714 Precinct Line Road, Suite 700, Hurst TX 76054": {
+        "lat": 32.8458788,
+        "lng": -97.1860855,
+        "timestamp": 1765763860
+    },
+    "751 Mid-Cities Blvd., Hurst TX 76054": {
+        "lat": 32.8619017,
+        "lng": -97.1847638,
+        "timestamp": 1765763886
+    },
+    "302 Grapevine Hwy, Hurst TX 76054": {
+        "lat": 32.8519467,
+        "lng": -97.190731,
+        "timestamp": 1765763964
+    },
+    "1872 Norwood Dr., Suite 200, Hurst TX 76054": {
+        "lat": 32.8494485,
+        "lng": -97.169451,
+        "timestamp": 1765764081
+    },
+    "1629 Precinct Line Rd., Hurst TX 76054": {
+        "lat": 32.8458788,
+        "lng": -97.1860855,
+        "timestamp": 1765764099
+    },
+    "901 Precinct Line Rd., Hurst, TX 76053": {
+        "lat": 32.8262008,
+        "lng": -97.1871548,
+        "timestamp": 1765763923
+    },
+    "1700 Rufe Snow Drive, Keller, TX  76248": {
+        "lat": 32.903996,
+        "lng": -97.236473,
+        "timestamp": 1765763899
+    },
+    "1004 Keller Pkwy, Suite 102, Keller, TX  76248": {
+        "lat": 32.9333527,
+        "lng": -97.2274136,
+        "timestamp": 1765763933
+    },
+    "601 S. Main Street, Suite 601, Keller, TX  76248": {
+        "lat": 32.928867,
+        "lng": -97.253814,
+        "timestamp": 1765763935
+    },
+    "12457 Timberland Blvd., Suite 201, Keller, TX  76248": {
+        "lat": 32.9564494,
+        "lng": -97.2543318,
+        "timestamp": 1765763974
+    },
+    "201 Golden Triangle Blvd., Keller, TX  76248": {
+        "lat": 32.9331707,
+        "lng": -97.2558662,
+        "timestamp": 1765764042
+    },
+    "12584 N. Beach Street, Suite 122, Keller, TX 76244": {
+        "lat": 32.9553276,
+        "lng": -97.2791701,
+        "timestamp": 1765764126
+    },
+    "201 Town Center Ln., Suite 1107, Keller, TX 76248": {
+        "lat": 32.932273505618,
+        "lng": -97.226986963729,
+        "timestamp": 1765762310
+    },
+    "1850 Lakepointe Dr., Suite 200, Lewisville TX 75057": {
+        "lat": 33.0174856,
+        "lng": -96.9792641,
+        "timestamp": 1765764066
+    },
+    "860 Hebron Pkwy., Suite 102, Lewisville TX 75057": {
+        "lat": 33.0123535,
+        "lng": -96.9637182,
+        "timestamp": 1765763997
+    },
+    "851 State Hwy. 121 Bypass, Lewisville TX 75067": {
+        "lat": null,
+        "lng": null,
+        "timestamp": 1765763827
+    },
+    "2401 S Stemmons Fwy., Suite 2000, Lewisville TX 75067": {
+        "lat": 33.0014211,
+        "lng": -96.9706848,
+        "timestamp": 1765763941
+    },
+    "1197 W Main St., Lewisville TX 75067": {
+        "lat": 33.0430705,
+        "lng": -97.0232052,
+        "timestamp": 1765763946
+    },
+    "2410 S Stemmons Fwy., Suite E, Lewisville TX 75067": {
+        "lat": 33.0062241,
+        "lng": -96.9721696,
+        "timestamp": 1765763983
+    },
+    "502 S Old Orchard Ln., Suite 126, Lewisville TX 75067": {
+        "lat": 33.0402355,
+        "lng": -97.0278189,
+        "timestamp": 1765764017
+    },
+    "751 W Main St., Lewisville TX 75067": {
+        "lat": 33.0462751,
+        "lng": -97.0111806,
+        "timestamp": 1765764040
+    },
+    "1124 W Main St., Lewisville TX 75067": {
+        "lat": 33.0422456,
+        "lng": -97.0209905,
+        "timestamp": 1765764086
+    },
+    "1251 Valley Ridge Blvd., Lewisville TX 75077": {
+        "lat": 33.0580647,
+        "lng": -97.0258911,
+        "timestamp": 1765763884
+    },
+    "1278 Justin Rd., Lewisville TX 75077": {
+        "lat": 33.0712309,
+        "lng": -97.0263416,
+        "timestamp": 1765763915
+    },
+    "1297 Justin Rd., Suite 310, Lewisville TX 75077": {
+        "lat": 33.0712357,
+        "lng": -97.026949,
+        "timestamp": 1765763940
+    },
+    "860 Hebron Pkwy., No. 103, Lewisville, TX 75057": {
+        "lat": 33.012718283409,
+        "lng": -96.96291339005,
+        "timestamp": 1765763999
+    },
+    "420 East Round Grove Rd., Suite 610, Lewisville, TX 75067": {
+        "lat": 33.0029479,
+        "lng": -96.9816665,
+        "timestamp": 1765763775
+    },
+    "851 South State Highway 121, Lewisville, TX 75067": {
+        "lat": 32.9883294,
+        "lng": -97.0123919,
+        "timestamp": 1765763823
+    },
+    "2401 S Stemmons Fwy., Suite 2000, Lewisville, TX 75067": {
+        "lat": 33.0014211,
+        "lng": -96.9706848,
+        "timestamp": 1765763943
+    },
+    "1197 W. Main, Lewisville, TX 75067": {
+        "lat": 33.0430705,
+        "lng": -97.0232052,
+        "timestamp": 1765763945
+    },
+    "1950 S Valley Pkwy., Lewisville, TX 75067": {
+        "lat": 33.0197602,
+        "lng": -97.0203716,
+        "timestamp": 1765763948
+    },
+    "801 W Main St., Lewisville, TX 75067": {
+        "lat": 33.0472099,
+        "lng": -97.0140137,
+        "timestamp": 1765763950
+    },
+    "751 W. Main St., Lewisville, TX 75067": {
+        "lat": 33.0462751,
+        "lng": -97.0111806,
+        "timestamp": 1765764039
+    },
+    "2410 S Stemmons, Ste E, Lewisville, TX 75067": {
+        "lat": 33.0053392,
+        "lng": -97.0193818,
+        "timestamp": 1765764053
+    },
+    "1124 W Main, Lewisville, TX 75067": {
+        "lat": 33.0419382,
+        "lng": -97.0215914,
+        "timestamp": 1765764089
+    },
+    "1251 Valley Ridge Blvd., Lewisville, TX 75077": {
+        "lat": 33.0580647,
+        "lng": -97.0258911,
+        "timestamp": 1765763883
+    },
+    "2403 S Stemmons, Ste 113, Lewisville, TX, 75067": {
+        "lat": 33.0057269,
+        "lng": -97.0193546,
+        "timestamp": 1765764013
+    },
+    "100 W Eldorado Pkwy., Little Elm 75068": {
+        "lat": 33.1579713,
+        "lng": -96.9399173,
+        "timestamp": 1765763954
+    },
+    "2700 E Eldorado Pkwy, Little Elm TX 75068": {
+        "lat": 33.1758928,
+        "lng": -96.8888472,
+        "timestamp": 1765763792
+    },
+    "2700 E Eldorado Pkwy, Suite 101, Little Elm TX 75068": {
+        "lat": 33.1758928,
+        "lng": -96.8888472,
+        "timestamp": 1765763839
+    },
+    "2409 FM 423, Little Elm TX 75068": {
+        "lat": 33.1820247,
+        "lng": -96.8872908,
+        "timestamp": 1765763851
+    },
+    "2671 Little Elm Pkwy, Little Elm TX 75068": {
+        "lat": 33.1706192,
+        "lng": -96.8913741,
+        "timestamp": 1765763937
+    },
+    "1200 East Eldorado Pkwy, Suite 100, Little Elm TX 75068": {
+        "lat": 33.168772,
+        "lng": -96.918587,
+        "timestamp": 1765763953
+    },
+    "800 W Eldorado Pkwy, Suite 100, Little Elm TX 75068": {
+        "lat": 33.1552555,
+        "lng": -96.9435426,
+        "timestamp": 1765763956
+    },
+    "2700 E Eldorado Pkwy, Suite 106, Little Elm TX 75068": {
+        "lat": 33.1758928,
+        "lng": -96.8888472,
+        "timestamp": 1765763967
+    },
+    "2405 FM 423, Little Elm TX 75068": {
+        "lat": 33.1820247,
+        "lng": -96.8872908,
+        "timestamp": 1765764061
+    },
+    "1501 Redbud, McKinney, TX 75069": {
+        "lat": 33.212176,
+        "lng": -96.63493,
+        "timestamp": 1765763920
+    },
+    "3705 Eldorado Pkwy., McKinney, TX 75070": {
+        "lat": 33.1679651,
+        "lng": -96.6680349,
+        "timestamp": 1765763768
+    },
+    "2301 Eldorado Pkwy., McKinney, TX 75070": {
+        "lat": 33.1709761,
+        "lng": -96.6466834,
+        "timestamp": 1765763890
+    },
+    "2301 Eldorado Pkwy., No. 500, McKinney, TX 75070": {
+        "lat": null,
+        "lng": null,
+        "timestamp": 1765764057
+    },
+    "1650 N. Lake Forest Dr., No. 100, McKinney, TX 75071": {
+        "lat": 33.213604632642,
+        "lng": -96.679898569452,
+        "timestamp": 1765764024
+    },
+    "605 N Maple Street, Muenster TX 76252": {
+        "lat": 33.654714378792,
+        "lng": -97.379908105734,
+        "timestamp": 1765763970
+    },
+    "6509 Precinct Line Rd, North Richland Hills TX 76180": {
+        "lat": 32.8602615,
+        "lng": -97.1861557,
+        "timestamp": 1765763760
+    },
+    "5755 Rufe Snow Drive, Suite 100, North Richland Hills TX 76180": {
+        "lat": 32.8520638,
+        "lng": -97.238726,
+        "timestamp": 1765763872
+    },
+    "9151 Boulevard 26, Suite B-1B, North Richland Hills TX 76180": {
+        "lat": 32.8330336,
+        "lng": -97.2157254,
+        "timestamp": 1765763918
+    },
+    "8222 Bedford-Euless Road, North Richland Hills TX 76180": {
+        "lat": 32.8336826,
+        "lng": -97.2047202,
+        "timestamp": 1765764000
+    },
+    "7728 Mid Cities Blvd, North Richland Hills TX 76180": {
+        "lat": 32.8602447,
+        "lng": -97.2271291,
+        "timestamp": 1765764064
+    },
+    "1228 NW Highway 377, Roanoke TX 76262": {
+        "lat": 33.01358457846,
+        "lng": -97.220135182953,
+        "timestamp": 1765763841
+    },
+    "201 Fairway Drive, Roanoke TX 76262": {
+        "lat": 33.0052166,
+        "lng": -97.2331021,
+        "timestamp": 1765764033
+    },
+    "856 TX 114, Suite 100, Roanoke TX 76262": {
+        "lat": 33.0104119,
+        "lng": -97.2343029,
+        "timestamp": 1765764115
+    },
+    "1640 W. Chapman Drive, No. 200, Sanger, TX 76266": {
+        "lat": 33.366910216638,
+        "lng": -97.18278828578,
+        "timestamp": 1765763857
+    },
+    "708 S. 5th Street, Sanger, TX 76266": {
+        "lat": 33.354402,
+        "lng": -97.1730341,
+        "timestamp": 1765763880
+    },
+    "1650 W Chapman Drive, Sanger, TX 76266": {
+        "lat": 33.3668878,
+        "lng": -97.1829568,
+        "timestamp": 1765763988
+    },
+    "617 North 10th Street, Suite 204, Sanger, TX 76266": {
+        "lat": 33.3656082,
+        "lng": -97.1780618,
+        "timestamp": 1765763991
+    },
+    "1100 N. I35 Frontage Rd., Sanger, TX 76266": {
+        "lat": null,
+        "lng": null,
+        "timestamp": 1765764026
+    },
+    "801 W Chapman Dr., Suite 100, Sanger, TX 76266": {
+        "lat": 33.3668694,
+        "lng": -97.1772382,
+        "timestamp": 1765764036
+    },
+    "501 N. Stemmons St., Sanger, TX 76266": {
+        "lat": 33.364224,
+        "lng": -97.1814727,
+        "timestamp": 1765764044
+    },
+    "100 North 5th Street, Sanger, TX 76266": {
+        "lat": 33.360726,
+        "lng": -97.173608,
+        "timestamp": 1765764046
+    },
+    "400 Bolivar Street, Suite 102, Sanger, TX 76266": {
+        "lat": 33.362193,
+        "lng": -97.172303,
+        "timestamp": 1765764047
+    },
+    "410 Bolivar St., Sanger, TX 76266": {
+        "lat": 33.362191,
+        "lng": -97.1723521,
+        "timestamp": 1765764049
+    },
+    "PO Box 714, Sanger, TX 76266": {
+        "lat": null,
+        "lng": null,
+        "timestamp": 1765764050
+    },
+    "640 S Stemmons, No. 100, Sanger, TX 76266": {
+        "lat": null,
+        "lng": null,
+        "timestamp": 1765764076
+    },
+    "904 S. 5th Street, Sanger, TX 76266": {
+        "lat": 33.3553021,
+        "lng": -97.1738182,
+        "timestamp": 1765764078
+    },
+    "711 N 5th Street, Sanger, TX 76266": {
+        "lat": 33.3655727,
+        "lng": -97.1740878,
+        "timestamp": 1765764095
+    },
+    "131 Garza Rd., Shady Shores TX 76208": {
+        "lat": 33.1625296,
+        "lng": -97.0420182,
+        "timestamp": 1765763800
+    },
+    "1980 East State Highway 114, Southlake TX 76092": {
+        "lat": 32.9496044,
+        "lng": -97.1304112,
+        "timestamp": 1765763810
+    },
+    "2601 E. State Hwy 114, Southlake TX 76092": {
+        "lat": null,
+        "lng": null,
+        "timestamp": 1765763830
+    },
+    "1247 Main Street, Southlake TX 76092": {
+        "lat": 32.9425095,
+        "lng": -97.1327853,
+        "timestamp": 1765763871
+    },
+    "3105 Southlake Blvd, Southlake TX 76092": {
+        "lat": 32.9382081,
+        "lng": -97.1046505,
+        "timestamp": 1765763875
+    },
+    "670 E. Southlake Blvd, Southlake TX 76092": {
+        "lat": 32.9411508,
+        "lng": -97.1421194,
+        "timestamp": 1765763961
+    },
+    "101 River Oaks, Suite 100, Southlake TX 76092": {
+        "lat": 32.9360531,
+        "lng": -97.1893733,
+        "timestamp": 1765763989
+    },
+    "510 E. Southlake Blvd., Suite 100, Southlake TX 76092": {
+        "lat": 32.9411361,
+        "lng": -97.1436708,
+        "timestamp": 1765764063
+    },
+    "4709 TX-121, Suite 122, The Colony TX 75056": {
+        "lat": 33.0666486,
+        "lng": -96.8885063,
+        "timestamp": 1765764093
+    },
+    "5621 Bunker Blvd., Watauga TX 76148": {
+        "lat": 32.8707405,
+        "lng": -97.2620445,
+        "timestamp": 1765763836
+    },
+    "8436 Denton Hwy. 377, Suite 210, Towne Shopping Center, Watauga TX 76148": {
+        "lat": 32.89308373462,
+        "lng": -97.258845283156,
+        "timestamp": 1765763864
+    },
+    "7604 Denton Highway, Suite 208, Watauga TX 76148": {
+        "lat": 32.8826034,
+        "lng": -97.260013,
+        "timestamp": 1765764111
+    },
+    "8329 Whitley Rd., Watauga, TX  76148": {
+        "lat": 32.886881,
+        "lng": -97.254907,
+        "timestamp": 1765763972
+    },
+    "4088 E I-20 Service Rd, Willow Park 76087": {
+        "lat": null,
+        "lng": null,
+        "timestamp": 1765763958
+    },
+    "7668 Eldorado Pkwy., No. 100, McKinney, TX 75072": {
+        "lat": 33.174409422982,
+        "lng": -96.718000784361,
+        "timestamp": 1765762378
+    },
+    "4919 South Hulen Street, Fort Worth, TX 76132": {
+        "lat": 32.676113110897,
+        "lng": -97.396637509626,
+        "timestamp": 1765762720
+    },
+    "6509 Precinct Line Rd, North Richland Hills, TX 76180": {
+        "lat": 32.865757091268,
+        "lng": -97.186184672206,
+        "timestamp": 1765762720
+    },
+    "104 Maverick St, Aledo, TX 76008": {
+        "lat": 32.694859027152,
+        "lng": -97.603358205031,
+        "timestamp": 1765762720
+    },
+    "126 S Ranch House Rd, Suite 1000, Aledo, TX 76008": {
+        "lat": 32.731733053167,
+        "lng": -97.634204098284,
+        "timestamp": 1765762721
+    },
+    "1600 W College, Suite 390, Grapevine, TX 76051": {
+        "lat": 32.93564994265,
+        "lng": -97.092929865391,
+        "timestamp": 1765762721
+    },
+    "3705 Eldorado Pkwy, McKinney, TX 75070": {
+        "lat": 33.1679651,
+        "lng": -96.6680349,
+        "timestamp": 1765762723
+    },
+    "420 East Round Grove Rd, Suite 610, Lewisville, TX 75067": {
+        "lat": 33.004532724235,
+        "lng": -96.980374304609,
+        "timestamp": 1765762724
+    },
+    "780 E. Road to Six Flags, Arlington, TX 76011": {
+        "lat": 32.75587706564,
+        "lng": -97.100504459088,
+        "timestamp": 1765762724
+    },
+    "5801 Long Prairie Road, Suite 360, Flower Mound, TX 75028": {
+        "lat": 33.059205827664,
+        "lng": -97.075317924827,
+        "timestamp": 1765762724
+    },
+    "2248 Central Drive, Suite 113, Bedford, TX 76021": {
+        "lat": 32.842934594317,
+        "lng": -97.133416905941,
+        "timestamp": 1765762724
+    },
+    "333 W. Main, Azle, TX 76020": {
+        "lat": 32.895509504894,
+        "lng": -97.546654987517,
+        "timestamp": 1765762725
+    },
+    "4200 Amon Carter Blvd, Fort Worth, TX 76155": {
+        "lat": 32.82368189601,
+        "lng": -97.048904628771,
+        "timestamp": 1765762725
+    },
+    "3930 Glade Road, Suite 122, Colleyville, TX 76034": {
+        "lat": 32.881547085446,
+        "lng": -97.104678107724,
+        "timestamp": 1765762725
+    },
+    "2700 E Eldorado Pkwy, Little Elm, TX 75068": {
+        "lat": 33.1758928,
+        "lng": -96.8888472,
+        "timestamp": 1765762727
+    },
+    "2424 Forest Ridge Dr, Bedford, TX 76021": {
+        "lat": 32.845299710403,
+        "lng": -97.143345864276,
+        "timestamp": 1765762728
+    },
+    "300 E Chambers St, Cleburne, TX 76031": {
+        "lat": 32.347302129709,
+        "lng": -97.383897504262,
+        "timestamp": 1765762728
+    },
+    "124 W. Renfro St, Burleson, TX 76028": {
+        "lat": 32.543065322812,
+        "lng": -97.322137580332,
+        "timestamp": 1765762728
+    },
+    "131 Garza Rd, Shady Shores, TX 76208": {
+        "lat": 33.161518903554,
+        "lng": -97.040240433668,
+        "timestamp": 1765762727
+    },
+    "201 NW Renfro St, Burleson, TX 76028": {
+        "lat": 32.544392282616,
+        "lng": -97.326646450272,
+        "timestamp": 1765762727
+    },
+    "1161 SW Wilshire Blvd, Burleson, TX 76028": {
+        "lat": 32.525232094194,
+        "lng": -97.343577757862,
+        "timestamp": 1765762728
+    },
+    "248 SW Johnson St, Burleson, TX 76028": {
+        "lat": 32.540584664724,
+        "lng": -97.327757959729,
+        "timestamp": 1765762728
+    },
+    "1665 Woodard Ave, Suite 209, Cleburne, TX 76033": {
+        "lat": 32.342177702485,
+        "lng": -97.424095252006,
+        "timestamp": 1765762728
+    },
+    "301 S FM 1187, Aledo, TX 76008": {
+        "lat": 32.689192460919,
+        "lng": -97.602219955112,
+        "timestamp": 1765762729
+    },
+    "220 S. Denton Tap Rd, Coppell, TX 75019": {
+        "lat": 32.96530704845,
+        "lng": -96.993581629747,
+        "timestamp": 1765762729
+    },
+    "1980 East State Highway 114, Southlake, TX 76092": {
+        "lat": 32.9496044,
+        "lng": -97.1304112,
+        "timestamp": 1765762731
+    },
+    "1511 W Henderson St, Cleburne, TX 76033": {
+        "lat": 32.33971702921,
+        "lng": -97.410039486766,
+        "timestamp": 1765762731
+    },
+    "839 N Nolan River Rd, Cleburne, TX 76033": {
+        "lat": 32.34559704159,
+        "lng": -97.426896432263,
+        "timestamp": 1765762732
+    },
+    "302 W Henderson St, Cleburne, TX 76033": {
+        "lat": 32.3473801,
+        "lng": -97.388898,
+        "timestamp": 1765762734
+    },
+    "111 Meadow View Dr, Cleburne, TX 76033": {
+        "lat": 32.333200929607,
+        "lng": -97.425899914252,
+        "timestamp": 1765762734
+    },
+    "108 S. Anglin St, Cleburne, TX 76033": {
+        "lat": 32.347043794547,
+        "lng": -97.384859742917,
+        "timestamp": 1765762734
+    },
+    "5205 Heritage Avenue, Colleyville, TX 76034": {
+        "lat": 32.884612150316,
+        "lng": -97.105366382976,
+        "timestamp": 1765762735
+    },
+    "5300 Overton Ridge Blvd, Fort Worth, TX 76132": {
+        "lat": 32.676501147697,
+        "lng": -97.407618663291,
+        "timestamp": 1765762735
+    },
+    "851 State Hwy 121 Bypass, Lewisville, TX 75067": {
+        "lat": null,
+        "lng": null,
+        "timestamp": 1765762737
+    },
+    "2601 E. State Hwy 114, Southlake, TX 76092": {
+        "lat": null,
+        "lng": null,
+        "timestamp": 1765762740
+    },
+    "512 N Ridgeway Dr, Cleburne, TX 76033": {
+        "lat": 32.346397513474,
+        "lng": -97.412216869036,
+        "timestamp": 1765762740
+    },
+    "2021 Cross Timbers Rd, Flower Mound, TX 75028": {
+        "lat": 33.034212417977,
+        "lng": -97.059133457606,
+        "timestamp": 1765762740
+    },
+    "303 Washburn, Decatur, TX 76234": {
+        "lat": 33.232615915838,
+        "lng": -97.593755772517,
+        "timestamp": 1765762741
+    },
+    "5621 Bunker Blvd, Watauga, TX 76148": {
+        "lat": 32.870714666939,
+        "lng": -97.262073720817,
+        "timestamp": 1765762741
+    },
+    "2700 E Eldorado Pkwy, Suite 101, Little Elm, TX 75068": {
+        "lat": 33.1758928,
+        "lng": -96.8888472,
+        "timestamp": 1765762743
+    },
+    "12001 South Fwy, No. 200, Burleson, TX 76028": {
+        "lat": 32.584743026319,
+        "lng": -97.319012356382,
+        "timestamp": 1765762743
+    },
+    "610 NE Big Bend Trail, Glen Rose, TX 76043": {
+        "lat": 32.23431408666,
+        "lng": -97.766556716443,
+        "timestamp": 1765762743
+    },
+    "104 S. Washburn, Decatur, TX 76234": {
+        "lat": 33.234118622196,
+        "lng": -97.593755227234,
+        "timestamp": 1765762744
+    },
+    "2409 FM 423, Little Elm, TX 75068": {
+        "lat": 33.1820247,
+        "lng": -96.8872908,
+        "timestamp": 1765762745
+    },
+    "7201 Boat Club Road, Fort Worth, TX 76179": {
+        "lat": 32.866630193638,
+        "lng": -97.426130774427,
+        "timestamp": 1765762746
+    },
+    "201 N FM 1187, Aledo, TX 76008": {
+        "lat": 32.698420612615,
+        "lng": -97.603443901151,
+        "timestamp": 1765762746
+    },
+    "201 N Ector Dr, Euless, TX 76039": {
+        "lat": 32.838090724476,
+        "lng": -97.090810067104,
+        "timestamp": 1765762746
+    },
+    "1714 Precinct Line Road, Suite 700, Hurst, TX 76054": {
+        "lat": 32.845573897698,
+        "lng": -97.186109109795,
+        "timestamp": 1765762747
+    },
+    "4800 South Hulen Street, Suite 1520, Fort Worth, TX 76132": {
+        "lat": 32.677764995973,
+        "lng": -97.395432082284,
+        "timestamp": 1765762747
+    },
+    "8436 Denton Hwy 377, Suite 210, Watauga, TX 76148": {
+        "lat": 32.89308373462,
+        "lng": -97.258845283156,
+        "timestamp": 1765762748
+    },
+    "9549 Sage Meadow Trail, Fort Worth, TX 76177": {
+        "lat": 32.911349092497,
+        "lng": -97.31451954005,
+        "timestamp": 1765762748
+    },
+    "1101 Melbourne Rd, Suite 3091, Hurst, TX 76053": {
+        "lat": 32.828731110199,
+        "lng": -97.197324382005,
+        "timestamp": 1765762748
+    },
+    "3000 South Hulen Street, Suite 104, Fort Worth, TX 76109": {
+        "lat": 32.708448482444,
+        "lng": -97.387353358606,
+        "timestamp": 1765762749
+    },
+    "1247 Main Street, Southlake, TX 76092": {
+        "lat": 32.942538469638,
+        "lng": -97.132788183393,
+        "timestamp": 1765762749
+    },
+    "5755 Rufe Snow Drive, Suite 100, North Richland Hills, TX 76180": {
+        "lat": 32.852042072908,
+        "lng": -97.238698280894,
+        "timestamp": 1765762749
+    },
+    "556 W Bedford Euless Rd, Suite B, Hurst, TX 76053": {
+        "lat": 32.834022564736,
+        "lng": -97.178171084618,
+        "timestamp": 1765762750
+    },
+    "3105 Southlake Blvd, Southlake, TX 76092": {
+        "lat": 32.934203955506,
+        "lng": -97.200498601416,
+        "timestamp": 1765762750
+    },
+    "6000 Morriss Rd, Flower Mound, TX 75028": {
+        "lat": 33.0182646,
+        "lng": -97.0541373,
+        "timestamp": 1765762752
+    },
+    "1251 Valley Ridge Blvd, Lewisville, TX 75077": {
+        "lat": 33.057381234438,
+        "lng": -97.026696314827,
+        "timestamp": 1765762752
+    },
+    "2400 Airport Freeway, Suite 140, Bedford, TX 76022": {
+        "lat": 32.836487365098,
+        "lng": -97.130135883484,
+        "timestamp": 1765762753
+    },
+    "751 Mid-Cities Blvd, Hurst, TX 76054": {
+        "lat": 32.861930578467,
+        "lng": -97.184769516655,
+        "timestamp": 1765762753
+    },
+    "2301 Eldorado Pkwy, McKinney, TX 75070": {
+        "lat": 33.1709761,
+        "lng": -96.6466834,
+        "timestamp": 1765762755
+    },
+    "505 FM 1187 N, Aledo, TX 76008": {
+        "lat": 32.686350610615,
+        "lng": -97.598276464299,
+        "timestamp": 1765762755
+    },
+    "400 N. E. Big Bend Trail, Glen Rose, TX 76043": {
+        "lat": null,
+        "lng": null,
+        "timestamp": 1765762759
+    },
+    "104 S. Miller, Decatur, TX 76234": {
+        "lat": 33.233531693611,
+        "lng": -97.584656143988,
+        "timestamp": 1765762758
+    },
+    "899 NE Alsbury Blvd, Burleson, TX 76028": {
+        "lat": 32.563176621823,
+        "lng": -97.319953839145,
+        "timestamp": 1765762758
+    },
+    "1700 Rufe Snow Drive, Keller, TX 76248": {
+        "lat": 32.903860912001,
+        "lng": -97.236547505574,
+        "timestamp": 1765762758
+    },
+    "3851 Long Prairie Rd, Suite 100, Flower Mound, TX 75028": {
+        "lat": 33.037381424404,
+        "lng": -97.069692199315,
+        "timestamp": 1765762759
+    },
+    "1001 Cross Timbers Rd, Suite 1170, Flower Mound, TX 75028": {
+        "lat": 33.042255084026,
+        "lng": -97.041888151531,
+        "timestamp": 1765762759
+    },
+    "2701 W Windsor Dr, Flower Mound, TX 75028": {
+        "lat": 33.047392741601,
+        "lng": -97.072962591863,
+        "timestamp": 1765762759
+    },
+    "4718 Colleyville Blvd, Suite 100, Colleyville, TX 76034": {
+        "lat": 32.878445162203,
+        "lng": -97.15860666052,
+        "timestamp": 1765762760
+    },
+    "1021 Holden St, Glen Rose, TX 76043": {
+        "lat": 32.241183255625,
+        "lng": -97.747533344412,
+        "timestamp": 1765762760
+    },
+    "112 3rd St, Grandview, TX 76050": {
+        "lat": 32.271252286697,
+        "lng": -97.179308272646,
+        "timestamp": 1765762760
+    },
+    "209 Market St, Burleson, TX 76028": {
+        "lat": 32.537597576608,
+        "lng": -97.334204142344,
+        "timestamp": 1765762761
+    },
+    "1278 Justin Rd, Lewisville, TX 75077": {
+        "lat": 33.071259095482,
+        "lng": -97.026386201777,
+        "timestamp": 1765762761
+    },
+    "349 NW Renfro St, Burleson, TX 76028": {
+        "lat": 32.546699188025,
+        "lng": -97.329356768714,
+        "timestamp": 1765762762
+    },
+    "9151 Boulevard 26, Suite B-1B, North Richland Hills, TX 76180": {
+        "lat": 32.854005598889,
+        "lng": -97.188356773002,
+        "timestamp": 1765762762
+    },
+    "1000 Highland Village Rd, Highland Village, TX 75077": {
+        "lat": 33.086276482498,
+        "lng": -97.052254506928,
+        "timestamp": 1765762762
+    },
+    "901 Precinct Line Rd, Hurst, TX 76053": {
+        "lat": 32.82593286432,
+        "lng": -97.186504977638,
+        "timestamp": 1765762763
+    },
+    "2105 Harwood Rd, Suite 126, Bedford, TX 76021": {
+        "lat": 32.852183396763,
+        "lng": -97.134296700073,
+        "timestamp": 1765762763
+    },
+    "201 West Ellison St, Burleson, TX 76028": {
+        "lat": 32.541942107542,
+        "lng": -97.323109476036,
+        "timestamp": 1765762763
+    },
+    "200 N FM 1187, Aledo, TX 76008": {
+        "lat": 32.698398438689,
+        "lng": -97.603310303559,
+        "timestamp": 1765762764
+    },
+    "1101 Melbourne Rd, Suite 5000, Hurst, TX 76053": {
+        "lat": 32.828731110199,
+        "lng": -97.197324382005,
+        "timestamp": 1765762764
+    },
+    "2001 Cross Timbers Rd, Flower Mound, TX 75028": {
+        "lat": 33.03424166044,
+        "lng": -97.058828948479,
+        "timestamp": 1765762764
+    },
+    "2 N Mill St, Cleburne, TX 76033": {
+        "lat": 32.346675195673,
+        "lng": -97.387285735802,
+        "timestamp": 1765762764
+    },
+    "1004 Keller Pkwy, Suite 102, Keller, TX 76248": {
+        "lat": 32.934293956739,
+        "lng": -97.229138979509,
+        "timestamp": 1765762765
+    },
+    "601 S. Main Street, Suite 601, Keller, TX 76248": {
+        "lat": 32.928937191319,
+        "lng": -97.253840762682,
+        "timestamp": 1765762765
+    },
+    "2671 Little Elm Pkwy, Little Elm, TX 75068": {
+        "lat": 33.1706192,
+        "lng": -96.8913741,
+        "timestamp": 1765762768
+    },
+    "1025 Long Prairie Rd, Suite 100, Flower Mound, TX 75022": {
+        "lat": 32.998095800111,
+        "lng": -97.066184079582,
+        "timestamp": 1765762768
+    },
+    "1297 Justin Rd, Suite 310, Lewisville, TX 75077": {
+        "lat": 33.071529461679,
+        "lng": -97.026953973419,
+        "timestamp": 1765762769
+    },
+    "2401 S Stemmons Fwy, Suite 2000, Lewisville, TX 75067": {
+        "lat": 33.0014211,
+        "lng": -96.9706848,
+        "timestamp": 1765762771
+    },
+    "1197 W Main St, Lewisville, TX 75067": {
+        "lat": 33.042227486816,
+        "lng": -97.022048403999,
+        "timestamp": 1765762771
+    },
+    "1950 S Valley Pkwy, Lewisville, TX 75067": {
+        "lat": 33.01774614061,
+        "lng": -97.019286736366,
+        "timestamp": 1765762771
+    },
+    "801 W Main St, Lewisville, TX 75067": {
+        "lat": 33.045729661461,
+        "lng": -97.012187408333,
+        "timestamp": 1765762772
+    },
+    "205 S. Caddo St, Cleburne, TX 76031": {
+        "lat": 32.346169258033,
+        "lng": -97.385407051037,
+        "timestamp": 1765762772
+    },
+    "1200 East Eldorado Pkwy, Suite 100, Little Elm, TX 75068": {
+        "lat": 33.16880358476,
+        "lng": -96.918664675438,
+        "timestamp": 1765762772
+    },
+    "100 W Eldorado Pkwy, Little Elm, TX 75068": {
+        "lat": 33.158703624825,
+        "lng": -96.940541662609,
+        "timestamp": 1765762773
+    },
+    "800 W Eldorado Pkwy, Suite 100, Little Elm, TX 75068": {
+        "lat": 33.162114806503,
+        "lng": -96.935238038258,
+        "timestamp": 1765762773
+    },
+    "4088 E I-20 Service Rd, Willow Park, TX 76087": {
+        "lat": null,
+        "lng": null,
+        "timestamp": 1765762775
+    },
+    "3800 Long Prairie Rd, Flower Mound, TX 75028": {
+        "lat": 33.036915545426,
+        "lng": -97.069780390515,
+        "timestamp": 1765762775
+    },
+    "5605 Colleyville Blvd, Colleyville, TX 76034": {
+        "lat": 32.890599073439,
+        "lng": -97.148973305319,
+        "timestamp": 1765762776
+    },
+    "670 E. Southlake Blvd, Southlake, TX 76092": {
+        "lat": 32.941124451238,
+        "lng": -97.142420993897,
+        "timestamp": 1765762776
+    },
+    "6273 Granbury Road, Fort Worth, TX 76133": {
+        "lat": 32.656984995056,
+        "lng": -97.402369545085,
+        "timestamp": 1765762776
+    },
+    "302 Grapevine Hwy, Hurst, TX 76054": {
+        "lat": 32.8519467,
+        "lng": -97.190731,
+        "timestamp": 1765762778
+    },
+    "7668 Eldorado Pkwy, No. 100, McKinney, TX 75070": {
+        "lat": 33.174409422982,
+        "lng": -96.718000784361,
+        "timestamp": 1765762779
+    },
+    "2700 E Eldorado Pkwy, Suite 106, Little Elm, TX 75068": {
+        "lat": 33.1758928,
+        "lng": -96.8888472,
+        "timestamp": 1765762780
+    },
+    "605 N Maple Street, Muenster, TX 76252": {
+        "lat": 33.654714378792,
+        "lng": -97.379908105734,
+        "timestamp": 1765762781
+    },
+    "5832 Boat Club Dr, Fort Worth, TX 76135": {
+        "lat": 32.840134440408,
+        "lng": -97.425236986204,
+        "timestamp": 1765762781
+    },
+    "12457 Timberland Blvd, Suite 201, Keller, TX 76248": {
+        "lat": 32.953918617711,
+        "lng": -97.282365281843,
+        "timestamp": 1765762781
+    },
+    "8329 Whitley Rd, Watauga, TX 76148": {
+        "lat": 32.886881,
+        "lng": -97.254907,
+        "timestamp": 1765762785
+    },
+    "2410 S Stemmons Fwy, Suite E, Lewisville, TX 75067": {
+        "lat": 33.0062241,
+        "lng": -96.9721696,
+        "timestamp": 1765762787
+    },
+    "400 East Renfro St, Burleson, TX 76028": {
+        "lat": 32.547360354126,
+        "lng": -97.329933444662,
+        "timestamp": 1765762787
+    },
+    "110 W. University Dr, Denton, TX 76201": {
+        "lat": 33.2306909,
+        "lng": -97.1336446,
+        "timestamp": 1765762790
+    },
+    "1850 Lakepointe Dr, Suite 200, Lewisville, TX 75057": {
+        "lat": 33.017215468234,
+        "lng": -96.978577316929,
+        "timestamp": 1765762789
+    },
+    "101 River Oaks, Suite 100, Southlake, TX 76092": {
+        "lat": 32.935528944394,
+        "lng": -97.189658186607,
+        "timestamp": 1765762789
+    },
+    "3551 Justin Rd, Suite 150, Flower Mound, TX 75028": {
+        "lat": 33.071946667118,
+        "lng": -97.084604127146,
+        "timestamp": 1765762789
+    },
+    "860 Hebron Pkwy, Suite 102, Lewisville, TX 75057": {
+        "lat": 33.012718283409,
+        "lng": -96.96291339005,
+        "timestamp": 1765762789
+    },
+    "860 Hebron Pkwy, No. 103, Lewisville, TX 75057": {
+        "lat": 33.012718283409,
+        "lng": -96.96291339005,
+        "timestamp": 1765762790
+    },
+    "8222 Bedford-Euless Road, North Richland Hills, TX 76180": {
+        "lat": 32.834131870423,
+        "lng": -97.205059590906,
+        "timestamp": 1765762790
+    },
+    "2430 Justin Rd (FM 407), Highland Village, TX 75077": {
+        "lat": 33.073511367478,
+        "lng": -97.065057974508,
+        "timestamp": 1765762790
+    },
+    "2403 S Stemmons, Ste 113, Lewisville, TX 75067": {
+        "lat": 33.0057269,
+        "lng": -97.0193546,
+        "timestamp": 1765762794
+    },
+    "5860 N. Tarrant Parkway, Suite 108, Fort Worth, TX 76137": {
+        "lat": 32.89472676176,
+        "lng": -97.259913359793,
+        "timestamp": 1765762794
+    },
+    "502 S Old Orchard Ln, Suite 126, Lewisville, TX 75067": {
+        "lat": 33.039977458936,
+        "lng": -97.027484512903,
+        "timestamp": 1765762795
+    },
+    "651 NE Alsbury Blvd, Burleson, TX 76028": {
+        "lat": 32.561635793673,
+        "lng": -97.327568464237,
+        "timestamp": 1765762795
+    },
+    "1403 W Henderson St, Cleburne, TX 76033": {
+        "lat": 32.3407757,
+        "lng": -97.4065532,
+        "timestamp": 1765762797
+    },
+    "226 W Katherine P Raines Rd, Cleburne, TX 76033": {
+        "lat": 32.3828968,
+        "lng": -97.3968423,
+        "timestamp": 1765762799
+    },
+    "1650 N. Lake Forest Dr, No. 100, McKinney, TX 75071": {
+        "lat": 33.213604632642,
+        "lng": -96.679898569452,
+        "timestamp": 1765762799
+    },
+    "1100 N. I35 Frontage Rd, Sanger, TX 76266": {
+        "lat": null,
+        "lng": null,
+        "timestamp": 1765762802
+    },
+    "1014 N Nolan River Rd, Suite B, Cleburne, TX 76033": {
+        "lat": 32.352115532664,
+        "lng": -97.427016761373,
+        "timestamp": 1765762802
+    },
+    "1228 NW Highway 377, Roanoke, TX 76262": {
+        "lat": 33.01358457846,
+        "lng": -97.220135182953,
+        "timestamp": 1765762802
+    },
+    "201 Fairway Drive, Roanoke, TX 76262": {
+        "lat": 33.006625427508,
+        "lng": -97.232156306308,
+        "timestamp": 1765762803
+    },
+    "2833 Eldorado Pkwy, Frisco, TX 75033": {
+        "lat": 33.178080173221,
+        "lng": -96.864707011256,
+        "timestamp": 1765762803
+    },
+    "801 W Chapman Dr, Suite 100, Sanger, TX 76266": {
+        "lat": 33.366839377381,
+        "lng": -97.177036810685,
+        "timestamp": 1765762803
+    },
+    "111 S. Anglin St, Cleburne, TX 76031": {
+        "lat": 32.347032777903,
+        "lng": -97.384717228524,
+        "timestamp": 1765762804
+    },
+    "201 Golden Triangle Blvd, Keller, TX 76248": {
+        "lat": 32.9331707,
+        "lng": -97.2558662,
+        "timestamp": 1765762807
+    },
+    "751 W Main St, Lewisville, TX 75067": {
+        "lat": 33.046244642418,
+        "lng": -97.011183027486,
+        "timestamp": 1765762807
+    },
+    "501 N. Stemmons St, Sanger, TX 76266": {
+        "lat": 33.364224,
+        "lng": -97.1814727,
+        "timestamp": 1765762809
+    },
+    "410 Bolivar St, Sanger, TX 76266": {
+        "lat": 33.36218667865,
+        "lng": -97.172863436584,
+        "timestamp": 1765762810
+    },
+    "5615 Colleyville Blvd, Suite 460, Colleyville, TX 76034": {
+        "lat": 32.890752369092,
+        "lng": -97.148871108212,
+        "timestamp": 1765762812
+    },
+    "2301 Eldorado Pkwy, No. 500, McKinney, TX 75070": {
+        "lat": null,
+        "lng": null,
+        "timestamp": 1765762815
+    },
+    "209 SW Barnard, Glen Rose, TX 76043": {
+        "lat": 32.233893478081,
+        "lng": -97.755880119887,
+        "timestamp": 1765762815
+    },
+    "2405 FM 423, Little Elm, TX 75068": {
+        "lat": 33.1820247,
+        "lng": -96.8872908,
+        "timestamp": 1765762817
+    },
+    "510 E. Southlake Blvd, Suite 100, Southlake, TX 76092": {
+        "lat": 32.94110756851,
+        "lng": -97.144292359136,
+        "timestamp": 1765762817
+    },
+    "7728 Mid Cities Blvd, North Richland Hills, TX 76180": {
+        "lat": 32.8602447,
+        "lng": -97.2271291,
+        "timestamp": 1765762819
+    },
+    "2439 E. Hwy 67, Glen Rose, TX 76043": {
+        "lat": 32.217503466698,
+        "lng": -97.787686096034,
+        "timestamp": 1765762820
+    },
+    "3713 E Harwood Rd, Bedford, TX 76021": {
+        "lat": 32.852103558188,
+        "lng": -97.105536721968,
+        "timestamp": 1765762820
+    },
+    "401 W Garnett St, Gainesville, TX 76240": {
+        "lat": 33.620280416809,
+        "lng": -97.148036639051,
+        "timestamp": 1765762820
+    },
+    "1400 Precinct Line Road, Hurst, TX 76053": {
+        "lat": 32.836470564626,
+        "lng": -97.186230682609,
+        "timestamp": 1765762821
+    },
+    "1401 W Glade Rd, Euless, TX 76039": {
+        "lat": 32.8804275,
+        "lng": -97.105038,
+        "timestamp": 1765762823
+    },
+    "1872 Norwood Dr, Suite 200, Hurst, TX 76054": {
+        "lat": 32.849474210803,
+        "lng": -97.169521025141,
+        "timestamp": 1765762823
+    },
+    "1607 W Henderson St, Cleburne, TX 76033": {
+        "lat": 32.338577101963,
+        "lng": -97.41294596973,
+        "timestamp": 1765762824
+    },
+    "1124 W Main St, Lewisville, TX 75067": {
+        "lat": 33.041963782544,
+        "lng": -97.021546537206,
+        "timestamp": 1765762824
+    },
+    "5062 NE Mall Blvd, Hurst, TX 76053": {
+        "lat": 32.8287458,
+        "lng": -97.2039652,
+        "timestamp": 1765762826
+    },
+    "4709 TX-121, Suite 122, The Colony, TX 75056": {
+        "lat": 33.066599738136,
+        "lng": -96.888557012971,
+        "timestamp": 1765762826
+    },
+    "945 Melbourne Road, Hurst, TX 76053": {
+        "lat": 32.82580564836,
+        "lng": -97.198569107539,
+        "timestamp": 1765762827
+    },
+    "6114 Colleyville Blvd, Colleyville, TX 76034": {
+        "lat": 32.897478225415,
+        "lng": -97.144540701723,
+        "timestamp": 1765762827
+    },
+    "1629 Precinct Line Rd, Hurst, TX 76054": {
+        "lat": 32.843194062222,
+        "lng": -97.186271113259,
+        "timestamp": 1765762827
+    },
+    "1711 W Henderson St, Cleburne, TX 76033": {
+        "lat": 32.334272096602,
+        "lng": -97.424617917307,
+        "timestamp": 1765762828
+    },
+    "3309 N. Main, Cleburne, TX 76033": {
+        "lat": 32.410985998663,
+        "lng": -97.383620383213,
+        "timestamp": 1765762828
+    },
+    "1510 W Westhill Dr, Cleburne, TX 76033": {
+        "lat": 32.329473414267,
+        "lng": -97.414841101017,
+        "timestamp": 1765762828
+    },
+    "2300 Highland Rd, No. 200, Highland Village, TX 75077": {
+        "lat": 33.072490890965,
+        "lng": -97.057671538774,
+        "timestamp": 1765762829
+    },
+    "2250 Airport Freeway, Suite 310, Bedford, TX 76022": {
+        "lat": 32.836482208532,
+        "lng": -97.131618414581,
+        "timestamp": 1765762829
+    },
+    "5520 S. Cooper St, Suite 110, Arlington, TX 76005": {
+        "lat": 32.657021076365,
+        "lng": -97.134675335323,
+        "timestamp": 1765762829
+    },
+    "7604 Denton Highway, Suite 208, Watauga, TX 76148": {
+        "lat": 32.882229018426,
+        "lng": -97.26064719517,
+        "timestamp": 1765762830
+    },
+    "856 TX 114, Suite 100, Roanoke, TX 76262": {
+        "lat": 33.01044321045,
+        "lng": -97.234281905283,
+        "timestamp": 1765762830
+    },
+    "500 Flower Mound Rd, No. 108, Flower Mound, TX 75028": {
+        "lat": 33.009974220821,
+        "lng": -97.034255461822,
+        "timestamp": 1765762830
+    },
+    "1601 Village Pkwy, No. 160, Highland Village, TX 75077": {
+        "lat": null,
+        "lng": null,
+        "timestamp": 1765762833
+    },
+    "800 US 287, Decatur, TX 76234": {
+        "lat": 33.229161875608,
+        "lng": -97.578807124245,
+        "timestamp": 1765762834
+    },
+    "951 SW Wilshire Blvd, Burleson, TX 76028": {
+        "lat": 32.529320852529,
+        "lng": -97.339800022283,
+        "timestamp": 1765762834
+    },
+    "5709 Westcreek Drive, Fort Worth, TX 76133": {
+        "lat": 32.660782954588,
+        "lng": -97.361817885361,
+        "timestamp": 1765762834
+    },
+    "6404 McCart Avenue, Fort Worth, TX 76133": {
+        "lat": 32.651039967221,
+        "lng": -97.366380058247,
+        "timestamp": 1765762835
+    },
+    "201 Town Center Ln, Suite 1107, Keller, TX 76248": {
+        "lat": 32.932273505618,
+        "lng": -97.226986963729,
+        "timestamp": 1765762835
+    },
+    "5801 , Long Prairie Rd.,Suite 360, Flower Mound, TX 75028": {
+        "lat": 33.0635371,
+        "lng": -97.0819953,
+        "timestamp": 1765763114
+    },
+    "780 E. Rd., to Six Flags, Arlington, TX 76011": {
+        "lat": 32.75587706564,
+        "lng": -97.100504459088,
+        "timestamp": 1765763117
+    },
+    "Steven Bresnahan), 201 NW Renfro  St.,, Burleson, TX 76028": {
+        "lat": 32.544392282616,
+        "lng": -97.326646450272,
+        "timestamp": 1765763119
+    },
+    "851 State Hwy., 121 Bypass, Lewisville TX 75067": {
+        "lat": null,
+        "lng": null,
+        "timestamp": 1765763121
+    },
+    "Eyeglass Recycling Center, 5621 Bunker Blvd.,, Watauga TX 76148": {
+        "lat": 32.870714666939,
+        "lng": -97.262073720817,
+        "timestamp": 1765763126
+    },
+    "12001 S Freeway, No., 200, Burleson, TX 76028": {
+        "lat": null,
+        "lng": null,
+        "timestamp": 1765763128
+    },
+    "Ranch Vision Source, 7201 Boat Club Road,, Fort Worth TX 76179": {
+        "lat": 32.866630193638,
+        "lng": -97.426130774427,
+        "timestamp": 1765763131
+    },
+    "1640 W. Chapman Drive, No., 200, Sanger, TX 76266": {
+        "lat": 33.366910216638,
+        "lng": -97.18278828578,
+        "timestamp": 1765763133
+    },
+    "8436 Denton Hwy., 377, Suite 210, Towne Shopping Center, Watauga TX 76148": {
+        "lat": 32.89308373462,
+        "lng": -97.258845283156,
+        "timestamp": 1765763136
+    },
+    "3851 Long Prairie, No., 100, Flower Mound, TX 75028": {
+        "lat": 33.037381424404,
+        "lng": -97.069692199315,
+        "timestamp": 1765763141
+    },
+    "4718 Colleyville Blvd., Suite 100, Colleyville, TX 76034 ": {
+        "lat": 32.8762889,
+        "lng": -97.1609661,
+        "timestamp": 1765763142
+    },
+    "1021 , Holden St.,, Glen Rose TX 76043": {
+        "lat": 32.2422177,
+        "lng": -97.7462609,
+        "timestamp": 1765763144
+    },
+    "1004 Keller Pkwy , Suite 102, Keller, TX  76248": {
+        "lat": 32.9333527,
+        "lng": -97.2274136,
+        "timestamp": 1765763145
+    },
+    "1025 Long Prairie Rd., Suite 100, Flower Mound \nTX 75022": {
+        "lat": 32.9981923,
+        "lng": -97.0663514,
+        "timestamp": 1765763147
+    },
+    "5605 Colleyville Blvd., Colleyville, TX 76034 ": {
+        "lat": 32.8892842,
+        "lng": -97.1468567,
+        "timestamp": 1765763150
+    },
+    "7668 Eldorado Pkwy., No., 100": {
+        "lat": null,
+        "lng": null,
+        "timestamp": 1765763153
+    },
+    " 8329 Whitley Rd., Watauga, TX  76148": {
+        "lat": 32.886881,
+        "lng": -97.254907,
+        "timestamp": 1765763154
+    },
+    "860 Hebron Pkwy., No., 103, Lewisville, TX 75057": {
+        "lat": 33.012718283409,
+        "lng": -96.96291339005,
+        "timestamp": 1765763157
+    },
+    "2430 Justin Rd;, FM 407, Highland Village TX 75077": {
+        "lat": 33.073511367478,
+        "lng": -97.065057974508,
+        "timestamp": 1765763158
+    },
+    "2403 S Stemmons , Ste 113, Lewisville, TX, 75067": {
+        "lat": 33.0057269,
+        "lng": -97.0193546,
+        "timestamp": 1765763160
+    },
+    "Bank, 1403 W Henderson St,, Cleburne TX 76033": {
+        "lat": 32.3407757,
+        "lng": -97.4065532,
+        "timestamp": 1765763162
+    },
+    "1650 N. Lake Forest Dr., No., 100, McKinney, TX 75071": {
+        "lat": 33.213604632642,
+        "lng": -96.679898569452,
+        "timestamp": 1765763164
+    },
+    "2301 Eldorado Pkwy., No., 500, McKinney, TX 75070": {
+        "lat": null,
+        "lng": null,
+        "timestamp": 1765763170
+    },
+    "640 S Stemmons, No., 100, Sanger, TX 76266": {
+        "lat": null,
+        "lng": null,
+        "timestamp": 1765763174
+    },
+    "5611 Colleyville Blvd, Colleyville, TX 76034 ": {
+        "lat": 32.8905008,
+        "lng": -97.1464013,
+        "timestamp": 1765764083
+    },
+    "6114 Colleyville \nBlvd, Colleyville TX 76034": {
+        "lat": 32.8977361,
+        "lng": -97.1443983,
+        "timestamp": 1765763178
+    },
+    "2300 Highland Rd., No., 200, Highland Village, TX 75077": {
+        "lat": 33.072490890965,
+        "lng": -97.057671538774,
+        "timestamp": 1765763180
+    },
+    "312 East Renfro, No., 107, Burleson, TX 76028": {
+        "lat": 32.543433408286,
+        "lng": -97.315735824074,
+        "timestamp": 1765763183
+    },
+    "500 Flower Mound Rd., No., 108, Flower Mound, TX 75028": {
+        "lat": 33.009974220821,
+        "lng": -97.034255461822,
+        "timestamp": 1765763186
+    },
+    "1601 Village Pkwy., No. 160, Highland Village, TX 75077 ": {
+        "lat": null,
+        "lng": null,
+        "timestamp": 1765764120
+    },
+    "130 NW John Jones, No., 216, Burleson, TX 76028": {
+        "lat": 32.521907413913,
+        "lng": -97.349527459069,
+        "timestamp": 1765763189
+    },
+    "1221 FM 1187, Crowley, TX 76036 ": {
+        "lat": 32.5770382,
+        "lng": -97.3389968,
+        "timestamp": 1765764134
+    },
+    "201 Town Center Ln. , Suite 1107, Keller, TX 76248": {
+        "lat": 32.933479,
+        "lng": -97.226968,
+        "timestamp": 1765764139
+    },
+    "7668 Eldorado Pkwy., No. 100": {
+        "lat": 33.1743403,
+        "lng": -96.7608781,
+        "timestamp": 1765763966
+    }
+}

@@ -37,25 +37,7 @@ function getCoordinates($address) {
     $cleanAddr = cleanAddress($address);
     $encodedAddr = urlencode($cleanAddr);
     
-    // 1. Try US Census API
-    $url = "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address={$encodedAddr}&benchmark=Public_AR_Current&format=json";
-    
-    // Reduced timeout to 2 seconds to prevent long hangs
-    $ctx = stream_context_create(['http' => ['timeout' => 2]]);
-    $response = @file_get_contents($url, false, $ctx);
-    
-    if ($response) {
-        $data = json_decode($response, true);
-        if (!empty($data['result']['addressMatches'])) {
-            $match = $data['result']['addressMatches'][0];
-            return [
-                'lat' => $match['coordinates']['y'],
-                'lng' => $match['coordinates']['x']
-            ];
-        }
-    }
-
-    // 2. Fallback to Nominatim (OpenStreetMap)
+    // 1. Try Nominatim (OpenStreetMap)
     // Sleep to respect rate limits (1 second)
     sleep(1);
     $url = "https://nominatim.openstreetmap.org/search?format=json&q={$encodedAddr}&limit=1";
@@ -73,6 +55,24 @@ function getCoordinates($address) {
             return [
                 'lat' => floatval($data[0]['lat']),
                 'lng' => floatval($data[0]['lon'])
+            ];
+        }
+    }
+
+    // 2. Fallback to US Census API
+    $url = "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address={$encodedAddr}&benchmark=Public_AR_Current&format=json";
+    
+    // Reduced timeout to 5 seconds to prevent long hangs
+    $ctx = stream_context_create(['http' => ['timeout' => 5]]);
+    $response = @file_get_contents($url, false, $ctx);
+    
+    if ($response) {
+        $data = json_decode($response, true);
+        if (!empty($data['result']['addressMatches'])) {
+            $match = $data['result']['addressMatches'][0];
+            return [
+                'lat' => $match['coordinates']['y'],
+                'lng' => $match['coordinates']['x']
             ];
         }
     }
