@@ -1,6 +1,6 @@
 <?php
 // Simple password protection
-$password = "lions2025"; // CHANGE THIS
+$password = "Lions@2025"; // CHANGE THIS
 if (!isset($_SERVER['PHP_AUTH_USER']) || $_SERVER['PHP_AUTH_USER'] != 'admin' || $_SERVER['PHP_AUTH_PW'] != $password) {
     header('WWW-Authenticate: Basic realm="Admin Area"');
     header('HTTP/1.0 401 Unauthorized');
