@@ -59,7 +59,7 @@ if (empty($name) || empty($email) || empty($message) || !filter_var($email, FILT
 }
 
 // Prepare Content
-$email_subject = "Message from $name: $subject_raw";
+$email_subject = "$subject_raw: $name";
 $current_date = date('F j, Y \a\t g:i A');
 
 $html_body = "
@@ -91,37 +91,18 @@ $error = null;
 try {
     $mail = new SimpleSMTP($SMTP_HOST, $SMTP_PORT, $SMTP_USER, $SMTP_PASS);
     
-    // Send to Admin
+    // Send to Admin with CC to User
     $mail->send(
         $SMTP_USER,         // From
-        $TO_EMAIL,          // To
+        $TO_EMAIL,          // To (Admin)
         $email_subject,     // Subject
         $html_body,         // Body
-        $name,              // From Name (optional context)
-        $email              // Reply-To
+        "Lions 2-E2 ERC",   // From Name
+        $email,             // Reply-To (User's email)
+        $email              // CC (User's email) -> ADDED THIS
     );
     
-    // Send Confirmation to User
-    $confirm_subject = "We received your message - Lions District 2-E2 ERC";
-    $confirm_body = "
-    <html>
-    <body style='font-family: Arial, sans-serif;'>
-        <p>Hi " . htmlspecialchars($name) . ",</p>
-        <p>Thank you for contacting us regarding '<strong>" . htmlspecialchars($subject_raw) . "</strong>'.</p>
-        <p>We have received your message and will respond shortly.</p>
-        <br>
-        <p>Best regards,<br>
-        <strong>Lions District 2-E2 Eyeglass Recycling Center</strong></p>
-    </body>
-    </html>
-    ";
-    
-    // Attempt confirmation (don't fail main flow if this fails)
-    try {
-        $mail->send($SMTP_USER, $email, $confirm_subject, $confirm_body, "Lions 2-E2 ERC");
-    } catch (Exception $e) {
-        error_log("Confirmation email failed: " . $e->getMessage());
-    }
+    // (Separate confirmation email block removed)
 
     header("Location: index.html?status=success#contact");
     exit;
@@ -157,7 +138,7 @@ class SimpleSMTP {
         $this->pass = $pass;
     }
 
-    public function send($from, $to, $subject, $html_body, $from_name = '', $reply_to = '') {
+    public function send($from, $to, $subject, $html_body, $from_name = '', $reply_to = '', $cc = '') {
         $scheme = ($this->port == 465) ? 'ssl://' : ''; // Helper for implicit SSL
         $connect_host = $scheme . $this->host;
 
@@ -191,7 +172,14 @@ class SimpleSMTP {
 
         // Mail Transaction
         $this->cmd("MAIL FROM: <$this->user>");
+        
+        // Recipient: TO
         $this->cmd("RCPT TO: <$to>");
+        // Recipient: CC
+        if (!empty($cc)) {
+            $this->cmd("RCPT TO: <$cc>");
+        }
+
         $this->cmd("DATA");
 
         // Headers
@@ -202,6 +190,9 @@ class SimpleSMTP {
         $headers[] = "Subject: $subject";
         $headers[] = "From: " . ($from_name ? "$from_name <$from>" : $from);
         $headers[] = "To: $to";
+        if (!empty($cc)) {
+            $headers[] = "Cc: $cc";
+        }
         if ($reply_to) {
             $headers[] = "Reply-To: $reply_to";
         }
