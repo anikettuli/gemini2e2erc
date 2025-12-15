@@ -149,10 +149,47 @@ class ThemeManager {
     }
 }
 
+class GalleryManager {
+    constructor() {
+        this.galleryTrack = document.querySelector('.gallery-track');
+        this.init();
+    }
+
+    async init() {
+        if (!this.galleryTrack) return;
+
+        try {
+            const response = await fetch('get-gallery-images.php');
+            const images = await response.json();
+            this.renderGallery(images);
+        } catch (error) {
+            console.error('Error loading gallery images:', error);
+        }
+    }
+
+    renderGallery(images) {
+        this.galleryTrack.innerHTML = ''; // Clear existing content
+        
+        if (images.length === 0) {
+            this.galleryTrack.innerHTML = '<p>No images found.</p>';
+            return;
+        }
+
+        images.forEach(imagePath => {
+            const img = document.createElement('img');
+            img.src = imagePath;
+            img.alt = 'Gallery Image';
+            img.loading = 'lazy'; // Good for performance
+            this.galleryTrack.appendChild(img);
+        });
+    }
+}
+
 // Initialize app when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     new Router();
     new ThemeManager();
+    new GalleryManager();
 
     // Check for email status from PHP redirection
     const urlParams = new URLSearchParams(window.location.search);
