@@ -53,14 +53,14 @@ if (empty($name) || empty($email) || empty($message)) {
     error_log("[send-email.php] Missing required fields - name: " . (empty($name) ? 'EMPTY' : 'OK') . 
               ", email: " . (empty($email) ? 'EMPTY' : 'OK') . 
               ", message: " . (empty($message) ? 'EMPTY' : 'OK'));
-    header("Location: index.html?status=error&reason=missing_fields");
+    header("Location: index.html?status=error&reason=missing_fields#contact");
     exit;
 }
 
 // Validate email format
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     error_log("[send-email.php] Invalid email format: $email");
-    header("Location: index.html?status=error&reason=invalid_email");
+    header("Location: index.html?status=error&reason=invalid_email#contact");
     exit;
 }
 
@@ -85,9 +85,15 @@ $smtp_pass = $_ENV['SMTP_PASS'] ?? '';
 $email_subject = "New Contact Form Submission from $name";
 $current_date = date('F j, Y \a\t g:i A');
 
+// Escape HTML entities in user input
+$safe_name = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
+$safe_email = htmlspecialchars($email, ENT_QUOTES, 'UTF-8');
+$safe_phone = htmlspecialchars($phone, ENT_QUOTES, 'UTF-8');
+$safe_subject = htmlspecialchars($subject, ENT_QUOTES, 'UTF-8');
+$safe_message = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
+
 // HTML email body
-$html_body = <<<HTML
-<!DOCTYPE html>
+$html_body = '<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -102,7 +108,7 @@ $html_body = <<<HTML
                     <tr>
                         <td style="background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%); padding: 30px; text-align: center;">
                             <h1 style="color: #ffffff; margin: 0; font-size: 24px;">📬 New Contact Form Submission</h1>
-                            <p style="color: #a8c5e2; margin: 10px 0 0 0; font-size: 14px;">$current_date</p>
+                            <p style="color: #a8c5e2; margin: 10px 0 0 0; font-size: 14px;">' . $current_date . '</p>
                         </td>
                     </tr>
                     
@@ -118,35 +124,29 @@ $html_body = <<<HTML
                                         <table width="100%" cellspacing="0" cellpadding="8">
                                             <tr>
                                                 <td width="100" style="color: #666; font-weight: bold; vertical-align: top;">👤 Name:</td>
-                                                <td style="color: #333;">$name</td>
+                                                <td style="color: #333;">' . $safe_name . '</td>
                                             </tr>
                                             <tr>
                                                 <td style="color: #666; font-weight: bold; vertical-align: top;">📧 Email:</td>
-                                                <td style="color: #333;"><a href="mailto:$email" style="color: #2d5a87;">$email</a></td>
-                                            </tr>
-HTML;
+                                                <td style="color: #333;"><a href="mailto:' . $safe_email . '" style="color: #2d5a87;">' . $safe_email . '</a></td>
+                                            </tr>';
 
 if (!empty($phone)) {
-    $html_body .= <<<HTML
+    $html_body .= '
                                             <tr>
                                                 <td style="color: #666; font-weight: bold; vertical-align: top;">📞 Phone:</td>
-                                                <td style="color: #333;"><a href="tel:$phone" style="color: #2d5a87;">$phone</a></td>
-                                            </tr>
-HTML;
+                                                <td style="color: #333;"><a href="tel:' . $safe_phone . '" style="color: #2d5a87;">' . $safe_phone . '</a></td>
+                                            </tr>';
 }
 
-$html_body .= <<<HTML
+$html_body .= '
                                             <tr>
                                                 <td style="color: #666; font-weight: bold; vertical-align: top;">📋 Subject:</td>
-                                                <td style="color: #333;">$subject</td>
+                                                <td style="color: #333;">' . $safe_subject . '</td>
                                             </tr>
                                             <tr>
                                                 <td style="color: #666; font-weight: bold; vertical-align: top;">📰 Newsletter:</td>
-                                                <td style="color: #333;">
-HTML;
-$html_body .= $subscribe ? '<span style="color: #28a745;">✓ Yes, subscribed</span>' : '<span style="color: #6c757d;">Not subscribed</span>';
-$html_body .= <<<HTML
-                                                </td>
+                                                <td style="color: #333;">' . ($subscribe ? '<span style="color: #28a745;">✓ Yes, subscribed</span>' : '<span style="color: #6c757d;">Not subscribed</span>') . '</td>
                                             </tr>
                                         </table>
                                     </td>
@@ -158,7 +158,7 @@ $html_body .= <<<HTML
                                 <tr>
                                     <td style="padding: 20px;">
                                         <h2 style="color: #1e3a5f; margin: 0 0 15px 0; font-size: 18px;">💬 Message</h2>
-                                        <p style="color: #333; line-height: 1.6; margin: 0; white-space: pre-wrap;">$message</p>
+                                        <p style="color: #333; line-height: 1.6; margin: 0; white-space: pre-wrap;">' . $safe_message . '</p>
                                     </td>
                                 </tr>
                             </table>
@@ -182,8 +182,7 @@ $html_body .= <<<HTML
         </tr>
     </table>
 </body>
-</html>
-HTML;
+</html>';
 
 // Plain text version for email clients that don't support HTML
 $plain_body = "NEW CONTACT FORM SUBMISSION\n";
@@ -211,39 +210,35 @@ $plain_body .= "https://www.2e2erc.org\n";
 // =============================================================================
 
 // Check for PHPMailer in various locations
-$phpmailer_paths = [
-    __DIR__ . '/vendor/phpmailer/phpmailer/src/PHPMailer.php',
+$phpmailer_loaded = false;
+
+$autoload_paths = [
     __DIR__ . '/vendor/autoload.php',
     __DIR__ . '/../vendor/autoload.php'
 ];
 
-$phpmailer_available = false;
-foreach ($phpmailer_paths as $path) {
-    if (file_exists($path)) {
-        require_once $path;
-        if (strpos($path, 'autoload.php') !== false) {
-            // Composer autoload
-            $phpmailer_available = class_exists('PHPMailer\PHPMailer\PHPMailer');
-        } else {
-            // Direct include - need to load all files
-            $smtp_path = __DIR__ . '/vendor/phpmailer/phpmailer/src/SMTP.php';
-            $exception_path = __DIR__ . '/vendor/phpmailer/phpmailer/src/Exception.php';
-            if (file_exists($smtp_path)) require_once $smtp_path;
-            if (file_exists($exception_path)) require_once $exception_path;
-            $phpmailer_available = class_exists('PHPMailer\PHPMailer\PHPMailer');
-        }
+foreach ($autoload_paths as $autoload) {
+    if (file_exists($autoload)) {
+        require_once $autoload;
+        $phpmailer_loaded = class_exists('PHPMailer\PHPMailer\PHPMailer');
         break;
     }
 }
 
-if ($phpmailer_available) {
-    // Use PHPMailer for reliable SMTP delivery
-    use PHPMailer\PHPMailer\PHPMailer;
-    use PHPMailer\PHPMailer\SMTP;
-    use PHPMailer\PHPMailer\Exception;
-    
+// Try direct include if autoload didn't work
+if (!$phpmailer_loaded) {
+    $phpmailer_src = __DIR__ . '/vendor/phpmailer/phpmailer/src/PHPMailer.php';
+    if (file_exists($phpmailer_src)) {
+        require_once $phpmailer_src;
+        require_once __DIR__ . '/vendor/phpmailer/phpmailer/src/SMTP.php';
+        require_once __DIR__ . '/vendor/phpmailer/phpmailer/src/Exception.php';
+        $phpmailer_loaded = class_exists('PHPMailer\PHPMailer\PHPMailer');
+    }
+}
+
+if ($phpmailer_loaded) {
     try {
-        $mail = new PHPMailer(true);
+        $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
         
         // SMTP Configuration
         $mail->isSMTP();
@@ -255,16 +250,10 @@ if ($phpmailer_available) {
         
         // Set encryption based on port
         if (intval($smtp_port) === 465) {
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS;
         } elseif (intval($smtp_port) === 587) {
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
         }
-        
-        // Enable debug output for logging (not displayed)
-        $mail->SMTPDebug = 0; // Set to 2 for verbose debugging in logs
-        $mail->Debugoutput = function($str, $level) {
-            error_log("[PHPMailer Debug] $str");
-        };
         
         // Email addresses
         $mail->setFrom($from_email, $from_name);
@@ -282,14 +271,71 @@ if ($phpmailer_available) {
         $mail->send();
         
         // Send confirmation email to the submitter
-        sendConfirmationEmail($smtp_host, $smtp_port, $smtp_user, $smtp_pass, $from_email, $from_name, $email, $name, $subject);
+        try {
+            $confirm_mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+            $confirm_mail->isSMTP();
+            $confirm_mail->Host = $smtp_host;
+            $confirm_mail->SMTPAuth = true;
+            $confirm_mail->Username = $smtp_user;
+            $confirm_mail->Password = $smtp_pass;
+            $confirm_mail->Port = intval($smtp_port);
+            
+            if (intval($smtp_port) === 465) {
+                $confirm_mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS;
+            } elseif (intval($smtp_port) === 587) {
+                $confirm_mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+            }
+            
+            $confirm_mail->setFrom($from_email, $from_name);
+            $confirm_mail->addAddress($email, $name);
+            $confirm_mail->isHTML(true);
+            $confirm_mail->Subject = "We received your message - Lions District 2-E2 ERC";
+            $confirm_mail->CharSet = 'UTF-8';
+            
+            $confirm_mail->Body = '<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"></head>
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+    <table width="600" cellspacing="0" cellpadding="0" style="background: #fff; border-radius: 8px; margin: 0 auto; overflow: hidden;">
+        <tr>
+            <td style="background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%); padding: 30px; text-align: center;">
+                <h1 style="color: #fff; margin: 0;">Thank You, ' . $safe_name . '! 🦁</h1>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 30px;">
+                <p style="color: #333; font-size: 16px; line-height: 1.6;">
+                    We\'ve received your message regarding "<strong>' . $safe_subject . '</strong>" and will respond within 24-48 hours.
+                </p>
+                <p style="color: #333; font-size: 16px; line-height: 1.6;">
+                    Thank you for reaching out to the Lions District 2-E2 Eyeglass Recycling Center!
+                </p>
+                <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
+                <p style="color: #666; font-size: 14px;">
+                    <strong>Lions District 2-E2 ERC</strong><br>
+                    5621 Bunker Blvd, Watauga, TX 76148<br>
+                    P.O. Box 1854, Keller, TX 76244
+                </p>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>';
+            
+            $confirm_mail->AltBody = "Hi $name,\n\nThank you for reaching out! We've received your message regarding \"$subject\" and will respond within 24-48 hours.\n\nBest regards,\nLions District 2-E2 Eyeglass Recycling Center\n5621 Bunker Blvd, Watauga, TX 76148";
+            
+            $confirm_mail->send();
+        } catch (\Exception $e) {
+            // Confirmation email failed, but main email was sent - continue
+            error_log("[send-email.php] Confirmation email failed: " . $e->getMessage());
+        }
         
         error_log("[send-email.php] Email sent successfully via PHPMailer to $to_email with CC to $email");
         header("Location: index.html?status=success#contact");
         exit;
         
-    } catch (Exception $e) {
-        error_log("[send-email.php] PHPMailer error: " . $mail->ErrorInfo);
+    } catch (\Exception $e) {
+        error_log("[send-email.php] PHPMailer error: " . $e->getMessage());
         // Fall through to native mail() as backup
     }
 }
@@ -302,14 +348,13 @@ if ($phpmailer_available) {
 $boundary = md5(uniqid(time()));
 
 // Build headers
-$headers = [];
+$headers = array();
 $headers[] = "From: $from_name <$from_email>";
 $headers[] = "Reply-To: $name <$email>";
 $headers[] = "CC: $email";
 $headers[] = "MIME-Version: 1.0";
 $headers[] = "Content-Type: multipart/alternative; boundary=\"$boundary\"";
 $headers[] = "X-Mailer: PHP/" . phpversion();
-$headers[] = "X-Priority: 1";
 
 $headers_string = implode("\r\n", $headers);
 
@@ -326,8 +371,7 @@ $email_content .= $html_body . "\r\n\r\n";
 $email_content .= "--$boundary--";
 
 // Send the email using PHP's mail() function
-// The -f parameter sets the envelope sender for better deliverability
-$mail_sent = mail($to_email, $email_subject, $email_content, $headers_string, "-f$from_email");
+$mail_sent = @mail($to_email, $email_subject, $email_content, $headers_string, "-f$from_email");
 
 if ($mail_sent) {
     error_log("[send-email.php] Email sent successfully via mail() to $to_email with CC to $email");
@@ -335,79 +379,7 @@ if ($mail_sent) {
 } else {
     $last_error = error_get_last();
     error_log("[send-email.php] mail() failed. Error: " . json_encode($last_error));
-    header("Location: index.html?status=error&reason=mail_failed");
+    header("Location: index.html?status=error&reason=mail_failed#contact");
 }
 exit;
-
-// =============================================================================
-// HELPER FUNCTION: Send confirmation email to submitter
-// =============================================================================
-
-function sendConfirmationEmail($smtp_host, $smtp_port, $smtp_user, $smtp_pass, $from_email, $from_name, $to_email, $to_name, $subject) {
-    if (!class_exists('PHPMailer\PHPMailer\PHPMailer')) return;
-    
-    use PHPMailer\PHPMailer\PHPMailer;
-    
-    try {
-        $mail = new PHPMailer(true);
-        $mail->isSMTP();
-        $mail->Host = $smtp_host;
-        $mail->SMTPAuth = true;
-        $mail->Username = $smtp_user;
-        $mail->Password = $smtp_pass;
-        $mail->Port = intval($smtp_port);
-        
-        if (intval($smtp_port) === 465) {
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-        } elseif (intval($smtp_port) === 587) {
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        }
-        
-        $mail->setFrom($from_email, $from_name);
-        $mail->addAddress($to_email, $to_name);
-        
-        $mail->isHTML(true);
-        $mail->Subject = "We received your message - Lions District 2-E2 ERC";
-        $mail->CharSet = 'UTF-8';
-        
-        $mail->Body = <<<HTML
-<!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8"></head>
-<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
-    <table width="600" cellspacing="0" cellpadding="0" style="background: #fff; border-radius: 8px; margin: 0 auto; overflow: hidden;">
-        <tr>
-            <td style="background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%); padding: 30px; text-align: center;">
-                <h1 style="color: #fff; margin: 0;">Thank You, $to_name! 🦁</h1>
-            </td>
-        </tr>
-        <tr>
-            <td style="padding: 30px;">
-                <p style="color: #333; font-size: 16px; line-height: 1.6;">
-                    We've received your message regarding "<strong>$subject</strong>" and will respond within 24-48 hours.
-                </p>
-                <p style="color: #333; font-size: 16px; line-height: 1.6;">
-                    Thank you for reaching out to the Lions District 2-E2 Eyeglass Recycling Center!
-                </p>
-                <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
-                <p style="color: #666; font-size: 14px;">
-                    <strong>Lions District 2-E2 ERC</strong><br>
-                    5621 Bunker Blvd, Watauga, TX 76148<br>
-                    P.O. Box 1854, Keller, TX 76244
-                </p>
-            </td>
-        </tr>
-    </table>
-</body>
-</html>
-HTML;
-        
-        $mail->AltBody = "Hi $to_name,\n\nThank you for reaching out! We've received your message regarding \"$subject\" and will respond within 24-48 hours.\n\nBest regards,\nLions District 2-E2 Eyeglass Recycling Center\n5621 Bunker Blvd, Watauga, TX 76148";
-        
-        $mail->send();
-        error_log("[send-email.php] Confirmation email sent to $to_email");
-    } catch (Exception $e) {
-        error_log("[send-email.php] Confirmation email failed: " . $e->getMessage());
-    }
-}
 ?>
