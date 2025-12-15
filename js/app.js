@@ -182,6 +182,67 @@ class GalleryManager {
             img.loading = 'lazy'; // Good for performance
             this.galleryTrack.appendChild(img);
         });
+
+        // After rendering images, initialize auto-scroll and arrows
+        this.setupGalleryControls();
+    }
+
+    setupGalleryControls() {
+        const container = this.galleryTrack.parentElement;
+        if (!container) return;
+
+        // Buttons
+        const leftBtn = container.querySelector('.gallery-arrow.left');
+        const rightBtn = container.querySelector('.gallery-arrow.right');
+
+        // Clear any existing timer
+        this.stopAutoScroll();
+
+        // Start auto-scroll slowly
+        this.autoScrollStep = 1; // pixels per tick
+        this.autoScrollIntervalMs = 30; // ms between ticks
+        this.startAutoScroll();
+
+        // Pause on hover or touch
+        container.addEventListener('mouseenter', () => this.stopAutoScroll());
+        container.addEventListener('mouseleave', () => this.startAutoScroll());
+        container.addEventListener('touchstart', () => this.stopAutoScroll());
+        container.addEventListener('touchend', () => this.startAutoScroll());
+
+        // Arrow controls
+        if (leftBtn) {
+            leftBtn.addEventListener('click', () => {
+                container.scrollBy({ left: -Math.round(container.clientWidth * 0.75), behavior: 'smooth' });
+            });
+        }
+        if (rightBtn) {
+            rightBtn.addEventListener('click', () => {
+                container.scrollBy({ left: Math.round(container.clientWidth * 0.75), behavior: 'smooth' });
+            });
+        }
+    }
+
+    startAutoScroll() {
+        const container = this.galleryTrack.parentElement;
+        if (!container) return;
+        if (this._autoScrollTimer) return; // already running
+
+        this._autoScrollTimer = setInterval(() => {
+            const maxScrollLeft = container.scrollWidth - container.clientWidth;
+            if (container.scrollLeft >= maxScrollLeft - 1) {
+                // smooth reset to start
+                container.scrollTo({ left: 0, behavior: 'smooth' });
+            } else {
+                container.scrollBy({ left: this.autoScrollStep, behavior: 'smooth' });
+            }
+        }, this.autoScrollIntervalMs);
+    }
+
+    stopAutoScroll() {
+        if (this._autoScrollTimer) {
+            clearInterval(this._autoScrollTimer);
+            this._autoScrollTimer = null;
+        }
     }
 }
 

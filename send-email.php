@@ -1,16 +1,43 @@
 <?php
 require_once 'config.php';
 
-// Load environment variables from .env file
-$env_file = __DIR__ . '/.env';
-if (file_exists($env_file)) {
+// Import PHPMailer classes at file scope
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+// Load environment variables from .env file (check current and parent dirs)
+$env_locations = [__DIR__ . '/.env', __DIR__ . '/../.env', __DIR__ . '/../../.env'];
+$env_file = null;
+foreach ($env_locations as $candidate) {
+    if (file_exists($candidate)) {
+        $env_file = $candidate;
+        break;
+    }
+}
+if ($env_file) {
     $lines = file($env_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     foreach ($lines as $line) {
-        if (strpos($line, '=') !== false && strpos($line, '#') !== 0) {
+        if (strpos($line, '=') !== false && strpos(trim($line), '#') !== 0) {
             list($key, $value) = explode('=', $line, 2);
             $_ENV[trim($key)] = trim($value);
         }
     }
+}
+
+// Debug flag
+$DEBUG = (isset($_ENV['DEBUG']) && trim($_ENV['DEBUG']) === '1') || (getenv('DEBUG') === '1');
+// Always keep display_errors off so the user sees normal behavior; enable full reporting to logs
+ini_set('display_errors', '0');
+ini_set('display_startup_errors', '0');
+error_reporting(E_ALL);
+
+// If Composer autoload is available, require it (helps PHPMailer availability)
+$composerAutoload = __DIR__ . '/vendor/autoload.php';
+if (!file_exists($composerAutoload)) {
+    $composerAutoload = __DIR__ . '/../vendor/autoload.php';
+}
+if (file_exists($composerAutoload)) {
+    require_once $composerAutoload;
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -24,6 +51,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // 2. Validate inputs
     if (!$name || !$email || !$message) {
+        if ($DEBUG) {
+            $err = "Missing required fields: name/email/message";
+            echo "<!doctype html><meta charset=\"utf-8\"><title>Error</title><script>alert(" . json_encode($err) . ");</script>";
+            exit;
+        }
         header("Location: index.html?status=error");
         exit;
     }
@@ -50,7 +82,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email_body .= "$message\n";
 
     // 5. Check if PHPMailer is available
-    if (!class_exists('PHPMailer\PHPMailer\PHPMailer')) {
+    if (!class_exists('PHPMailer\\PHPMailer\\PHPMailer')) {
         // Fallback to basic mail() if PHPMailer not available
         $headers = "From: $email\r\n";
         $headers .= "Reply-To: $email\r\n";
@@ -58,14 +90,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (mail($to_email, "New Contact Message from $name", $email_body, $headers)) {
             header("Location: index.html?status=success");
         } else {
+            if ($DEBUG) {
+                $err = "mail() failed when trying fallback delivery";
+                echo "<!doctype html><meta charset=\"utf-8\"><title>Error</title><script>alert(" . json_encode($err) . ");</script>";
+                exit;
+            }
             header("Location: index.html?status=error");
         }
         exit;
     }
 
     // 6. Use PHPMailer for Gmail SMTP
-    use PHPMailer\PHPMailer\PHPMailer;
-    use PHPMailer\PHPMailer\Exception;
 
     try {
         $mail = new PHPMailer(true);
@@ -117,7 +152,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             header("Location: index.html?status=error");
         }
-    } catch (Exception $e) {
+    } catch (\Exception $e) {
+        if ($DEBUG) {
+            $msg = $e->getMessage();
+            $trace = $e->getTraceAsString();
+            $html = "<!doctype html><meta charset=\"utf-8\"><title>Send Email Error</title>";
+            $html .= "<style>body{font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial;margin:2rem;} .error{background:#fff2f2;border:1px solid #f5c2c2;padding:1rem;border-radius:6px;} pre{white-space:pre-wrap;background:#f7f7f7;padding:8px;border-radius:4px;}</style>";
+            $html .= "<div class=\"error\"><h2>send-email.php Exception</h2><p>Message: " . htmlspecialchars($msg) . "</p>";
+            $html .= "<h3>Trace</h3><pre>" . htmlspecialchars($trace) . "</pre></div>";
+            // Also provide a small JS popup for visibility
+            $html .= "<script>setTimeout(()=>{alert('Send Email Error: ' + " . json_encode(substr($msg,0,200)) . ");},50);</script>";
+            echo $html;
+            exit;
+        }
         header("Location: index.html?status=error");
     }
 } else {

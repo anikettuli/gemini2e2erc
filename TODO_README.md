@@ -27,10 +27,12 @@ The following files are referenced or needed by the website but might be missing
     - Action: Change headers. Add new directors names with E2ERC logo (placeholder).
     - Note: Barb to send list of names and pictures. Pics to be added later.
 
-- [ ] **3. 2nd Saturday Event Logo**
+- [x] **3. 2nd Saturday Event Logo**
+    - Status: Completed. `images/events/second-saturday-session.jpg` is in place.
     - Requirement: Use specific logo for the 2nd Saturday event.
 
-- [ ] **4. Robson Ranch Events**
+- [x] **4. Robson Ranch Events**
+    - Status: Photo added and referenced in `data/events.json` (`images/events/robson-ranch-lions.jpg`). More events can be added when details are provided.
     - Requirement: Add more events.
     - Note: Barb to send details. Only dates change. (Marked as "Later").
 
@@ -51,3 +53,6 @@ The following files are referenced or needed by the website but might be missing
 - **Deployment**: Configured to reset geo-cache on every deploy to ensure map data stays fresh.
 - **Forms**: Streamlined forms section. Removed unused PDFs and redirected Collection Box requests to the contact form.
 - **Locations**: Standardized phone number formatting in `locations.json`.
+- **Gallery**: Added slow auto-scroll and overlay left/right arrows to the gallery carousel (`js/app.js`, `css/styles.css`, `index.html`).
+- **Events**: Moved Robson Ranch photo to `images/events/robson-ranch-lions.jpg` and updated `data/events.json` to reference it.
+- **Email**: Improved `send-email.php` to discover `.env` from parent dirs, require Composer autoload when present, and show detailed debug info only on failure when `DEBUG=1`.
