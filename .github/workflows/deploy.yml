@@ -22,6 +22,9 @@ jobs:
           -not -path "./.git/*" \
           -exec sh -c 'cwebp -q 90 -m 6 "$1" -o "${1%.*}.webp"' _ {} \;
       
+      - name: Warm Up Geolocation Cache
+        run: php tools/warm-cache.php
+      
       - name: Sync files
         uses: SamKirkland/FTP-Deploy-Action@v4.3.6
         with:
