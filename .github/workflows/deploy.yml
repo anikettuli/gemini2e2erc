@@ -13,6 +13,15 @@ jobs:
       - name: Get latest code
         uses: actions/checkout@v4
       
+      - name: Optimize & Convert Images to WebP
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y webp
+          # Find all JPG/PNGs and create a .webp version next to them
+          find . -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) \
+          -not -path "./.git/*" \
+          -exec sh -c 'cwebp -q 90 -m 6 "$1" -o "${1%.*}.webp"' _ {} \;
+      
       - name: Sync files
         uses: SamKirkland/FTP-Deploy-Action@v4.3.6
         with:

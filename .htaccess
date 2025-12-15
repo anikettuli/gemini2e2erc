@@ -1,3 +1,21 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Check if browser supports WebP
+  RewriteCond %{HTTP_ACCEPT} image/webp
+
+  # Check if the .webp version actually exists on the server
+  RewriteCond %{DOCUMENT_ROOT}/$1.webp -f
+
+  # If both true, silently serve the WebP file instead of the JPG/PNG
+  RewriteRule ^(.+)\.(jpe?g|png)$ $1.webp [T=image/webp,E=accept:1]
+</IfModule>
+
+<IfModule mod_headers.c>
+  # Tell caches that this URL serves different content based on browser support
+  Header append Vary Accept env=REDIRECT_accept
+</IfModule>
+
 RewriteEngine On
 
 # Force HTTPS
