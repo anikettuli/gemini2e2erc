@@ -212,12 +212,17 @@ class GalleryManager {
         // Arrow controls
         if (leftBtn) {
             leftBtn.addEventListener('click', () => {
+                this.stopAutoScroll();
                 container.scrollBy({ left: -Math.round(container.clientWidth * 0.75), behavior: 'smooth' });
+                // Restart auto-scroll after short delay
+                setTimeout(() => this.startAutoScroll(), 3000);
             });
         }
         if (rightBtn) {
             rightBtn.addEventListener('click', () => {
+                this.stopAutoScroll();
                 container.scrollBy({ left: Math.round(container.clientWidth * 0.75), behavior: 'smooth' });
+                setTimeout(() => this.startAutoScroll(), 3000);
             });
         }
     }
@@ -227,13 +232,17 @@ class GalleryManager {
         if (!container) return;
         if (this._autoScrollTimer) return; // already running
 
+        // Only start when content overflows
+        if (container.scrollWidth <= container.clientWidth) return;
+
         this._autoScrollTimer = setInterval(() => {
             const maxScrollLeft = container.scrollWidth - container.clientWidth;
-            if (container.scrollLeft >= maxScrollLeft - 1) {
-                // smooth reset to start
-                container.scrollTo({ left: 0, behavior: 'smooth' });
+            // Use instant increments to avoid fighting the browser's smooth scroll
+            if (container.scrollLeft + this.autoScrollStep >= maxScrollLeft - 1) {
+                // reset to start
+                container.scrollLeft = 0;
             } else {
-                container.scrollBy({ left: this.autoScrollStep, behavior: 'smooth' });
+                container.scrollLeft += this.autoScrollStep;
             }
         }, this.autoScrollIntervalMs);
     }
