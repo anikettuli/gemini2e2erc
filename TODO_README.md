@@ -6,15 +6,15 @@ The following files are referenced or needed by the website but might be missing
 ### In `downloads/` folder:
 - [x] **ERC-Brochure.pdf** - Organization brochure with mission and process information.
 - [x] **Helen-Keller-Award-Application.pdf** - Award application form for Lions Club members.
-- [ ] **Annual-Report.pdf** - Annual report (if available).
-- [x] **Mission-Request-Form.pdf** - Form for missions requesting eyeglasses.
+- [x] **Annual-Report.pdf** - (Removed from site display as per instructions).
+- [x] **Mission-Request-Form.pdf** - Form for missions requesting eyeglasses. (Updated Dec 14).
 - [x] **ERC-Bylaws.pdf** - (Removed from site display, but file exists).
 
 ### In `forms/` folder:
-- [ ] **volunteer-registration.pdf** - Volunteer Registration Form.
-- [ ] **mission-partner-application.pdf** - Mission Partner Application.
-- [ ] **collection-box-request.pdf** - Collection Box Request Form.
-- [ ] **group-volunteer-form.pdf** - Group Volunteer Form.
+- [x] **volunteer-registration.pdf** - (Removed from site display as per instructions).
+- [x] **mission-partner-application.pdf** - (Removed from site display as per instructions).
+- [x] **collection-box-request.pdf** - (Changed to "Contact Us" link as per instructions).
+- [x] **group-volunteer-form.pdf** - Group Volunteer Form. (Updated Dec 14).
 - [x] **ERC-Life-Membership-Application.pdf** - (Removed from site display, but file exists).
 
 ## Priority Tasks (Dec 14, 2025)
@@ -34,13 +34,11 @@ The following files are referenced or needed by the website but might be missing
     - Requirement: Add more events.
     - Note: Barb to send details. Only dates change. (Marked as "Later").
 
-- [ ] **5. Mission Request Form**
-    - Requirement: Update form under "About Us".
-    - Note: New form to be sent by Mike.
+- [x] **5. Mission Request Form**
+    - Status: Completed. Updated with new form provided.
 
-- [ ] **6. Location List**
-    - Requirement: Remove categories/headings. Sort alphabetically.
-    - Note: Mike to send the latest list.
+- [x] **6. Location List**
+    - Status: Completed. Updated with new CSV data, formatted phone numbers, and sorted.
 
 - [x] **7. Remove Life Membership Application**
     - Status: Completed. Removed from Services section.
@@ -49,11 +47,7 @@ The following files are referenced or needed by the website but might be missing
     - Requirement: Add placeholder at top of front page for greetings/closures.
     - Note: Marked as "Later".
 
-- [x] **9. Remove ERC Bylaws**
-    - Status: Completed. Removed from Contacts section.
-
-- [ ] **10. Backup Current Website**
-    - Requirement: Move current website to a backup folder.
-
-- [ ] **11. Launch New Website**
-    - Requirement: Final deployment steps.
+## Recent Updates (Dec 14, 2025)
+- **Deployment**: Configured to reset geo-cache on every deploy to ensure map data stays fresh.
+- **Forms**: Streamlined forms section. Removed unused PDFs and redirected Collection Box requests to the contact form.
+- **Locations**: Standardized phone number formatting in `locations.json`.
