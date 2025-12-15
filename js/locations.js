@@ -93,8 +93,13 @@ async function initializeMap() {
       // but if it's an image, we might want a different one. 
       // For now keeping same marker as it is likely high contrast).
 
+      const directionsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc.address)}`;
       const popup = new maplibregl.Popup({ offset: 25 })
-        .setHTML(`<div style="font-weight: bold; color: #0fbe7c;">${loc.name}</div><div style="font-size: 0.9em; color: #333;">${loc.address}</div>`);
+        .setHTML(`
+          <div style="font-weight: bold; color: #0fbe7c; margin-bottom: 5px;">${loc.name}</div>
+          <div style="font-size: 0.9em; color: #333; margin-bottom: 8px;">${loc.address}</div>
+          <a href="${directionsLink}" target="_blank" style="display: inline-block; background-color: #0fbe7c; color: white; padding: 5px 10px; border-radius: 4px; text-decoration: none; font-size: 0.85em; transition: background-color 0.2s;">Get Directions</a>
+        `);
       // Force dark text in popup as map styles might affect it, or ensure popup css is robust.
 
       new maplibregl.Marker(el)
