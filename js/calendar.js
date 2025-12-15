@@ -12,6 +12,7 @@ class EventCalendar {
         this.renderCalendar();
         this.renderUpcomingEvents();
         this.addEventListeners();
+        this.autoSelectNextEvent();
     }
 
     setCurrentMonthToNextEvent() {
@@ -54,6 +55,12 @@ class EventCalendar {
             if (dayCell && !dayCell.classList.contains('other-month')) {
                 const date = dayCell.dataset.date;
                 if (date) {
+                    // Remove selected class from all day cells
+                    document.querySelectorAll('.calendar-day.selected').forEach(cell => {
+                        cell.classList.remove('selected');
+                    });
+                    // Add selected class to clicked cell
+                    dayCell.classList.add('selected');
                     this.showDayEvents(date);
                 }
             }
@@ -292,6 +299,27 @@ class EventCalendar {
         const date = new Date(dateString + 'T00:00:00');
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         return date.toLocaleDateString('en-US', options);
+    }
+
+    autoSelectNextEvent() {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        // Find the first event that is today or in the future
+        const nextEvent = this.events.find(event => {
+            const eventDate = new Date(event.date);
+            return eventDate >= today;
+        });
+        
+        // If there's an upcoming event, automatically display it
+        if (nextEvent) {
+            this.showDayEvents(nextEvent.date);
+            // Highlight the day in the calendar
+            const dayCell = document.querySelector(`[data-date="${nextEvent.date}"]`);
+            if (dayCell) {
+                dayCell.classList.add('selected');
+            }
+        }
     }
 }
 

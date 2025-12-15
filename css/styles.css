@@ -1620,8 +1620,8 @@ input[type="text"],
         }
 
         .calendar-day.today {
-            background: var(--primary-light);
-            color: white;
+            background: var(--light-grey);
+            color: var(--text-dark);
             font-weight: bold;
         }
 
@@ -1633,6 +1633,17 @@ input[type="text"],
 
         .calendar-day.has-event:hover {
             background: var(--primary-dark);
+        }
+
+        .calendar-day.selected {
+            background: var(--secondary-color);
+            color: var(--primary-dark);
+            font-weight: bold;
+            border: 2px solid var(--primary-color);
+        }
+
+        .calendar-day.selected:hover {
+            background: var(--secondary-dark);
         }
 
         .day-number {
