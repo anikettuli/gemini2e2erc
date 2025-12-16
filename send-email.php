@@ -7,6 +7,9 @@
  * This solves issues where mail() is blocked or works silently.
  */
 
+// Set timezone to Central Time (Keller, TX)
+date_default_timezone_set('America/Chicago');
+
 // Load Configuration
 require_once 'config.php'; // Defines $GLOBAL_EMAIL
 

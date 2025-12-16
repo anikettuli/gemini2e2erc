@@ -835,11 +835,11 @@ input[type="text"],
 
         /* ============ FOOTER ============ */
         footer {
-            background: var(--black);
+            background: #1a1a1a;
             color: #ffffff;
             padding: 1rem 2rem 0.5rem;
             margin-top: 1.5rem;
-            border-top: 4px solid var(--primary-color);
+            border-top: 4px solid #004990;
         }
 
         .footer-content {
@@ -863,7 +863,7 @@ input[type="text"],
         }
 
         .footer-section h3 {
-            color: var(--primary-color);
+            color: #3d8fcf;
             margin-bottom: 1rem;
             font-size: 1.1rem;
         }
@@ -876,23 +876,27 @@ input[type="text"],
             transition: color 0.3s;
         }
 
-        .footer-section a:hover {
-            color: var(--primary-color);
+        .footer-section strong {
+            color: #FDB913;
         }
 
-        /* Phone and email link styling */
-        a[href^="tel:"],
-        a[href^="mailto:"] {
-            color: var(--primary-color);
+        .footer-section a:hover {
+            color: #3d8fcf;
+        }
+
+        /* Phone and email link styling in footer */
+        footer a[href^="tel:"],
+        footer a[href^="mailto:"] {
+            color: #3d8fcf;
             text-decoration: none;
             border-bottom: 1px solid transparent;
             transition: all 0.3s;
             font-weight: 500;
         }
 
-        a[href^="tel:"]:hover,
-        a[href^="mailto:"]:hover {
-            border-bottom-color: var(--primary-color);
+        footer a[href^="tel:"]:hover,
+        footer a[href^="mailto:"]:hover {
+            border-bottom-color: #3d8fcf;
             opacity: 0.8;
         }
 
@@ -904,6 +908,22 @@ input[type="text"],
             font-size: 0.9rem;
             max-width: 1200px;
             margin: 0 auto;
+        }
+
+        /* Phone and email link styling for main content */
+        main a[href^="tel:"],
+        main a[href^="mailto:"] {
+            color: var(--primary-light);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        main a[href^="tel:"]:hover,
+        main a[href^="mailto:"]:hover {
+            border-bottom-color: var(--primary-light);
+            opacity: 0.8;
         }
 
         /* ============ UTILITY CLASSES ============ */

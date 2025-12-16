@@ -49,10 +49,41 @@ The following files are referenced or needed by the website but might be missing
     - Requirement: Add placeholder at top of front page for greetings/closures.
     - Note: Marked as "Later".
 
-## Recent Updates (Dec 14, 2025)
-- **Deployment**: Configured to reset geo-cache on every deploy to ensure map data stays fresh.
-- **Forms**: Streamlined forms section. Removed unused PDFs and redirected Collection Box requests to the contact form.
-- **Locations**: Standardized phone number formatting in `locations.json`.
-- **Gallery**: Added slow auto-scroll and overlay left/right arrows to the gallery carousel (`js/app.js`, `css/styles.css`, `index.html`).
-- **Events**: Moved Robson Ranch photo to `images/events/robson-ranch-lions.jpg` and updated `data/events.json` to reference it.
-- **Email**: Improved `send-email.php` to discover `.env` from parent dirs, require Composer autoload when present, and show detailed debug info only on failure when `DEBUG=1`.
+## Priority Tasks (Dec 15, 2025)
+
+- [x] **1. Calendar Update: Colleyville Lions Club**
+    - Status: Completed. Date changed to Jan 31.
+
+- [x] **2. Logo Update: Colleyville Lions Club**
+    - Status: Completed. Updated with `colleyville-erc-2024.jpg`.
+
+- [x] **3. Contact Us: Collection Boxes Option**
+    - Status: Completed. Added "Need Collection Boxes" to Subject dropdown.
+
+- [x] **4. Locations Page Layout**
+    - Status: Completed. Map moved above "Partner Drop-Off Locations".
+
+- [x] **5. Footer Styling**
+    - Status: Completed. Titles and labels updated for better visibility in light/dark modes.
+
+- [x] **6. Email Timezone Fix**
+    - Status: Completed. Fixed timezone to Central Time in `send-email.php`.
+
+- [ ] **7. Locations Page - Zip Code Search**
+    - Requirement: Implement a search feature to filter locations by zip code.
+    - Status: To Do.
+
+- [ ] **8. Move Hours & Info to Home Page**
+    - Requirement: Move "Hours & Information" section to top of Home page (For Barb's review).
+    - Status: To Do.
+
+- [ ] **9. Board of Directors Sections**
+    - Requirement: Split into ‘Current Board of Directors’ and ‘Previous Board Members’.
+    - Action: Change headers. Add new directors names with E2ERC logo (placeholder).
+    - Note: Barb to send list of names and pictures. Pics to be added later.
+
+## Recent Updates (Dec 15, 2025)
+- **Visuals**: Updated Colleyville Lions event logo. Improved Admin View styling.
+- **Layout**: Reorganized Locations page.
+- **Functionality**: Added robust email sending with correct timezones.
+- **Styling**: enhanced footer visibility and consistency across themes.

@@ -1,786 +1,858 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="description" content="We collect, process, and distribute recycled eyeglasses to those in need around the world. Join us in giving the gift of sight.">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description"
+    content="We collect, process, and distribute recycled eyeglasses to those in need around the world. Join us in giving the gift of sight.">
 
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://www.2e2erc.org/">
-    <meta property="og:title" content="Lions District 2-E2 Eyeglass Recycling Center">
-    <meta property="og:description" content="Giving the gift of sight through recycled eyeglasses. Volunteer or donate today.">
-    <meta property="og:image" content="https://www.2e2erc.org/images/our-story-group.png">
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.2e2erc.org/">
+  <meta property="og:title" content="Lions District 2-E2 Eyeglass Recycling Center">
+  <meta property="og:description"
+    content="Giving the gift of sight through recycled eyeglasses. Volunteer or donate today.">
+  <meta property="og:image" content="https://www.2e2erc.org/images/our-story-group.png">
 
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://www.2e2erc.org/">
-    <meta property="twitter:title" content="Lions District 2-E2 ERC">
-    <meta property="twitter:description" content="Giving the gift of sight through recycled eyeglasses.">
-    <meta property="twitter:image" content="https://www.2e2erc.org/images/our-story-group.png">
-    <meta name="theme-color" content="#004990">
-    <title>Lions District 2-E2 Eyeglass Recycling Center</title>
-    <link rel="icon" type="image/png" href="e2e2rc_LOGO.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@4.0.0/dist/maplibre-gl.css" />
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://www.2e2erc.org/">
+  <meta property="twitter:title" content="Lions District 2-E2 ERC">
+  <meta property="twitter:description" content="Giving the gift of sight through recycled eyeglasses.">
+  <meta property="twitter:image" content="https://www.2e2erc.org/images/our-story-group.png">
+  <meta name="theme-color" content="#004990">
+  <title>Lions District 2-E2 Eyeglass Recycling Center</title>
+  <link rel="icon" type="image/png" href="e2e2rc_LOGO.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@4.0.0/dist/maplibre-gl.css" />
 
 </head>
+
 <body>
-    <!-- HEADER WITH NAVIGATION -->
-    <header class="tab-container">
-        <div class="header-container">
-            <div class="logo-section">
-                <div class="logo">
-                    <img src="e2e2rc_LOGO.png" alt="District 2-E2 ERC Logo" style="width: 100%; height: 100%; object-fit: contain;">
-                </div>
-                <div class="site-info">
-                    <h1>Lions District 2-E2 ERC</h1>
-                    <p>Eyeglass Recycling Center</p>
-                </div>
-            </div>
-            
-            <!-- Mobile Menu Bar -->
-            <div class="mobile-menu-bar">
-                <button class="mobile-menu-trigger" id="mobileMenuTrigger" aria-label="Toggle navigation menu">
-                    <span class="current-page-name">Home</span>
-                    <span class="dropdown-arrow">▼</span>
-                </button>
-                <button class="theme-toggle" id="themeToggle" title="Toggle dark mode" aria-label="Toggle dark mode">
-                    <span id="themeIcon">☀️</span>
-                </button>
-            </div>
-
-            <!-- Mobile Navigation Dropdown -->
-            <nav class="mobile-nav" id="mobileNav">
-                <button class="tab-button active"  data-tab="home">Home</button>
-                <button class="tab-button"  data-tab="about">About Us</button>
-                <button class="tab-button"  data-tab="services">Services</button>
-                <button class="tab-button"  data-tab="get-involved">Get Involved</button>
-                <button class="tab-button"  data-tab="locations">Locations</button>
-                <button class="tab-button"  data-tab="contact">Contact Us</button>
-            </nav>
-
-            <!-- Desktop Tab Navigation -->
-            <nav class="tab-nav">
-                <button class="tab-button active"  data-tab="home">Home</button>
-                <button class="tab-button"  data-tab="about">About Us</button>
-                <button class="tab-button"  data-tab="services">Services</button>
-                <button class="tab-button"  data-tab="get-involved">Get Involved</button>
-                <button class="tab-button"  data-tab="locations">Locations</button>
-                <button class="tab-button"  data-tab="contact">Contact Us</button>
-            </nav>
-            <button class="theme-toggle desktop-only" id="themeToggleDesktop" title="Toggle dark mode" aria-label="Toggle dark mode">
-                <span id="themeIconDesktop">☀️</span>
-            </button>
+  <!-- HEADER WITH NAVIGATION -->
+  <header class="tab-container">
+    <div class="header-container">
+      <div class="logo-section">
+        <div class="logo">
+          <img src="e2e2rc_LOGO.png" alt="District 2-E2 ERC Logo"
+            style="width: 100%; height: 100%; object-fit: contain;">
         </div>
-    </header>
-
-    <!-- MAIN CONTENT -->
-    <main>
-        <!-- HOME TAB -->
-        <div id="home" class="tab-content active">
-            <div class="hero">
-                <h2>👓 Lions District 2-E2 Eyeglass Recycling Center</h2>
-                <p>Giving sight to those in need around the world through eyeglass recycling and reuse.</p>
-                <button class="cta-button js-tab-trigger" data-tab="get-involved">Get Involved Today →</button>
-            </div>
-
-            <section>
-                <h2>The Need for Clear Vision</h2>
-                <p>According to the World Health Organization, at least <strong>2.2 billion people globally</strong> have a near or distance vision impairment. Of these, at least <strong>1 billion cases</strong> have not yet been addressed.</p>
-                <p>It costs less than <strong>10¢ US</strong> to provide a pair of recycled eyeglasses and change someone's life.</p>
-            </section>
-
-            <section>
-                <h2>The Impact of Your Donation</h2>
-                <p>When you donate glasses, you change someone's life. Clear vision provides critical opportunities and improves quality of life.</p>
-                <div class="grid">
-                    <div class="card">
-                        <h3>👧 For Children</h3>
-                        <p>It means a better education, healthier development, and an improved quality of life.</p>
-                    </div>
-                    <div class="card">
-                        <h3>💼 For Adults</h3>
-                        <p>It provides greater employment opportunities and economic strength.</p>
-                    </div>
-                    <div class="card">
-                        <h3>👴 For Seniors</h3>
-                        <p>It gives them less dependence on others and helps them maintain their independence.</p>
-                    </div>
-                    <div class="card">
-                        <h3>🌍 For Communities</h3>
-                        <p>It provides more opportunities to grow and thrive.</p>
-                    </div>
-                </div>
-            </section>
-
-            <section>
-                <h2>Our Mission & Global Reach</h2>
-                <div class="grey-panel">
-                    <p style="font-size: 1.1rem;"><strong>Our Mission:</strong> The District 2-E2 Eyeglass Recycling Center will provide eyeglasses, when available and without cost, to those missions who have a method of determining the refractive status of the eye.</p>
-                    <p style="margin-top: 1rem;">Our recycled glasses are available for Humanitarian and Medical Missions around the world.</p>
-                </div>
-            </section>
-
-            <section>
-                <h2>Our Impact by the Numbers</h2>
-                <div class="stats-grid">
-                    <div class="stat-box">
-                        <div class="number">17,000+</div>
-                        <div class="label">Pairs in 2023-2024</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="number">40+</div>
-                        <div class="label">Countries Served</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="number">100%</div>
-                        <div class="label">All Volunteer</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="number">501(c)(3)</div>
-                        <div class="label">Nonprofit Status</div>
-                    </div>
-                </div>
-                <p style="text-align: center; margin-top: 1rem; font-size: 1.05rem;">In 2023-2024, we supplied over <strong>17,000 pairs</strong> of eyeglasses for foreign missions—our largest quantity ever.</p>
-            </section>
-
-            <section>
-                <h2>Our 4-Step Recycling Process</h2>
-                <p>We have a dedicated process to ensure used eyeglasses are ready for a new owner.</p>
-                <div class="grid">
-                    <div class="card">
-                        <h3>Step 1: Sorting</h3>
-                        <p>Eyeglasses are sorted into categories, such as non-prescription, nearsightedness (minus), farsightedness (plus), bifocal, trifocal, progressive, and prism.</p>
-                    </div>
-                    <div class="card">
-                        <h3>Step 2: Washing & Drying</h3>
-                        <p>Glasses are thoroughly cleaned and sanitized to ensure they're ready for their new owner.</p>
-                    </div>
-                    <div class="card">
-                        <h3>Step 3: Measuring the Prescription</h3>
-                        <p>We use specialized equipment to determine the exact prescription of each lens.</p>
-                    </div>
-                    <div class="card">
-                        <h3>Step 4: Final Sorting & Storage</h3>
-                        <p>The processed glasses are sorted one last time and stored, ready for distribution.</p>
-                    </div>
-                </div>
-            </section>
-
-            <section>
-                <h2>Countries We Have Served</h2>
-                <div class="grid">
-                    <div class="grey-box">
-                        <h4>🌎 The Americas</h4>
-                        <p>Belize, Bolivia, Brazil, Colombia, Costa Rica, Cuba, Dominican Republic, Ecuador, El Salvador, Guatemala, Haiti, Honduras, Mexico, Nicaragua, Panama, Paraguay, Peru, and Venezuela.</p>
-                    </div>
-                    <div class="grey-box">
-                        <h4>🌍 Africa</h4>
-                        <p>Cameroon, Ethiopia, Ghana, Kenya, Malawi, Nigeria, South Africa, Tanzania, Uganda, and Zambia.</p>
-                    </div>
-                    <div class="grey-box">
-                        <h4>🌏 Asia</h4>
-                        <p>Bangladesh, Cambodia, Nepal, Philippines, and Vietnam.</p>
-                    </div>
-                    <div class="grey-box">
-                        <h4>🇪🇺 Europe</h4>
-                        <p>Moldova, Poland, Romania, and Ukraine.</p>
-                    </div>
-                </div>
-            </section>
-
-            <section>
-                <h2>💬 Testimonials from Our Mission Partners</h2>
-                <p>Hear from the organizations and individuals whose work is made possible through recycled eyeglasses.</p>
-
-                <div id="testimonials-container">
-                    <!-- Testimonials will be loaded here dynamically -->
-                    <div style="text-align: center; padding: 2rem;">Loading testimonials...</div>
-                </div>
-
-                <div class="grey-panel" style="margin-top: 2rem;">
-                    <h3>Become a Mission Partner</h3>
-                    <p>If your organization conducts eye clinics or vision missions and would like to partner with us, please contact us at <a href="#" class="global-email-link show-text"></a> or call <a href="#" class="global-phone-link show-text"></a>.</p>
-                </div>
-            </section>
+        <div class="site-info">
+          <h1>Lions District 2-E2 ERC</h1>
+          <p>Eyeglass Recycling Center</p>
         </div>
+      </div>
 
-        <!-- ABOUT TAB -->
-        <div id="about" class="tab-content">
-            <div class="hero">
-                <h2>About Lions District 2-E2 ERC</h2>
-                <p>A community-driven organization dedicated to recycling eyeglasses and serving global mission partners.</p>
-            </div>
+      <!-- Mobile Menu Bar -->
+      <div class="mobile-menu-bar">
+        <button class="mobile-menu-trigger" id="mobileMenuTrigger" aria-label="Toggle navigation menu">
+          <span class="current-page-name">Home</span>
+          <span class="dropdown-arrow">▼</span>
+        </button>
+        <button class="theme-toggle" id="themeToggle" title="Toggle dark mode" aria-label="Toggle dark mode">
+          <span id="themeIcon">☀️</span>
+        </button>
+      </div>
 
-            <section>
-                <h2>Our Story</h2>
-                <div class="two-column">
-                    <div>
-                        <p>District 2-E2 Eyeglass Recycling Center was founded in 2013 and officially recognized in 2014 as a 501(c)(3) nonprofit organization. We were created with a simple vision: to ensure that no one should go without proper vision care due to cost or access limitations.</p>
-                        <p>What started as a small group of passionate volunteers has grown into a thriving organization that serves mission partners across 20+ countries. Every single member of our team is a volunteer, dedicated to making a global impact.</p>
-                    </div>
-                    <div class="image-placeholder">
-                        <!-- Replace placeholder with actual photo: <img src="images/organization-photo.jpg" alt="Organization"> -->
-                        <img src="images/our-story-group.png" alt="Organization">
-                    </div>
-                </div>
-            </section>
+      <!-- Mobile Navigation Dropdown -->
+      <nav class="mobile-nav" id="mobileNav">
+        <button class="tab-button active" data-tab="home">Home</button>
+        <button class="tab-button" data-tab="about">About Us</button>
+        <button class="tab-button" data-tab="services">Services</button>
+        <button class="tab-button" data-tab="get-involved">Get Involved</button>
+        <button class="tab-button" data-tab="locations">Locations</button>
+        <button class="tab-button" data-tab="contact">Contact Us</button>
+      </nav>
 
-            <section>
-                <h2>Impact by the Numbers</h2>
-                <div class="grid">
-                    <div class="card">
-                        <h3>Global Reach</h3>
-                        <p>We serve mission partners in Mexico, Guatemala, Ethiopia, Uganda, Ghana, Vietnam, Dominican Republic, Haiti, Romania, Fiji, Philippines, and many more.</p>
-                    </div>
-                    <div class="card">
-                        <h3>All Volunteer</h3>
-                        <p>100% of our team members volunteer their time. No paid staff. Everyone is committed to our mission because they believe in it.</p>
-                    </div>
-                    <div class="card">
-                        <h3>Nonprofit Status</h3>
-                        <p>We're officially recognized as a 501(c)(3) nonprofit, ensuring transparency and accountability.</p>
-                    </div>
-                </div>
-            </section>
+      <!-- Desktop Tab Navigation -->
+      <nav class="tab-nav">
+        <button class="tab-button active" data-tab="home">Home</button>
+        <button class="tab-button" data-tab="about">About Us</button>
+        <button class="tab-button" data-tab="services">Services</button>
+        <button class="tab-button" data-tab="get-involved">Get Involved</button>
+        <button class="tab-button" data-tab="locations">Locations</button>
+        <button class="tab-button" data-tab="contact">Contact Us</button>
+      </nav>
+      <button class="theme-toggle desktop-only" id="themeToggleDesktop" title="Toggle dark mode"
+        aria-label="Toggle dark mode">
+        <span id="themeIconDesktop">☀️</span>
+      </button>
+    </div>
+  </header>
 
-            <section>
-                <h2>Our Values</h2>
-                <ul class="list-style" style="font-size: 1.05rem;">
-                    <li><strong>Integrity:</strong> We operate with honesty and transparency in all activities</li>
-                    <li><strong>Compassion:</strong> We care deeply about improving lives globally</li>
-                    <li><strong>Sustainability:</strong> We reduce waste and promote environmental responsibility</li>
-                    <li><strong>Community:</strong> We believe in the power of volunteers working together</li>
-                    <li><strong>Excellence:</strong> We maintain high quality standards in everything we do</li>
-                </ul>
-            </section>
+  <!-- MAIN CONTENT -->
+  <main>
+    <!-- HOME TAB -->
+    <div id="home" class="tab-content active">
+      <div class="hero">
+        <h2>👓 Lions District 2-E2 Eyeglass Recycling Center</h2>
+        <p>Giving sight to those in need around the world through eyeglass recycling and reuse.</p>
+        <button class="cta-button js-tab-trigger" data-tab="get-involved">Get Involved Today →</button>
+      </div>
 
-            <section>
-                <h2>Previous Board Members</h2>
-                <p>Our dedicated leadership team ensures we stay true to our mission.</p>
-                <div class="board-grid" id="board-grid">
-                    <!-- Board members will be loaded here dynamically -->
-                    <div style="text-align: center; padding: 2rem; width: 100%;">Loading board members...</div>
-                </div>
-            </section>
+      <section>
+        <h2>The Need for Clear Vision</h2>
+        <p>According to the World Health Organization, at least <strong>2.2 billion people globally</strong> have a near
+          or distance vision impairment. Of these, at least <strong>1 billion cases</strong> have not yet been
+          addressed.</p>
+        <p>It costs less than <strong>10¢ US</strong> to provide a pair of recycled eyeglasses and change someone's
+          life.</p>
+      </section>
 
-            <section>
-                <h2>📥 Downloads & Resources</h2>
-                <p>Access our brochures, forms, and informational materials.</p>
-                <div class="grid">
-                    <div class="card" style="min-height: 240px; display: flex; flex-direction: column; align-items: center;">
-                        <h3>📖 ERC Brochure</h3>
-                        <p style="flex: 1;">Learn about our mission, our 4-step recycling process, and how we serve communities worldwide. Perfect for sharing with potential donors and volunteers.</p>
-                        <a href="downloads/ERC-Brochure.pdf" class="cta-button" target="_blank" style="margin-top: 1rem; display: inline-block; text-align: center;">Download</a>
-                    </div>
-                    <div class="card" style="min-height: 240px; display: flex; flex-direction: column; align-items: center;">
-                        <h3>🏆 Helen Keller Award Application</h3>
-                        <p style="flex: 1;">Lions Club members can apply for the prestigious Helen Keller Award by documenting their service hours at the ERC.</p>
-                        <a href="downloads/Helen-Keller-Award-Application.pdf" class="cta-button" target="_blank" style="margin-top: 1rem; display: inline-block; text-align: center;">Download</a>
-                    </div>
-                    <div class="card" style="min-height: 240px; display: flex; flex-direction: column; align-items: center;">
-                        <h3>📋 Mission Request Form</h3>
-                        <p style="flex: 1;">Medical and humanitarian missions can request eyeglasses for their upcoming trips. Please submit requests at least 30 days in advance.</p>
-                        <a href="downloads/Mission-Request-Form.pdf" class="cta-button" target="_blank" style="margin-top: 1rem; display: inline-block; text-align: center;">Download</a>
-                    </div>
-                </div>
-                <div class="grey-panel" style="margin-top: 2rem;">
-                    <h3>Need More Information?</h3>
-                    <p>For additional resources, customized presentations, or bulk materials for your organization, please contact us at <a href="#" class="global-email-link show-text"></a> or call <a href="#" class="global-phone-link show-text"></a>.</p>
-                </div>
-            </section>
+      <section>
+        <h2>The Impact of Your Donation</h2>
+        <p>When you donate glasses, you change someone's life. Clear vision provides critical opportunities and improves
+          quality of life.</p>
+        <div class="grid">
+          <div class="card">
+            <h3>👧 For Children</h3>
+            <p>It means a better education, healthier development, and an improved quality of life.</p>
+          </div>
+          <div class="card">
+            <h3>💼 For Adults</h3>
+            <p>It provides greater employment opportunities and economic strength.</p>
+          </div>
+          <div class="card">
+            <h3>👴 For Seniors</h3>
+            <p>It gives them less dependence on others and helps them maintain their independence.</p>
+          </div>
+          <div class="card">
+            <h3>🌍 For Communities</h3>
+            <p>It provides more opportunities to grow and thrive.</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Our Mission & Global Reach</h2>
+        <div class="grey-panel">
+          <p style="font-size: 1.1rem;"><strong>Our Mission:</strong> The District 2-E2 Eyeglass Recycling Center will
+            provide eyeglasses, when available and without cost, to those missions who have a method of determining the
+            refractive status of the eye.</p>
+          <p style="margin-top: 1rem;">Our recycled glasses are available for Humanitarian and Medical Missions around
+            the world.</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>Our Impact by the Numbers</h2>
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div class="number">17,000+</div>
+            <div class="label">Pairs in 2023-2024</div>
+          </div>
+          <div class="stat-box">
+            <div class="number">40+</div>
+            <div class="label">Countries Served</div>
+          </div>
+          <div class="stat-box">
+            <div class="number">100%</div>
+            <div class="label">All Volunteer</div>
+          </div>
+          <div class="stat-box">
+            <div class="number">501(c)(3)</div>
+            <div class="label">Nonprofit Status</div>
+          </div>
+        </div>
+        <p style="text-align: center; margin-top: 1rem; font-size: 1.05rem;">In 2023-2024, we supplied over
+          <strong>17,000 pairs</strong> of eyeglasses for foreign missions—our largest quantity ever.</p>
+      </section>
+
+      <section>
+        <h2>Our 4-Step Recycling Process</h2>
+        <p>We have a dedicated process to ensure used eyeglasses are ready for a new owner.</p>
+        <div class="grid">
+          <div class="card">
+            <h3>Step 1: Sorting</h3>
+            <p>Eyeglasses are sorted into categories, such as non-prescription, nearsightedness (minus), farsightedness
+              (plus), bifocal, trifocal, progressive, and prism.</p>
+          </div>
+          <div class="card">
+            <h3>Step 2: Washing & Drying</h3>
+            <p>Glasses are thoroughly cleaned and sanitized to ensure they're ready for their new owner.</p>
+          </div>
+          <div class="card">
+            <h3>Step 3: Measuring the Prescription</h3>
+            <p>We use specialized equipment to determine the exact prescription of each lens.</p>
+          </div>
+          <div class="card">
+            <h3>Step 4: Final Sorting & Storage</h3>
+            <p>The processed glasses are sorted one last time and stored, ready for distribution.</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Countries We Have Served</h2>
+        <div class="grid">
+          <div class="grey-box">
+            <h4>🌎 The Americas</h4>
+            <p>Belize, Bolivia, Brazil, Colombia, Costa Rica, Cuba, Dominican Republic, Ecuador, El Salvador, Guatemala,
+              Haiti, Honduras, Mexico, Nicaragua, Panama, Paraguay, Peru, and Venezuela.</p>
+          </div>
+          <div class="grey-box">
+            <h4>🌍 Africa</h4>
+            <p>Cameroon, Ethiopia, Ghana, Kenya, Malawi, Nigeria, South Africa, Tanzania, Uganda, and Zambia.</p>
+          </div>
+          <div class="grey-box">
+            <h4>🌏 Asia</h4>
+            <p>Bangladesh, Cambodia, Nepal, Philippines, and Vietnam.</p>
+          </div>
+          <div class="grey-box">
+            <h4>🇪🇺 Europe</h4>
+            <p>Moldova, Poland, Romania, and Ukraine.</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>💬 Testimonials from Our Mission Partners</h2>
+        <p>Hear from the organizations and individuals whose work is made possible through recycled eyeglasses.</p>
+
+        <div id="testimonials-container">
+          <!-- Testimonials will be loaded here dynamically -->
+          <div style="text-align: center; padding: 2rem;">Loading testimonials...</div>
         </div>
 
-        <!-- SERVICES TAB -->
-        <div id="services" class="tab-content">
-            <div class="hero">
-                <h2>Our Services</h2>
-                <p>Complete eyeglass recycling solutions for individuals and organizations</p>
-            </div>
-
-            <section>
-                <h2>What We Accept</h2>
-                <div class="grid">
-                    <div class="card">
-                        <h3>👓 Eyeglasses</h3>
-                        <p>We accept all eyeglasses including sunglasses in any condition. Even broken.</p>
-                    </div>
-                    <div class="card">
-                        <h3>💻 Laptops & Computers</h3>
-                        <p>We only accept laptops or tablets that are Windows 11 ready or already installed. No desktops.</p>
-                    </div>
-                    <div class="card">
-                        <h3>📱 Cell Phones</h3>
-                        <p><strong>Any brand or model:</strong> Smartphones and basic phones in any condition. Data will be completely wiped.</p>
-                    </div>
-                    <div class="card">
-                        <h3>🔊 Hearing Aids</h3>
-                        <p><strong>Functional or non-functional:</strong> We work with partners to ensure these devices reach those who need them.</p>
-                    </div>
-                </div>
-            </section>
-
-            <section>
-                <h2>How Our Process Works</h2>
-                <div class="two-column">
-                    <div>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th colspan="2">Our 5-Step Process</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><strong>1. Collection</strong></td>
-                                    <td>Items collected from donors</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>2. Inspection</strong></td>
-                                    <td>We inspect and assess all items</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>3. Processing</strong></td>
-                                    <td>Cleaning, sorting, organization</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>4. Quality Check</strong></td>
-                                    <td>Final quality assurance review</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>5. Distribution</strong></td>
-                                    <td>Shipped to mission partners</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="image-placeholder">
-                        <!-- Replace placeholder with actual photo: <img src="images/processing-glasses.jpg" alt="Process"> -->
-                        <img src="images/process-lensometers.jpg" alt="Process">
-                    </div>
-                </div>
-            </section>
-
-            <section>
-                <h2>Items We Cannot Accept</h2>
-                <div class="alert alert-info">
-                    <strong>Note:</strong> For safety and quality reasons, we cannot accept damaged screens, non-functional keyboards, or items with missing parts. Call <a href="#" class="global-phone-link show-text"></a> if you have questions.
-                </div>
-            </section>
-
-            <section>
-                <h2>Forms & Documents</h2>
-                <p>Download the forms you need to get started with our services:</p>
-                <div class="grid">
-                    <div class="card" style="min-height: 200px; display: flex; flex-direction: column; align-items: center;">
-                        <h3>� Collection Box Request</h3>
-                        <p style="flex: 1;">Request a collection box for your business or organization.</p>
-                        <a href="#contact" class="cta-button" style="margin-top: 1rem; display: inline-block; text-align: center;">Contact Us</a>
-                    </div>
-                    <div class="card" style="min-height: 200px; display: flex; flex-direction: column; align-items: center;">
-                        <h3>🎓 Group Volunteer Form</h3>
-                        <p style="flex: 1;">Schedule a group volunteer event for your team, school, or organization. Please email completed forms to <a href="#" class="global-email-link show-text"></a>.</p>
-                        <a href="forms/group-volunteer-form.pdf" class="cta-button" target="_blank" style="margin-top: 1rem; display: inline-block; text-align: center;">Download</a>
-                    </div>
-                </div>
-                <div class="grey-panel" style="margin-top: 2rem;">
-                    <p><strong>Note:</strong> If you have questions about any forms or need assistance, please contact us at <a href="#" class="global-phone-link show-text"></a> or email <a href="#" class="global-email-link show-text"></a></p>
-                </div>
-            </section>
+        <div class="grey-panel" style="margin-top: 2rem;">
+          <h3>Become a Mission Partner</h3>
+          <p>If your organization conducts eye clinics or vision missions and would like to partner with us, please
+            contact us at <a href="#" class="global-email-link show-text"></a> or call <a href="#"
+              class="global-phone-link show-text"></a>.</p>
         </div>
-
-        <!-- GET INVOLVED TAB -->
-        <div id="get-involved" class="tab-content">
-            <div class="hero">
-                <h2>Get Involved</h2>
-                <p>Join us in making a global impact through volunteering, donating, or supporting our mission</p>
-            </div>
-
-            <section>
-                <h2>Ways to Help</h2>
-                <div class="grid">
-                    <div class="card">
-                        <h3>🤝 Volunteer</h3>
-                        <p>Join our sorting, cleaning, and packing efforts. Help process items that will change lives worldwide.</p>
-                    </div>
-                    <div class="card">
-                        <h3>🎁 Donate Items</h3>
-                        <p>Bring your used eyeglasses, laptops, phones, and hearing aids. Every item makes a difference.</p>
-                    </div>
-                    <div class="card">
-                        <h3>💰 Donate Money</h3>
-                        <p>Financial contributions help us with shipping, processing, and operational costs. 100% goes to our mission.</p>
-                    </div>
-                    <div class="card">
-                        <h3>📢 Spread the Word</h3>
-                        <p>Tell friends and family about our mission. Help us reach more people and grow our impact.</p>
-                    </div>
-                </div>
-            </section>
-
-            <section>
-                <h2>Volunteer Opportunities</h2>
-                <div class="two-column">
-                    <div>
-                        <h3>Individual Volunteers</h3>
-                        <p>We welcome individual volunteers during our open hours to help with:</p>
-                        <ul class="list-style">
-                            <li>Sorting and organizing donations</li>
-                            <li>Cleaning eyeglasses</li>
-                            <li>Packing shipments</li>
-                            <li>Administrative support</li>
-                        </ul>
-                    </div>
-                    <div class="image-placeholder">
-                        <!-- Replace placeholder with actual photo: <img src="images/volunteers-working.jpg" alt="Volunteers"> -->
-                        <img src="gallery/drying-glasses.jpg" alt="Volunteers">
-                    </div>
-                </div>
-
-                <!-- Photo Gallery Carousel -->
-                <h3 style="margin-top: 3rem;">Volunteers in Action</h3>
-                <div class="gallery-wrapper">
-                    <button class="gallery-arrow left" aria-label="Scroll left">‹</button>
-                    <div class="gallery-container">
-                        <div class="gallery-track">
-                            <!-- Images will be loaded dynamically by js/app.js -->
-                            <p style="text-align: center; width: 100%; padding: 20px;">Loading gallery...</p>
-                        </div>
-                    </div>
-                    <button class="gallery-arrow right" aria-label="Scroll right">›</button>
-                </div>
-            </section>
-
-            <section>
-                <h2>📅 Volunteer Calendar</h2>
-                <p>View upcoming volunteer opportunities and register for events that fit your schedule. Click on a date to see events.</p>
-                
-                <div class="calendar-section">
-                    <div id="volunteerCalendar" class="calendar-container"></div>
-                    <div class="events-display" id="eventsDisplay">
-                        <div class="events-display-empty">
-                            <p style="font-size: 1.1rem; margin: 0;">📅</p>
-                            <p>Select a date to view events</p>
-                        </div>
-                    </div>
-                </div>
-
-                <h3 style="margin-top: 3rem; margin-bottom: 1.5rem;">All Upcoming Events</h3>
-                <div id="upcomingEvents"></div>
-            </section>
-
-            <section>
-                <h2>Group Volunteer Days</h2>
-                <div class="card" style="border-top: 4px solid var(--primary-color);">
-                    <h3>Organizations, Schools & Teams</h3>
-                    <p>Organize a group volunteer day for your organization! We can accommodate up to 20 volunteers per group. This is a great team-building activity with meaningful impact.</p>
-                    <ul class="list-style">
-                        <li>Flexible scheduling to fit your needs</li>
-                        <li>No experience necessary</li>
-                        <li>Fun, engaging work environment</li>
-                        <li>See the direct impact of your efforts</li>
-                        <li>Perfect for corporate teams, schools, and community organizations</li>
-                    </ul>
-                    <p><strong>To schedule:</strong> Call <a href="#" class="global-phone-link show-text"></a> or email <a href="#" class="global-email-link show-text"></a></p>
-                </div>
-            </section>
-
-            <section>
-                <h2>Financial Donations</h2>
-                <div class="grid">
-                    <div class="card">
-                        <h3>Why Support Us?</h3>
-                        <p>Your donations help us cover shipping costs, purchase supplies, and maintain our facility. As a 501(c)(3) nonprofit, donations may be tax-deductible.</p>
-                    </div>
-                    <div class="card">
-                        <h3>How to Donate</h3>
-                        <p><strong>Send checks to:</strong><br>
-                        Lions District 2-E2 ERC<br>
-                        P.O. Box 1854<br>
-                        Keller, TX 76244</p>
-                    </div>
-                </div>
-            </section>
-
-            <section>
-                <h2>Our Partners & Friends</h2>
-                <p>We are grateful for the support of our many friends and partners in service:</p>
-                <div style="columns: 2; column-gap: 2rem; margin-top: 1.5rem;">
-                    <ul class="list-style" style="margin: 0;" id="partners-list">
-                        <!-- Partners will be loaded here dynamically -->
-                        <li>Loading partners...</li>
-                    </ul>
-                </div>
-                <div class="grey-panel" style="margin-top: 2rem;">
-                    <h3>Partner with Us</h3>
-                    <p>Local businesses like Westlake Ace Hardware and MarketStreet help by hosting collection boxes in their locations. If you'd like to partner with us, please contact us at <a href="#" class="global-phone-link show-text"></a>.</p>
-                </div>
-            </section>
-        </div>
-
-        <!-- LOCATIONS TAB -->
-        <div id="locations" class="tab-content">
-            <div class="hero">
-                <h2>Drop-Off Locations</h2>
-                <p>Find convenient donation drop-off locations across the Dallas-Fort Worth area</p>
-            </div>
-
-            <!-- MAIN CENTER SECTION -->
-            <section>
-                <h2>Main Center</h2>
-                <div class="alert alert-success">
-                    <strong>📍 5621 Bunker Blvd, Watauga, TX 76148</strong><br>
-                    <strong>Phone:</strong> <a href="#" class="global-phone-link show-text"></a><br>
-                    (Follow wooden walkway on East side of building for entrance at rear)
-                </div>
-
-                <div class="map-container" id="mapContainer" style="width: 100%; height: 500px; border-radius: 8px; position: relative; overflow: hidden;">
-                    <div id="allLocationsMap" style="width: 100%; height: 100%;"></div>
-                </div>
-                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@4.0.0/dist/maplibre-gl.css" />
-                <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.0.0/dist/maplibre-gl.js"></script>
-            </section>
-
-            <section>
-                <h2>Hours & Information</h2>
-                <div class="two-column">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Day</th>
-                                <th>Hours</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Monday - Friday</td>
-                                <td>By Appointment</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Saturday</strong></td>
-                                <td><strong>9:00 AM - 3:00 PM</strong></td>
-                            </tr>
-                            <tr>
-                                <td>Sunday</td>
-                                <td>Closed</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div>
-                        <div class="card">
-                            <h3>📮 Mailing Address</h3>
-                            <p>Lions District 2-E2 ERC<br>
-                            P.O. Box 1854<br>
-                            Keller, TX 76244</p>
-                        </div>
-                        <div class="card">
-                            <h3>🅿️ Parking & Access</h3>
-                            <p>Free parking available. Entrance at rear of building via wooden walkway on East side.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- PARTNER DROP-OFF LOCATIONS -->
-            <section>
-                <h2>Partner Drop-Off Locations</h2>
-                <p>We have 150+ convenient donation drop-off locations at partner organizations throughout the DFW area. Below are our main partner locations:</p>
-
-                <div class="locations-table" id="locations-list">
-                    <div style="text-align: center; padding: 2rem;">Loading locations...</div>
-                </div>
-
-                <p style="margin-top: 2rem; font-style: italic; color: var(--text-light);">Additional locations available by phone: <a href="#" class="global-phone-link show-text"></a></p>
-            </section>
-
-            <section>
-                <h2>Volunteer Capacity</h2>
-                <p>We can accommodate up to 20 volunteers per group for organized volunteer days. For individual volunteers, just drop by during Saturday hours.</p>
-                <div class="alert alert-info">
-                    <strong>Tip:</strong> For group volunteer days, please call ahead at <a href="#" class="global-phone-link show-text"></a> to schedule and let us know how many people to expect.
-                </div>
-            </section>
-
-            <section>
-                <h2>Frequently Asked Questions</h2>
-                <div class="faq-section">
-                    <div class="faq-item">
-                        <h4>📍 What items can I donate?</h4>
-                        <p>We accept eyeglasses (any condition), hearing aids, laptops, computers, cell phones, and other electronics. Some partner locations accept specific items - check with the location before going.</p>
-                    </div>
-                    <div class="faq-item">
-                        <h4>⏰ What are your hours?</h4>
-                        <p>Our main center is open most Saturdays from 9 AM to 3 PM. Weekday appointments are available by calling <a href="#" class="global-phone-link show-text"></a>. Partner locations vary - check their individual schedules.</p>
-                    </div>
-                    <div class="faq-item">
-                        <h4>💰 Do you accept donations from businesses?</h4>
-                        <p>Yes! Large donations from businesses and organizations are welcome. Please contact us at <a href="#" class="global-phone-link show-text"></a> to arrange pickup or delivery.</p>
-                    </div>
-                    <div class="faq-item">
-                        <h4>📦 How do I ship donations?</h4>
-                        <p>For shipping large quantities, contact us first at <a href="#" class="global-email-link show-text"></a>. We can provide shipping instructions and may be able to arrange pickups.</p>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-        <!-- CONTACT TAB -->
-        <div id="contact" class="tab-content">
-            <div class="hero">
-                <h2>Contact Us</h2>
-                <p>Have questions? Reach out anytime!</p>
-            </div>
-
-            <section>
-                <h2>Contact Information</h2>
-                <div class="grid">
-                    <div class="card">
-                        <h3>📞 Phone</h3>
-                        <p><strong><a href="#" class="global-phone-link show-text" style="color: var(--primary-color); text-decoration: none;"></a></strong></p>
-                    </div>
-                    <div class="card">
-                        <h3>✉️ Email</h3>
-                        <p><strong><a href="#" class="global-email-link show-text" style="color: var(--primary-color); text-decoration: none;"></a></strong></p>
-                    </div>
-                    <div class="card">
-                        <h3>📍 Visit Us</h3>
-                        <p>5621 Bunker Blvd<br>Watauga, TX 76148</p>
-                    </div>
-                    <div class="card">
-                        <h3>📮 Mail Us</h3>
-                        <p>P.O. Box 1854<br>Keller, TX 76244</p>
-                    </div>
-                </div>
-            </section>
-
-            <section>
-                <h2>Get in Touch</h2>
-                <form class="contact-form" action="send-email.php" method="POST" style="max-width: 600px;">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="name">Full Name *</label>
-                            <input type="text" id="name" name="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email Address *</label>
-                            <input type="email" id="email" name="email" required>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="phone">Phone Number</label>
-                            <input type="tel" id="phone" name="phone">
-                        </div>
-                        <div class="form-group">
-                            <label for="subject">Subject *</label>
-                            <select id="subject" name="subject" required>
-                                <option value="">-- Select a subject --</option>
-                                <option value="volunteer">I want to volunteer</option>
-                                <option value="group-volunteer">Group volunteer day</option>
-                                <option value="donation-items">Items to donate</option>
-                                <option value="donation-money">Financial donation</option>
-                                <option value="partnership">Mission organization partner</option>
-                                <option value="question">General question</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="message">Message *</label>
-                        <textarea id="message" name="message" required></textarea>
-                    </div>
-
-
-
-                    <button type="submit" class="cta-button" style="width: 100%; text-align: center;">Send Message</button>
-                </form>
-                <p style="margin-top: 1.5rem; color: var(--text-light); font-size: 0.9rem;">We typically respond to inquiries within 24 hours. Thank you for reaching out!</p>
-            </section>
-
-            <section>
-                <h2>Frequently Asked Questions</h2>
-                <div class="grid">
-                    <div class="card">
-                        <h3>Can I drop off items other than Saturday?</h3>
-                        <p>Yes! Weekday drop-offs are available by appointment. Call or email us to schedule.</p>
-                    </div>
-                    <div class="card">
-                        <h3>Do you accept damaged eyeglasses?</h3>
-                        <p>Absolutely! We accept glasses in any condition. Our team can often repair or repurpose them.</p>
-                    </div>
-                    <div class="card">
-                        <h3>Are donations tax-deductible?</h3>
-                        <p>Yes! We're a registered 501(c)(3) nonprofit. Keep your receipt for tax purposes.</p>
-                    </div>
-                    <div class="card">
-                        <h3>How are you involved in missions?</h3>
-                        <p>We partner with missionaries and nonprofits in 20+ countries to distribute eyeglasses.</p>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </main>
-
-    <!-- Volunteer Signup Modal -->
-    <div id="signupModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h2 id="modalEventTitle">Sign Up to Volunteer</h2>
-            <p id="modalEventDetails"></p>
-            <form id="volunteerSignupForm">
-                <input type="hidden" id="signupEventId" name="eventId">
-                <div class="form-group">
-                    <label for="signupName">Full Name *</label>
-                    <input type="text" id="signupName" name="name" required>
-                </div>
-                <div class="form-group">
-                    <label for="signupEmail">Email Address *</label>
-                    <input type="email" id="signupEmail" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="signupPhone">Phone Number</label>
-                    <input type="tel" id="signupPhone" name="phone">
-                </div>
-                <button type="submit" class="cta-button" style="width: 100%; margin-top: 1rem;">Confirm Registration</button>
-            </form>
-        </div>
+      </section>
     </div>
 
-    <!-- FOOTER -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-section footer-about">
-                <h3>About Us</h3>
-                <p>Lions District 2-E2 Eyeglass Recycling Center is a 501(c)(3) nonprofit dedicated to improving vision care access globally. We collect, sort, clean, and prepare used eyeglasses for shipment to people in need across 40+ countries worldwide.</p>
-                <p>What started as a small group of passionate volunteers has grown into a thriving organization. Every single member of our team is a volunteer, dedicated to making a global impact and ensuring no one should go without proper vision care due to cost or access limitations.</p>
-            </div>
-            <div class="footer-section">
-                <h3>Contact Info</h3>
-                <p><strong>Phone:</strong> <a href="#" class="global-phone-link show-text"></a></p>
-                <p><strong>Email:</strong> <a href="#" class="global-email-link show-text"></a></p>
-                <p><strong>Address:</strong> 5621 Bunker Blvd<br>Watauga, TX 76148</p>
-            </div>
-            <div class="footer-section">
-                <h3>Mailing Address</h3>
-                <p>Lions District 2-E2 ERC<br>P.O. Box 1854<br>Keller, TX 76244</p>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p><a href="admin-view.php" style="color: inherit; text-decoration: none; cursor: default;">&copy;</a> 2025 Lions District 2-E2 Eyeglass Recycling Center. All rights reserved. | 501(c)(3) Nonprofit Organization</p>
-        </div>
-    </footer>
+    <!-- ABOUT TAB -->
+    <div id="about" class="tab-content">
+      <div class="hero">
+        <h2>About Lions District 2-E2 ERC</h2>
+        <p>A community-driven organization dedicated to recycling eyeglasses and serving global mission partners.</p>
+      </div>
 
-    <!-- External Scripts for Modular Architecture -->
-    <script src="js/config.js"></script>
-    <script src="js/dynamic-content.js"></script>
-    <script src="js/locations.js"></script>
-    <script src="js/calendar.js"></script>
-    <script src="js/app.js"></script>
+      <section>
+        <h2>Our Story</h2>
+        <div class="two-column">
+          <div>
+            <p>District 2-E2 Eyeglass Recycling Center was founded in 2013 and officially recognized in 2014 as a
+              501(c)(3) nonprofit organization. We were created with a simple vision: to ensure that no one should go
+              without proper vision care due to cost or access limitations.</p>
+            <p>What started as a small group of passionate volunteers has grown into a thriving organization that serves
+              mission partners across 20+ countries. Every single member of our team is a volunteer, dedicated to making
+              a global impact.</p>
+          </div>
+          <div class="image-placeholder">
+            <!-- Replace placeholder with actual photo: <img src="images/organization-photo.jpg" alt="Organization"> -->
+            <img src="images/our-story-group.png" alt="Organization">
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Impact by the Numbers</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>Global Reach</h3>
+            <p>We serve mission partners in Mexico, Guatemala, Ethiopia, Uganda, Ghana, Vietnam, Dominican Republic,
+              Haiti, Romania, Fiji, Philippines, and many more.</p>
+          </div>
+          <div class="card">
+            <h3>All Volunteer</h3>
+            <p>100% of our team members volunteer their time. No paid staff. Everyone is committed to our mission
+              because they believe in it.</p>
+          </div>
+          <div class="card">
+            <h3>Nonprofit Status</h3>
+            <p>We're officially recognized as a 501(c)(3) nonprofit, ensuring transparency and accountability.</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Our Values</h2>
+        <ul class="list-style" style="font-size: 1.05rem;">
+          <li><strong>Integrity:</strong> We operate with honesty and transparency in all activities</li>
+          <li><strong>Compassion:</strong> We care deeply about improving lives globally</li>
+          <li><strong>Sustainability:</strong> We reduce waste and promote environmental responsibility</li>
+          <li><strong>Community:</strong> We believe in the power of volunteers working together</li>
+          <li><strong>Excellence:</strong> We maintain high quality standards in everything we do</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Previous Board Members</h2>
+        <p>Our dedicated leadership team ensures we stay true to our mission.</p>
+        <div class="board-grid" id="board-grid">
+          <!-- Board members will be loaded here dynamically -->
+          <div style="text-align: center; padding: 2rem; width: 100%;">Loading board members...</div>
+        </div>
+      </section>
+
+      <section>
+        <h2>📥 Downloads & Resources</h2>
+        <p>Access our brochures, forms, and informational materials.</p>
+        <div class="grid">
+          <div class="card" style="min-height: 240px; display: flex; flex-direction: column; align-items: center;">
+            <h3>📖 ERC Brochure</h3>
+            <p style="flex: 1;">Learn about our mission, our 4-step recycling process, and how we serve communities
+              worldwide. Perfect for sharing with potential donors and volunteers.</p>
+            <a href="downloads/ERC-Brochure.pdf" class="cta-button" target="_blank"
+              style="margin-top: 1rem; display: inline-block; text-align: center;">Download</a>
+          </div>
+          <div class="card" style="min-height: 240px; display: flex; flex-direction: column; align-items: center;">
+            <h3>🏆 Helen Keller Award Application</h3>
+            <p style="flex: 1;">Lions Club members can apply for the prestigious Helen Keller Award by documenting their
+              service hours at the ERC.</p>
+            <a href="downloads/Helen-Keller-Award-Application.pdf" class="cta-button" target="_blank"
+              style="margin-top: 1rem; display: inline-block; text-align: center;">Download</a>
+          </div>
+          <div class="card" style="min-height: 240px; display: flex; flex-direction: column; align-items: center;">
+            <h3>📋 Mission Request Form</h3>
+            <p style="flex: 1;">Medical and humanitarian missions can request eyeglasses for their upcoming trips.
+              Please submit requests at least 30 days in advance.</p>
+            <a href="downloads/Mission-Request-Form.pdf" class="cta-button" target="_blank"
+              style="margin-top: 1rem; display: inline-block; text-align: center;">Download</a>
+          </div>
+        </div>
+        <div class="grey-panel" style="margin-top: 2rem;">
+          <h3>Need More Information?</h3>
+          <p>For additional resources, customized presentations, or bulk materials for your organization, please contact
+            us at <a href="#" class="global-email-link show-text"></a> or call <a href="#"
+              class="global-phone-link show-text"></a>.</p>
+        </div>
+      </section>
+    </div>
+
+    <!-- SERVICES TAB -->
+    <div id="services" class="tab-content">
+      <div class="hero">
+        <h2>Our Services</h2>
+        <p>Complete eyeglass recycling solutions for individuals and organizations</p>
+      </div>
+
+      <section>
+        <h2>What We Accept</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>👓 Eyeglasses</h3>
+            <p>We accept all eyeglasses including sunglasses in any condition. Even broken.</p>
+          </div>
+          <div class="card">
+            <h3>💻 Laptops & Computers</h3>
+            <p>We only accept laptops or tablets that are Windows 11 ready or already installed. No desktops.</p>
+          </div>
+          <div class="card">
+            <h3>📱 Cell Phones</h3>
+            <p><strong>Any brand or model:</strong> Smartphones and basic phones in any condition. Data will be
+              completely wiped.</p>
+          </div>
+          <div class="card">
+            <h3>🔊 Hearing Aids</h3>
+            <p><strong>Functional or non-functional:</strong> We work with partners to ensure these devices reach those
+              who need them.</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>How Our Process Works</h2>
+        <div class="two-column">
+          <div>
+            <table>
+              <thead>
+                <tr>
+                  <th colspan="2">Our 5-Step Process</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>1. Collection</strong></td>
+                  <td>Items collected from donors</td>
+                </tr>
+                <tr>
+                  <td><strong>2. Inspection</strong></td>
+                  <td>We inspect and assess all items</td>
+                </tr>
+                <tr>
+                  <td><strong>3. Processing</strong></td>
+                  <td>Cleaning, sorting, organization</td>
+                </tr>
+                <tr>
+                  <td><strong>4. Quality Check</strong></td>
+                  <td>Final quality assurance review</td>
+                </tr>
+                <tr>
+                  <td><strong>5. Distribution</strong></td>
+                  <td>Shipped to mission partners</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="image-placeholder">
+            <!-- Replace placeholder with actual photo: <img src="images/processing-glasses.jpg" alt="Process"> -->
+            <img src="images/process-lensometers.jpg" alt="Process">
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Items We Cannot Accept</h2>
+        <div class="alert alert-info">
+          <strong>Note:</strong> For safety and quality reasons, we cannot accept damaged screens, non-functional
+          keyboards, or items with missing parts. Call <a href="#" class="global-phone-link show-text"></a> if you have
+          questions.
+        </div>
+      </section>
+
+      <section>
+        <h2>Forms & Documents</h2>
+        <p>Download the forms you need to get started with our services:</p>
+        <div class="grid">
+          <div class="card" style="min-height: 200px; display: flex; flex-direction: column; align-items: center;">
+            <h3>� Collection Box Request</h3>
+            <p style="flex: 1;">Request a collection box for your business or organization.</p>
+            <a href="#contact" class="cta-button"
+              style="margin-top: 1rem; display: inline-block; text-align: center;">Contact Us</a>
+          </div>
+          <div class="card" style="min-height: 200px; display: flex; flex-direction: column; align-items: center;">
+            <h3>🎓 Group Volunteer Form</h3>
+            <p style="flex: 1;">Schedule a group volunteer event for your team, school, or organization. Please email
+              completed forms to <a href="#" class="global-email-link show-text"></a>.</p>
+            <a href="forms/group-volunteer-form.pdf" class="cta-button" target="_blank"
+              style="margin-top: 1rem; display: inline-block; text-align: center;">Download</a>
+          </div>
+        </div>
+        <div class="grey-panel" style="margin-top: 2rem;">
+          <p><strong>Note:</strong> If you have questions about any forms or need assistance, please contact us at <a
+              href="#" class="global-phone-link show-text"></a> or email <a href="#"
+              class="global-email-link show-text"></a></p>
+        </div>
+      </section>
+    </div>
+
+    <!-- GET INVOLVED TAB -->
+    <div id="get-involved" class="tab-content">
+      <div class="hero">
+        <h2>Get Involved</h2>
+        <p>Join us in making a global impact through volunteering, donating, or supporting our mission</p>
+      </div>
+
+      <section>
+        <h2>Ways to Help</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>🤝 Volunteer</h3>
+            <p>Join our sorting, cleaning, and packing efforts. Help process items that will change lives worldwide.</p>
+          </div>
+          <div class="card">
+            <h3>🎁 Donate Items</h3>
+            <p>Bring your used eyeglasses, laptops, phones, and hearing aids. Every item makes a difference.</p>
+          </div>
+          <div class="card">
+            <h3>💰 Donate Money</h3>
+            <p>Financial contributions help us with shipping, processing, and operational costs. 100% goes to our
+              mission.</p>
+          </div>
+          <div class="card">
+            <h3>📢 Spread the Word</h3>
+            <p>Tell friends and family about our mission. Help us reach more people and grow our impact.</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Volunteer Opportunities</h2>
+        <div class="two-column">
+          <div>
+            <h3>Individual Volunteers</h3>
+            <p>We welcome individual volunteers during our open hours to help with:</p>
+            <ul class="list-style">
+              <li>Sorting and organizing donations</li>
+              <li>Cleaning eyeglasses</li>
+              <li>Packing shipments</li>
+              <li>Administrative support</li>
+            </ul>
+          </div>
+          <div class="image-placeholder">
+            <!-- Replace placeholder with actual photo: <img src="images/volunteers-working.jpg" alt="Volunteers"> -->
+            <img src="gallery/drying-glasses.jpg" alt="Volunteers">
+          </div>
+        </div>
+
+        <!-- Photo Gallery Carousel -->
+        <h3 style="margin-top: 3rem;">Volunteers in Action</h3>
+        <div class="gallery-wrapper">
+          <button class="gallery-arrow left" aria-label="Scroll left">‹</button>
+          <div class="gallery-container">
+            <div class="gallery-track">
+              <!-- Images will be loaded dynamically by js/app.js -->
+              <p style="text-align: center; width: 100%; padding: 20px;">Loading gallery...</p>
+            </div>
+          </div>
+          <button class="gallery-arrow right" aria-label="Scroll right">›</button>
+        </div>
+      </section>
+
+      <section>
+        <h2>📅 Volunteer Calendar</h2>
+        <p>View upcoming volunteer opportunities and register for events that fit your schedule. Click on a date to see
+          events.</p>
+
+        <div class="calendar-section">
+          <div id="volunteerCalendar" class="calendar-container"></div>
+          <div class="events-display" id="eventsDisplay">
+            <div class="events-display-empty">
+              <p style="font-size: 1.1rem; margin: 0;">📅</p>
+              <p>Select a date to view events</p>
+            </div>
+          </div>
+        </div>
+
+        <h3 style="margin-top: 3rem; margin-bottom: 1.5rem;">All Upcoming Events</h3>
+        <div id="upcomingEvents"></div>
+      </section>
+
+      <section>
+        <h2>Group Volunteer Days</h2>
+        <div class="card" style="border-top: 4px solid var(--primary-color);">
+          <h3>Organizations, Schools & Teams</h3>
+          <p>Organize a group volunteer day for your organization! We can accommodate up to 20 volunteers per group.
+            This is a great team-building activity with meaningful impact.</p>
+          <ul class="list-style">
+            <li>Flexible scheduling to fit your needs</li>
+            <li>No experience necessary</li>
+            <li>Fun, engaging work environment</li>
+            <li>See the direct impact of your efforts</li>
+            <li>Perfect for corporate teams, schools, and community organizations</li>
+          </ul>
+          <p><strong>To schedule:</strong> Call <a href="#" class="global-phone-link show-text"></a> or email <a
+              href="#" class="global-email-link show-text"></a></p>
+        </div>
+      </section>
+
+      <section>
+        <h2>Financial Donations</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>Why Support Us?</h3>
+            <p>Your donations help us cover shipping costs, purchase supplies, and maintain our facility. As a 501(c)(3)
+              nonprofit, donations may be tax-deductible.</p>
+          </div>
+          <div class="card">
+            <h3>How to Donate</h3>
+            <p><strong>Send checks to:</strong><br>
+              Lions District 2-E2 ERC<br>
+              P.O. Box 1854<br>
+              Keller, TX 76244</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Our Partners & Friends</h2>
+        <p>We are grateful for the support of our many friends and partners in service:</p>
+        <div style="columns: 2; column-gap: 2rem; margin-top: 1.5rem;">
+          <ul class="list-style" style="margin: 0;" id="partners-list">
+            <!-- Partners will be loaded here dynamically -->
+            <li>Loading partners...</li>
+          </ul>
+        </div>
+        <div class="grey-panel" style="margin-top: 2rem;">
+          <h3>Partner with Us</h3>
+          <p>Local businesses like Westlake Ace Hardware and MarketStreet help by hosting collection boxes in their
+            locations. If you'd like to partner with us, please contact us at <a href="#"
+              class="global-phone-link show-text"></a>.</p>
+        </div>
+      </section>
+    </div>
+
+    <!-- LOCATIONS TAB -->
+    <div id="locations" class="tab-content">
+      <div class="hero">
+        <h2>Drop-Off Locations</h2>
+        <p>Find convenient donation drop-off locations across the Dallas-Fort Worth area</p>
+      </div>
+
+      <!-- MAIN CENTER SECTION -->
+      <section>
+        <h2>Main Center</h2>
+        <div class="alert alert-success">
+          <strong>📍 5621 Bunker Blvd, Watauga, TX 76148</strong><br>
+          <strong>Phone:</strong> <a href="#" class="global-phone-link show-text"></a><br>
+          (Follow wooden walkway on East side of building for entrance at rear)
+        </div>
+      </section>
+
+      <section>
+        <h2>Hours & Information</h2>
+        <div class="two-column">
+          <table>
+            <thead>
+              <tr>
+                <th>Day</th>
+                <th>Hours</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Monday - Friday</td>
+                <td>By Appointment</td>
+              </tr>
+              <tr>
+                <td><strong>Saturday</strong></td>
+                <td><strong>9:00 AM - 3:00 PM</strong></td>
+              </tr>
+              <tr>
+                <td>Sunday</td>
+                <td>Closed</td>
+              </tr>
+            </tbody>
+          </table>
+          <div>
+            <div class="card">
+              <h3>📮 Mailing Address</h3>
+              <p>Lions District 2-E2 ERC<br>
+                P.O. Box 1854<br>
+                Keller, TX 76244</p>
+            </div>
+            <div class="card">
+              <h3>🅿️ Parking & Access</h3>
+              <p>Free parking available. Entrance at rear of building via wooden walkway on East side.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MAP SECTION - Above Partner Drop-Off Locations -->
+      <section>
+        <h2>All Locations Map</h2>
+        <div class="map-container" id="mapContainer"
+          style="width: 100%; height: 500px; border-radius: 8px; position: relative; overflow: hidden;">
+          <div id="allLocationsMap" style="width: 100%; height: 100%;"></div>
+        </div>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@4.0.0/dist/maplibre-gl.css" />
+        <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.0.0/dist/maplibre-gl.js"></script>
+      </section>
+
+      <!-- PARTNER DROP-OFF LOCATIONS -->
+      <section>
+        <h2>Partner Drop-Off Locations</h2>
+        <p>We have 150+ convenient donation drop-off locations at partner organizations throughout the DFW area. Below
+          are our main partner locations:</p>
+
+        <div class="locations-table" id="locations-list">
+          <div style="text-align: center; padding: 2rem;">Loading locations...</div>
+        </div>
+
+        <p style="margin-top: 2rem; font-style: italic; color: var(--text-light);">Additional locations available by
+          phone: <a href="#" class="global-phone-link show-text"></a></p>
+      </section>
+
+      <section>
+        <h2>Volunteer Capacity</h2>
+        <p>We can accommodate up to 20 volunteers per group for organized volunteer days. For individual volunteers,
+          just drop by during Saturday hours.</p>
+        <div class="alert alert-info">
+          <strong>Tip:</strong> For group volunteer days, please call ahead at <a href="#"
+            class="global-phone-link show-text"></a> to schedule and let us know how many people to expect.
+        </div>
+      </section>
+
+      <section>
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq-section">
+          <div class="faq-item">
+            <h4>📍 What items can I donate?</h4>
+            <p>We accept eyeglasses (any condition), hearing aids, laptops, computers, cell phones, and other
+              electronics. Some partner locations accept specific items - check with the location before going.</p>
+          </div>
+          <div class="faq-item">
+            <h4>⏰ What are your hours?</h4>
+            <p>Our main center is open most Saturdays from 9 AM to 3 PM. Weekday appointments are available by calling
+              <a href="#" class="global-phone-link show-text"></a>. Partner locations vary - check their individual
+              schedules.</p>
+          </div>
+          <div class="faq-item">
+            <h4>💰 Do you accept donations from businesses?</h4>
+            <p>Yes! Large donations from businesses and organizations are welcome. Please contact us at <a href="#"
+                class="global-phone-link show-text"></a> to arrange pickup or delivery.</p>
+          </div>
+          <div class="faq-item">
+            <h4>📦 How do I ship donations?</h4>
+            <p>For shipping large quantities, contact us first at <a href="#" class="global-email-link show-text"></a>.
+              We can provide shipping instructions and may be able to arrange pickups.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- CONTACT TAB -->
+    <div id="contact" class="tab-content">
+      <div class="hero">
+        <h2>Contact Us</h2>
+        <p>Have questions? Reach out anytime!</p>
+      </div>
+
+      <section>
+        <h2>Contact Information</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>📞 Phone</h3>
+            <p><strong><a href="#" class="global-phone-link show-text"
+                  style="color: var(--primary-color); text-decoration: none;"></a></strong></p>
+          </div>
+          <div class="card">
+            <h3>✉️ Email</h3>
+            <p><strong><a href="#" class="global-email-link show-text"
+                  style="color: var(--primary-color); text-decoration: none;"></a></strong></p>
+          </div>
+          <div class="card">
+            <h3>📍 Visit Us</h3>
+            <p>5621 Bunker Blvd<br>Watauga, TX 76148</p>
+          </div>
+          <div class="card">
+            <h3>📮 Mail Us</h3>
+            <p>P.O. Box 1854<br>Keller, TX 76244</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Get in Touch</h2>
+        <form class="contact-form" action="send-email.php" method="POST" style="max-width: 600px;">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Full Name *</label>
+              <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Email Address *</label>
+              <input type="email" id="email" name="email" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" name="phone">
+            </div>
+            <div class="form-group">
+              <label for="subject">Subject *</label>
+              <select id="subject" name="subject" required>
+                <option value="">-- Select a subject --</option>
+                <option value="volunteer">I want to volunteer</option>
+                <option value="group-volunteer">Group volunteer day</option>
+                <option value="donation-items">Items to donate</option>
+                <option value="donation-money">Financial donation</option>
+                <option value="need-collection-boxes">Need Collection Boxes</option>
+                <option value="partnership">Mission organization partner</option>
+                <option value="question">General question</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="message">Message *</label>
+            <textarea id="message" name="message" required></textarea>
+          </div>
+
+
+
+          <button type="submit" class="cta-button" style="width: 100%; text-align: center;">Send Message</button>
+        </form>
+        <p style="margin-top: 1.5rem; color: var(--text-light); font-size: 0.9rem;">We typically respond to inquiries
+          within 24 hours. Thank you for reaching out!</p>
+      </section>
+
+      <section>
+        <h2>Frequently Asked Questions</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>Can I drop off items other than Saturday?</h3>
+            <p>Yes! Weekday drop-offs are available by appointment. Call or email us to schedule.</p>
+          </div>
+          <div class="card">
+            <h3>Do you accept damaged eyeglasses?</h3>
+            <p>Absolutely! We accept glasses in any condition. Our team can often repair or repurpose them.</p>
+          </div>
+          <div class="card">
+            <h3>Are donations tax-deductible?</h3>
+            <p>Yes! We're a registered 501(c)(3) nonprofit. Keep your receipt for tax purposes.</p>
+          </div>
+          <div class="card">
+            <h3>How are you involved in missions?</h3>
+            <p>We partner with missionaries and nonprofits in 20+ countries to distribute eyeglasses.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Volunteer Signup Modal -->
+  <div id="signupModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <h2 id="modalEventTitle">Sign Up to Volunteer</h2>
+      <p id="modalEventDetails"></p>
+      <form id="volunteerSignupForm">
+        <input type="hidden" id="signupEventId" name="eventId">
+        <div class="form-group">
+          <label for="signupName">Full Name *</label>
+          <input type="text" id="signupName" name="name" required>
+        </div>
+        <div class="form-group">
+          <label for="signupEmail">Email Address *</label>
+          <input type="email" id="signupEmail" name="email" required>
+        </div>
+        <div class="form-group">
+          <label for="signupPhone">Phone Number</label>
+          <input type="tel" id="signupPhone" name="phone">
+        </div>
+        <button type="submit" class="cta-button" style="width: 100%; margin-top: 1rem;">Confirm Registration</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section footer-about">
+        <h3>About Us</h3>
+        <p>Lions District 2-E2 Eyeglass Recycling Center is a 501(c)(3) nonprofit dedicated to improving vision care
+          access globally. We collect, sort, clean, and prepare used eyeglasses for shipment to people in need across
+          40+ countries worldwide.</p>
+        <p>What started as a small group of passionate volunteers has grown into a thriving organization. Every single
+          member of our team is a volunteer, dedicated to making a global impact and ensuring no one should go without
+          proper vision care due to cost or access limitations.</p>
+      </div>
+      <div class="footer-section">
+        <h3>Contact Info</h3>
+        <p><strong>Phone:</strong> <a href="#" class="global-phone-link show-text"></a></p>
+        <p><strong>Email:</strong> <a href="#" class="global-email-link show-text"></a></p>
+        <p><strong>Address:</strong> 5621 Bunker Blvd<br>Watauga, TX 76148</p>
+      </div>
+      <div class="footer-section">
+        <h3>Mailing Address</h3>
+        <p>Lions District 2-E2 ERC<br>P.O. Box 1854<br>Keller, TX 76244</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p><a href="admin-view.php" style="color: inherit; text-decoration: none; cursor: default;">&copy;</a> 2025 Lions
+        District 2-E2 Eyeglass Recycling Center. All rights reserved. | 501(c)(3) Nonprofit Organization</p>
+    </div>
+  </footer>
+
+  <!-- External Scripts for Modular Architecture -->
+  <script src="js/config.js"></script>
+  <script src="js/dynamic-content.js"></script>
+  <script src="js/locations.js"></script>
+  <script src="js/calendar.js"></script>
+  <script src="js/app.js"></script>
 </body>
+
 </html>
