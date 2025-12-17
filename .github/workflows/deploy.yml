@@ -9,18 +9,36 @@ jobs:
   web-deploy:
     name: Deploy
     runs-on: ubuntu-latest
+    container:
+      image: alpine:latest
     steps:
+      - name: Install dependencies
+        run: |
+          apk add --no-cache git libwebp-tools php php-json php-curl
+      
       - name: Get latest code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Needed for changed-files action
       
-      - name: Optimize & Convert Images to WebP
+      - name: Get changed image files
+        id: changed-images
+        uses: step-security/changed-files@v46
+        with:
+          files: |
+            **/*.jpg
+            **/*.jpeg
+            **/*.png
+      
+      - name: Convert changed images to WebP
+        if: steps.changed-images.outputs.any_changed == 'true'
         run: |
-          sudo apt-get update
-          sudo apt-get install -y webp
-          # Find all JPG/PNGs and create a .webp version next to them
-          find . -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) \
-          -not -path "./.git/*" \
-          -exec sh -c 'cwebp -q 90 -m 6 "$1" -o "${1%.*}.webp"' _ {} \;
+          echo "Converting changed images to WebP..."
+          for file in ${{ steps.changed-images.outputs.all_changed_files }}; do
+            echo "Converting: $file"
+            cwebp -q 90 -m 6 "$file" -o "${file%.*}.webp"
+          done
+          echo "Done converting ${{ steps.changed-images.outputs.changed_files_count }} image(s)"
       
       - name: Warm Up Geolocation Cache
         run: php tools/warm-cache.php
