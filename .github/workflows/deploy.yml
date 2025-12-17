@@ -21,6 +21,9 @@ jobs:
         with:
           fetch-depth: 0  # Needed for changed-files action
       
+      - name: Configure git safe directory
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+      
       - name: Get changed image files
         id: changed-images
         uses: step-security/changed-files@v46
