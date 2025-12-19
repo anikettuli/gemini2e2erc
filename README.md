@@ -2,6 +2,8 @@
 
 A modern, responsive, and accessible website for the District 2-E2 Eyeglass Recycling Center. This project serves as the digital hub for volunteer coordination, donation information, and event management.
 
+This project has been pushed to the public website.
+
 ## 🛠 Technical Stack
 
 ### Frontend
@@ -50,7 +52,7 @@ Content is decoupled from the HTML structure and stored in the `data/` directory
 ## 🌟 Key Functionality
 
 ### 1. Hash-Based Routing
-The site uses a lightweight SPA architecture. Navigation is handled via URL hashes (e.g., `#home`, `#get-involved`). `app.js` listens for hash changes to toggle visibility of content sections without page reloads.
+The site uses a lightweight SPA architecture. Navigation is handled via URL hashes (e.g., `#home`, `#get-involved`). `app.js` listens for hash changes to toggle visibility of content sections without full page reloads.
 
 ### 2. Dynamic Content Loading
 To allow non-technical updates, content sections like the Board of Directors, Partners, and Events are fetched from JSON files in the `data/` folder and rendered client-side by `dynamic-content.js`.
