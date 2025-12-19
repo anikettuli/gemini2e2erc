@@ -109,14 +109,14 @@
         </div>
 
         <!-- Medium Card: Children -->
-        <div class="glass-panel p-8 rounded-3xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors" data-aos="fade-up">
+        <div class="glass-panel p-8 rounded-3xl" data-aos="fade-up">
             <div class="text-4xl mb-4">👧</div>
             <h3 class="text-xl font-bold mb-2">For Children</h3>
             <p class="text-slate-500">It means a better education, healthier development, and an improved quality of life.</p>
         </div>
 
         <!-- Medium Card: Seniors -->
-        <div class="glass-panel p-8 rounded-3xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors" data-aos="fade-up" data-aos-delay="100">
+        <div class="glass-panel p-8 rounded-3xl" data-aos="fade-up" data-aos-delay="100">
             <div class="text-4xl mb-4">👴</div>
             <h3 class="text-xl font-bold mb-2">For Seniors</h3>
             <p class="text-slate-500">It gives them less dependence on others and helps them maintain their independence.</p>

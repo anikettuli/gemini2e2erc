@@ -14,9 +14,14 @@
                         <p class="text-xs text-slate-500">Eyeglass Recycling Center</p>
                     </div>
                 </div>
-                <p class="text-slate-400 mb-4 max-w-md leading-relaxed">
-                    A 501(c)(3) nonprofit dedicated to improving vision care access globally. We collect, process, and distribute recycled eyeglasses to those in need across 20+ countries.
-                </p>
+                <div class="text-slate-400 mb-4 max-w-3xl leading-relaxed space-y-4">
+                    <p>
+                        Lions District 2-E2 Eyeglass Recycling Center is a 501(c)(3) nonprofit dedicated to improving vision care access globally. We collect, sort, clean, and prepare used eyeglasses for shipment to people in need across 40+ countries worldwide.
+                    </p>
+                    <p>
+                        Our team is entirely volunteer-run and dedicated to ensuring no one goes without proper vision care due to cost or access limitations.
+                    </p>
+                </div>
 
             </div>
 
