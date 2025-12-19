@@ -44,6 +44,11 @@ error_reporting(E_ALL);
 
 // Only allow POST
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+    if (isset($_POST['ajax'])) {
+        header('Content-Type: application/json');
+        echo json_encode(['success' => false, 'message' => 'Invalid request method.']);
+        exit;
+    }
     header("Location: index.html");
     exit;
 }
@@ -57,6 +62,11 @@ $message = trim($_POST["message"] ?? '');
 $subscribe = isset($_POST["subscribe"]) ? 'Yes' : 'No';
 
 if (empty($name) || empty($email) || empty($message) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    if (isset($_POST['ajax'])) {
+        header('Content-Type: application/json');
+        echo json_encode(['success' => false, 'message' => 'Please fill in all required fields properly.']);
+        exit;
+    }
     header("Location: index.html?status=error&reason=invalid_input#contact");
     exit;
 }
@@ -105,8 +115,11 @@ try {
         $email              // CC (User's email) -> ADDED THIS
     );
     
-    // (Separate confirmation email block removed)
-
+    if (isset($_POST['ajax'])) {
+        header('Content-Type: application/json');
+        echo json_encode(['success' => true, 'message' => 'Message sent successfully!']);
+        exit;
+    }
     header("Location: index.html?status=success#contact");
     exit;
 
@@ -118,6 +131,11 @@ try {
     if (strpos($error, 'Authentic') !== false) $reason = 'auth_failed';
     if (strpos($error, 'connect') !== false) $reason = 'connect_failed';
     
+    if (isset($_POST['ajax'])) {
+        header('Content-Type: application/json');
+        echo json_encode(['success' => false, 'message' => 'Sending failed. Please try again later.']);
+        exit;
+    }
     header("Location: index.html?status=error&reason=$reason#contact");
     exit;
 }

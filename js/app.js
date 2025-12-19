@@ -1,163 +1,172 @@
-// Hash-based routing for persisting tab state
-class Router {
+// Modern App Logic for District 2-E2 ERC
+
+class TurboRouter {
   constructor() {
-    this.tabs = ['home', 'about', 'services', 'get-involved', 'locations', 'contact'];
-    this.mobileNav = document.getElementById('mobileNav');
-    this.dropdownArrow = document.querySelector('.dropdown-arrow');
-    this.currentPageName = document.querySelector('.current-page-name');
-    this.init();
+    this.mainContent = document.querySelector('main');
+    this.initLinkInterception();
+    window.addEventListener('popstate', () => this.handlePopState());
   }
 
-  init() {
-    // Handle initial load
-    this.navigateToHash();
-
-    // Handle hash changes
-    window.addEventListener('hashchange', () => this.navigateToHash());
-
-    // Setup tab buttons
-    document.querySelectorAll('.tab-button, .js-tab-trigger').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const tab = btn.getAttribute('data-tab');
-        // Use pushState to prevent default browser scrolling to anchor
-        history.pushState(null, null, '#' + tab);
-        window.dispatchEvent(new Event('hashchange'));
-      });
-    });
-
-    // Setup Mobile Menu
-    const mobileMenuTrigger = document.getElementById('mobileMenuTrigger');
-    if (mobileMenuTrigger && this.mobileNav) {
-      mobileMenuTrigger.addEventListener('click', () => {
-        this.mobileNav.classList.toggle('open');
-        if (this.dropdownArrow) this.dropdownArrow.classList.toggle('open');
-      });
-    }
-  }
-
-  navigateToHash() {
-    let tab = window.location.hash.slice(1) || 'home';
-
-    // Validate tab
-    if (!this.tabs.includes(tab)) {
-      tab = 'home';
-      window.location.hash = tab;
-    }
-
-    this.switchTab(tab);
-  }
-
-  switchTab(tab) {
-    // Hide all tabs
-    document.querySelectorAll('.tab-content').forEach(el => {
-      el.classList.remove('active');
-    });
-
-    // Remove active from all buttons
-    document.querySelectorAll('.tab-button').forEach(btn => {
-      btn.classList.remove('active');
-    });
-
-    // Show selected tab
-    const tabContent = document.getElementById(tab);
-    if (tabContent) {
-      tabContent.classList.add('active');
-    }
-
-    // Activate button
-    const tabBtn = document.querySelector(`[data-tab="${tab}"]`);
-    if (tabBtn) {
-      tabBtn.classList.add('active');
-      // Update mobile menu text
-      if (this.currentPageName) {
-        this.currentPageName.textContent = tabBtn.textContent;
+  initLinkInterception() {
+    document.addEventListener('click', (e) => {
+      const link = e.target.closest('a');
+      if (link && link.href.includes('?page=') && !link.getAttribute('target')) {
+        const url = new URL(link.href, window.location.origin);
+        if (url.origin === window.location.origin) {
+          e.preventDefault();
+          this.navigate(url.href);
+        }
       }
+    });
+  }
+
+  async navigate(url, push = true) {
+    try {
+      const response = await fetch(url);
+      const text = await response.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(text, 'text/html');
+      const newMain = doc.querySelector('main').innerHTML;
+      const newTitle = doc.title;
+
+      this.mainContent.style.opacity = '0';
+      this.mainContent.style.transition = 'opacity 0.2s ease';
+
+      setTimeout(() => {
+        this.mainContent.innerHTML = newMain;
+        document.title = newTitle;
+        this.updateNavState(url);
+
+        if (push) window.history.pushState({}, '', url);
+
+        // Re-initialize logic
+        this.reinitPageScripts();
+
+        this.mainContent.style.opacity = '1';
+        window.scrollTo(0, 0);
+
+        // Robust AOS Handling
+        if (window.AOS) {
+          setTimeout(() => {
+            window.AOS.refreshHard();
+            setTimeout(() => {
+              document.querySelectorAll('[data-aos]').forEach(el => {
+                if (getComputedStyle(el).opacity === '0' || getComputedStyle(el).visibility === 'hidden') {
+                  el.classList.add('aos-animate');
+                  el.style.opacity = '1';
+                  el.style.visibility = 'visible';
+                }
+              });
+            }, 300);
+          }, 50);
+        }
+      }, 200);
+
+    } catch (error) {
+      console.error('Navigation error:', error);
+      window.location.href = url;
+    }
+  }
+
+  handlePopState() {
+    this.navigate(window.location.href, false);
+  }
+
+  updateNavState(url) {
+    const currentParams = new URLSearchParams(new URL(url).search);
+    const currentPage = currentParams.get('page') || 'home';
+
+    document.querySelectorAll('nav a').forEach(a => {
+      // 1. Always remove active classes first
+      a.classList.remove('text-indigo-600', 'dark:text-indigo-400', 'bg-indigo-50', 'dark:bg-indigo-900/20', 'dark:bg-white/10', 'font-semibold');
+      a.classList.add('text-slate-600', 'dark:text-slate-300');
+
+      // 2. Determine if this link matches the current page
+      let linkPage = null;
+      try {
+        const linkUrl = new URL(a.href, window.location.origin);
+        // Only consider internal links
+        if (linkUrl.searchParams.has('page')) {
+          linkPage = linkUrl.searchParams.get('page');
+        } else if (linkUrl.pathname.endsWith('index.php') || linkUrl.pathname === '/' || linkUrl.pathname.endsWith('/')) {
+          // Treat root or index.php as home
+          linkPage = 'home';
+        }
+      } catch (e) {
+        // Ignore invalid URLs (tel:, mailto:, etc inside nav)
+      }
+
+      // 3. Apply active classes if match
+      if (linkPage === currentPage) {
+        a.classList.add('text-indigo-600', 'dark:text-indigo-400', 'bg-indigo-50', 'dark:bg-indigo-900/20', 'font-semibold');
+        a.classList.remove('text-slate-600', 'dark:text-slate-300'); // Remove inactive styling
+      }
+    });
+  }
+
+  reinitPageScripts() {
+    // Calendar
+    if (window.eventCalendar) window.eventCalendar.init();
+
+    // Global Info
+    if (typeof updateGlobalInfo === 'function') updateGlobalInfo();
+
+    // Maps
+    const mapContainer = document.getElementById('allLocationsMap');
+    if (mapContainer && typeof loadLocations === 'function') {
+      loadLocations();
     }
 
-    // Close mobile menu
-    if (this.mobileNav) {
-      this.mobileNav.classList.remove('open');
-      if (this.dropdownArrow) this.dropdownArrow.classList.remove('open');
+    // Dynamic Lists
+    if (typeof window.loadPartners === 'function') window.loadPartners();
+    if (typeof window.loadBoard === 'function') window.loadBoard();
+
+    // Gallery
+    if (document.querySelector('.gallery-track')) {
+      new GalleryManager();
     }
 
-    // Scroll to top
-    setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, 10);
+    // Bind Modals if present
+    window.bindModalLogic();
+    // Bind Contact Form if present
+    if (window.bindContactLogic) window.bindContactLogic();
   }
 }
 
 class ThemeManager {
   constructor() {
-    this.themeToggleMobile = document.getElementById('themeToggle');
-    this.themeToggleDesktop = document.getElementById('themeToggleDesktop');
-    this.themeIconMobile = document.getElementById('themeIcon');
-    this.themeIconDesktop = document.getElementById('themeIconDesktop');
+    this.themeToggle = document.getElementById('themeToggleDesktop');
     this.htmlElement = document.documentElement;
     this.init();
   }
-
   init() {
-    // Check for saved theme preference or system preference
-    const savedTheme = localStorage.getItem('theme') ||
-      (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-
-    // Apply saved theme
-    if (savedTheme === 'dark') {
-      this.setTheme('dark');
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      this.htmlElement.classList.add('dark');
     } else {
-      this.setTheme('light');
+      this.htmlElement.classList.remove('dark');
     }
-
-    // Add click listeners
-    if (this.themeToggleMobile) {
-      this.themeToggleMobile.addEventListener('click', () => this.toggleTheme());
-    }
-    if (this.themeToggleDesktop) {
-      this.themeToggleDesktop.addEventListener('click', () => this.toggleTheme());
-    }
-
-    // Listen for system theme changes
-    if (window.matchMedia) {
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-        if (!localStorage.getItem('theme')) {
-          this.setTheme(e.matches ? 'dark' : 'light');
-        }
-      });
+    if (this.themeToggle) {
+      this.themeToggle.addEventListener('click', () => this.toggleTheme());
     }
   }
-
-  setTheme(theme) {
-    const icon = theme === 'dark' ? '🌙' : '☀️';
-    if (theme === 'dark') {
-      this.htmlElement.setAttribute('data-theme', 'dark');
-    } else {
-      this.htmlElement.removeAttribute('data-theme');
-    }
-
-    if (this.themeIconMobile) this.themeIconMobile.textContent = icon;
-    if (this.themeIconDesktop) this.themeIconDesktop.textContent = icon;
-  }
-
   toggleTheme() {
-    const currentTheme = this.htmlElement.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-
-    this.setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
+    if (this.htmlElement.classList.contains('dark')) {
+      this.htmlElement.classList.remove('dark');
+      localStorage.theme = 'light';
+    } else {
+      this.htmlElement.classList.add('dark');
+      localStorage.theme = 'dark';
+    }
   }
 }
 
 class GalleryManager {
   constructor() {
-    this.galleryTrack = document.querySelector('.gallery-track');
-    this.init();
+    this.track = document.querySelector('.gallery-track');
+    this.scrollInterval = null;
+    if (this.track) this.init();
   }
-
   async init() {
-    if (!this.galleryTrack) return;
-
     try {
       const response = await fetch('get-gallery-images.php');
       const images = await response.json();
@@ -166,260 +175,183 @@ class GalleryManager {
       console.error('Error loading gallery images:', error);
     }
   }
-
   renderGallery(images) {
-    this.galleryTrack.innerHTML = ''; // Clear existing content
-    this.originalImages = images; // Store for cloning
-
-    if (images.length === 0) {
-      this.galleryTrack.innerHTML = '<p>No images found.</p>';
+    this.track.innerHTML = '';
+    if (!images || images.length === 0) {
+      this.track.innerHTML = '<p class="text-white text-center w-full">No images found.</p>';
       return;
     }
-
-    // Create image elements and track loading
-    const imageElements = [];
-    let loadedCount = 0;
-
-    images.forEach(imagePath => {
+    const imagesToRender = [...images, ...images, ...images];
+    imagesToRender.forEach(imagePath => {
       const img = document.createElement('img');
       img.src = imagePath;
-      img.alt = 'Gallery Image';
-      img.loading = 'eager'; // Load images immediately for carousel
-      imageElements.push(img);
-      this.galleryTrack.appendChild(img);
-
-      // Track when each image loads
-      img.onload = () => {
-        loadedCount++;
-        if (loadedCount === images.length) {
-          // All images loaded, now setup controls and clone for infinite scroll
-          this.setupInfiniteScroll();
-          this.setupGalleryControls();
-        }
-      };
-
-      // Handle error case - count as loaded to not block forever
-      img.onerror = () => {
-        loadedCount++;
-        if (loadedCount === images.length) {
-          this.setupInfiniteScroll();
-          this.setupGalleryControls();
-        }
-      };
+      img.className = "inline-block h-64 w-auto rounded-xl shadow-lg mx-2 object-cover shrink-0 cursor-pointer hover:opacity-90 transition-opacity";
+      img.onclick = () => window.open(imagePath, '_blank');
+      this.track.appendChild(img);
     });
-
-    // Fallback: if images don't load within 3 seconds, start anyway
-    setTimeout(() => {
-      if (!this._controlsInitialized) {
-        this.setupInfiniteScroll();
-        this.setupGalleryControls();
+    this.startAutoScroll();
+    this.setupControls();
+  }
+  startAutoScroll() {
+    if (this.scrollInterval) clearInterval(this.scrollInterval);
+    this.scrollInterval = setInterval(() => {
+      if (this.track.matches(':hover')) return;
+      this.track.scrollLeft += 1;
+      if (this.track.scrollLeft >= (this.track.scrollWidth / 3) * 2) {
+        this.track.scrollLeft = this.track.scrollWidth / 3;
       }
-    }, 3000);
+    }, 15);
   }
-
-  setupInfiniteScroll() {
-    // Clone images at the end for seamless looping
-    if (!this.originalImages || this.originalImages.length === 0) return;
-
-    // Clone the first few images and append to end
-    const cloneCount = Math.min(this.originalImages.length, 3);
-    for (let i = 0; i < cloneCount; i++) {
-      const img = document.createElement('img');
-      img.src = this.originalImages[i];
-      img.alt = 'Gallery Image';
-      img.classList.add('gallery-clone');
-      this.galleryTrack.appendChild(img);
-    }
-  }
-
-  setupGalleryControls() {
-    if (this._controlsInitialized) return; // Only setup once
-    this._controlsInitialized = true;
-
-    const container = this.galleryTrack.parentElement; // this is the scrolling element
-    if (!container) return;
-
-    // wrapper is the non-scrolling parent that holds arrows
-    const wrapper = this.galleryTrack.closest('.gallery-wrapper') || container.parentElement;
+  setupControls() {
+    const wrapper = this.track.parentElement;
     if (!wrapper) return;
-
-    // Buttons live on wrapper so they don't move with scroll
     const leftBtn = wrapper.querySelector('.gallery-arrow.left');
     const rightBtn = wrapper.querySelector('.gallery-arrow.right');
-
-    // Clear any existing timer
-    this.stopAutoScroll();
-
-    // Start auto-scroll faster
-    this.autoScrollStep = 2; // pixels per tick (increased for speed)
-    this.autoScrollIntervalMs = 20; // ms between ticks (smaller -> faster)
-
-    // Start auto-scroll immediately on page load
-    this.startAutoScroll();
-
-    // Pause on hover over wrapper (not the inner scroll) or touch
-    wrapper.addEventListener('mouseenter', () => this.stopAutoScroll());
-    wrapper.addEventListener('mouseleave', () => this.startAutoScroll());
-    wrapper.addEventListener('touchstart', () => this.stopAutoScroll());
-    wrapper.addEventListener('touchend', () => this.startAutoScroll());
-
-    // Arrow controls (operate on container scroll)
-    if (leftBtn) {
-      leftBtn.addEventListener('click', () => {
-        this.stopAutoScroll();
-        container.scrollBy({ left: -Math.round(container.clientWidth * 0.6), behavior: 'smooth' });
-        // Restart auto-scroll after short delay
-        setTimeout(() => this.startAutoScroll(), 3000);
-      });
-    }
-    if (rightBtn) {
-      rightBtn.addEventListener('click', () => {
-        this.stopAutoScroll();
-        container.scrollBy({ left: Math.round(container.clientWidth * 0.6), behavior: 'smooth' });
-        setTimeout(() => this.startAutoScroll(), 3000);
-      });
-    }
-  }
-
-  startAutoScroll() {
-    const container = this.galleryTrack.parentElement;
-    if (!container) return;
-    if (this._autoScrollTimer) return; // already running
-
-    // Only start when content overflows
-    if (container.scrollWidth <= container.clientWidth) return;
-
-    // Calculate where original images end (before clones)
-    const originalImagesEnd = this.getOriginalImagesWidth();
-
-    this._autoScrollTimer = setInterval(() => {
-      // Check if we've scrolled past the original images (into clones)
-      if (container.scrollLeft >= originalImagesEnd) {
-        // Jump back to start seamlessly
-        container.scrollLeft = 0;
-      } else {
-        container.scrollLeft += this.autoScrollStep;
-      }
-    }, this.autoScrollIntervalMs);
-  }
-
-  getOriginalImagesWidth() {
-    // Calculate the width of original images (excluding clones)
-    const allImages = this.galleryTrack.querySelectorAll('img:not(.gallery-clone)');
-    let totalWidth = 0;
-    allImages.forEach(img => {
-      const style = window.getComputedStyle(img);
-      totalWidth += img.offsetWidth + parseFloat(style.marginLeft) + parseFloat(style.marginRight);
-    });
-    return totalWidth;
-  }
-
-  stopAutoScroll() {
-    if (this._autoScrollTimer) {
-      clearInterval(this._autoScrollTimer);
-      this._autoScrollTimer = null;
-    }
+    leftBtn?.addEventListener('click', (e) => { e.preventDefault(); this.track.scrollBy({ left: -400, behavior: 'smooth' }); });
+    rightBtn?.addEventListener('click', (e) => { e.preventDefault(); this.track.scrollBy({ left: 400, behavior: 'smooth' }); });
+    this.track.addEventListener('touchstart', () => clearInterval(this.scrollInterval));
+    this.track.addEventListener('touchend', () => this.startAutoScroll());
   }
 }
 
-// Initialize app when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-  new Router();
-  new ThemeManager();
-  new GalleryManager();
-
-  // Check for email status from PHP redirection
-  const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.get('status') === 'success') {
-    alert('Thank you! Your message has been sent.');
-    // Clean the URL but keep the hash if present
-    const newUrl = window.location.pathname + window.location.hash;
-    window.history.replaceState({}, document.title, newUrl);
-  } else if (urlParams.get('status') === 'error') {
-    alert('Sorry, there was an error sending your message. Please try again.');
+// Global Loaders
+window.loadPartners = function () {
+  const partnersList = document.getElementById('partners-list');
+  if (partnersList) {
+    fetch('data/partners.json')
+      .then(r => r.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          partnersList.innerHTML = '';
+          data.forEach(p => {
+            const li = document.createElement('li');
+            li.className = "flex items-center gap-3 text-slate-600 dark:text-slate-400 mb-2";
+            li.innerHTML = `<span class="w-2 h-2 rounded-full bg-indigo-500"></span> ${p}`;
+            partnersList.appendChild(li);
+          });
+        }
+      })
+      .catch(console.error);
   }
+};
 
-  // Modal Logic
+window.loadBoard = function () {
+  const boardGrid = document.getElementById('board-grid');
+  if (boardGrid) {
+    fetch('data/board.json')
+      .then(r => r.json())
+      .then(data => {
+        boardGrid.innerHTML = '';
+        if (data.length === 0) { boardGrid.innerHTML = '<p class="col-span-full text-center">No members found.</p>'; return; }
+        data.forEach(m => {
+          const card = document.createElement('div');
+          card.className = "glass-panel p-6 rounded-2xl flex flex-col items-center hover:scale-105 transition-transform duration-300 group";
+          card.innerHTML = `
+            <div class="w-24 h-24 rounded-full overflow-hidden mb-4 border-4 border-indigo-50 dark:border-indigo-900 shadow-md group-hover:border-indigo-400 transition-colors">
+              <img src="${m.image}" alt="${m.name}" class="w-full h-full object-cover" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&background=6366f1&color=fff'">
+            </div>
+            <h3 class="font-bold text-lg text-slate-800 dark:text-white text-center mb-1">${m.name}</h3>
+            <span class="text-xs font-bold uppercase tracking-wider text-indigo-500">Board Member</span>`;
+          boardGrid.appendChild(card);
+        });
+      })
+      .catch((e) => { console.error(e); boardGrid.innerHTML = '<p class="col-span-full text-center">Error loading members.</p>'; });
+  }
+};
+
+window.bindModalLogic = function () {
   const modal = document.getElementById('signupModal');
-  const closeBtn = document.querySelector('.close-modal');
   const signupForm = document.getElementById('volunteerSignupForm');
+  if (!modal) return;
 
-  if (closeBtn) {
-    closeBtn.onclick = () => modal.style.display = "none";
-  }
+  document.querySelectorAll('.close-modal').forEach(btn => btn.onclick = () => modal.classList.add('hidden'));
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal || e.target.classList.contains('close-modal-bg')) modal.classList.add('hidden');
+  });
 
-  window.onclick = (event) => {
-    if (event.target == modal) {
-      modal.style.display = "none";
-    }
-  }
-
-  if (signupForm) {
+  if (signupForm && !signupForm.dataset.bound) {
+    signupForm.dataset.bound = 'true'; // Prevent multiple bindings
     signupForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const submitBtn = signupForm.querySelector('button[type="submit"]');
-      const originalText = submitBtn.innerText;
-      submitBtn.innerText = "Registering...";
-      submitBtn.disabled = true;
+      const btn = signupForm.querySelector('button[type="submit"]');
+      const originalText = btn.innerText;
+      btn.innerText = "Registering...";
+      btn.disabled = true;
+      try {
+        const formData = {
+          eventId: document.getElementById('signupEventId').value,
+          name: document.getElementById('signupName').value,
+          email: document.getElementById('signupEmail').value,
+          phone: document.getElementById('signupPhone').value
+        };
+        const res = await fetch('register-volunteer.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData) });
+        const result = await res.json();
+        if (result.success) {
+          alert('Registration successful!');
+          modal.classList.add('hidden');
+          signupForm.reset();
+          if (window.eventCalendar) { await window.eventCalendar.loadEvents(); window.eventCalendar.renderCalendar(); }
+        } else { alert(result.message); }
+      } catch (e) { alert('Error occurred.'); }
+      finally { btn.innerText = originalText; btn.disabled = false; }
+    });
+  }
+};
 
-      const formData = {
-        eventId: document.getElementById('signupEventId').value,
-        name: document.getElementById('signupName').value,
-        email: document.getElementById('signupEmail').value,
-        phone: document.getElementById('signupPhone').value
-      };
+window.bindContactLogic = function () {
+  const contactForm = document.getElementById('contactForm');
+  if (contactForm && !contactForm.dataset.bound) {
+    contactForm.dataset.bound = 'true';
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = contactForm.querySelector('button[type="submit"]');
+      const originalText = btn.innerText;
+      btn.innerText = "Sending...";
+      btn.disabled = true;
 
       try {
-        const response = await fetch('register-volunteer.php', {
+        const formData = new FormData(contactForm);
+        formData.append('ajax', '1');
+
+        const res = await fetch('send-email.php', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData)
+          body: formData
         });
 
-        const result = await response.json();
+        const result = await res.json();
 
         if (result.success) {
-          alert('Registration successful! Check your email for confirmation.');
-          modal.style.display = "none";
-          signupForm.reset();
-          // Reload events to update count
-          if (window.eventCalendar) {
-            await window.eventCalendar.loadEvents();
-            window.eventCalendar.renderCalendar();
-            window.eventCalendar.renderUpcomingEvents();
-
-            // Reset the day view to ensure no stale data is shown
-            const eventsDisplay = document.getElementById('eventsDisplay');
-            if (eventsDisplay) {
-              eventsDisplay.innerHTML = `
-                                <div class="events-display-empty">
-                                    <p style="font-size: 1.1rem; margin: 0;">📅</p>
-                                    <p>Select a date to view events</p>
-                                </div>
-                            `;
-            }
-          }
+          alert('Message sent successfully!');
+          contactForm.reset();
         } else {
-          alert('Error: ' + result.message);
+          alert(result.message || 'Error sending message.');
         }
-      } catch (error) {
-        console.error('Error:', error);
-        alert('An error occurred. Please try again.');
+      } catch (err) {
+        console.error(err);
+        alert('An network error occurred. Please try again.');
       } finally {
-        submitBtn.innerText = originalText;
-        submitBtn.disabled = false;
+        btn.innerText = originalText;
+        btn.disabled = false;
       }
     });
   }
-});
+};
 
-// Global function to open modal (called from calendar.js)
 window.openSignupModal = function (eventId, title, date, time) {
   const modal = document.getElementById('signupModal');
+  if (!modal) return;
   document.getElementById('signupEventId').value = eventId;
   document.getElementById('modalEventTitle').innerText = "Sign Up: " + title;
   document.getElementById('modalEventDetails').innerText = `${date} • ${time}`;
-  modal.style.display = "block";
-}
+  modal.classList.remove('hidden');
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (!window.appRouter) window.appRouter = new TurboRouter();
+  new ThemeManager();
+  new GalleryManager();
+  window.loadPartners();
+  window.loadBoard();
+  window.bindModalLogic();
+  if (window.bindContactLogic) window.bindContactLogic();
+});

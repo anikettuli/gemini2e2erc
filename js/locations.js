@@ -9,19 +9,30 @@ const MAP_STYLE_DARK = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/st
 
 // Function to fetch locations
 async function loadLocations() {
+  const container = document.getElementById('locations-list');
+  const mapContainer = document.getElementById('allLocationsMap');
+
+  // Only load if we are on the locations page logic (container exists)
+  if (!container && !mapContainer) return;
+
+  // SPA RESET: If map container exists but is empty, reset state
+  if (mapContainer && mapContainer.innerHTML === '') {
+    mapInitialized = false;
+    if (mapInstance) {
+      mapInstance.remove(); // Clean up old instance logic if still lingering
+      mapInstance = null;
+    }
+  }
+
   try {
-    // Fetch from PHP script which handles caching and geocoding
     const response = await fetch('get-locations.php');
     allLocations = await response.json();
     renderLocationsList();
-
-    // Try to init map if we are already on the locations tab
-    checkAndInitMap();
+    initMap();
   } catch (error) {
     console.error('Error loading locations:', error);
-    const container = document.getElementById('locations-list');
     if (container) {
-      container.innerHTML = '<p style="text-align:center; padding: 2rem;">Error loading locations. Please try refreshing the page.</p>';
+      container.innerHTML = '<div class="text-center p-8 text-red-500">Error loading locations. Please try refreshing the page.</div>';
     }
   }
 }
@@ -33,79 +44,99 @@ function renderLocationsList() {
 
   container.innerHTML = '';
 
+  if (allLocations.length === 0) {
+    container.innerHTML = '<div class="text-center p-8 text-slate-500">No partner locations found.</div>';
+    return;
+  }
+
+  // Create a grid layout for the list
+  const grid = document.createElement('div');
+  grid.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4';
+
   allLocations.forEach(loc => {
-    // Generate links dynamically
-    const phoneDigits = loc.phone.replace(/\D/g, '');
-    const phoneLink = `tel:+1${phoneDigits}`;
+    const phoneDigits = loc.phone ? loc.phone.replace(/\D/g, '') : '';
+    const phoneLink = phoneDigits ? `tel:+1${phoneDigits}` : '#';
     const directionsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc.address)}`;
 
-    const row = document.createElement('div');
-    row.className = 'location-row';
-    row.innerHTML = `
-            <div class="location-name">${loc.name}</div>
-            <div class="location-address">${loc.address}</div>
-            <div class="location-phone"><a href="${phoneLink}">${loc.phone}</a></div>
-            <div class="location-link"><a href="${directionsLink}" target="_blank">Directions</a></div>
-        `;
-    container.appendChild(row);
+    const card = document.createElement('div');
+    card.className = 'bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm hover:shadow-md transition-all border border-slate-100 dark:border-slate-700 block';
+
+    card.innerHTML = `
+        <h3 class="font-bold text-lg text-slate-900 dark:text-white mb-2">${loc.name}</h3>
+        <p class="text-slate-600 dark:text-slate-400 text-sm mb-4 h-10 line-clamp-2">${loc.address}</p>
+        <div class="flex gap-3 text-sm">
+            ${loc.phone ? `<a href="${phoneLink}" class="text-indigo-600 hover:text-indigo-500 font-medium">📞 Call</a>` : ''}
+            <a href="${directionsLink}" target="_blank" class="text-indigo-600 hover:text-indigo-500 font-medium">🗺️ Directions</a>
+        </div>
+    `;
+    grid.appendChild(card);
   });
+
+  container.appendChild(grid);
 }
 
-// Get current appropriate map style
 function getMapStyle() {
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const isDark = document.documentElement.classList.contains('dark');
   return isDark ? MAP_STYLE_DARK : MAP_STYLE_LIGHT;
 }
 
-// Initialize map
-async function initializeMap() {
+function initMap() {
   const mapContainer = document.getElementById('allLocationsMap');
-  if (!mapContainer) return;
+  if (!mapContainer || mapInitialized) return;
+
+  if (allLocations.length === 0) return; // Wait for data
+
+  mapInitialized = true;
 
   // Initialize MapLibre GL map
   mapInstance = new maplibregl.Map({
     container: 'allLocationsMap',
     style: getMapStyle(),
-    center: [-97.2, 32.75], // Default center (DFW)
+    center: [-97.2, 32.75], // DFW center
     zoom: 9
   });
 
-  // Add navigation controls
   mapInstance.addControl(new maplibregl.NavigationControl());
 
   const bounds = new maplibregl.LngLatBounds();
   let hasValidLocation = false;
 
-  // Process locations
   allLocations.forEach(loc => {
-    // Coordinates are now provided by the server (get-locations.php)
     if (loc.lat && loc.lng) {
       hasValidLocation = true;
+
+      // Custom marker element
       const el = document.createElement('div');
       el.className = 'marker';
-      el.style.backgroundImage = 'url(\'images/marker-icon.svg\')';
-      el.style.backgroundSize = '100%';
+      el.style.backgroundImage = 'url(\'images/marker-icon.svg\')'; // Ensure this exists or use fallback
       el.style.width = '30px';
       el.style.height = '30px';
+      el.style.backgroundSize = 'contain';
+      el.style.backgroundRepeat = 'no-repeat';
       el.style.cursor = 'pointer';
 
-      // Check if we need to invert marker color for dark mode (though usually SVG handles it, 
-      // but if it's an image, we might want a different one. 
-      // For now keeping same marker as it is likely high contrast).
+      // Fallback if image missing
+      el.onerror = () => { el.style.backgroundColor = '#6366f1'; el.style.borderRadius = '50%'; };
 
       const directionsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc.address)}`;
-      const popup = new maplibregl.Popup({ offset: 25 })
-        .setHTML(`
-          <div style="font-weight: bold; color: #0fbe7c; margin-bottom: 5px;">${loc.name}</div>
-          <div style="font-size: 0.9em; color: #333; margin-bottom: 8px;">${loc.address}</div>
-          <a href="${directionsLink}" target="_blank" style="display: inline-block; background-color: #0fbe7c; color: white; padding: 5px 10px; border-radius: 4px; text-decoration: none; font-size: 0.85em; transition: background-color 0.2s;">Get Directions</a>
-        `);
-      // Force dark text in popup as map styles might affect it, or ensure popup css is robust.
 
-      new maplibregl.Marker(el)
+      const popupHTML = `
+        <div class="p-2 min-w-[200px]">
+            <strong class="block text-slate-900 text-sm mb-1">${loc.name}</strong>
+            <p class="text-slate-600 text-xs mb-2">${loc.address}</p>
+            <a href="${directionsLink}" target="_blank" class="inline-block bg-indigo-600 text-white text-xs px-2 py-1 rounded hover:bg-indigo-700 transition-colors">Get Directions</a>
+        </div>
+      `;
+
+      const popup = new maplibregl.Popup({ offset: 25, closeButton: false }).setHTML(popupHTML);
+
+      new maplibregl.Marker({ element: el }) // Use the custom element if image exists, for now standard color is safer if no image
         .setLngLat([loc.lng, loc.lat])
         .setPopup(popup)
         .addTo(mapInstance);
+
+      // If image marker path is dubious, use default color marker:
+      // new maplibregl.Marker({ color: '#6366f1' })...
 
       bounds.extend([loc.lng, loc.lat]);
     }
@@ -116,60 +147,21 @@ async function initializeMap() {
   }
 }
 
-const checkAndInitMap = () => {
-  const locationsTab = document.getElementById('locations');
-  const mapContainer = document.getElementById('allLocationsMap');
-
-  // Check if locations tab is active/visible and we have data
-  if (locationsTab && locationsTab.classList.contains('active') && allLocations.length > 0) {
-    if (!mapInitialized) {
-      mapInitialized = true;
-      // distinct visual break for the user to see map loading
-      setTimeout(initializeMap, 100);
-    } else if (mapInstance) {
-      // If already initialized, trigger a resize in case it was hidden
-      mapInstance.resize();
-    }
-  }
-};
-
-// Update map style when theme changes
-const updateMapTheme = () => {
-  if (mapInstance && mapInitialized) {
-    mapInstance.setStyle(getMapStyle());
-  }
-};
-
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
   loadLocations();
 
-  // Listen for hash changes (handled by app.js router)
-  window.addEventListener('hashchange', () => {
-    setTimeout(checkAndInitMap, 100); // Small delay to allow tab switch to complete
-  });
-
-  // Also listen for tab clicks directly to be safe, though hashchange should cover it
-  const tabButtons = document.querySelectorAll('.tab-button, .js-tab-trigger');
-  tabButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      if (button.getAttribute('data-tab') === 'locations') {
-        setTimeout(checkAndInitMap, 100);
-      }
-    });
-  });
-
-  // Observe theme changes
+  // Watch for theme changes to update map style
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
-      if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
-        updateMapTheme();
+      if (mutation.type === 'attributes' && (mutation.attributeName === 'class' || mutation.attributeName === 'data-theme')) {
+        if (mapInstance) mapInstance.setStyle(getMapStyle());
       }
     });
   });
 
   observer.observe(document.documentElement, {
     attributes: true,
-    attributeFilter: ['data-theme']
+    attributeFilter: ['class', 'data-theme']
   });
 });
