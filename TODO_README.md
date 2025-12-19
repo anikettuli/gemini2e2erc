@@ -73,9 +73,9 @@ The following files are referenced or needed by the website but might be missing
     - Requirement: Implement a search feature to filter locations by zip code.
     - Status: To Do.
 
-- [ ] **8. Move Hours & Info to Home Page**
+- [x] **8. Move Hours & Info to Home Page**
     - Requirement: Move "Hours & Information" section to top of Home page (For Barb's review).
-    - Status: To Do.
+    - Status: Completed.
 
 - [ ] **9. Board of Directors Sections**
     - Requirement: Split into ‘Current Board of Directors’ and ‘Previous Board Members’.

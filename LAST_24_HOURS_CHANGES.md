@@ -16,6 +16,11 @@ These are changes that you or your visitors will notice properly when using the 
     -   **Why it helps:** Users can now see the visual map location immediately before browsing the detailed list, creating a more logical flow.
     -   **Importance:** **Medium**.
 
+-   **Hours & Information Relocation**
+    -   **What I did:** Moved the "Main Center & Hours" information from the Locations page to the very top of the Home page (just below the opening greeting).
+    -   **Why it helps:** This puts the most important information—where we are and when we are open—front and center. Visitors no longer have to hunt through the "Locations" tab to find out how to visit the main center.
+    -   **Importance:** **High**.
+
 -   **Contact Form Update**
     -   **What I did:** Added a "Need Collection Boxes" option to the subject dropdown.
     -   **Why it helps:** Streamlines requests for collection boxes, ensuring they get routed correctly.
