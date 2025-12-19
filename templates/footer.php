@@ -1,4 +1,4 @@
-<footer class="relative bg-slate-900 text-slate-300 pt-4 pb-4 overflow-hidden">
+<footer class="relative bg-slate-900 text-slate-300 pt-6 pb-4 overflow-hidden">
     <!-- Decorative glow -->
     <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
     <div class="absolute -top-[200px] -left-[200px] w-[500px] h-[500px] bg-indigo-600/20 rounded-full blur-[100px] pointer-events-none"></div>

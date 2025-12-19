@@ -1,11 +1,11 @@
-<section class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-16">
-    <div class="text-center mb-16">
+<section class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-8">
+    <div class="text-center mb-10">
         <h1 class="text-4xl font-bold mb-4 text-slate-900 dark:text-white">Get Involved</h1>
         <p class="text-xl text-slate-600 dark:text-slate-400">Join us in making a global impact through volunteering, donating, or support.</p>
     </div>
 
     <!-- Ways to Help Grid (Restored) -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-24">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
         <div class="glass-panel p-8 rounded-2xl hover:scale-105 transition-transform" data-aos="fade-up" data-aos-delay="0">
             <div class="text-4xl mb-4">🤝</div>
             <h3 class="font-bold text-lg mb-2">Volunteer</h3>
@@ -29,9 +29,9 @@
     </div>
 
     <!-- Calendar Section -->
-    <h2 class="text-3xl font-bold mb-8 text-center" id="volunteer-calendar">Volunteer Calendar</h2>
-    <div class="glass-panel rounded-3xl p-8 mb-16 relative overflow-hidden shadow-lg">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 h-[600px] lg:h-[500px]">
+    <h2 class="text-3xl font-bold mb-6 text-center" id="volunteer-calendar">Volunteer Calendar</h2>
+    <div class="glass-panel rounded-3xl p-8 mb-12 relative overflow-hidden shadow-lg">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 h-[500px] lg:h-[400px]">
             <!-- Calendar Grid -->
             <div class="lg:col-span-1 border-r border-slate-200 dark:border-slate-700/50 pr-8" id="volunteerCalendar">
                 <div class="flex items-center justify-center h-full text-slate-400 animate-pulse">Loading Calendar...</div>
@@ -48,10 +48,10 @@
     </div>
     
     <!-- All Events List -->
-    <div id="upcomingEvents" class="mb-24 px-4 bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm"></div>
+    <div id="upcomingEvents" class="mb-16 px-4 bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm"></div>
 
     <!-- Interactive Sections -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-24">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
         <!-- Individual Volunteers -->
         <div class="glass-panel p-8 rounded-3xl" data-aos="fade-right">
             <h3 class="text-2xl font-bold mb-4">Individual Volunteers</h3>
@@ -68,6 +68,10 @@
                  <li class="flex items-center gap-3">
                     <div class="w-6 h-6 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs">✓</div>
                     <span>Packing shipments</span>
+                </li>
+                 <li class="flex items-center gap-3">
+                    <div class="w-6 h-6 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs">✓</div>
+                    <span>Administrative support</span>
                 </li>
             </ul>
         </div>
@@ -132,6 +136,29 @@
                     <p class="text-slate-900 dark:text-white font-mono font-medium text-lg">Lions District 2-E2 ERC</p>
                     <p class="text-slate-600 dark:text-slate-400">P.O. Box 1854, Keller, TX 76244</p>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Partners Section -->
+    <div class="mt-16" data-aos="fade-up">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold mb-4">Our Partners & Friends</h2>
+            <p class="text-slate-500 max-w-2xl mx-auto">
+                We are grateful for the support of our many friends and partners. Special thanks to local businesses like <strong>Westlake Ace Hardware</strong> and <strong>Market Street</strong> for hosting our collection boxes.
+            </p>
+        </div>
+        
+        <div class="glass-panel p-8 rounded-3xl">
+            <ul id="partners-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-2">
+                <li class="col-span-full text-center text-slate-400 py-4 italic">Loading partners list...</li>
+            </ul>
+            <div class="mt-10 pt-8 border-t border-slate-100 dark:border-slate-800 text-center">
+                <h3 class="text-xl font-bold mb-4">Partner with Us</h3>
+                <p class="text-slate-600 dark:text-slate-400 mb-6">Want to host a collection box or support our mission through your organization?</p>
+                <a href="index.php?page=contact" class="text-indigo-600 font-bold hover:underline inline-flex items-center gap-2">
+                    Contact us to learn more <span>→</span>
+                </a>
             </div>
         </div>
     </div>

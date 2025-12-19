@@ -1,5 +1,5 @@
-<section class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-16">
-    <div class="text-center mb-16">
+<section class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-8">
+    <div class="text-center mb-10">
         <h1 class="text-4xl font-bold mb-4 text-slate-900 dark:text-white">Our Services</h1>
         <p class="text-xl text-slate-600 dark:text-slate-400">Complete eyeglass recycling solutions for individuals and organizations.</p>
     </div>
@@ -33,29 +33,36 @@
                     <div class="flex items-center p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors">
                         <span class="w-10 h-10 flex items-center justify-center bg-indigo-100 text-indigo-600 rounded-lg font-bold mr-4 text-lg">1</span>
                         <div>
-                            <strong class="block text-slate-900 dark:text-white text-lg">Sorting</strong>
-                            <span class="text-sm text-slate-500">Eyeglasses are sorted into categories (prescription type, etc.)</span>
+                            <strong class="block text-slate-900 dark:text-white text-lg">Collection</strong>
+                            <span class="text-sm text-slate-500">Items are collected from drop-off boxes and contributors.</span>
                         </div>
                     </div>
                     <div class="flex items-center p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors">
                         <span class="w-10 h-10 flex items-center justify-center bg-purple-100 text-purple-600 rounded-lg font-bold mr-4 text-lg">2</span>
                         <div>
-                            <strong class="block text-slate-900 dark:text-white text-lg">Washing & Drying</strong>
-                            <span class="text-sm text-slate-500">Thoroughly cleaned and sanitized for safety.</span>
+                            <strong class="block text-slate-900 dark:text-white text-lg">Inspection</strong>
+                            <span class="text-sm text-slate-500">We inspect and assess all items for quality and condition.</span>
                         </div>
                     </div>
                     <div class="flex items-center p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl hover:bg-pink-50 dark:hover:bg-pink-900/20 transition-colors">
                         <span class="w-10 h-10 flex items-center justify-center bg-pink-100 text-pink-600 rounded-lg font-bold mr-4 text-lg">3</span>
                         <div>
-                            <strong class="block text-slate-900 dark:text-white text-lg">Measuring</strong>
-                            <span class="text-sm text-slate-500">Precision equipment used to determine exact prescriptions.</span>
+                            <strong class="block text-slate-900 dark:text-white text-lg">Processing</strong>
+                            <span class="text-sm text-slate-500">Cleaning, sorting, and organizing based on prescription needs.</span>
                         </div>
                     </div>
                     <div class="flex items-center p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl hover:bg-teal-50 dark:hover:bg-teal-900/20 transition-colors">
                         <span class="w-10 h-10 flex items-center justify-center bg-teal-100 text-teal-600 rounded-lg font-bold mr-4 text-lg">4</span>
                         <div>
-                            <strong class="block text-slate-900 dark:text-white text-lg">Final Sorting</strong>
-                            <span class="text-sm text-slate-500">Sorted one last time and stored, ready for distribution.</span>
+                            <strong class="block text-slate-900 dark:text-white text-lg">Quality Check</strong>
+                            <span class="text-sm text-slate-500">Final quality assurance review to ensure accurate functionality.</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors">
+                        <span class="w-10 h-10 flex items-center justify-center bg-green-100 text-green-600 rounded-lg font-bold mr-4 text-lg">5</span>
+                        <div>
+                            <strong class="block text-slate-900 dark:text-white text-lg">Distribution</strong>
+                            <span class="text-sm text-slate-500">Items are shipped to mission partners around the world.</span>
                         </div>
                     </div>
                 </div>

@@ -1,6 +1,6 @@
-<section class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-16">
+<section class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-8">
     <!-- Header -->
-    <div class="text-center mb-16" data-aos="fade-up">
+    <div class="text-center mb-10" data-aos="fade-up">
         <h1 class="text-4xl md:text-5xl font-bold mb-6 text-slate-900 dark:text-white">About Us</h1>
         <p class="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
             A community-driven organization dedicated to recycling eyeglasses and serving global mission partners.
@@ -96,7 +96,7 @@
     </div>
 
     <!-- Downloads -->
-    <div class="bg-indigo-50 dark:bg-slate-800/50 rounded-3xl p-12 text-center" data-aos="zoom-in">
+    <div class="bg-indigo-50 dark:bg-slate-800/50 rounded-3xl p-8 text-center" data-aos="zoom-in">
         <h2 class="text-3xl font-bold mb-4 text-slate-900 dark:text-white">Downloads & Resources</h2>
         <p class="text-slate-600 dark:text-slate-400 mb-8">Access our brochures, forms, and informational materials.</p>
         

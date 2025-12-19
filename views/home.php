@@ -1,5 +1,5 @@
 <!-- Hero Section -->
-<section class="relative min-h-[60vh] flex flex-col justify-center pt-10 px-4 sm:px-6 lg:px-8 overflow-hidden mb-12">
+<section class="relative min-h-[50vh] flex flex-col justify-center pt-8 px-4 sm:px-6 lg:px-8 overflow-hidden mb-8">
     <!-- Background Elements (Fixed/Parallax) -->
     <div class="fixed inset-0 w-full h-full z-0 pointer-events-none">
         <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-[128px] animate-pulse"></div>
@@ -23,13 +23,13 @@
         </div>
         
         <!-- Stats Strip -->
-        <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 pt-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="mt-10 grid grid-cols-2 md:grid-cols-4 gap-8 pt-4" data-aos="fade-up" data-aos-delay="200">
             <div>
                 <div class="text-3xl font-bold text-indigo-600 dark:text-indigo-400">17,000+</div>
                 <div class="text-sm text-slate-500">Pairs in 2023-2024</div>
             </div>
             <div>
-                <div class="text-3xl font-bold text-purple-600 dark:text-purple-400">20+</div>
+                <div class="text-3xl font-bold text-purple-600 dark:text-purple-400">40+</div>
                 <div class="text-sm text-slate-500">Countries Served</div>
             </div>
             <div>
@@ -45,8 +45,8 @@
 </section>
 
 <!-- Impact Bento Grid Section -->
-<section class="py-6 px-4 sm:px-6 lg:px-8 max-w-[1400px] mx-auto mb-12">
-    <div class="text-center mb-16" data-aos="fade-up">
+<section class="py-4 px-4 sm:px-6 lg:px-8 max-w-[1400px] mx-auto mb-8">
+    <div class="text-center mb-10" data-aos="fade-up">
         <h2 class="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4">The Need for Clear Vision</h2>
         <p class="text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto">
              According to the World Health Organization, at least <strong>2.2 billion people globally</strong> have a near or distance vision impairment. Of these, at least <strong>1 billion cases</strong> have not yet been addressed.
@@ -81,28 +81,28 @@
                     <span class="p-2 bg-white/20 rounded-lg shrink-0">🌎</span>
                     <div>
                         <strong class="block text-lg">The Americas</strong>
-                        <span class="text-indigo-100 text-sm">Belize, Bolivia, Brazil, Mexico, Peru, Haiti, Honduras, Guatemala, Nicaragua, Costa Rica, Panama & more</span>
+                        <span class="text-indigo-100 text-sm">Belize, Bolivia, Brazil, Colombia, Costa Rica, Cuba, Dominican Republic, Ecuador, El Salvador, Guatemala, Haiti, Honduras, Mexico, Nicaragua, Panama, Paraguay, Peru, and Venezuela.</span>
                     </div>
                 </li>
                 <li class="flex items-start gap-3">
                     <span class="p-2 bg-white/20 rounded-lg shrink-0">🌍</span>
                     <div>
                         <strong class="block text-lg">Africa</strong>
-                        <span class="text-indigo-100 text-sm">Ethiopia, Ghana, Kenya, Nigeria, Uganda, Zambia, Senegal, Mali, Cameroon, Rwanda, South Sudan, Madagascar</span>
+                        <span class="text-indigo-100 text-sm">Cameroon, Ethiopia, Ghana, Kenya, Malawi, Nigeria, Senegal, South Africa, Tanzania, Uganda, Zambia, and more.</span>
                     </div>
                 </li>
                 <li class="flex items-start gap-3">
                     <span class="p-2 bg-white/20 rounded-lg shrink-0">🌏</span>
                     <div>
                         <strong class="block text-lg">Asia</strong>
-                        <span class="text-indigo-100 text-sm">Cambodia, Nepal, Philippines, Vietnam, Thailand, Laos, Indonesia, Malaysia, Sri Lanka, Bangladesh, Mongolia</span>
+                        <span class="text-indigo-100 text-sm">Bangladesh, Cambodia, Nepal, Philippines, Vietnam, Thailand, Laos, Indonesia, Malaysia, Sri Lanka, and Mongolia.</span>
                     </div>
                 </li>
                 <li class="flex items-start gap-3">
                     <span class="p-2 bg-white/20 rounded-lg shrink-0">🌍</span>
                     <div>
                         <strong class="block text-lg">Europe</strong>
-                        <span class="text-indigo-100 text-sm">Moldova, Poland, Romania, Ukraine, Albania, Bosnia, Serbia, Armenia, Georgia</span>
+                        <span class="text-indigo-100 text-sm">Moldova, Poland, Romania, Ukraine, Albania, Bosnia, Serbia, Armenia, and Georgia.</span>
                     </div>
                 </li>
             </ul>
@@ -141,9 +141,9 @@
 </section>
 
 <!-- Process Section -->
-<section class="py-6 mb-12">
+<section class="py-4 mb-8">
     <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16">
+        <div class="text-center mb-10">
             <h2 class="text-3xl font-bold mb-4">Our 4-Step Recycling Process</h2>
             <p class="text-slate-500">We have a dedicated process to ensure used eyeglasses are ready for a new owner.</p>
         </div>
@@ -182,6 +182,48 @@
                 </div>
             </div>
         </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-12 px-4 sm:px-6 lg:px-8 max-w-[1400px] mx-auto overflow-hidden">
+    <div class="text-center mb-10" data-aos="fade-up">
+        <h2 class="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4">💬 Mission Partners</h2>
+        <p class="text-xl text-slate-500">Hear from those whose work is made possible through recycled eyeglasses.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <?php 
+        $testimonials = json_decode(file_get_contents('data/testimonials.json'), true);
+        if ($testimonials): 
+            foreach($testimonials as $i => $t): 
+        ?>
+            <div class="glass-panel p-8 rounded-3xl relative" data-aos="fade-up" data-aos-delay="<?= $i * 100 ?>">
+                <div class="text-4xl text-indigo-500 opacity-20 absolute top-6 left-6">"</div>
+                <p class="text-slate-600 dark:text-slate-300 italic mb-6 leading-relaxed relative z-10">
+                    <?= htmlspecialchars($t['text']) ?>
+                </p>
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/30 rounded-full flex items-center justify-center font-bold text-indigo-600">
+                        <?= substr($t['author'], 0, 1) ?>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-900 dark:text-white"><?= htmlspecialchars($t['author']) ?></h4>
+                        <p class="text-sm text-slate-500"><?= htmlspecialchars($t['organization']) ?></p>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach; endif; ?>
+    </div>
+    
+    <div class="mt-12 glass-panel p-8 rounded-3xl border-l-8 border-indigo-500 flex flex-col md:flex-row justify-between items-center gap-6" data-aos="fade-up">
+        <div>
+            <h3 class="text-2xl font-bold mb-2">Become a Mission Partner</h3>
+            <p class="text-slate-500">If your organization conducts vision missions, we would love to partner with you.</p>
+        </div>
+        <a href="index.php?page=contact" class="px-8 py-4 bg-indigo-600 text-white rounded-full font-bold hover:bg-indigo-700 transition-all shadow-lg whitespace-nowrap">
+            Partner with Us
+        </a>
     </div>
 </section>
 

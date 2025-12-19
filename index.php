@@ -13,6 +13,23 @@ if (!in_array($page, $valid_pages)) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lions District 2-E2 Eyeglass Recycling Center</title>
+    <meta name="description" content="We collect, process, and distribute recycled eyeglasses to those in need around the world. Join us in giving the gift of sight.">
+    <link rel="icon" type="image/png" href="e2e2rc_LOGO.png">
+    <meta name="theme-color" content="#004990">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.2e2erc.org/">
+    <meta property="og:title" content="Lions District 2-E2 Eyeglass Recycling Center">
+    <meta property="og:description" content="Giving the gift of sight through recycled eyeglasses. Volunteer or donate today.">
+    <meta property="og:image" content="https://www.2e2erc.org/images/our-story-group.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://www.2e2erc.org/">
+    <meta property="twitter:title" content="Lions District 2-E2 ERC">
+    <meta property="twitter:description" content="Giving the gift of sight through recycled eyeglasses.">
+    <meta property="twitter:image" content="https://www.2e2erc.org/images/our-story-group.png">
     
     <!-- Modern Stack -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -121,7 +138,7 @@ if (!in_array($page, $valid_pages)) {
     <?php include 'templates/nav.php'; ?>
 
     <!-- Main Content -->
-    <main class="pt-24 flex-grow">
+    <main class="pt-20 flex-grow">
         <?php 
         $file = "views/{$page}.php";
         if (file_exists($file)) {

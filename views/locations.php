@@ -1,5 +1,5 @@
-<section class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-16">
-    <div class="text-center mb-16">
+<section class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-8">
+    <div class="text-center mb-10">
         <h1 class="text-4xl font-bold mb-4 text-slate-900 dark:text-white">Drop-Off Locations</h1>
         <p class="text-xl text-slate-600 dark:text-slate-400">Find convenient donation drop-off locations across the Dallas-Fort Worth area.</p>
     </div>
@@ -86,6 +86,37 @@
                   <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
                 Loading locations map data...
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="mt-12">
+        <h2 class="text-3xl font-bold mb-8 text-center text-slate-900 dark:text-white">Frequently Asked Questions</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="glass-panel p-8 rounded-2xl" data-aos="fade-up">
+                <h3 class="text-xl font-bold mb-3 text-indigo-600 dark:text-indigo-400">📍 What items can I donate?</h3>
+                <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+                    We accept eyeglasses (any condition), hearing aids, laptops, computers, cell phones, and other electronics. Some partner locations accept specific items - check with the location before going.
+                </p>
+            </div>
+            <div class="glass-panel p-8 rounded-2xl" data-aos="fade-up" data-aos-delay="100">
+                <h3 class="text-xl font-bold mb-3 text-purple-600 dark:text-purple-400">⏰ What are your hours?</h3>
+                <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+                    Our main center is open most Saturdays from 9 AM to 3 PM. Weekday appointments are available by calling (817) 710-5403. Partner locations vary - check their individual schedules.
+                </p>
+            </div>
+            <div class="glass-panel p-8 rounded-2xl" data-aos="fade-up" data-aos-delay="200">
+                <h3 class="text-xl font-bold mb-3 text-pink-600 dark:text-pink-400">💰 Do you accept donations from businesses?</h3>
+                <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+                    Yes! Large donations from businesses and organizations are welcome. Please contact us at (817) 710-5403 to arrange pickup or delivery.
+                </p>
+            </div>
+            <div class="glass-panel p-8 rounded-2xl" data-aos="fade-up" data-aos-delay="300">
+                <h3 class="text-xl font-bold mb-3 text-teal-600 dark:text-teal-400">📦 How do I ship donations?</h3>
+                <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+                    For shipping large quantities, contact us first at 2e2erc1854@gmail.com. We can provide shipping instructions and may be able to arrange pickups.
+                </p>
             </div>
         </div>
     </div>
