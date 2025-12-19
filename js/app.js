@@ -43,22 +43,28 @@ class TurboRouter {
         this.reinitPageScripts();
 
         this.mainContent.style.opacity = '1';
-        window.scrollTo(0, 0);
+        // Force scroll to top on all browsers
+        window.scrollTo({ top: 0, behavior: 'instant' });
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
 
-        // Robust AOS Handling
+        // Robust AOS Handling - with increased delays to prevent race conditions
         if (window.AOS) {
+          // First pass: wait for DOM to settle
           setTimeout(() => {
             window.AOS.refreshHard();
+            // Second pass: force-animate any stubborn elements
             setTimeout(() => {
               document.querySelectorAll('[data-aos]').forEach(el => {
                 if (getComputedStyle(el).opacity === '0' || getComputedStyle(el).visibility === 'hidden') {
                   el.classList.add('aos-animate');
                   el.style.opacity = '1';
                   el.style.visibility = 'visible';
+                  el.style.transform = 'none';
                 }
               });
-            }, 300);
-          }, 50);
+            }, 500);
+          }, 150);
         }
       }, 200);
 
@@ -136,6 +142,7 @@ class TurboRouter {
 class ThemeManager {
   constructor() {
     this.themeToggle = document.getElementById('themeToggleDesktop');
+    this.themeToggleMobile = document.getElementById('themeToggleMobile');
     this.htmlElement = document.documentElement;
     this.init();
   }
@@ -147,6 +154,9 @@ class ThemeManager {
     }
     if (this.themeToggle) {
       this.themeToggle.addEventListener('click', () => this.toggleTheme());
+    }
+    if (this.themeToggleMobile) {
+      this.themeToggleMobile.addEventListener('click', () => this.toggleTheme());
     }
   }
   toggleTheme() {

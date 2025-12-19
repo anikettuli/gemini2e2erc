@@ -8,7 +8,7 @@ if (!in_array($page, $valid_pages)) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth overflow-x-hidden">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -120,19 +120,22 @@ if (!in_array($page, $valid_pages)) {
             scrollbar-width: none;
         }
 
-        /* Custom Scrollbar */
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.05); }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(99, 102, 241, 0.5); border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(99, 102, 241, 0.8); }
-        .dark .custom-scrollbar::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); }
-        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(129, 140, 248, 0.5); }
+        /* Box Sizing Reset */
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            width: 100%;
+            overflow-x: hidden;
+            position: relative;
+        }
     </style>
 </head>
-<body class="bg-gray-50 text-slate-800 dark:bg-slate-900 dark:text-gray-100 transition-colors duration-300 flex flex-col min-h-screen">
+<body class="bg-gray-50 text-slate-800 dark:bg-slate-900 dark:text-gray-100 transition-colors duration-300 flex flex-col min-h-screen overflow-x-hidden">
 
     <!-- Background -->
-    <div class="animated-bg"></div>
+    <div class="animated-bg overflow-hidden"></div>
 
     <!-- Navigation -->
     <?php include 'templates/nav.php'; ?>
@@ -164,9 +167,17 @@ if (!in_array($page, $valid_pages)) {
         // Mobile Menu Logic
         const mobileBtn = document.getElementById('mobile-menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
-        if(mobileBtn) {
+        if(mobileBtn && mobileMenu) {
             mobileBtn.addEventListener('click', () => {
                 mobileMenu.classList.toggle('hidden');
+            });
+            
+            // Close menu when a link is clicked
+            mobileMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                    window.scrollTo(0, 0);
+                });
             });
         }
     </script>

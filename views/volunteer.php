@@ -30,16 +30,16 @@
 
     <!-- Calendar Section -->
     <h2 class="text-3xl font-bold mb-6 text-center" id="volunteer-calendar">Volunteer Calendar</h2>
-    <div class="glass-panel rounded-3xl p-8 mb-12 relative overflow-hidden shadow-lg">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 h-[500px] lg:h-[400px]">
+    <div class="glass-panel rounded-3xl p-4 lg:p-8 mb-12 relative overflow-hidden shadow-lg">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Calendar Grid -->
-            <div class="lg:col-span-1 border-r border-slate-200 dark:border-slate-700/50 pr-8" id="volunteerCalendar">
-                <div class="flex items-center justify-center h-full text-slate-400 animate-pulse">Loading Calendar...</div>
+            <div class="lg:col-span-1 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-700/50 pb-8 lg:pb-0 lg:pr-8" id="volunteerCalendar">
+                <div class="flex items-center justify-center h-[320px] text-slate-400 animate-pulse">Loading Calendar...</div>
             </div>
             
             <!-- Events Display -->
-            <div class="lg:col-span-2 bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-6 overflow-y-auto custom-scrollbar" id="eventsDisplay">
-                <div class="flex flex-col items-center justify-center h-full text-slate-400">
+            <div class="lg:col-span-2 bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-4 lg:p-6 overflow-x-auto lg:overflow-y-auto no-scrollbar lg:custom-scrollbar min-h-[320px] lg:h-[400px]" id="eventsDisplay">
+                <div class="flex flex-col items-center justify-center h-full text-slate-400 text-center py-8">
                     <span class="text-4xl mb-2">📅</span>
                     <p>Select a date to view available slots</p>
                 </div>

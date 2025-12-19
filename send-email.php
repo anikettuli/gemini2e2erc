@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
         echo json_encode(['success' => false, 'message' => 'Invalid request method.']);
         exit;
     }
-    header("Location: index.html");
+    header("Location: index.php");
     exit;
 }
 
@@ -67,7 +67,7 @@ if (empty($name) || empty($email) || empty($message) || !filter_var($email, FILT
         echo json_encode(['success' => false, 'message' => 'Please fill in all required fields properly.']);
         exit;
     }
-    header("Location: index.html?status=error&reason=invalid_input#contact");
+    header("Location: index.php?page=contact&status=error&reason=invalid_input");
     exit;
 }
 
@@ -120,7 +120,7 @@ try {
         echo json_encode(['success' => true, 'message' => 'Message sent successfully!']);
         exit;
     }
-    header("Location: index.html?status=success#contact");
+    header("Location: index.php?page=contact&status=success");
     exit;
 
 } catch (Exception $e) {
@@ -136,7 +136,7 @@ try {
         echo json_encode(['success' => false, 'message' => 'Sending failed. Please try again later.']);
         exit;
     }
-    header("Location: index.html?status=error&reason=$reason#contact");
+    header("Location: index.php?page=contact&status=error&reason=$reason");
     exit;
 }
 

@@ -42,7 +42,10 @@ function isActive($pageName, $currentPage) {
             </div>
 
             <!-- Mobile Button -->
-            <div class="md:hidden flex items-center">
+            <div class="md:hidden flex items-center gap-2">
+                <button id="themeToggleMobile" class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors">
+                    <span class="text-xl">☀️</span>
+                </button>
                 <button id="mobile-menu-btn" class="p-2 rounded-md text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />

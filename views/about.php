@@ -16,7 +16,7 @@
                     District 2-E2 Eyeglass Recycling Center was founded in 2013 and officially recognized in 2014 as a 501(c)(3) nonprofit organization. We were created with a simple vision: to ensure that no one should go without proper vision care due to cost or access limitations.
                 </p>
                 <p>
-                    What started as a small group of passionate volunteers has grown into a thriving organization that serves mission partners across 20+ countries. Every single member of our team is a volunteer, dedicated to making a global impact.
+                    What started as a small group of passionate volunteers has grown into a thriving organization that serves mission partners across 40+ countries. Every single member of our team is a volunteer, dedicated to making a global impact.
                 </p>
             </div>
         </div>

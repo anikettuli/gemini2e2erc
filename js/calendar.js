@@ -146,7 +146,9 @@ class EventCalendar {
     dayEvents.forEach(event => {
       html += this.createEventCard(event);
     });
-    eventsDisplay.innerHTML = `<div class="space-y-4 animate-fade-in">${html}</div>`;
+    // Added snap-x snap-mandatory and scroll-px for behavior
+    // Added trailing spacer for last-card snap fix
+    eventsDisplay.innerHTML = `<div class="flex lg:flex-col gap-4 animate-fade-in w-full overflow-x-auto snap-x snap-mandatory lg:overflow-visible no-scrollbar pb-4 px-4 scroll-px-4">${html}<div class="w-4 shrink-0 lg:hidden" aria-hidden="true"></div></div>`;
   }
 
   renderUpcomingEvents() {
@@ -162,12 +164,17 @@ class EventCalendar {
       return;
     }
 
-    let html = `<h3 class="text-2xl font-bold mb-6 text-slate-900 dark:text-white">Upcoming Opportunities</h3><div class="grid grid-cols-1 md:grid-cols-2 gap-6">`;
+    let eventsHtml = '';
     upcoming.forEach(event => {
-      html += this.createEventCard(event);
+      eventsHtml += this.createEventCard(event);
     });
-    html += '</div>';
-    container.innerHTML = html;
+
+    container.innerHTML = `
+      <h3 class="text-2xl font-bold mb-6 text-slate-900 dark:text-white px-1">Upcoming Opportunities</h3>
+      <div class="flex md:grid md:grid-cols-2 gap-6 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-6 w-full px-4 scroll-px-4">
+        ${eventsHtml}
+        <div class="w-4 shrink-0 md:hidden" aria-hidden="true"></div>
+      </div>`;
   }
 
   createEventCard(event) {
@@ -179,10 +186,10 @@ class EventCalendar {
     const imageSrc = event.image ? event.image : 'images/e2e2rc_LOGO.png';
 
     return `
-            <div class="bg-white dark:bg-slate-700/50 rounded-2xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-md transition-shadow relative overflow-hidden group flex flex-col sm:flex-row gap-6">
+            <div class="bg-white dark:bg-slate-700/50 rounded-2xl p-5 lg:p-6 shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-md transition-shadow relative overflow-hidden group flex flex-col sm:flex-row gap-5 lg:gap-6 w-[80vw] sm:w-auto sm:min-w-0 flex-shrink-0 lg:w-full snap-center lg:snap-none">
                 ${isFull ? '<div class="absolute top-2 right-2 bg-red-100 text-red-600 text-xs font-bold px-2 py-1 rounded-full z-10">FULL</div>' : ''}
                 
-                <div class="w-full sm:w-32 h-32 shrink-0 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-600">
+                <div class="w-full sm:w-32 aspect-square shrink-0 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-600">
                     <img src="${imageSrc}" alt="${event.title}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" onerror="this.src='images/e2e2rc_LOGO.png'">
                 </div>
 

@@ -10,10 +10,10 @@
         <span class="inline-block py-1 px-3 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-sm font-semibold mb-6 border border-indigo-100 dark:border-indigo-800">
             Vision for the World
         </span>
-        <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-6">
+        <h1 class="text-2xl sm:text-4xl md:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-6 max-w-full break-words leading-tight">
             Giving the <span class="text-gradient">Gift of Sight</span><br>to Those in Need
         </h1>
-        <p class="text-xl md:text-2xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto mb-10 leading-relaxed">
+        <p class="text-lg md:text-2xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto mb-10 leading-relaxed">
             We collect, process, and distribute recycled eyeglasses to missions around the globe. Join us in making a difference, one pair at a time.
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
