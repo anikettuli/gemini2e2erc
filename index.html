@@ -159,7 +159,8 @@
           </div>
         </div>
         <p style="text-align: center; margin-top: 1rem; font-size: 1.05rem;">In 2023-2024, we supplied over
-          <strong>17,000 pairs</strong> of eyeglasses for foreign missions—our largest quantity ever.</p>
+          <strong>17,000 pairs</strong> of eyeglasses for foreign missions—our largest quantity ever.
+        </p>
       </section>
 
       <section>
@@ -674,7 +675,8 @@
             <h4>⏰ What are your hours?</h4>
             <p>Our main center is open most Saturdays from 9 AM to 3 PM. Weekday appointments are available by calling
               <a href="#" class="global-phone-link show-text"></a>. Partner locations vary - check their individual
-              schedules.</p>
+              schedules.
+            </p>
           </div>
           <div class="faq-item">
             <h4>💰 Do you accept donations from businesses?</h4>
@@ -698,75 +700,81 @@
       </div>
 
       <section>
-        <h2>Contact Information</h2>
-        <div class="grid">
-          <div class="card">
-            <h3>📞 Phone</h3>
-            <p><strong><a href="#" class="global-phone-link show-text"
-                  style="color: var(--primary-color); text-decoration: none;"></a></strong></p>
+        <div class="contact-layout">
+          <div class="contact-info-sidebar">
+            <div class="contact-card">
+              <div class="contact-card-icon">📞</div>
+              <div class="contact-card-content">
+                <h3>Phone</h3>
+                <p><a href="#" class="global-phone-link show-text"></a></p>
+              </div>
+            </div>
+            <div class="contact-card">
+              <div class="contact-card-icon">✉️</div>
+              <div class="contact-card-content">
+                <h3>Email</h3>
+                <p><a href="#" class="global-email-link show-text"></a></p>
+              </div>
+            </div>
+            <div class="contact-card">
+              <div class="contact-card-icon">📍</div>
+              <div class="contact-card-content">
+                <h3>Visit Us</h3>
+                <p>5621 Bunker Blvd<br>Watauga, TX 76148</p>
+              </div>
+            </div>
+            <div class="contact-card">
+              <div class="contact-card-icon">📮</div>
+              <div class="contact-card-content">
+                <h3>Mail Us</h3>
+                <p>P.O. Box 1854<br>Keller, TX 76244</p>
+              </div>
+            </div>
           </div>
-          <div class="card">
-            <h3>✉️ Email</h3>
-            <p><strong><a href="#" class="global-email-link show-text"
-                  style="color: var(--primary-color); text-decoration: none;"></a></strong></p>
-          </div>
-          <div class="card">
-            <h3>📍 Visit Us</h3>
-            <p>5621 Bunker Blvd<br>Watauga, TX 76148</p>
-          </div>
-          <div class="card">
-            <h3>📮 Mail Us</h3>
-            <p>P.O. Box 1854<br>Keller, TX 76244</p>
+
+          <div class="contact-form-main">
+            <h3>Get in Touch</h3>
+            <form class="contact-form" action="send-email.php" method="POST">
+              <div class="form-row-four">
+                <div class="form-group">
+                  <label for="name">Full Name *</label>
+                  <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                  <label for="email">Email *</label>
+                  <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                  <label for="phone">Phone</label>
+                  <input type="tel" id="phone" name="phone">
+                </div>
+                <div class="form-group">
+                  <label for="subject">Subject *</label>
+                  <select id="subject" name="subject" required>
+                    <option value="">Select...</option>
+                    <option value="volunteer">Volunteer</option>
+                    <option value="group-volunteer">Group volunteer</option>
+                    <option value="donation-items">Donate items</option>
+                    <option value="donation-money">Donate money</option>
+                    <option value="need-collection-boxes">Collection Boxes</option>
+                    <option value="partnership">Partnership</option>
+                    <option value="question">Question</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="message">Message *</label>
+                <textarea id="message" name="message" required></textarea>
+              </div>
+
+              <button type="submit" class="cta-button" style="width: 100%;">Send Message</button>
+            </form>
+            <p style="margin-top: 0.25rem; color: var(--text-light); font-size: 0.85rem;">Typically respond within 24
+              hours.</p>
           </div>
         </div>
-      </section>
-
-      <section>
-        <h2>Get in Touch</h2>
-        <form class="contact-form" action="send-email.php" method="POST" style="max-width: 600px;">
-          <div class="form-row">
-            <div class="form-group">
-              <label for="name">Full Name *</label>
-              <input type="text" id="name" name="name" required>
-            </div>
-            <div class="form-group">
-              <label for="email">Email Address *</label>
-              <input type="email" id="email" name="email" required>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="phone">Phone Number</label>
-              <input type="tel" id="phone" name="phone">
-            </div>
-            <div class="form-group">
-              <label for="subject">Subject *</label>
-              <select id="subject" name="subject" required>
-                <option value="">-- Select a subject --</option>
-                <option value="volunteer">I want to volunteer</option>
-                <option value="group-volunteer">Group volunteer day</option>
-                <option value="donation-items">Items to donate</option>
-                <option value="donation-money">Financial donation</option>
-                <option value="need-collection-boxes">Need Collection Boxes</option>
-                <option value="partnership">Mission organization partner</option>
-                <option value="question">General question</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="message">Message *</label>
-            <textarea id="message" name="message" required></textarea>
-          </div>
-
-
-
-          <button type="submit" class="cta-button" style="width: 100%; text-align: center;">Send Message</button>
-        </form>
-        <p style="margin-top: 1.5rem; color: var(--text-light); font-size: 0.9rem;">We typically respond to inquiries
-          within 24 hours. Thank you for reaching out!</p>
       </section>
 
       <section>
