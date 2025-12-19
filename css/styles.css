@@ -437,7 +437,7 @@ main {
 .cta-button {
     display: inline-block;
     background: var(--secondary-color);
-    color: var(--white);
+    color: #000000; /* Force black text for contrast on yellow */
     padding: 1rem 2rem;
     border-radius: 6px;
     text-decoration: none;
@@ -656,6 +656,17 @@ section p {
 
 :root[data-theme="dark"] .testimonial-org {
     color: #b8b8b8;
+}
+
+/* Dark mode email/phone links in header - light blue like footer */
+:root[data-theme="dark"] .contact-item a[href^="tel:"],
+:root[data-theme="dark"] .contact-item a[href^="mailto:"] {
+    color: #3d8fcf;
+}
+
+:root[data-theme="dark"] .contact-item a[href^="tel:"]:hover,
+:root[data-theme="dark"] .contact-item a[href^="mailto:"]:hover {
+    color: #5da6e0;
 }
 
 .info-box {
@@ -1794,7 +1805,7 @@ input[type="text"],
 
         .calendar-day.selected {
             background: var(--secondary-color);
-            color: var(--primary-dark);
+            color: #000000; /* Force black text for contrast on yellow */
             font-weight: bold;
             border: 2px solid var(--primary-color);
         }
