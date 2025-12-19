@@ -59,7 +59,10 @@ jobs:
             **/.git*
             **/.git*/**
             **/node_modules/**
-            data/signups.json
+            data/*.json
+            gallery/*
+            images/events/*
+            images/board/*
             tools/**
 
 
