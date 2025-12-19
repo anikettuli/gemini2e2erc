@@ -38,13 +38,29 @@
     <div class="header-container">
       <div class="logo-section">
         <div class="logo">
-          <img src="e2e2rc_LOGO.png" alt="District 2-E2 ERC Logo"
-            style="width: 100%; height: 100%; object-fit: contain;">
+          <img src="e2e2rc_LOGO.png" alt="District 2-E2 ERC Logo">
         </div>
         <div class="site-info">
           <h1>Lions District 2-E2 ERC</h1>
           <p>Eyeglass Recycling Center</p>
         </div>
+      </div>
+
+      <!-- Desktop Tab Navigation -->
+      <nav class="tab-nav">
+        <button class="tab-button active" data-tab="home">Home</button>
+        <button class="tab-button" data-tab="about">About</button>
+        <button class="tab-button" data-tab="services">Services</button>
+        <button class="tab-button" data-tab="get-involved">Volunteer</button>
+        <button class="tab-button" data-tab="locations">Locations</button>
+        <button class="tab-button" data-tab="contact">Contact</button>
+      </nav>
+
+      <div class="header-actions desktop-only">
+        <button class="theme-toggle" id="themeToggleDesktop" title="Toggle dark mode" aria-label="Toggle dark mode">
+          <span id="themeIconDesktop">☀️</span>
+        </button>
+        <button class="header-cta js-tab-trigger" data-tab="get-involved">Get Involved</button>
       </div>
 
       <!-- Mobile Menu Bar -->
@@ -61,26 +77,12 @@
       <!-- Mobile Navigation Dropdown -->
       <nav class="mobile-nav" id="mobileNav">
         <button class="tab-button active" data-tab="home">Home</button>
-        <button class="tab-button" data-tab="about">About Us</button>
+        <button class="tab-button" data-tab="about">About</button>
         <button class="tab-button" data-tab="services">Services</button>
-        <button class="tab-button" data-tab="get-involved">Get Involved</button>
+        <button class="tab-button" data-tab="get-involved">Volunteer</button>
         <button class="tab-button" data-tab="locations">Locations</button>
-        <button class="tab-button" data-tab="contact">Contact Us</button>
+        <button class="tab-button" data-tab="contact">Contact</button>
       </nav>
-
-      <!-- Desktop Tab Navigation -->
-      <nav class="tab-nav">
-        <button class="tab-button active" data-tab="home">Home</button>
-        <button class="tab-button" data-tab="about">About Us</button>
-        <button class="tab-button" data-tab="services">Services</button>
-        <button class="tab-button" data-tab="get-involved">Get Involved</button>
-        <button class="tab-button" data-tab="locations">Locations</button>
-        <button class="tab-button" data-tab="contact">Contact Us</button>
-      </nav>
-      <button class="theme-toggle desktop-only" id="themeToggleDesktop" title="Toggle dark mode"
-        aria-label="Toggle dark mode">
-        <span id="themeIconDesktop">☀️</span>
-      </button>
     </div>
   </header>
 
@@ -834,9 +836,8 @@
         <p>Lions District 2-E2 Eyeglass Recycling Center is a 501(c)(3) nonprofit dedicated to improving vision care
           access globally. We collect, sort, clean, and prepare used eyeglasses for shipment to people in need across
           40+ countries worldwide.</p>
-        <p>What started as a small group of passionate volunteers has grown into a thriving organization. Every single
-          member of our team is a volunteer, dedicated to making a global impact and ensuring no one should go without
-          proper vision care due to cost or access limitations.</p>
+        <p>Our team is entirely volunteer-run and dedicated to ensuring no one goes without proper vision care due to
+          cost or access limitations.</p>
       </div>
       <div class="footer-section">
         <h3>Contact Info</h3>
