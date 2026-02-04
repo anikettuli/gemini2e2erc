@@ -72,20 +72,71 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     file_put_contents($signupsFile, json_encode($signups, JSON_PRETTY_PRINT));
     file_put_contents($eventsFile, json_encode($events, JSON_PRETTY_PRINT));
 
-    // 8. Send Email (Simple version)
-    $to = $email;
-    $subject = "Volunteer Confirmation: " . $events[$eventIndex]['title'];
-    $message = "Hi $name,\n\nThank you for signing up for " . $events[$eventIndex]['title'] . ".\n";
-    $message .= "Date: " . $events[$eventIndex]['date'] . "\n";
-    $message .= "Time: " . $events[$eventIndex]['time'] . "\n";
-    $message .= "Location: " . $events[$eventIndex]['location'] . "\n\n";
-    $message .= "We look forward to seeing you!\n\nLions District 2-E2 ERC";
-    $headers = "From: " . $GLOBAL_EMAIL;
+    // 8. Send Emails via SMTP
+    require_once 'mail-utils.php';
+    $config = get_smtp_config();
+    $mail = new SimpleSMTP($config['host'], $config['port'], $config['user'], $config['pass']);
 
-    mail($to, $subject, $message, $headers);
+    $eventTitle = $events[$eventIndex]['title'];
+    $eventDate = $events[$eventIndex]['date'];
+    $eventTime = $events[$eventIndex]['time'];
+    $eventLoc = $events[$eventIndex]['location'];
 
-    // Notify Admin
-    mail($GLOBAL_EMAIL, "New Volunteer Signup: $name", "Event: " . $events[$eventIndex]['title'] . "\nName: $name\nEmail: $email", $headers);
+    // Volunteer Confirmation Email
+    $volunteer_subject = "Volunteer Confirmation: $eventTitle";
+    $volunteer_body = "
+    <html>
+    <body style='font-family: Arial, sans-serif; color: #333;'>
+        <div style='max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 5px;'>
+            <div style='background: #00447c; color: #fff; padding: 15px; text-align: center;'>
+                <h2 style='margin:0;'>Volunteer Confirmation</h2>
+            </div>
+            <div style='padding: 20px;'>
+                <p>Hi <strong>" . htmlspecialchars($name) . "</strong>,</p>
+                <p>Thank you for signing up to volunteer for <strong>" . htmlspecialchars($eventTitle) . "</strong>.</p>
+                <hr>
+                <p><strong>Date:</strong> " . htmlspecialchars($eventDate) . "</p>
+                <p><strong>Time:</strong> " . htmlspecialchars($eventTime) . "</p>
+                <p><strong>Location:</strong> " . htmlspecialchars($eventLoc) . "</p>
+                <hr>
+                <p>We look forward to seeing you!</p>
+            </div>
+            <div style='background: #f4f4f4; padding: 10px; text-align: center; font-size: 12px; color: #777;'>
+                Lions District 2-E2 ERC
+            </div>
+        </div>
+    </body>
+    </html>";
+
+    // Admin Notification Email
+    $admin_subject = "New Volunteer Signup: $name";
+    $admin_body = "
+    <html>
+    <body style='font-family: Arial, sans-serif; color: #333;'>
+        <div style='max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 5px;'>
+            <div style='background: #00447c; color: #fff; padding: 15px; text-align: center;'>
+                <h2 style='margin:0;'>New Volunteer Signup</h2>
+            </div>
+            <div style='padding: 20px;'>
+                <p><strong>Event:</strong> " . htmlspecialchars($eventTitle) . "</p>
+                <p><strong>Volunteer Name:</strong> " . htmlspecialchars($name) . "</p>
+                <p><strong>Volunteer Email:</strong> <a href='mailto:$email'>" . htmlspecialchars($email) . "</a></p>
+                <p><strong>Volunteer Phone:</strong> " . htmlspecialchars($phone) . "</p>
+            </div>
+        </div>
+    </body>
+    </html>";
+
+    try {
+        // Send to Volunteer
+        $mail->send($config['user'], $email, $volunteer_subject, $volunteer_body, "Lions 2-E2 ERC");
+        
+        // Send to Admin
+        $mail->send($config['user'], $config['admin_email'], $admin_subject, $admin_body, "Lions 2-E2 ERC");
+    } catch (Exception $e) {
+        error_log("SMTP Registration Error: " . $e->getMessage());
+        // We still return success since the signup was saved, but log the email failure
+    }
 
     echo json_encode(['success' => true, 'message' => 'Registration successful!', 'newCount' => $events[$eventIndex]['people']]);
 
