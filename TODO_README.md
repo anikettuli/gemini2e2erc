@@ -86,4 +86,4 @@ The following files are referenced or needed by the website but might be missing
 - **Visuals**: Updated Colleyville Lions event logo. Improved Admin View styling.
 - **Layout**: Reorganized Locations page.
 - **Functionality**: Added robust email sending with correct timezones.
-- **Styling**: enhanced footer visibility and consistency across themes.
+- **Styling**: Enhanced footer visibility and consistency across themes.
