@@ -183,7 +183,7 @@ class EventCalendar {
     const isFull = spotsLeft <= 0;
     const datePretty = new Date(event.date + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
     // Use event.image or fallback
-    const imageSrc = event.image ? event.image : 'images/e2e2rc_LOGO.png';
+    const imageSrc = event.image ? event.image : 'e2e2rc_LOGO.png';
 
     return `
             <div class="bg-white dark:bg-slate-700/50 rounded-2xl p-5 lg:p-6 shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-md transition-shadow relative overflow-hidden group flex flex-col sm:flex-row gap-5 lg:gap-6 w-[80vw] sm:w-auto sm:min-w-0 flex-shrink-0 lg:w-full snap-center lg:snap-none">
