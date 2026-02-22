@@ -66,7 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $signups[$eventId][] = $newSignup;
 
     // 6. Update Event Count
-    $events[$eventIndex]['people']++;
+    $events[$eventIndex]['people'] = count($signups[$eventId]);
 
     // 7. Save Files
     file_put_contents($signupsFile, json_encode($signups, JSON_PRETTY_PRINT));

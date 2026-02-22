@@ -40,12 +40,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
+        $signupsForEvent = loadJSON('data/signups.json');
         $eventData = [
             "id" => $id ? (int)$id : (count($events) > 0 ? max(array_column($events, 'id')) + 1 : 1),
             "title" => $_POST['title'],
             "date" => $_POST['date'],
             "time" => $_POST['time'],
-            "people" => (int)($_POST['people'] ?? 0),
+            "people" => $id && isset($signupsForEvent[$id]) ? count($signupsForEvent[$id]) : 0,
             "maxPeople" => (int)$_POST['maxPeople'],
             "location" => $_POST['location'],
             "image" => $imagePath,
@@ -240,6 +241,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Load current data
 $events = loadJSON('data/events.json');
 $signups = loadJSON('data/signups.json');
+
+// Auto-sync events 'people' count with actual signups
+$needsSync = false;
+foreach ($events as &$ev) {
+    $actualCount = isset($signups[$ev['id']]) ? count($signups[$ev['id']]) : 0;
+    if (!isset($ev['people']) || $ev['people'] != $actualCount) {
+        $ev['people'] = $actualCount;
+        $needsSync = true;
+    }
+}
+if ($needsSync) {
+    saveJSON('data/events.json', $events);
+}
+
 $locations = loadJSON('data/locations.json');
 $board = loadJSON('data/board.json');
 $partners = loadJSON('data/partners.json') ?: [];
@@ -682,10 +697,6 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
                                 <label>Max Volunteers</label>
                                 <input type="number" name="maxPeople" id="event_maxPeople" required>
                             </div>
-                            <div>
-                                <label>Current Volunteers (Pre-set if needed)</label>
-                                <input type="number" name="people" id="event_people" value="0">
-                            </div>
                             <div class="form-full">
                                 <label>Location</label>
                                 <input type="text" name="location" id="event_location" required>
@@ -977,7 +988,6 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
             document.getElementById('event_date').value = event.date;
             document.getElementById('event_time').value = event.time;
             document.getElementById('event_maxPeople').value = event.maxPeople;
-            document.getElementById('event_people').value = event.people;
             document.getElementById('event_location').value = event.location;
             document.getElementById('event_contact').value = event.contact;
             document.getElementById('event_description').value = event.description;
