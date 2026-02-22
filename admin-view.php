@@ -737,7 +737,8 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
                                 <td><?php echo $e['time']; ?></td>
                                 <td><?php echo $e['people']; ?>/<?php echo $e['maxPeople']; ?></td>
                                 <td class="action-btns">
-                                    <button class="btn btn-outline" onclick='editEvent(<?php echo json_encode($e); ?>)'><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-outline" title="Edit Event" onclick='editEvent(<?php echo htmlspecialchars(json_encode($e), ENT_QUOTES, "UTF-8"); ?>)'><i class="fas fa-edit"></i></button>
+                                    <button type="button" class="btn btn-outline" title="Duplicate Event" onclick='duplicateEvent(<?php echo htmlspecialchars(json_encode($e), ENT_QUOTES, 'UTF-8'); ?>)'><i class="fas fa-copy"></i></button>
                                     <form method="POST" style="display:inline;" onsubmit="return confirm('Delete this event?');">
                                         <input type="hidden" name="action" value="delete_event">
                                         <input type="hidden" name="id" value="<?php echo $e['id']; ?>">
@@ -992,6 +993,21 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
             document.getElementById('event_contact').value = event.contact;
             document.getElementById('event_description').value = event.description;
         }
+
+        function duplicateEvent(event) {
+            showEventForm();
+            document.getElementById('formTitle').innerText = 'Duplicate Event: ' + event.title;
+            document.getElementById('event_id').value = ''; // Empty ID to create a new event
+            document.getElementById('event_existing_image').value = event.image;
+            document.getElementById('event_title').value = 'Copy of ' + event.title;
+            document.getElementById('event_date').value = event.date;
+            document.getElementById('event_time').value = event.time;
+            document.getElementById('event_maxPeople').value = event.maxPeople;
+            document.getElementById('event_location').value = event.location;
+            document.getElementById('event_contact').value = event.contact;
+            document.getElementById('event_description').value = event.description;
+        }
+
 
         // Location Management
         function showLocationForm() {
