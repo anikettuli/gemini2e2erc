@@ -236,6 +236,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = "Failed to update config.php";
         }
     }
+
+    if ($action === 'upload_form') {
+        $targetFilename = $_POST['target_filename'];
+        if (isset($_FILES['new_form']) && $_FILES['new_form']['error'] === UPLOAD_ERR_OK) {
+            $tmp_name = $_FILES['new_form']['tmp_name'];
+            $cleanFilename = basename($targetFilename);
+            $targetPath = "forms/" . $cleanFilename;
+
+            if (move_uploaded_file($tmp_name, $targetPath)) {
+                $message = "Form '$cleanFilename' successfully updated!";
+            } else {
+                $error = "Failed to upload the new form.";
+            }
+        } else {
+            $error = "Upload error or no file provided.";
+        }
+    }
 }
 
 // Load current data
@@ -568,6 +585,7 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
             <li><a href="#" data-target="events"><i class="fas fa-calendar-alt"></i> <span>Events</span></a></li>
             <li><a href="#" data-target="locations"><i class="fas fa-map-marker-alt"></i> <span>Locations</span></a></li>
             <li><a href="#" data-target="gallery"><i class="fas fa-images"></i> <span>Gallery</span></a></li>
+            <li><a href="#" data-target="forms"><i class="fas fa-file-pdf"></i> <span>Forms</span></a></li>
             <li><a href="#" data-target="other"><i class="fas fa-edit"></i> <span>Other Info</span></a></li>
         </ul>
         <div style="margin-top: auto;">
@@ -846,6 +864,44 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
                         </div>
                     <?php endforeach; ?>
                 </div>
+            </div>
+        </section>
+
+        <!-- FORMS SECTION -->
+        <section id="forms" class="section">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Manage Forms</h2>
+                </div>
+                <p style="margin-bottom: 2rem; color: var(--text-dim);">Upload a new file to replace an existing form. The original filename will be preserved.</p>
+                
+                <?php
+                if (!is_dir('forms')) {
+                    mkdir('forms', 0777, true);
+                }
+                $formFiles = array_diff(scandir('forms'), array('.', '..', 'README.md'));
+                $hasPdf = false;
+                foreach ($formFiles as $formFile):
+                    $ext = strtolower(pathinfo($formFile, PATHINFO_EXTENSION));
+                    if ($ext === 'pdf'):
+                        $hasPdf = true;
+                ?>
+                    <div style="background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; border: 1px solid var(--primary); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                        <div>
+                            <h3 style="margin-bottom: 0.5rem; color: var(--accent);"><i class="fas fa-file-pdf"></i> <?php echo htmlspecialchars($formFile); ?></h3>
+                            <a href="forms/<?php echo htmlspecialchars($formFile); ?>" target="_blank" style="color: var(--text-dim); text-decoration: none; font-size: 0.9rem;"><i class="fas fa-external-link-alt"></i> View Current File</a>
+                        </div>
+                        <form action="admin-view.php" method="POST" enctype="multipart/form-data" style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                            <input type="hidden" name="action" value="upload_form">
+                            <input type="hidden" name="target_filename" value="<?php echo htmlspecialchars($formFile); ?>">
+                            <input type="file" name="new_form" accept=".pdf,application/pdf" required style="width: auto;">
+                            <button type="submit" class="btn btn-accent"><i class="fas fa-upload"></i> Replace</button>
+                        </form>
+                    </div>
+                <?php endif; endforeach; 
+                if (!$hasPdf): ?>
+                    <p style="color: var(--text-dim);">No PDF forms found in the forms directory.</p>
+                <?php endif; ?>
             </div>
         </section>
 
