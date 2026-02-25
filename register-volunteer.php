@@ -16,12 +16,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
-    // 2. Load Data
+    // 2. Load Data Safely using flock
     $eventsFile = 'data/events.json';
     $signupsFile = 'data/signups.json';
 
-    $events = json_decode(file_get_contents($eventsFile), true);
-    $signups = json_decode(file_get_contents($signupsFile), true);
+    // Helper to load JSON with shared lock
+    function loadJsonSafely($file) {
+        if (!file_exists($file)) return [];
+        $fp = fopen($file, 'r');
+        if (!$fp) return [];
+        if (flock($fp, LOCK_SH)) {
+            $content = stream_get_contents($fp);
+            flock($fp, LOCK_UN);
+            fclose($fp);
+            return json_decode($content, true) ?: [];
+        }
+        fclose($fp);
+        return [];
+    }
+
+    $events = loadJsonSafely($eventsFile);
+    $signups = loadJsonSafely($signupsFile);
 
     // 3. Find Event
     $eventIndex = -1;
@@ -68,9 +83,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // 6. Update Event Count
     $events[$eventIndex]['people'] = count($signups[$eventId]);
 
-    // 7. Save Files
-    file_put_contents($signupsFile, json_encode($signups, JSON_PRETTY_PRINT));
-    file_put_contents($eventsFile, json_encode($events, JSON_PRETTY_PRINT));
+    // 7. Save Files Safely using flock
+    function saveJsonSafely($file, $data) {
+        $fp = fopen($file, 'c');
+        if (!$fp) return;
+        if (flock($fp, LOCK_EX)) {
+            ftruncate($fp, 0);
+            fwrite($fp, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+            fflush($fp);
+            flock($fp, LOCK_UN);
+        }
+        fclose($fp);
+    }
+    
+    saveJsonSafely($signupsFile, $signups);
+    saveJsonSafely($eventsFile, $events);
 
     // 8. Send Emails via SMTP
     require_once 'mail-utils.php';

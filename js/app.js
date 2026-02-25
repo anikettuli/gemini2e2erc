@@ -218,107 +218,24 @@ class GalleryManager {
   }
 
   setupInfiniteScroll() {
-    // Clone images at the end for seamless looping
+    // Clone all images for a seamless CSS loop
     if (!this.originalImages || this.originalImages.length === 0) return;
 
-    // Clone the first few images and append to end
-    const cloneCount = Math.min(this.originalImages.length, 3);
-    for (let i = 0; i < cloneCount; i++) {
+    this.originalImages.forEach(src => {
       const img = document.createElement('img');
-      img.src = this.originalImages[i];
+      img.src = src;
       img.alt = 'Gallery Image';
       img.classList.add('gallery-clone');
       this.galleryTrack.appendChild(img);
-    }
+    });
   }
 
   setupGalleryControls() {
     if (this._controlsInitialized) return; // Only setup once
     this._controlsInitialized = true;
 
-    const container = this.galleryTrack.parentElement; // this is the scrolling element
-    if (!container) return;
-
-    // wrapper is the non-scrolling parent that holds arrows
-    const wrapper = this.galleryTrack.closest('.gallery-wrapper') || container.parentElement;
-    if (!wrapper) return;
-
-    // Buttons live on wrapper so they don't move with scroll
-    const leftBtn = wrapper.querySelector('.gallery-arrow.left');
-    const rightBtn = wrapper.querySelector('.gallery-arrow.right');
-
-    // Clear any existing timer
-    this.stopAutoScroll();
-
-    // Start auto-scroll faster
-    this.autoScrollStep = 2; // pixels per tick (increased for speed)
-    this.autoScrollIntervalMs = 20; // ms between ticks (smaller -> faster)
-
-    // Start auto-scroll immediately on page load
-    this.startAutoScroll();
-
-    // Pause on hover over wrapper (not the inner scroll) or touch
-    wrapper.addEventListener('mouseenter', () => this.stopAutoScroll());
-    wrapper.addEventListener('mouseleave', () => this.startAutoScroll());
-    wrapper.addEventListener('touchstart', () => this.stopAutoScroll());
-    wrapper.addEventListener('touchend', () => this.startAutoScroll());
-
-    // Arrow controls (operate on container scroll)
-    if (leftBtn) {
-      leftBtn.addEventListener('click', () => {
-        this.stopAutoScroll();
-        container.scrollBy({ left: -Math.round(container.clientWidth * 0.6), behavior: 'smooth' });
-        // Restart auto-scroll after short delay
-        setTimeout(() => this.startAutoScroll(), 3000);
-      });
-    }
-    if (rightBtn) {
-      rightBtn.addEventListener('click', () => {
-        this.stopAutoScroll();
-        container.scrollBy({ left: Math.round(container.clientWidth * 0.6), behavior: 'smooth' });
-        setTimeout(() => this.startAutoScroll(), 3000);
-      });
-    }
-  }
-
-  startAutoScroll() {
-    const container = this.galleryTrack.parentElement;
-    if (!container) return;
-    if (this._autoScrollTimer) return; // already running
-
-    // Only start when content overflows
-    if (container.scrollWidth <= container.clientWidth) return;
-
-    // Calculate where original images end (before clones)
-    const originalImagesEnd = this.getOriginalImagesWidth();
-
-    this._autoScrollTimer = setInterval(() => {
-      // Check if we've scrolled past the original images (into clones)
-      if (container.scrollLeft >= originalImagesEnd) {
-        // Jump back to start seamlessly
-        container.scrollLeft = 0;
-      } else {
-        container.scrollLeft += this.autoScrollStep;
-      }
-    }, this.autoScrollIntervalMs);
-  }
-
-  getOriginalImagesWidth() {
-    // Calculate the width of original images (excluding clones)
-    const allImages = this.galleryTrack.querySelectorAll('img:not(.gallery-clone)');
-    let totalWidth = 0;
-    allImages.forEach(img => {
-      const style = window.getComputedStyle(img);
-      totalWidth += img.offsetWidth + parseFloat(style.marginLeft) + parseFloat(style.marginRight);
-    });
-    return totalWidth;
-  }
-
-  stopAutoScroll() {
-    if (this._autoScrollTimer) {
-      clearInterval(this._autoScrollTimer);
-      this._autoScrollTimer = null;
-    }
+    // Use the performant CSS animation class defined in styles.css
+    this.galleryTrack.classList.add('animate-scroll');
   }
 }
 

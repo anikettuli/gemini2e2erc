@@ -1,4 +1,9 @@
 <?php
+session_start();
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
 // Simple password protection
 $password = "Lions@2025"; // CHANGE THIS
 if (!isset($_SERVER['PHP_AUTH_USER']) || $_SERVER['PHP_AUTH_USER'] != 'admin' || $_SERVER['PHP_AUTH_PW'] != $password) {
@@ -11,12 +16,51 @@ if (!isset($_SERVER['PHP_AUTH_USER']) || $_SERVER['PHP_AUTH_USER'] != 'admin' ||
 // Helper Functions
 function loadJSON($file) {
     if (!file_exists($file)) return [];
-    $content = file_get_contents($file);
-    return json_decode($content, true) ?: [];
+    
+    $fp = fopen($file, 'r');
+    if (!$fp) return [];
+    
+    if (flock($fp, LOCK_SH)) {
+        $content = stream_get_contents($fp);
+        flock($fp, LOCK_UN);
+        fclose($fp);
+        return json_decode($content, true) ?: [];
+    }
+    
+    fclose($fp);
+    return [];
 }
 
 function saveJSON($file, $data) {
-    return file_put_contents($file, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+    $fp = fopen($file, 'c');
+    if (!$fp) return false;
+    
+    if (flock($fp, LOCK_EX)) {
+        ftruncate($fp, 0);
+        $result = fwrite($fp, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        fflush($fp);
+        flock($fp, LOCK_UN);
+        fclose($fp);
+        return $result !== false;
+    }
+    
+    fclose($fp);
+    return false;
+}
+
+function isValidImageUpload($fileArray) {
+    if ($fileArray['error'] !== UPLOAD_ERR_OK) return false;
+    
+    $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+    
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $mime = finfo_file($finfo, $fileArray['tmp_name']);
+    finfo_close($finfo);
+    
+    $ext = strtolower(pathinfo($fileArray['name'], PATHINFO_EXTENSION));
+    
+    return in_array($mime, $allowedMimeTypes) && in_array($ext, $allowedExtensions);
 }
 
 $message = "";
@@ -24,6 +68,10 @@ $error = "";
 
 // Handle POST actions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+        die("CSRF token validation failed.");
+    }
+
     $action = $_POST['action'] ?? '';
 
     if ($action === 'save_event') {
@@ -31,13 +79,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $id = $_POST['id'] ?? null;
         
         $imagePath = $_POST['existing_image'] ?? 'images/placeholder-event.svg';
-        if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+        if (isset($_FILES['image']) && isValidImageUpload($_FILES['image'])) {
             $tmp_name = $_FILES['image']['tmp_name'];
             $name = basename($_FILES['image']['name']);
-            $target = "images/events/" . time() . "_" . $name;
+            $target = "images/events/" . time() . "_" . preg_replace("/[^a-zA-Z0-9\._-]/", "_", $name);
             if (move_uploaded_file($tmp_name, $target)) {
                 $imagePath = $target;
             }
+        } elseif (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+             $error = "Invalid image upload for event.";
         }
 
         $signupsForEvent = loadJSON('data/signups.json');
@@ -125,12 +175,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     
                     // Handle individual photo upload for this board member
                     if (isset($_FILES['board_files']['name'][$i]) && $_FILES['board_files']['error'][$i] === UPLOAD_ERR_OK) {
-                        $tmp_name = $_FILES['board_files']['tmp_name'][$i];
-                        $name = basename($_FILES['board_files']['name'][$i]);
-                        $name = preg_replace("/[^a-zA-Z0-9\._-]/", "_", $name);
-                        $target = "images/board/" . time() . "_" . $name;
-                        if (move_uploaded_file($tmp_name, $target)) {
-                            $imagePath = $target;
+                        $fileArray = [
+                             'name' => $_FILES['board_files']['name'][$i],
+                             'type' => $_FILES['board_files']['type'][$i],
+                             'tmp_name' => $_FILES['board_files']['tmp_name'][$i],
+                             'error' => $_FILES['board_files']['error'][$i],
+                             'size' => $_FILES['board_files']['size'][$i]
+                        ];
+                        if (isValidImageUpload($fileArray)) {
+                            $tmp_name = $fileArray['tmp_name'];
+                            $name = basename($fileArray['name']);
+                            $name = preg_replace("/[^a-zA-Z0-9\._-]/", "_", $name);
+                            $target = "images/board/" . time() . "_" . $name;
+                            if (move_uploaded_file($tmp_name, $target)) {
+                                $imagePath = $target;
+                            }
+                        } else {
+                            $error = "Invalid photo upload for board member.";
                         }
                     }
 
@@ -175,13 +236,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $count = 0;
             for ($i = 0; $i < count($files['name']); $i++) {
                 if ($files['error'][$i] === UPLOAD_ERR_OK) {
-                    $tmp_name = $files['tmp_name'][$i];
-                    $name = basename($files['name'][$i]);
-                    $name = preg_replace("/[^a-zA-Z0-9\._-]/", "_", $name);
-                    $target = "gallery/" . time() . "_" . $name;
-                    if (move_uploaded_file($tmp_name, $target)) {
-                        $gallery[] = $target;
-                        $count++;
+                    $fileArray = [
+                         'name' => $files['name'][$i],
+                         'type' => $files['type'][$i],
+                         'tmp_name' => $files['tmp_name'][$i],
+                         'error' => $files['error'][$i],
+                         'size' => $files['size'][$i]
+                    ];
+                    if (isValidImageUpload($fileArray)) {
+                        $tmp_name = $fileArray['tmp_name'];
+                        $name = basename($fileArray['name']);
+                        $name = preg_replace("/[^a-zA-Z0-9\._-]/", "_", $name);
+                        $target = "gallery/" . time() . "_" . $name;
+                        if (move_uploaded_file($tmp_name, $target)) {
+                            $gallery[] = $target;
+                            $count++;
+                        }
+                    } else {
+                        $error = "One or more gallery images were invalid.";
                     }
                 }
             }
@@ -229,7 +301,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($action === 'save_config') {
         $email = $_POST['global_email'];
         $phone = $_POST['global_phone'];
-        $configContent = "<?php\n// Global configuration for email and phone\n\$GLOBAL_EMAIL = \"$email\";\n\$GLOBAL_PHONE = \"$phone\";\n?>";
+        $safe_email = var_export($email, true);
+        $safe_phone = var_export($phone, true);
+        
+        $configContent = "<?php\n// Global configuration for email and phone\n\$GLOBAL_EMAIL = $safe_email;\n\$GLOBAL_PHONE = $safe_phone;\n?>";
         if (file_put_contents('config.php', $configContent)) {
             $message = "Global settings updated!";
         } else {
@@ -244,10 +319,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $cleanFilename = basename($targetFilename);
             $targetPath = "forms/" . $cleanFilename;
 
-            if (move_uploaded_file($tmp_name, $targetPath)) {
-                $message = "Form '$cleanFilename' successfully updated!";
+            if ($cleanFilename !== '') {
+                $ext = strtolower(pathinfo($cleanFilename, PATHINFO_EXTENSION));
+                if ($ext === 'pdf' && mime_content_type($tmp_name) === 'application/pdf') {
+                    if (move_uploaded_file($tmp_name, $targetPath)) {
+                        $message = "Form '$cleanFilename' successfully updated!";
+                    } else {
+                        $error = "Failed to upload the new form.";
+                    }
+                } else {
+                     $error = "Invalid form upload. Only PDFs are allowed.";
+                }
             } else {
-                $error = "Failed to upload the new form.";
+                 $error = "Invalid target filename.";
             }
         } else {
             $error = "Upload error or no file provided.";
@@ -581,12 +665,15 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
             <span>ERC ADMIN</span>
         </div>
         <ul class="nav-links">
-            <li><a href="#" data-target="signups" class="active"><i class="fas fa-users"></i> <span>Signups</span></a></li>
+            <li><a href="#" data-target="dashboard" class="active"><i class="fas fa-chart-line"></i> <span>Dashboard</span></a></li>
+            <li><a href="#" data-target="signups"><i class="fas fa-users"></i> <span>Signups</span></a></li>
             <li><a href="#" data-target="events"><i class="fas fa-calendar-alt"></i> <span>Events</span></a></li>
             <li><a href="#" data-target="locations"><i class="fas fa-map-marker-alt"></i> <span>Locations</span></a></li>
             <li><a href="#" data-target="gallery"><i class="fas fa-images"></i> <span>Gallery</span></a></li>
             <li><a href="#" data-target="forms"><i class="fas fa-file-pdf"></i> <span>Forms</span></a></li>
-            <li><a href="#" data-target="other"><i class="fas fa-edit"></i> <span>Other Info</span></a></li>
+            <li><a href="#" data-target="board"><i class="fas fa-user-tie"></i> <span>Board Members</span></a></li>
+            <li><a href="#" data-target="testimonials"><i class="fas fa-comment-dots"></i> <span>Testimonials</span></a></li>
+            <li><a href="#" data-target="other"><i class="fas fa-cogs"></i> <span>Other Info</span></a></li>
         </ul>
         <div style="margin-top: auto;">
             <a href="index.html" style="color: var(--text-dim); text-decoration: none; font-size: 0.9rem;"><i class="fas fa-external-link-alt"></i> View Site</a>
@@ -597,12 +684,16 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
         <header>
             <div>
                 <h1>Dashboard</h1>
-                <p style="color: var(--text-dim);">Manage your eye recycling center data</p>
             </div>
             <div class="user-info">
                 <span class="badge" style="background: var(--primary); padding: 5px 12px; border-radius: 20px; font-size: 0.8rem;">Logged in as Admin</span>
             </div>
         </header>
+        
+        <!-- Provide CSRF token for JS functions -->
+        <script>
+            const CSRF_TOKEN = "<?php echo $_SESSION['csrf_token']; ?>";
+        </script>
 
         <?php if ($message): ?>
             <div class="alert alert-success"><i class="fas fa-check-circle"></i> <?php echo $message; ?></div>
@@ -611,27 +702,85 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
             <div class="alert alert-error"><i class="fas fa-exclamation-triangle"></i> <?php echo $error; ?></div>
         <?php endif; ?>
 
-        <div class="stats-grid">
-            <div class="stat-card">
-                <h3>Gallery Photos</h3>
-                <div><?php echo count($gallery); ?></div>
+        <!-- DASHBOARD SECTION -->
+        <section id="dashboard" class="section active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Gallery Photos</h3>
+                    <div><?php echo count($gallery); ?></div>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Signups</h3>
+                    <div><?php 
+                        $totalSignups = 0;
+                        foreach($signups as $s) $totalSignups += count($s);
+                        echo $totalSignups;
+                    ?></div>
+                </div>
+                <div class="stat-card">
+                    <h3>Active Events</h3>
+                    <div><?php echo count($events); ?></div>
+                </div>
+                <div class="stat-card">
+                    <h3>Drop-off Locations</h3>
+                    <div><?php echo count($locations); ?></div>
+                </div>
             </div>
-            <div class="stat-card">
-                <h3>Total Signups</h3>
-                <div><?php 
-                    $totalSignups = 0;
-                    foreach($signups as $s) $totalSignups += count($s);
-                    echo $totalSignups;
-                ?></div>
+
+            <div class="card" style="margin-top: 2rem;">
+                <div class="card-header">
+                    <h2>Upcoming Events Overview</h2>
+                    <button class="btn btn-outline" onclick="document.querySelector('[data-target=\'events\']').click()"><i class="fas fa-calendar-plus"></i> Manage Events</button>
+                </div>
+                
+                <?php if (count($events) === 0): ?>
+                    <p style="color: var(--text-dim);">No upcoming events scheduled.</p>
+                <?php else: ?>
+                    <table style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Event Date</th>
+                                <th>Title</th>
+                                <th>Volunteers</th>
+                                <th>Location</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php 
+                                // Sort events by date closest to today
+                                $sortedEvents = $events;
+                                usort($sortedEvents, function($a, $b) {
+                                    return strtotime($a['date']) - strtotime($b['date']);
+                                });
+                                // Keep only future events and top 5
+                                $upcoming = array_filter($sortedEvents, function($e) {
+                                    return strtotime($e['date']) >= strtotime('today');
+                                });
+                                $upcoming = array_slice($upcoming, 0, 5);
+                                
+                                foreach($upcoming as $e): 
+                            ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($e['date']); ?></td>
+                                    <td><strong><?php echo htmlspecialchars($e['title']); ?></strong></td>
+                                    <td>
+                                        <?php if ($e['people'] >= $e['maxPeople']): ?>
+                                            <span style="color: var(--danger);"><i class="fas fa-user-check"></i> FULL (<?php echo $e['maxPeople']; ?>/<?php echo $e['maxPeople']; ?>)</span>
+                                        <?php else: ?>
+                                            <span style="color: var(--accent);"><i class="fas fa-users"></i> <?php echo $e['people']; ?>/<?php echo $e['maxPeople']; ?></span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td><?php echo htmlspecialchars($e['location']); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                <?php endif; ?>
             </div>
-            <div class="stat-card">
-                <h3>Drop-off Locations</h3>
-                <div><?php echo count($locations); ?></div>
-            </div>
-        </div>
+        </section>
 
         <!-- SIGNUPS SECTION -->
-        <section id="signups" class="section active">
+        <section id="signups" class="section">
             <div class="card">
                 <div class="card-header">
                     <h2>Volunteer Signups</h2>
@@ -664,6 +813,7 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
                                         <td><?php echo htmlspecialchars($person['timestamp']); ?></td>
                                         <td>
                                             <form method="POST" onsubmit="return confirm('Remove this signup?');" style="display:inline;">
+                                                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                                                 <input type="hidden" name="action" value="delete_signup">
                                                 <input type="hidden" name="event_id" value="<?php echo $event['id']; ?>">
                                                 <input type="hidden" name="index" value="<?php echo $idx; ?>">
@@ -690,6 +840,7 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
                 <div id="eventForm" style="display:none; margin-bottom: 3rem; background: rgba(0,0,0,0.2); padding: 2rem; border-radius: 12px; border: 1px solid var(--primary);">
                     <h3 id="formTitle">Add New Event</h3>
                     <form action="admin-view.php" method="POST" enctype="multipart/form-data" style="margin-top: 1.5rem;">
+                        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                         <input type="hidden" name="action" value="save_event">
                         <input type="hidden" name="id" id="event_id">
                         <input type="hidden" name="existing_image" id="event_existing_image">
@@ -758,6 +909,7 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
                                     <button class="btn btn-outline" title="Edit Event" onclick='editEvent(<?php echo htmlspecialchars(json_encode($e), ENT_QUOTES, "UTF-8"); ?>)'><i class="fas fa-edit"></i></button>
                                     <button type="button" class="btn btn-outline" title="Duplicate Event" onclick='duplicateEvent(<?php echo htmlspecialchars(json_encode($e), ENT_QUOTES, 'UTF-8'); ?>)'><i class="fas fa-copy"></i></button>
                                     <form method="POST" style="display:inline;" onsubmit="return confirm('Delete this event?');">
+                                        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                                         <input type="hidden" name="action" value="delete_event">
                                         <input type="hidden" name="id" value="<?php echo $e['id']; ?>">
                                         <button type="submit" class="btn btn-outline" style="color: var(--danger);"><i class="fas fa-trash"></i></button>
@@ -781,6 +933,7 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
                 <div id="locationForm" style="display:none; margin-bottom: 3rem; background: rgba(0,0,0,0.2); padding: 2rem; border-radius: 12px; border: 1px solid var(--primary);">
                     <h3 id="locFormTitle">Add New Location</h3>
                     <form action="admin-view.php" method="POST" style="margin-top: 1.5rem;">
+                        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                         <input type="hidden" name="action" value="save_location">
                         <input type="hidden" name="index" id="loc_index" value="-1">
                         <div class="form-grid">
@@ -823,6 +976,7 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
                                     <td class="action-btns">
                                         <button class="btn btn-outline" onclick='editLocation(<?php echo $idx; ?>, <?php echo json_encode($l); ?>)'><i class="fas fa-edit"></i></button>
                                         <form method="POST" style="display:inline;" onsubmit="return confirm('Delete this location?');">
+                                            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                                             <input type="hidden" name="action" value="delete_location">
                                             <input type="hidden" name="index" value="<?php echo $idx; ?>">
                                             <button type="submit" class="btn btn-outline" style="color: var(--danger);"><i class="fas fa-trash"></i></button>
@@ -844,6 +998,7 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
                 </div>
                 
                 <form action="admin-view.php" method="POST" enctype="multipart/form-data" style="background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; border: 1px solid var(--primary);">
+                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                     <input type="hidden" name="action" value="upload_gallery">
                     <label>Upload new photos (Select multiple)</label>
                     <div style="display: flex; gap: 1rem; align-items: center; margin-top: 0.5rem;">
@@ -857,6 +1012,7 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
                         <div class="gallery-item">
                             <img src="<?php echo $photo; ?>" loading="lazy">
                             <form method="POST" onsubmit="return confirm('Remove this photo from gallery?');">
+                                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                                 <input type="hidden" name="action" value="delete_gallery">
                                 <input type="hidden" name="photo" value="<?php echo $photo; ?>">
                                 <button type="submit" class="delete-btn" title="Delete"><i class="fas fa-trash-alt"></i></button>
@@ -892,6 +1048,7 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
                             <a href="forms/<?php echo htmlspecialchars($formFile); ?>" target="_blank" style="color: var(--text-dim); text-decoration: none; font-size: 0.9rem;"><i class="fas fa-external-link-alt"></i> View Current File</a>
                         </div>
                         <form action="admin-view.php" method="POST" enctype="multipart/form-data" style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                             <input type="hidden" name="action" value="upload_form">
                             <input type="hidden" name="target_filename" value="<?php echo htmlspecialchars($formFile); ?>">
                             <input type="file" name="new_form" accept=".pdf,application/pdf" required style="width: auto;">
@@ -910,6 +1067,7 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
             <div class="card">
                 <h2>Global Settings</h2>
                 <form action="admin-view.php" method="POST">
+                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                     <input type="hidden" name="action" value="save_config">
                     <div class="form-grid">
                         <div>
@@ -926,10 +1084,25 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
             </div>
 
             <div class="card">
+                <h2>Partners</h2>
+                <p style="margin-bottom: 1rem; color: var(--text-dim);">One partner name per line.</p>
+                <form action="admin-view.php" method="POST">
+                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                    <input type="hidden" name="action" value="save_partners">
+                    <textarea name="partners" rows="10"><?php echo implode("\n", $partners); ?></textarea>
+                    <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">Update Partners</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- BOARD MEMBERS SECTION -->
+        <section id="board" class="section">
+            <div class="card">
                 <h2>Board Members</h2>
                 <form action="admin-view.php" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                     <input type="hidden" name="action" value="save_board">
-                    <div id="board-container">
+                    <div id="board-container" style="margin-top: 1.5rem;">
                         <?php foreach($board as $b): ?>
                             <div class="form-grid board-row" style="margin-bottom: 2rem; align-items: start; border-bottom: 1px solid var(--glass-border); padding-bottom: 1.5rem;">
                                 <div style="display: flex; gap: 1.5rem; grid-column: span 2;">
@@ -959,12 +1132,16 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
                     <button type="submit" class="btn btn-primary">Save All Changes</button>
                 </form>
             </div>
+        </section>
 
+        <!-- TESTIMONIALS SECTION -->
+        <section id="testimonials" class="section">
             <div class="card">
                 <h2>Testimonials</h2>
                 <form action="admin-view.php" method="POST">
+                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                     <input type="hidden" name="action" value="save_testimonials">
-                    <div id="testimonial-container">
+                    <div id="testimonial-container" style="margin-top: 1.5rem;">
                         <?php foreach($testimonials as $t): ?>
                             <div class="testimonial-row" style="background: rgba(0,0,0,0.1); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; border: 1px solid var(--glass-border); position: relative;">
                                 <button type="button" style="position: absolute; top: 1rem; right: 1rem; background: transparent; border: none; color: var(--danger); cursor: pointer;" onclick="if(confirm('Remove this testimonial?')) this.closest('.testimonial-row').remove()"><i class="fas fa-times-circle fa-lg"></i></button>
@@ -986,16 +1163,6 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
                     <button type="button" class="btn btn-outline" onclick="addTestimonial()" style="margin-bottom: 1.5rem;"><i class="fas fa-plus"></i> Add New Testimonial</button>
                     <br>
                     <button type="submit" class="btn btn-primary">Update All Testimonials</button>
-                </form>
-            </div>
-
-            <div class="card">
-                <h2>Partners</h2>
-                <p style="margin-bottom: 1rem; color: var(--text-dim);">One partner name per line.</p>
-                <form action="admin-view.php" method="POST">
-                    <input type="hidden" name="action" value="save_partners">
-                    <textarea name="partners" rows="10"><?php echo implode("\n", $partners); ?></textarea>
-                    <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">Update Partners</button>
                 </form>
             </div>
         </section>
