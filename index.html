@@ -288,19 +288,27 @@
       </div>
 
       <section>
-        <h2>Our Story</h2>
-        <div class="two-column">
+        <div class="two-column" style="align-items: start;">
           <div>
+            <h2>Our Story</h2>
             <p>District 2-E2 Eyeglass Recycling Center was founded in 2013 and officially recognized in 2014 as a
               501(c)(3) nonprofit organization. We were created with a simple vision: to ensure that no one should go
               without proper vision care due to cost or access limitations.</p>
             <p>What started as a small group of passionate volunteers has grown into a thriving organization that serves
               mission partners across 20+ countries. Every single member of our team is a volunteer, dedicated to making
               a global impact.</p>
+
+            <h2 class="mt-2">Our Values</h2>
+            <ul class="list-style text-md mt-1">
+              <li><strong>Integrity:</strong> We operate with honesty and transparency in all activities</li>
+              <li><strong>Compassion:</strong> We care deeply about improving lives globally</li>
+              <li><strong>Sustainability:</strong> We reduce waste and promote environmental responsibility</li>
+              <li><strong>Community:</strong> We believe in the power of volunteers working together</li>
+              <li><strong>Excellence:</strong> We maintain high quality standards in everything we do</li>
+            </ul>
           </div>
-          <div class="image-placeholder">
-            <!-- Replace placeholder with actual photo: <img src="images/organization-photo.jpg" alt="Organization"> -->
-            <img src="images/our-story-group.png" alt="Organization">
+          <div class="image-placeholder" style="aspect-ratio: 4/3;">
+            <img src="images/our-story-group.png" alt="Organization Team">
           </div>
         </div>
       </section>
@@ -326,17 +334,6 @@
       </section>
 
       <section>
-        <h2>Our Values</h2>
-        <ul class="list-style text-md">
-          <li><strong>Integrity:</strong> We operate with honesty and transparency in all activities</li>
-          <li><strong>Compassion:</strong> We care deeply about improving lives globally</li>
-          <li><strong>Sustainability:</strong> We reduce waste and promote environmental responsibility</li>
-          <li><strong>Community:</strong> We believe in the power of volunteers working together</li>
-          <li><strong>Excellence:</strong> We maintain high quality standards in everything we do</li>
-        </ul>
-      </section>
-
-      <section>
         <h2>Current Board Members</h2>
         <p>Our dedicated leadership team ensures we stay true to our mission.</p>
         <div class="board-grid" id="board-grid">
@@ -353,19 +350,22 @@
             <h3>📖 ERC Brochure</h3>
             <p class="flex-1">Learn about our mission, our 4-step recycling process, and how we serve communities
               worldwide. Perfect for sharing with potential donors and volunteers.</p>
-            <a href="downloads/ERC-Brochure.pdf" class="cta-button mt-1 inline-block text-center" target="_blank">Download</a>
+            <a href="downloads/ERC-Brochure.pdf" class="cta-button mt-1 inline-block text-center"
+              target="_blank">Download</a>
           </div>
           <div class="card card-flex-col min-h-240">
             <h3>🏆 Helen Keller Award Application</h3>
             <p class="flex-1">Lions Club members can apply for the prestigious Helen Keller Award by documenting their
               service hours at the ERC.</p>
-            <a href="downloads/Helen-Keller-Award-Application.pdf" class="cta-button mt-1 inline-block text-center" target="_blank">Download</a>
+            <a href="downloads/Helen-Keller-Award-Application.pdf" class="cta-button mt-1 inline-block text-center"
+              target="_blank">Download</a>
           </div>
           <div class="card card-flex-col min-h-240">
             <h3>📋 Mission Request Form</h3>
             <p class="flex-1">Medical and humanitarian missions can request eyeglasses for their upcoming trips.
               Please submit requests at least 30 days in advance.</p>
-            <a href="downloads/Mission-Request-Form.pdf" class="cta-button mt-1 inline-block text-center" target="_blank">Download</a>
+            <a href="downloads/Mission-Request-Form.pdf" class="cta-button mt-1 inline-block text-center"
+              target="_blank">Download</a>
           </div>
         </div>
         <div class="grey-panel mt-2">
@@ -471,7 +471,8 @@
             <h3>🎓 Group Volunteer Form</h3>
             <p class="flex-1">Schedule a group volunteer event for your team, school, or organization. Please email
               completed forms to <a href="#" class="global-email-link show-text"></a>.</p>
-            <a href="forms/group-volunteer-form.pdf" class="cta-button mt-1 inline-block text-center" target="_blank">Download</a>
+            <a href="forms/group-volunteer-form.pdf" class="cta-button mt-1 inline-block text-center"
+              target="_blank">Download</a>
           </div>
         </div>
         <div class="grey-panel mt-2">
@@ -585,7 +586,8 @@
         <div class="grid">
           <div class="card">
             <h3>Why Support Us?</h3>
-            <p>Your donations help us cover shipping costs, purchase supplies, and maintain our facility. We are a 501(c)(3) organization. Donations may be deductible. Please check with your tax preparer.</p>
+            <p>Your donations help us cover shipping costs, purchase supplies, and maintain our facility. We are a
+              501(c)(3) organization. Donations may be deductible. Please check with your tax preparer.</p>
           </div>
           <div class="card">
             <h3>How to Donate</h3>
@@ -637,6 +639,9 @@
         <h2>Partner Drop-Off Locations</h2>
         <p>We have 150+ convenient donation drop-off locations at partner organizations throughout the DFW area. Below
           are our main partner locations:</p>
+
+        <div id="az-directory" class="az-directory"
+          style="display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-bottom: 1.5rem;"></div>
 
         <div class="locations-table" id="locations-list">
           <div class="text-center p-2">Loading locations...</div>

@@ -29,9 +29,16 @@ async function loadLocations() {
 // Function to render the list
 function renderLocationsList() {
   const container = document.getElementById('locations-list');
-  if (!container) return;
+  const azContainer = document.getElementById('az-directory');
+  if (!container || !azContainer) return;
 
   container.innerHTML = '';
+  azContainer.innerHTML = '';
+
+  // Sort locations alphabetically by name
+  allLocations.sort((a, b) => a.name.localeCompare(b.name));
+
+  const firstLetters = new Set();
 
   allLocations.forEach(loc => {
     // Generate links dynamically
@@ -39,8 +46,27 @@ function renderLocationsList() {
     const phoneLink = `tel:+1${phoneDigits}`;
     const directionsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc.address)}`;
 
+    // Grouping by letter logic
+    const firstChar = loc.name.charAt(0).toUpperCase();
+    const isNewLetter = !firstLetters.has(firstChar);
+
     const row = document.createElement('div');
     row.className = 'location-row';
+
+    if (isNewLetter) {
+      firstLetters.add(firstChar);
+      // Give this row the anchor ID for scrolling
+      row.id = `loc-letter-${firstChar}`;
+
+      // Add the A-Z quick link to the directory container
+      const azLink = document.createElement('a');
+      azLink.href = `#loc-letter-${firstChar}`;
+      azLink.textContent = firstChar;
+      azLink.className = 'btn btn-outline';
+      azLink.style = 'padding: 5px 12px; font-weight: bold; font-size: 0.9rem; text-decoration: none; display: inline-block;';
+      azContainer.appendChild(azLink);
+    }
+
     row.innerHTML = `
             <div class="location-name">${loc.name}</div>
             <div class="location-address">${loc.address}</div>
