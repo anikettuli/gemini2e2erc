@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lions District 2-E2 | Home</title>
+
+  <!-- GSAP CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <svg style="display: none;">
+    <filter id="noiseFilter">
+      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
+    </filter>
+  </svg>
+</head>
+
+<body class="smooth-scroll">
+  <div class="noise-overlay" style="filter: url(#noiseFilter);"></div>
+
+  <!-- Shared Navbar -->
+  <header class="navbar gs-reveal-up">
+    <a href="index.html" class="brand">
+      <img src="e2e2rc_LOGO.png" alt="ERC Logo">
+      District 2-E2 ERC
+    </a>
+    <nav class="navbar-links">
+      <a href="about.html" class="nav-link">About</a>
+      <a href="services.html" class="nav-link">Services</a>
+      <a href="locations.html" class="nav-link">Locations</a>
+      <a href="volunteer.html" class="nav-link">Volunteer</a>
+    </nav>
+    <a href="contact.html" class="btn btn-primary" style="padding: 0.6rem 1.25rem;">Contact Us</a>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-bg"></div>
+      <div class="hero-gradient"></div>
+      <div class="hero-content gs-reveal-up">
+        <h1 class="hero-title">Giving Sight<br><span class="drama-word">to the world.</span></h1>
+        <p class="hero-desc">We collect, process, and distribute recycled eyeglasses to those in need across 40+
+          countries. Join us in bringing vision and hope globally.</p>
+        <div style="display: flex; gap: 1rem; justify-content: center;">
+          <a href="volunteer.html" class="btn btn-primary">Volunteer Today</a>
+          <a href="locations.html" class="btn btn-outline-white">Find Drop-Offs</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Core Philosophy Split -->
+    <section class="philosophy container gs-section mb-4">
+      <div class="phil-grid gs-stagger">
+        <div class="phil-text">
+          <span class="phil-stat drama-text gs-scale">2.2 Billion</span>
+          <p>People globally have a near or distance vision impairment. Of these, at least <strong>1 billion
+              cases</strong> have not yet been addressed.</p>
+          <p>It costs less than <strong style="color: var(--primary);">10¢ US</strong> to provide a pair of recycled
+            eyeglasses. This simple gift changes someone's life—providing a child better education, or an adult critical
+            employment opportunities.</p>
+          <h2 class="phil-title mt-4" style="margin-top: 2rem;">Our Mission</h2>
+          <p class="drama-text" style="font-size: 1.4rem; line-height: 1.5; color: var(--text-dark);">"To provide
+            eyeglasses without cost to those missions who have a method of determining the refractive status of the
+            eye."</p>
+        </div>
+        <div class="phil-img"
+          style="border-radius: var(--border-radius-lg); overflow: hidden; height: 100%; min-height: 450px; position: relative;">
+          <img src="gallery/drying-glasses.jpg" alt="Volunteers working"
+            style="width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0;" class="gs-parallax">
+        </div>
+      </div>
+    </section>
+
+    <!-- Impact by the Numbers -->
+    <section class="section stats gs-section mt-4 mb-4"
+      style="border-radius: var(--border-radius-lg); margin-left: 1rem; margin-right: 1rem;">
+      <div class="container">
+        <h2 style="color: var(--surface); margin-bottom: 1rem; font-size: 2.5rem;">Impact by the Numbers</h2>
+        <p class="drama-text" style="max-width: 600px; margin: 0 auto; font-size: 1.25rem; margin-bottom: 3rem;">Our
+          recycled glasses support Humanitarian and Medical Missions worldwide.</p>
+
+        <div class="stats-grid gs-stagger">
+          <div class="stat-item">
+            <h4 class="counter" data-target="17000">17,000+</h4>
+            <p>Pairs Given (23-24)</p>
+          </div>
+          <div class="stat-item">
+            <h4 class="counter" data-target="40">40+</h4>
+            <p>Countries Served</p>
+          </div>
+          <div class="stat-item">
+            <h4>100%</h4>
+            <p>Volunteer Run</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Shared Footer -->
+  <footer class="footer">
+    <div class="container footer-grid gs-reveal-up">
+      <div>
+        <a href="index.html" class="brand"
+          style="color: white; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem; text-decoration: none;">
+          <img src="e2e2rc_LOGO.png" alt="Logo" style="height: 40px; border-radius: 4px;">
+          District 2-E2 ERC
+        </a>
+        <p style="margin-top: 1.5rem; max-width: 400px; line-height: 1.6;">Lions District 2-E2 Eyeglass Recycling Center
+          is a 501(c)(3) nonprofit dedicated to improving vision care access globally. Entirely volunteer-run.</p>
+        <div style="margin-top: 1rem;">
+          <a href="admin-view.php" style="font-size: 0.9rem; text-decoration: underline;">Admin Sign In</a>
+        </div>
+      </div>
+
+      <div>
+        <h3>Directory</h3>
+        <a href="about.html">About & Team</a>
+        <a href="services.html">Process & Services</a>
+        <a href="locations.html">Drop-Off Locations</a>
+        <a href="volunteer.html">Volunteer Events</a>
+        <a href="contact.html">Contact Us</a>
+      </div>
+
+      <div>
+        <h3>Main Center</h3>
+        <p style="margin-bottom: 0.5rem; color: rgba(255,255,255,0.7);"><a href="#" class="global-phone-link show-text"
+            style="color: rgba(255,255,255,0.7); display: inline;"></a></p>
+        <p style="margin-bottom: 0.5rem; color: rgba(255,255,255,0.7);"><a href="#" class="global-email-link show-text"
+            style="color: rgba(255,255,255,0.7); display: inline;"></a></p>
+        <p style="margin-bottom: 0.5rem; color: rgba(255,255,255,0.7);">5621 Bunker Blvd<br>Watauga, TX 76148</p>
+        <p style="margin-bottom: 0.5rem; color: rgba(255,255,255,0.7);">P.O. Box 1854<br>Keller, TX 76244</p>
+      </div>
+    </div>
+    <div class="container"
+      style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem;">
+      <p>&copy; 2025 Lions District 2-E2 ERC. All rights reserved.</p>
+      <div style="display: flex; align-items: center; gap: 0.5rem; font-family: var(--font-mono);">
+        <span
+          style="display: block; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent);"></span>
+        System Operational
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,197 @@
+// Global variable to store locations
+let allLocations = [];
+let mapInitialized = false;
+let mapInstance = null;
+
+// Map Styles
+const MAP_STYLE_LIGHT = 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json';
+const MAP_STYLE_DARK = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
+
+// Function to fetch locations
+async function loadLocations() {
+  try {
+    // Fetch from PHP script which handles caching and geocoding
+    const response = await fetch('get-locations.php');
+    allLocations = await response.json();
+    renderLocationsList();
+
+    // Try to init map if we are already on the locations tab
+    checkAndInitMap();
+  } catch (error) {
+    console.error('Error loading locations:', error);
+    const container = document.getElementById('locations-list');
+    if (container) {
+      container.innerHTML = '<p style="text-align:center; padding: 2rem;">Error loading locations. Please try refreshing the page.</p>';
+    }
+  }
+}
+
+// Function to render the list
+function renderLocationsList() {
+  const container = document.getElementById('locations-list');
+  const azContainer = document.getElementById('az-directory');
+  if (!container || !azContainer) return;
+
+  container.innerHTML = '';
+  azContainer.innerHTML = '';
+
+  // Sort locations alphabetically by name
+  allLocations.sort((a, b) => a.name.localeCompare(b.name));
+
+  const firstLetters = new Set();
+
+  allLocations.forEach(loc => {
+    // Generate links dynamically
+    const phoneDigits = loc.phone.replace(/\D/g, '');
+    const phoneLink = `tel:+1${phoneDigits}`;
+    const directionsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc.address)}`;
+
+    // Grouping by letter logic
+    const firstChar = loc.name.charAt(0).toUpperCase();
+    const isNewLetter = !firstLetters.has(firstChar);
+
+    const row = document.createElement('div');
+    row.className = 'location-row';
+
+    if (isNewLetter) {
+      firstLetters.add(firstChar);
+      // Give this row the anchor ID for scrolling
+      row.id = `loc-letter-${firstChar}`;
+
+      // Add the A-Z quick link to the directory container
+      const azLink = document.createElement('a');
+      azLink.href = `#loc-letter-${firstChar}`;
+      azLink.textContent = firstChar;
+      azLink.className = 'btn-outline-az';
+      azContainer.appendChild(azLink);
+    }
+
+    row.innerHTML = `
+            <div class="location-name">${loc.name}</div>
+            <div class="location-address">${loc.address}</div>
+            <div class="location-phone"><a href="${phoneLink}">${loc.phone}</a></div>
+            <div class="location-link"><a href="${directionsLink}" target="_blank">Directions</a></div>
+        `;
+    container.appendChild(row);
+  });
+}
+
+// Get current appropriate map style
+function getMapStyle() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  return isDark ? MAP_STYLE_DARK : MAP_STYLE_LIGHT;
+}
+
+// Initialize map
+window.initializeMap = async function () {
+  const mapContainer = document.getElementById('allLocationsMap');
+  if (!mapContainer) return;
+
+  // Initialize MapLibre GL map
+  mapInstance = new maplibregl.Map({
+    container: 'allLocationsMap',
+    style: getMapStyle(),
+    center: [-97.2, 32.75], // Default center (DFW)
+    zoom: 9
+  });
+
+  // Add navigation controls
+  mapInstance.addControl(new maplibregl.NavigationControl());
+
+  const bounds = new maplibregl.LngLatBounds();
+  let hasValidLocation = false;
+
+  // Process locations
+  allLocations.forEach(loc => {
+    // Coordinates are now provided by the server (get-locations.php)
+    if (loc.lat && loc.lng) {
+      hasValidLocation = true;
+      const el = document.createElement('div');
+      el.className = 'marker';
+      el.style.backgroundImage = 'url(\'images/marker-icon.svg\')';
+      el.style.backgroundSize = '100%';
+      el.style.width = '30px';
+      el.style.height = '30px';
+      el.style.cursor = 'pointer';
+
+      // Check if we need to invert marker color for dark mode (though usually SVG handles it, 
+      // but if it's an image, we might want a different one. 
+      // For now keeping same marker as it is likely high contrast).
+
+      const directionsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc.address)}`;
+      const popup = new maplibregl.Popup({ offset: 25 })
+        .setHTML(`
+          <div style="font-weight: bold; color: #0fbe7c; margin-bottom: 5px;">${loc.name}</div>
+          <div style="font-size: 0.9em; color: #333; margin-bottom: 8px;">${loc.address}</div>
+          <a href="${directionsLink}" target="_blank" style="display: inline-block; background-color: #0fbe7c; color: white; padding: 5px 10px; border-radius: 4px; text-decoration: none; font-size: 0.85em; transition: background-color 0.2s;">Get Directions</a>
+        `);
+      // Force dark text in popup as map styles might affect it, or ensure popup css is robust.
+
+      new maplibregl.Marker(el)
+        .setLngLat([loc.lng, loc.lat])
+        .setPopup(popup)
+        .addTo(mapInstance);
+
+      bounds.extend([loc.lng, loc.lat]);
+    }
+  });
+
+  if (hasValidLocation) {
+    mapInstance.fitBounds(bounds, { padding: 50 });
+  }
+}
+
+window.checkAndInitMap = () => {
+  const mapContainer = document.getElementById('allLocationsMap');
+
+  // Check if map container exists and we have data
+  if (mapContainer && allLocations.length > 0) {
+    if (!mapInitialized) {
+      mapInitialized = true;
+      setTimeout(initializeMap, 100);
+    } else if (mapInstance) {
+      mapInstance.resize();
+    }
+  }
+};
+
+// Update map style when theme changes
+const updateMapTheme = () => {
+  if (mapInstance && mapInitialized) {
+    mapInstance.setStyle(getMapStyle());
+  }
+};
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+  loadLocations();
+
+  // Listen for hash changes (handled by app.js router)
+  window.addEventListener('hashchange', () => {
+    setTimeout(checkAndInitMap, 100); // Small delay to allow tab switch to complete
+  });
+
+  // Also listen for tab clicks directly to be safe, though hashchange should cover it
+  const tabButtons = document.querySelectorAll('.tab-button, .js-tab-trigger');
+  tabButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      if (button.getAttribute('data-tab') === 'locations') {
+        setTimeout(checkAndInitMap, 100);
+      }
+    });
+  });
+
+  // Observe theme changes
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
+        updateMapTheme();
+      }
+    });
+  });
+
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['data-theme']
+  });
+});

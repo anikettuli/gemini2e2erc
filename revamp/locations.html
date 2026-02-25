@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Locations | Lions District 2-E2 ERC</title>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@4.0.0/dist/maplibre-gl.css" />
+  <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.0.0/dist/maplibre-gl.js"></script>
+
+  <!-- Old Styles override required dynamically by MapLibre injection script -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="smooth-scroll" style="background: var(--bg-color);">
+  <div class="noise-overlay"></div>
+
+  <!-- Shared Navbar -->
+  <header class="navbar gs-reveal-up">
+    <a href="index.html" class="brand">
+      <img src="e2e2rc_LOGO.png" alt="ERC Logo">
+      District 2-E2 ERC
+    </a>
+    <nav class="navbar-links">
+      <a href="about.html" class="nav-link">About</a>
+      <a href="services.html" class="nav-link">Services</a>
+      <a href="locations.html" class="nav-link active">Locations</a>
+      <a href="volunteer.html" class="nav-link">Volunteer</a>
+    </nav>
+    <a href="contact.html" class="btn btn-primary" style="padding: 0.6rem 1.25rem;">Contact Us</a>
+  </header>
+
+  <main class="page-top-padding">
+
+    <div class="container text-center mb-4 gs-reveal-up">
+      <h1 style="font-size: 3.5rem;">Drop-Off <span class="drama-text" style="color: var(--primary);">Locations</span>
+      </h1>
+      <p style="font-size: 1.2rem; max-width: 600px; margin: 1rem auto; color: var(--text-muted);">Find convenient
+        donation drop-off locations across the Dallas-Fort Worth area to contribute physical items.</p>
+    </div>
+
+    <!-- Map UI -->
+    <section class="section container gs-section" style="padding-top: 2rem;">
+      <div class="gs-reveal-up mb-4">
+        <!-- Must match ID from old locations.js -->
+        <div id="allLocationsMap"
+          style="width: 100%; height: 500px; border-radius: var(--border-radius-lg); overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.05); border: 2px solid rgba(0,0,0,0.05);">
+        </div>
+      </div>
+
+      <div class="gs-reveal-up">
+        <div id="az-directory"
+          style="display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; margin-bottom: 3rem;"></div>
+        <div id="locations-list"
+          style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+          <!-- Loaded dynamically via locations.js -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid gs-reveal-up">
+      <div>
+        <a href="index.html" class="brand"
+          style="color: white; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem; text-decoration: none;">
+          <img src="e2e2rc_LOGO.png" alt="Logo" style="height: 40px; border-radius: 4px;">
+          District 2-E2 ERC
+        </a>
+        <p style="margin-top: 1.5rem; max-width: 400px; line-height: 1.6;">Lions District 2-E2 Eyeglass Recycling Center
+          is a 501(c)(3) nonprofit dedicated to improving vision care access globally. Entirely volunteer-run.</p>
+        <div style="margin-top: 1rem;">
+          <a href="admin-view.php" style="font-size: 0.9rem; text-decoration: underline;">Admin Sign In</a>
+        </div>
+      </div>
+
+      <div>
+        <h3>Directory</h3>
+        <a href="about.html">About & Team</a>
+        <a href="services.html">Process & Services</a>
+        <a href="locations.html">Drop-Off Locations</a>
+        <a href="volunteer.html">Volunteer Events</a>
+        <a href="contact.html">Contact Us</a>
+      </div>
+
+      <div>
+        <h3>Main Center</h3>
+        <p style="margin-bottom: 0.5rem; color: rgba(255,255,255,0.7);"><a href="#" class="global-phone-link show-text"
+            style="color: rgba(255,255,255,0.7); display: inline;"></a></p>
+        <p style="margin-bottom: 0.5rem; color: rgba(255,255,255,0.7);"><a href="#" class="global-email-link show-text"
+            style="color: rgba(255,255,255,0.7); display: inline;"></a></p>
+        <p style="margin-bottom: 0.5rem; color: rgba(255,255,255,0.7);">5621 Bunker Blvd<br>Watauga, TX 76148</p>
+        <p style="margin-bottom: 0.5rem; color: rgba(255,255,255,0.7);">P.O. Box 1854<br>Keller, TX 76244</p>
+      </div>
+    </div>
+    <div class="container"
+      style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem;">
+      <p>&copy; 2025 Lions District 2-E2 ERC. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/locations.js"></script>
+  <script src="js/main.js"></script>
+
+  <script>
+    // Manual map force loader since JS tab logic is removed
+    document.addEventListener("DOMContentLoaded", () => {
+      window.checkAndInitMap = function (force = false) {
+        if (!window.mapInitialized && window.allLocations && window.allLocations.length > 0) {
+          window.mapInitialized = true;
+          if (window.initializeMap) window.initializeMap();
+        }
+      };
+
+      setTimeout(() => {
+        if (window.checkAndInitMap) window.checkAndInitMap(true);
+      }, 1000);
+    });
+  </script>
+</body>
+
+</html>
