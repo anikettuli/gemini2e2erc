@@ -64,6 +64,15 @@ function renderLocationsList() {
       azLink.textContent = firstChar;
       azLink.className = 'btn btn-outline';
       azLink.style = 'padding: 5px 12px; font-weight: bold; font-size: 0.9rem; text-decoration: none; display: inline-block;';
+      azLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = document.getElementById(`loc-letter-${firstChar}`);
+        if (target) {
+          const headerHeight = document.querySelector('header')?.offsetHeight || 70;
+          const top = target.getBoundingClientRect().top + window.scrollY - headerHeight - 12;
+          window.scrollTo({ top, behavior: 'smooth' });
+        }
+      });
       azContainer.appendChild(azLink);
     }
 

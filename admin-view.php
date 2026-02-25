@@ -317,7 +317,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_FILES['new_form']) && $_FILES['new_form']['error'] === UPLOAD_ERR_OK) {
             $tmp_name = $_FILES['new_form']['tmp_name'];
             $cleanFilename = basename($targetFilename);
-            $targetPath = "forms/" . $cleanFilename;
+            $targetPath = "files/" . $cleanFilename;
 
             if ($cleanFilename !== '') {
                 $ext = strtolower(pathinfo($cleanFilename, PATHINFO_EXTENSION));
@@ -670,7 +670,7 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
             <li><a href="#" data-target="events"><i class="fas fa-calendar-alt"></i> <span>Events</span></a></li>
             <li><a href="#" data-target="locations"><i class="fas fa-map-marker-alt"></i> <span>Locations</span></a></li>
             <li><a href="#" data-target="gallery"><i class="fas fa-images"></i> <span>Gallery</span></a></li>
-            <li><a href="#" data-target="forms"><i class="fas fa-file-pdf"></i> <span>Forms</span></a></li>
+            <li><a href="#" data-target="forms"><i class="fas fa-file-pdf"></i> <span>Files</span></a></li>
             <li><a href="#" data-target="board"><i class="fas fa-user-tie"></i> <span>Board Members</span></a></li>
             <li><a href="#" data-target="testimonials"><i class="fas fa-comment-dots"></i> <span>Testimonials</span></a></li>
             <li><a href="#" data-target="other"><i class="fas fa-cogs"></i> <span>Other Info</span></a></li>
@@ -1027,25 +1027,55 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
         <section id="forms" class="section">
             <div class="card">
                 <div class="card-header">
-                    <h2>Manage Forms</h2>
+                    <h2>Manage Files</h2>
                 </div>
-                <p style="margin-bottom: 2rem; color: var(--text-dim);">Upload a new file to replace an existing form. The original filename will be preserved.</p>
+                <p style="margin-bottom: 2rem; color: var(--text-dim);">Upload a new file to replace an existing PDF. The original filename will be preserved.</p>
                 
                 <?php
-                if (!is_dir('forms')) {
-                    mkdir('forms', 0777, true);
+                if (!is_dir('files')) {
+                    mkdir('files', 0777, true);
                 }
-                $formFiles = array_diff(scandir('forms'), array('.', '..', 'README.md'));
-                $hasPdf = false;
+
+                // Read index.html once to check which files are linked on the site
+                $indexHtml = file_exists('index.html') ? file_get_contents('index.html') : '';
+
+                $allFiles = array_diff(scandir('files'), array('.', '..', 'README.md'));
+
+                // Split into linked (Live on Site) and unlinked (Not Displayed), each sorted alphabetically
+                $linkedFiles = [];
+                $unlinkedFiles = [];
+                foreach ($allFiles as $f) {
+                    if (strtolower(pathinfo($f, PATHINFO_EXTENSION)) === 'pdf') {
+                        if (strpos($indexHtml, 'files/' . $f) !== false) {
+                            $linkedFiles[] = $f;
+                        } else {
+                            $unlinkedFiles[] = $f;
+                        }
+                    }
+                }
+                sort($linkedFiles);
+                sort($unlinkedFiles);
+                $formFiles = array_merge($linkedFiles, $unlinkedFiles);
+
+                $hasPdf = !empty($formFiles);
                 foreach ($formFiles as $formFile):
-                    $ext = strtolower(pathinfo($formFile, PATHINFO_EXTENSION));
-                    if ($ext === 'pdf'):
-                        $hasPdf = true;
+                        $isLinked = strpos($indexHtml, 'files/' . $formFile) !== false;
                 ?>
-                    <div style="background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; border: 1px solid var(--primary); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                    <div style="background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; border: 1px solid <?php echo $isLinked ? 'var(--success)' : '#f59e0b'; ?>; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
                         <div>
-                            <h3 style="margin-bottom: 0.5rem; color: var(--accent);"><i class="fas fa-file-pdf"></i> <?php echo htmlspecialchars($formFile); ?></h3>
-                            <a href="forms/<?php echo htmlspecialchars($formFile); ?>" target="_blank" style="color: var(--text-dim); text-decoration: none; font-size: 0.9rem;"><i class="fas fa-external-link-alt"></i> View Current File</a>
+                            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; flex-wrap: wrap;">
+                                <h3 style="margin: 0; color: var(--accent);"><i class="fas fa-file-pdf"></i> <?php echo htmlspecialchars($formFile); ?></h3>
+                                <?php if ($isLinked): ?>
+                                    <span style="background: rgba(16,185,129,0.15); color: #6ee7b7; border: 1px solid var(--success); border-radius: 20px; padding: 2px 10px; font-size: 0.78rem; font-weight: 600; white-space: nowrap;">
+                                        <i class="fas fa-check-circle"></i> Live on Site
+                                    </span>
+                                <?php else: ?>
+                                    <span style="background: rgba(245,158,11,0.15); color: #fcd34d; border: 1px solid #f59e0b; border-radius: 20px; padding: 2px 10px; font-size: 0.78rem; font-weight: 600; white-space: nowrap;">
+                                        <i class="fas fa-eye-slash"></i> Not Displayed
+                                    </span>
+                                <?php endif; ?>
+                            </div>
+                            <a href="files/<?php echo htmlspecialchars($formFile); ?>" target="_blank" style="color: var(--text-dim); text-decoration: none; font-size: 0.9rem;"><i class="fas fa-external-link-alt"></i> View Current File</a>
                         </div>
                         <form action="admin-view.php" method="POST" enctype="multipart/form-data" style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
                             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
@@ -1055,9 +1085,9 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
                             <button type="submit" class="btn btn-accent"><i class="fas fa-upload"></i> Replace</button>
                         </form>
                     </div>
-                <?php endif; endforeach; 
+                <?php endforeach; 
                 if (!$hasPdf): ?>
-                    <p style="color: var(--text-dim);">No PDF forms found in the forms directory.</p>
+                    <p style="color: var(--text-dim);">No PDF files found in the files directory.</p>
                 <?php endif; ?>
             </div>
         </section>
