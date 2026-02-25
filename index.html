@@ -29,6 +29,19 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@4.0.0/dist/maplibre-gl.css" />
+  <!-- Theme init: runs before CSS renders to prevent flash of wrong theme.
+       Priority: 1) localStorage  2) system preference  3) dark fallback -->
+  <script>
+    (function () {
+      var saved = localStorage.getItem('theme');
+      var sysDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      // saved → system pref → dark fallback
+      var theme = saved || (window.matchMedia ? (sysDark ? 'dark' : 'light') : 'dark');
+      if (theme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
 
 </head>
 

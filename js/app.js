@@ -99,16 +99,11 @@ class ThemeManager {
   }
 
   init() {
-    // Check for saved theme preference or system preference
-    const savedTheme = localStorage.getItem('theme') ||
-      (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    // Priority: localStorage → system preference → dark fallback
+    const sysDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const savedTheme = localStorage.getItem('theme') || (window.matchMedia ? (sysDark ? 'dark' : 'light') : 'dark');
 
-    // Apply saved theme
-    if (savedTheme === 'dark') {
-      this.setTheme('dark');
-    } else {
-      this.setTheme('light');
-    }
+    this.setTheme(savedTheme);
 
     // Add click listeners
     if (this.themeToggleMobile) {
@@ -116,15 +111,6 @@ class ThemeManager {
     }
     if (this.themeToggleDesktop) {
       this.themeToggleDesktop.addEventListener('click', () => this.toggleTheme());
-    }
-
-    // Listen for system theme changes
-    if (window.matchMedia) {
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-        if (!localStorage.getItem('theme')) {
-          this.setTheme(e.matches ? 'dark' : 'light');
-        }
-      });
     }
   }
 
