@@ -106,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($id) {
             foreach ($events as &$e) {
-                if ($e['id'] == $id) {
+                if ($e['id'] === (int)$id) {
                     $e = $eventData;
                     break;
                 }
@@ -244,6 +244,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                          'size' => $files['size'][$i]
                     ];
                     if (isValidImageUpload($fileArray)) {
+                        if ($fileArray['size'] > 10 * 1024 * 1024) { // 10MB limit
+                            $error = "One or more images exceeded the 10MB limit.";
+                            continue;
+                        }
                         $tmp_name = $fileArray['tmp_name'];
                         $name = basename($fileArray['name']);
                         $name = preg_replace("/[^a-zA-Z0-9\._-]/", "_", $name);
@@ -696,10 +700,10 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
         </script>
 
         <?php if ($message): ?>
-            <div class="alert alert-success"><i class="fas fa-check-circle"></i> <?php echo $message; ?></div>
+            <div class="alert alert-success"><i class="fas fa-check-circle"></i> <?php echo htmlspecialchars($message); ?></div>
         <?php endif; ?>
         <?php if ($error): ?>
-            <div class="alert alert-error"><i class="fas fa-exclamation-triangle"></i> <?php echo $error; ?></div>
+            <div class="alert alert-error"><i class="fas fa-exclamation-triangle"></i> <?php echo htmlspecialchars($error); ?></div>
         <?php endif; ?>
 
         <!-- DASHBOARD SECTION -->
@@ -900,10 +904,10 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
                     <tbody>
                         <?php foreach($events as $e): ?>
                             <tr>
-                                <td><img src="<?php echo $e['image']; ?>" class="image-preview"></td>
+                                <td><img src="<?php echo htmlspecialchars($e['image']); ?>" class="image-preview" alt="Event preview"></td>
                                 <td><strong><?php echo htmlspecialchars($e['title']); ?></strong></td>
-                                <td><?php echo $e['date']; ?></td>
-                                <td><?php echo $e['time']; ?></td>
+                                <td><?php echo htmlspecialchars($e['date']); ?></td>
+                                <td><?php echo htmlspecialchars($e['time']); ?></td>
                                 <td><?php echo $e['people']; ?>/<?php echo $e['maxPeople']; ?></td>
                                 <td class="action-btns">
                                     <button class="btn btn-outline" title="Edit Event" onclick='editEvent(<?php echo htmlspecialchars(json_encode($e), ENT_QUOTES, "UTF-8"); ?>)'><i class="fas fa-edit"></i></button>
@@ -911,7 +915,7 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
                                     <form method="POST" style="display:inline;" onsubmit="return confirm('Delete this event?');">
                                         <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                                         <input type="hidden" name="action" value="delete_event">
-                                        <input type="hidden" name="id" value="<?php echo $e['id']; ?>">
+                                        <input type="hidden" name="id" value="<?php echo (int)$e['id']; ?>">
                                         <button type="submit" class="btn btn-outline" style="color: var(--danger);"><i class="fas fa-trash"></i></button>
                                     </form>
                                 </td>
@@ -1009,12 +1013,12 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
 
                 <div class="gallery-grid">
                     <?php foreach($gallery as $photo): ?>
-                        <div class="gallery-item">
-                            <img src="<?php echo $photo; ?>" loading="lazy">
+                        <div class="gallery-item" title="<?php echo htmlspecialchars($photo); ?>">
+                            <img src="<?php echo htmlspecialchars($photo); ?>" loading="lazy">
                             <form method="POST" onsubmit="return confirm('Remove this photo from gallery?');">
                                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                                 <input type="hidden" name="action" value="delete_gallery">
-                                <input type="hidden" name="photo" value="<?php echo $photo; ?>">
+                                <input type="hidden" name="photo" value="<?php echo htmlspecialchars($photo); ?>">
                                 <button type="submit" class="delete-btn" title="Delete"><i class="fas fa-trash-alt"></i></button>
                             </form>
                         </div>
@@ -1136,7 +1140,7 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
                         <?php foreach($board as $b): ?>
                             <div class="form-grid board-row" style="margin-bottom: 2rem; align-items: start; border-bottom: 1px solid var(--glass-border); padding-bottom: 1.5rem;">
                                 <div style="display: flex; gap: 1.5rem; grid-column: span 2;">
-                                    <img src="<?php echo $b['image']; ?>" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);">
+                                    <img src="<?php echo htmlspecialchars($b['image']); ?>" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);">
                                     <div style="flex: 1;">
                                         <div class="form-grid">
                                             <div>

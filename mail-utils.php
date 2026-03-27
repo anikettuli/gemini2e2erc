@@ -35,6 +35,32 @@ function get_smtp_config() {
 }
 
 /**
+ * Shared Branded Email Template
+ */
+function render_email_template($title, $content_html, $received_date = null) {
+    $date = $received_date ?: date('F j, Y \a\t g:i A');
+    return "
+    <html>
+    <body style='font-family: Arial, sans-serif; color: #333; line-height: 1.6;'>
+        <div style='max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;'>
+            <div style='background: #00447c; color: #fff; padding: 20px; text-align: center;'>
+                <h2 style='margin:0; font-size: 24px;'>$title</h2>
+            </div>
+            <div style='padding: 30px;'>
+                $content_html
+            </div>
+            <div style='background: #f8f9fa; padding: 15px; text-align: center; font-size: 13px; color: #777; border-top: 1px solid #eee;'>
+                Lions District 2-E2 ERC<br>
+                Received: $date
+            </div>
+        </div>
+    </body>
+    </html>
+    ";
+}
+
+
+/**
  * LIGHTWEIGHT SMTP CLASS (No dependencies)
  */
 class SimpleSMTP {

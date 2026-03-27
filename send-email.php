@@ -37,44 +37,33 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 
 // Sanitize Inputs
 $name = strip_tags(trim($_POST["name"] ?? ''));
-$email = filter_var(trim($_POST["email"] ?? ''), FILTER_SANITIZE_EMAIL);
+$email_raw = trim($_POST["email"] ?? '');
 $phone = strip_tags(trim($_POST["phone"] ?? ''));
 $subject_raw = strip_tags(trim($_POST["subject"] ?? 'General Inquiry'));
 $message = trim($_POST["message"] ?? '');
 $subscribe = isset($_POST["subscribe"]) ? 'Yes' : 'No';
 
-if (empty($name) || empty($email) || empty($message) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+// Use proper validation - Reject rather than sanitize
+if (empty($name) || empty($email_raw) || empty($message) || !filter_var($email_raw, FILTER_VALIDATE_EMAIL)) {
     header("Location: index.html?status=error&reason=invalid_input#contact");
     exit;
 }
+$email = $email_raw; 
 
 // Prepare Content
 $email_subject = "$subject_raw: $name";
-$current_date = date('F j, Y \a\t g:i A');
 
-$html_body = "
-<html>
-<body style='font-family: Arial, sans-serif; color: #333;'>
-    <div style='max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 5px;'>
-        <div style='background: #00447c; color: #fff; padding: 15px; text-align: center;'>
-            <h2 style='margin:0;'>New Website Inquiry</h2>
-        </div>
-        <div style='padding: 20px;'>
-            <p><strong>Name:</strong> " . htmlspecialchars($name) . "</p>
-            <p><strong>Email:</strong> <a href='mailto:$email'>$email</a></p>
-            <p><strong>Phone:</strong> " . htmlspecialchars($phone) . "</p>
-            <p><strong>Subject:</strong> " . htmlspecialchars($subject_raw) . "</p>
-            <hr>
-            <h3>Message:</h3>
-            <p>" . nl2br(htmlspecialchars($message)) . "</p>
-        </div>
-        <div style='background: #f4f4f4; padding: 10px; text-align: center; font-size: 12px; color: #777;'>
-            Received: $current_date
-        </div>
-    </div>
-</body>
-</html>
+$content_html = "
+    <p><strong>Name:</strong> " . htmlspecialchars($name) . "</p>
+    <p><strong>Email:</strong> <a href='mailto:$email'>$email</a></p>
+    <p><strong>Phone:</strong> " . htmlspecialchars($phone) . "</p>
+    <p><strong>Subject:</strong> " . htmlspecialchars($subject_raw) . "</p>
+    <hr style='border: 0; border-top: 1px solid #eee; margin: 20px 0;'>
+    <h3>Message:</h3>
+    <p style='white-space: pre-wrap;'>" . htmlspecialchars($message) . "</p>
 ";
+
+$html_body = render_email_template("New Website Inquiry", $content_html);
 
 // Send using our custom Lightweight SMTP class
 $error = null;
@@ -89,23 +78,23 @@ try {
         $html_body,         // Body
         "Lions 2-E2 ERC",   // From Name
         $email,             // Reply-To (User's email)
-        $email              // CC (User's email) -> ADDED THIS
+        $email              // CC (User's email)
     );
     
-    // (Separate confirmation email block removed)
-
     header("Location: index.html?status=success#contact");
     exit;
 
 } catch (Exception $e) {
     $error = $e->getMessage();
     error_log("SMTP Error: " . $error);
+    
     // Determine reason for URL
     $reason = 'send_failed';
     if (strpos($error, 'Authentic') !== false) $reason = 'auth_failed';
     if (strpos($error, 'connect') !== false) $reason = 'connect_failed';
     
-    header("Location: index.html?status=error&reason=$reason#contact");
+    // Fix: urlencode the reason to prevent header injection
+    header("Location: index.html?status=error&reason=" . urlencode($reason) . "#contact");
     exit;
 }
 ?>

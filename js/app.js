@@ -225,6 +225,43 @@ class GalleryManager {
   }
 }
 
+/**
+ * Toast Notification System
+ */
+function showToast(message, type = 'info', title = '') {
+  let container = document.getElementById('toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'toast-container';
+    document.body.appendChild(container);
+  }
+
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  
+  const icon = type === 'success' ? '✓' : (type === 'error' ? '✕' : 'ℹ');
+  const defaultTitle = type.charAt(0).toUpperCase() + type.slice(1);
+
+  toast.innerHTML = `
+    <div class="toast-icon">${icon}</div>
+    <div class="toast-content">
+      <div class="toast-title">${title || defaultTitle}</div>
+      <div class="toast-message">${message}</div>
+    </div>
+  `;
+
+  container.appendChild(toast);
+
+  // Animate in
+  setTimeout(() => toast.classList.add('show'), 10);
+
+  // Remove after 5 seconds
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 500);
+  }, 5000);
+}
+
 // Initialize app when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
   new Router();
@@ -234,12 +271,18 @@ document.addEventListener('DOMContentLoaded', () => {
   // Check for email status from PHP redirection
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('status') === 'success') {
-    alert('Thank you! Your message has been sent.');
+    showToast('Your message has been sent successfully.', 'success', 'Message Sent');
     // Clean the URL but keep the hash if present
     const newUrl = window.location.pathname + window.location.hash;
     window.history.replaceState({}, document.title, newUrl);
   } else if (urlParams.get('status') === 'error') {
-    alert('Sorry, there was an error sending your message. Please try again.');
+    const reason = urlParams.get('reason') || '';
+    let msg = 'There was an error sending your message. Please try again.';
+    if (reason === 'invalid_input') msg = 'Please check your information and try again.';
+    showToast(msg, 'error', 'Error');
+    // Clean URL
+    const newUrl = window.location.pathname + window.location.hash;
+    window.history.replaceState({}, document.title, newUrl);
   }
 
   // Modal Logic
@@ -284,7 +327,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const result = await response.json();
 
         if (result.success) {
-          alert('Registration successful! Check your email for confirmation.');
+          showToast('Registration successful! Check your email for confirmation.', 'success', 'Registered');
           modal.style.display = "none";
           signupForm.reset();
           // Reload events to update count
@@ -305,11 +348,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
           }
         } else {
-          alert('Error: ' + result.message);
+          showToast(result.message, 'error', 'Registration Failed');
         }
       } catch (error) {
         console.error('Error:', error);
-        alert('An error occurred. Please try again.');
+        showToast('An error occurred. Please try again.', 'error', 'Connection Error');
       } finally {
         submitBtn.innerText = originalText;
         submitBtn.disabled = false;
@@ -317,6 +360,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
 
 // Global function to open modal (called from calendar.js)
 window.openSignupModal = function (eventId, title, date, time) {
