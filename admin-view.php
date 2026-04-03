@@ -4,9 +4,27 @@ if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
-// Simple password protection
-$password = "Lions@2025"; // CHANGE THIS
-if (!isset($_SERVER['PHP_AUTH_USER']) || $_SERVER['PHP_AUTH_USER'] != 'admin' || $_SERVER['PHP_AUTH_PW'] != $password) {
+// Load Administrative Credentials from .env
+function get_admin_credentials() {
+    $env_file = __DIR__ . '/.env';
+    $env_config = [];
+    if (file_exists($env_file)) {
+        $lines = file($env_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        foreach ($lines as $line) {
+            $line = trim($line);
+            if ($line === '' || strpos($line, '#') === 0 || strpos($line, '=') === false) continue;
+            list($key, $value) = explode('=', $line, 2);
+            $env_config[trim($key)] = trim($value);
+        }
+    }
+    return [
+        'user' => $env_config['ADMIN_USER'] ?? 'admin',
+        'pass' => $env_config['ADMIN_PASS'] ?? 'Lions@2025'
+    ];
+}
+
+$creds = get_admin_credentials();
+if (!isset($_SERVER['PHP_AUTH_USER']) || $_SERVER['PHP_AUTH_USER'] != $creds['user'] || $_SERVER['PHP_AUTH_PW'] != $creds['pass']) {
     header('WWW-Authenticate: Basic realm="Admin Area"');
     header('HTTP/1.0 401 Unauthorized');
     echo 'Access Denied';
@@ -32,21 +50,22 @@ function loadJSON($file) {
 }
 
 function saveJSON($file, $data) {
-    $fp = fopen($file, 'c');
-    if (!$fp) return false;
-    
-    if (flock($fp, LOCK_EX)) {
-        ftruncate($fp, 0);
-        $result = fwrite($fp, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
-        fflush($fp);
-        flock($fp, LOCK_UN);
-        fclose($fp);
-        return $result !== false;
+    $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+    if ($json === false) return false;
+
+    // Write to a temp file then atomically rename — works on all PHP versions
+    $tmpFile = $file . '.tmp.' . getmypid();
+    if (file_put_contents($tmpFile, $json, LOCK_EX) === false) {
+        @unlink($tmpFile);
+        return false;
     }
-    
-    fclose($fp);
-    return false;
+    if (!rename($tmpFile, $file)) {
+        @unlink($tmpFile);
+        return false;
+    }
+    return true;
 }
+
 
 function isValidImageUpload($fileArray) {
     if ($fileArray['error'] !== UPLOAD_ERR_OK) return false;
@@ -68,11 +87,16 @@ $error = "";
 
 // Handle POST actions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
-        die("CSRF token validation failed.");
+    // Check for POST size truncation (if post_max_size is exceeded)
+    if (empty($_POST) && $_SERVER['CONTENT_LENGTH'] > 0) {
+        $error = "The uploaded file is too large for the server to process. Please try a smaller image.";
+        $action = "error_too_large";
+    } elseif (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+        $error = "Session expired or invalid. Please reload the page and try again.";
+        $action = "error_csrf"; // Skip all other actions
+    } else {
+        $action = $_POST['action'] ?? '';
     }
-
-    $action = $_POST['action'] ?? '';
 
     if ($action === 'save_event') {
         $events = loadJSON('data/events.json');
@@ -80,11 +104,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         $imagePath = $_POST['existing_image'] ?? 'images/placeholder-event.svg';
         if (isset($_FILES['image']) && isValidImageUpload($_FILES['image'])) {
-            $tmp_name = $_FILES['image']['tmp_name'];
-            $name = basename($_FILES['image']['name']);
-            $target = "images/events/" . time() . "_" . preg_replace("/[^a-zA-Z0-9\._-]/", "_", $name);
-            if (move_uploaded_file($tmp_name, $target)) {
-                $imagePath = $target;
+            if ($_FILES['image']['size'] > 10 * 1024 * 1024) {
+                $error = "Event image exceeds 10MB limit.";
+            } else {
+                $tmp_name = $_FILES['image']['tmp_name'];
+                $name = basename($_FILES['image']['name']);
+                $target = "images/events/" . time() . "_" . preg_replace("/[^a-zA-Z0-9\._-]/", "_", $name);
+                if (move_uploaded_file($tmp_name, $target)) {
+                    $imagePath = $target;
+                }
             }
         } elseif (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
              $error = "Invalid image upload for event.";
@@ -106,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($id) {
             foreach ($events as &$e) {
-                if ($e['id'] == $id) {
+                if ($e['id'] === (int)$id) {
                     $e = $eventData;
                     break;
                 }
@@ -197,7 +225,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     $board[] = [
                         "name" => $_POST['names'][$i],
-                        "image" => $imagePath
+                        "image" => $imagePath,
+                        "tag" => in_array($_POST['tags'][$i] ?? '', ['current', 'previous']) ? $_POST['tags'][$i] : 'current'
                     ];
                 }
             }
@@ -244,6 +273,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                          'size' => $files['size'][$i]
                     ];
                     if (isValidImageUpload($fileArray)) {
+                        if ($fileArray['size'] > 10 * 1024 * 1024) { // 10MB limit
+                            $error = "One or more images exceeded the 10MB limit.";
+                            continue;
+                        }
                         $tmp_name = $fileArray['tmp_name'];
                         $name = basename($fileArray['name']);
                         $name = preg_replace("/[^a-zA-Z0-9\._-]/", "_", $name);
@@ -696,10 +729,10 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
         </script>
 
         <?php if ($message): ?>
-            <div class="alert alert-success"><i class="fas fa-check-circle"></i> <?php echo $message; ?></div>
+            <div class="alert alert-success"><i class="fas fa-check-circle"></i> <?php echo htmlspecialchars($message); ?></div>
         <?php endif; ?>
         <?php if ($error): ?>
-            <div class="alert alert-error"><i class="fas fa-exclamation-triangle"></i> <?php echo $error; ?></div>
+            <div class="alert alert-error"><i class="fas fa-exclamation-triangle"></i> <?php echo htmlspecialchars($error); ?></div>
         <?php endif; ?>
 
         <!-- DASHBOARD SECTION -->
@@ -900,10 +933,10 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
                     <tbody>
                         <?php foreach($events as $e): ?>
                             <tr>
-                                <td><img src="<?php echo $e['image']; ?>" class="image-preview"></td>
+                                <td><img src="<?php echo htmlspecialchars($e['image']); ?>" class="image-preview" alt="Event preview"></td>
                                 <td><strong><?php echo htmlspecialchars($e['title']); ?></strong></td>
-                                <td><?php echo $e['date']; ?></td>
-                                <td><?php echo $e['time']; ?></td>
+                                <td><?php echo htmlspecialchars($e['date']); ?></td>
+                                <td><?php echo htmlspecialchars($e['time']); ?></td>
                                 <td><?php echo $e['people']; ?>/<?php echo $e['maxPeople']; ?></td>
                                 <td class="action-btns">
                                     <button class="btn btn-outline" title="Edit Event" onclick='editEvent(<?php echo htmlspecialchars(json_encode($e), ENT_QUOTES, "UTF-8"); ?>)'><i class="fas fa-edit"></i></button>
@@ -911,7 +944,7 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
                                     <form method="POST" style="display:inline;" onsubmit="return confirm('Delete this event?');">
                                         <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                                         <input type="hidden" name="action" value="delete_event">
-                                        <input type="hidden" name="id" value="<?php echo $e['id']; ?>">
+                                        <input type="hidden" name="id" value="<?php echo (int)$e['id']; ?>">
                                         <button type="submit" class="btn btn-outline" style="color: var(--danger);"><i class="fas fa-trash"></i></button>
                                     </form>
                                 </td>
@@ -1009,12 +1042,12 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
 
                 <div class="gallery-grid">
                     <?php foreach($gallery as $photo): ?>
-                        <div class="gallery-item">
-                            <img src="<?php echo $photo; ?>" loading="lazy">
+                        <div class="gallery-item" title="<?php echo htmlspecialchars($photo); ?>">
+                            <img src="<?php echo htmlspecialchars($photo); ?>" loading="lazy">
                             <form method="POST" onsubmit="return confirm('Remove this photo from gallery?');">
                                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                                 <input type="hidden" name="action" value="delete_gallery">
-                                <input type="hidden" name="photo" value="<?php echo $photo; ?>">
+                                <input type="hidden" name="photo" value="<?php echo htmlspecialchars($photo); ?>">
                                 <button type="submit" class="delete-btn" title="Delete"><i class="fas fa-trash-alt"></i></button>
                             </form>
                         </div>
@@ -1129,40 +1162,97 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
         <section id="board" class="section">
             <div class="card">
                 <h2>Board Members</h2>
+                <p style="color: var(--text-dim); margin-bottom: 1.5rem; font-size: 0.9rem;">Use the <strong>Category</strong> dropdown on each member to assign them to <em>Current</em> or <em>Previous</em> Board Members. Changes take effect when you click <strong>Save All Changes</strong>.</p>
                 <form action="admin-view.php" method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                     <input type="hidden" name="action" value="save_board">
-                    <div id="board-container" style="margin-top: 1.5rem;">
-                        <?php foreach($board as $b): ?>
-                            <div class="form-grid board-row" style="margin-bottom: 2rem; align-items: start; border-bottom: 1px solid var(--glass-border); padding-bottom: 1.5rem;">
-                                <div style="display: flex; gap: 1.5rem; grid-column: span 2;">
-                                    <img src="<?php echo $b['image']; ?>" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);">
-                                    <div style="flex: 1;">
-                                        <div class="form-grid">
-                                            <div>
-                                                <label>Name</label>
-                                                <input type="text" name="names[]" value="<?php echo htmlspecialchars($b['name']); ?>" required>
-                                            </div>
-                                            <div>
-                                                <label>Update Photo</label>
-                                                <input type="file" name="board_files[]" accept="image/*">
-                                                <input type="hidden" name="images[]" value="<?php echo htmlspecialchars($b['image']); ?>">
+
+                    <!-- CURRENT BOARD MEMBERS -->
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="color: var(--accent); border-bottom: 1px solid var(--glass-border); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">
+                            <i class="fas fa-user-tie"></i> Current Board Members
+                        </h3>
+                        <div id="board-container-current" style="margin-top: 1rem;">
+                            <?php foreach($board as $b): if (($b['tag'] ?? 'current') === 'current'): ?>
+                                <div class="form-grid board-row" style="margin-bottom: 2rem; align-items: start; border-bottom: 1px solid var(--glass-border); padding-bottom: 1.5rem;">
+                                    <div style="display: flex; gap: 1.5rem; grid-column: span 2;">
+                                        <img src="<?php echo htmlspecialchars($b['image']); ?>" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);">
+                                        <div style="flex: 1;">
+                                            <div class="form-grid">
+                                                <div>
+                                                    <label>Name</label>
+                                                    <input type="text" name="names[]" value="<?php echo htmlspecialchars($b['name']); ?>" required>
+                                                </div>
+                                                <div>
+                                                    <label>Category</label>
+                                                    <select name="tags[]">
+                                                        <option value="current" <?php echo ($b['tag'] ?? 'current') === 'current' ? 'selected' : ''; ?>>Current Board Member</option>
+                                                        <option value="previous" <?php echo ($b['tag'] ?? '') === 'previous' ? 'selected' : ''; ?>>Previous Board Member</option>
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <label>Update Photo</label>
+                                                    <input type="file" name="board_files[]" accept="image/*">
+                                                    <input type="hidden" name="images[]" value="<?php echo htmlspecialchars($b['image']); ?>">
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div style="display: flex; align-items: center; padding-top: 1.5rem;">
-                                        <button type="button" class="btn btn-outline" style="color: var(--danger);" onclick="if(confirm('Remove this member?')) this.closest('.board-row').remove()"><i class="fas fa-trash"></i></button>
+                                        <div style="display: flex; align-items: center; padding-top: 1.5rem;">
+                                            <button type="button" class="btn btn-outline" style="color: var(--danger);" onclick="if(confirm('Remove this member?')) this.closest('.board-row').remove()"><i class="fas fa-trash"></i></button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        <?php endforeach; ?>
+                            <?php endif; endforeach; ?>
+                        </div>
                     </div>
-                    <button type="button" class="btn btn-outline" onclick="addBoardMember()" style="margin-bottom: 1.5rem; margin-top: 1rem;"><i class="fas fa-plus"></i> Add New Member</button>
+
+                    <!-- PREVIOUS BOARD MEMBERS -->
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="color: var(--text-dim); border-bottom: 1px solid var(--glass-border); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">
+                            <i class="fas fa-history"></i> Previous Board Members
+                        </h3>
+                        <div id="board-container-previous">
+                            <?php foreach($board as $b): if (($b['tag'] ?? 'current') === 'previous'): ?>
+                                <div class="form-grid board-row" style="margin-bottom: 2rem; align-items: start; border-bottom: 1px solid var(--glass-border); padding-bottom: 1.5rem;">
+                                    <div style="display: flex; gap: 1.5rem; grid-column: span 2;">
+                                        <img src="<?php echo htmlspecialchars($b['image']); ?>" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid var(--text-dim);">
+                                        <div style="flex: 1;">
+                                            <div class="form-grid">
+                                                <div>
+                                                    <label>Name</label>
+                                                    <input type="text" name="names[]" value="<?php echo htmlspecialchars($b['name']); ?>" required>
+                                                </div>
+                                                <div>
+                                                    <label>Category</label>
+                                                    <select name="tags[]">
+                                                        <option value="current" <?php echo ($b['tag'] ?? 'current') === 'current' ? 'selected' : ''; ?>>Current Board Member</option>
+                                                        <option value="previous" <?php echo ($b['tag'] ?? '') === 'previous' ? 'selected' : ''; ?>>Previous Board Member</option>
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <label>Update Photo</label>
+                                                    <input type="file" name="board_files[]" accept="image/*">
+                                                    <input type="hidden" name="images[]" value="<?php echo htmlspecialchars($b['image']); ?>">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style="display: flex; align-items: center; padding-top: 1.5rem;">
+                                            <button type="button" class="btn btn-outline" style="color: var(--danger);" onclick="if(confirm('Remove this member?')) this.closest('.board-row').remove()"><i class="fas fa-trash"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endif; endforeach; ?>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-outline" onclick="addBoardMember('current')" style="margin-bottom: 0.75rem; margin-right: 1rem;"><i class="fas fa-plus"></i> Add Current Member</button>
+                    <button type="button" class="btn btn-outline" onclick="addBoardMember('previous')" style="margin-bottom: 1.5rem;"><i class="fas fa-plus"></i> Add Previous Member</button>
                     <br>
                     <button type="submit" class="btn btn-primary">Save All Changes</button>
                 </form>
             </div>
         </section>
+
 
         <!-- TESTIMONIALS SECTION -->
         <section id="testimonials" class="section">
@@ -1282,16 +1372,20 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
         }
 
         // Row Helpers
-        function addBoardMember() {
-            const container = document.getElementById('board-container');
+        function addBoardMember(tag) {
+            tag = tag || 'current';
+            const containerId = tag === 'previous' ? 'board-container-previous' : 'board-container-current';
+            const container = document.getElementById(containerId);
             const div = document.createElement('div');
-            div.className = 'board-row';
+            div.className = 'form-grid board-row';
             div.style.marginBottom = '2rem';
             div.style.borderBottom = '1px solid var(--glass-border)';
             div.style.paddingBottom = '1.5rem';
+            div.style.alignItems = 'start';
+            const accentColor = tag === 'previous' ? 'var(--text-dim)' : 'var(--accent)';
             div.innerHTML = `
-                <div style="display: flex; gap: 1.5rem; align-items: start;">
-                    <div style="width: 80px; height: 80px; border-radius: 50%; background: #222; display: flex; align-items: center; justify-content: center;">
+                <div style="display: flex; gap: 1.5rem; grid-column: span 2;">
+                    <div style="width: 80px; height: 80px; border-radius: 50%; background: #222; display: flex; align-items: center; justify-content: center; border: 2px solid ${accentColor};">
                         <i class="fas fa-user fa-2x" style="color: var(--text-dim);"></i>
                     </div>
                     <div style="flex: 1;">
@@ -1299,6 +1393,13 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
                             <div>
                                 <label>Name</label>
                                 <input type="text" name="names[]" required>
+                            </div>
+                            <div>
+                                <label>Category</label>
+                                <select name="tags[]">
+                                    <option value="current" ${tag === 'current' ? 'selected' : ''}>Current Board Member</option>
+                                    <option value="previous" ${tag === 'previous' ? 'selected' : ''}>Previous Board Member</option>
+                                </select>
                             </div>
                             <div>
                                 <label>Upload Photo</label>

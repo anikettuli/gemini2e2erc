@@ -1,6 +1,10 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
+  # Force HTTPS
+  RewriteCond %{HTTPS} off
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
   # Check if browser supports WebP
   RewriteCond %{HTTP_ACCEPT} image/webp
 
@@ -16,11 +20,6 @@
   Header append Vary Accept env=REDIRECT_accept
 </IfModule>
 
-RewriteEngine On
-
-# Force HTTPS
-RewriteCond %{HTTPS} off
-RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-
 # Prevent directory listing
 Options -Indexes
+

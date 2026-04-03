@@ -5,28 +5,56 @@ document.addEventListener('DOMContentLoaded', () => {
     loadTestimonials();
 });
 
-// Load Board Members
+// Load Board Members (split into Current and Previous sections by tag)
 async function loadBoardMembers() {
-    const container = document.getElementById('board-grid');
-    if (!container) return;
+    const currentContainer = document.getElementById('board-grid-current');
+    const previousContainer = document.getElementById('board-grid-previous');
+    if (!currentContainer && !previousContainer) return;
 
     try {
         const response = await fetch('data/board.json');
         const boardMembers = await response.json();
 
-        let html = '';
-        boardMembers.forEach(member => {
-            html += `
-                <div class="board-member">
-                    <img src="${member.image}" alt="${member.name}" onerror="this.src='${SITE_CONFIG.defaultImage}'">
-                    <h4>${member.name}</h4>
-                </div>
-            `;
-        });
-        container.innerHTML = html;
+        const currentMembers = boardMembers.filter(m => !m.tag || m.tag === 'current');
+        const previousMembers = boardMembers.filter(m => m.tag === 'previous');
+
+        function renderMembers(members, container) {
+            if (!container) return;
+            container.innerHTML = ''; // Safely clear container
+            
+            if (members.length === 0) {
+                const emptyMsg = document.createElement('p');
+                emptyMsg.className = 'text-dim';
+                emptyMsg.textContent = 'No members listed.';
+                container.appendChild(emptyMsg);
+                return;
+            }
+
+            members.forEach(member => {
+                const memberCard = document.createElement('div');
+                memberCard.className = 'board-member';
+                
+                const img = document.createElement('img');
+                img.src = member.image || SITE_CONFIG.defaultImage;
+                img.alt = member.name || 'Board Member';
+                img.onerror = function() { this.src = SITE_CONFIG.defaultImage; };
+                
+                const h4 = document.createElement('h4');
+                h4.textContent = member.name || '';
+                
+                memberCard.appendChild(img);
+                memberCard.appendChild(h4);
+                container.appendChild(memberCard);
+            });
+        }
+
+        renderMembers(currentMembers, currentContainer);
+        renderMembers(previousMembers, previousContainer);
+
     } catch (error) {
         console.error('Error loading board members:', error);
-        container.innerHTML = '<p>Unable to load board members.</p>';
+        if (currentContainer) currentContainer.innerHTML = '<p>Unable to load board members.</p>';
+        if (previousContainer) previousContainer.innerHTML = '';
     }
 }
 

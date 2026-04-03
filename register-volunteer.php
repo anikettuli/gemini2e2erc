@@ -1,6 +1,7 @@
 <?php
 require_once 'config.php';
 header('Content-Type: application/json');
+set_time_limit(60); // Prevent 500 on slow SMTP connections
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // 1. Get Input
@@ -8,35 +9,57 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     $eventId = $input['eventId'] ?? null;
     $name = strip_tags(trim($input['name'] ?? ''));
-    $email = filter_var(trim($input['email'] ?? ''), FILTER_SANITIZE_EMAIL);
+    $email_raw = trim($input['email'] ?? '');
     $phone = strip_tags(trim($input['phone'] ?? ''));
 
-    if (!$eventId || !$name || !$email) {
-        echo json_encode(['success' => false, 'message' => 'Missing required fields']);
+    // Improved validation
+    if (!$eventId || !$name || !filter_var($email_raw, FILTER_VALIDATE_EMAIL)) {
+        echo json_encode(['success' => false, 'message' => 'Valid name and email are required']);
         exit;
     }
+    
+    if (!empty($phone) && strlen($phone) > 20) {
+        echo json_encode(['success' => false, 'message' => 'Invalid phone number']);
+        exit;
+    }
+    
+    $email = $email_raw;
 
-    // 2. Load Data Safely using flock
+    // 2. Load and Update Data ATOMICALLY
     $eventsFile = 'data/events.json';
     $signupsFile = 'data/signups.json';
 
-    // Helper to load JSON with shared lock
-    function loadJsonSafely($file) {
-        if (!file_exists($file)) return [];
-        $fp = fopen($file, 'r');
-        if (!$fp) return [];
-        if (flock($fp, LOCK_SH)) {
-            $content = stream_get_contents($fp);
-            flock($fp, LOCK_UN);
-            fclose($fp);
-            return json_decode($content, true) ?: [];
-        }
-        fclose($fp);
-        return [];
+    // We open signups file first and lock it for the entire duration of the update
+    $fpSignups = fopen($signupsFile, 'c+');
+    $fpEvents = fopen($eventsFile, 'c+');
+    
+    if (!$fpSignups || !$fpEvents) {
+        echo json_encode(['success' => false, 'message' => 'Database error']);
+        exit;
     }
 
-    $events = loadJsonSafely($eventsFile);
-    $signups = loadJsonSafely($signupsFile);
+    // Acquire exclusive locks on both files
+    flock($fpSignups, LOCK_EX);
+    flock($fpEvents, LOCK_EX);
+
+    // Read Data
+    $signupsContent = stream_get_contents($fpSignups);
+    $eventsContent = stream_get_contents($fpEvents);
+    
+    $signups = json_decode($signupsContent, true);
+    if ($signups === null && json_last_error() !== JSON_ERROR_NONE) {
+        $signups = []; // Or handle error properly
+    }
+    if (!is_array($signups)) $signups = [];
+
+    $events = json_decode($eventsContent, true);
+    if ($events === null && json_last_error() !== JSON_ERROR_NONE) {
+        flock($fpEvents, LOCK_UN);
+        flock($fpSignups, LOCK_UN);
+        echo json_encode(['success' => false, 'message' => 'Internal Database Error']);
+        exit;
+    }
+    if (!is_array($events)) $events = [];
 
     // 3. Find Event
     $eventIndex = -1;
@@ -48,12 +71,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if ($eventIndex === -1) {
+        flock($fpEvents, LOCK_UN);
+        flock($fpSignups, LOCK_UN);
         echo json_encode(['success' => false, 'message' => 'Event not found']);
         exit;
     }
 
     // 4. Check Capacity
     if ($events[$eventIndex]['people'] >= $events[$eventIndex]['maxPeople']) {
+        flock($fpEvents, LOCK_UN);
+        flock($fpSignups, LOCK_UN);
         echo json_encode(['success' => false, 'message' => 'Event is full']);
         exit;
     }
@@ -66,6 +93,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Check for duplicate email for this event
     foreach ($signups[$eventId] as $signup) {
         if ($signup['email'] === $email) {
+            flock($fpEvents, LOCK_UN);
+            flock($fpSignups, LOCK_UN);
             echo json_encode(['success' => false, 'message' => 'You are already registered for this event']);
             exit;
         }
@@ -83,86 +112,68 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // 6. Update Event Count
     $events[$eventIndex]['people'] = count($signups[$eventId]);
 
-    // 7. Save Files Safely using flock
-    function saveJsonSafely($file, $data) {
-        $fp = fopen($file, 'c');
-        if (!$fp) return;
-        if (flock($fp, LOCK_EX)) {
-            ftruncate($fp, 0);
-            fwrite($fp, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
-            fflush($fp);
-            flock($fp, LOCK_UN);
+    // 7. Save Files ATOMICALLY via temp files while holding locks
+    function saveAtomic($file, $data, $fp) {
+        $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        $tmpFile = $file . '.tmp.' . getmypid() . '_' . rand(1000, 9999);
+        if (file_put_contents($tmpFile, $json) !== false) {
+            if (rename($tmpFile, $file)) {
+                return true;
+            }
+            @unlink($tmpFile);
         }
-        fclose($fp);
+        return false;
     }
-    
-    saveJsonSafely($signupsFile, $signups);
-    saveJsonSafely($eventsFile, $events);
 
-    // 8. Send Emails via SMTP
-    require_once 'mail-utils.php';
-    $config = get_smtp_config();
-    $mail = new SimpleSMTP($config['host'], $config['port'], $config['user'], $config['pass']);
+    saveAtomic($signupsFile, $signups, $fpSignups);
+    saveAtomic($eventsFile, $events, $fpEvents);
 
-    $eventTitle = $events[$eventIndex]['title'];
-    $eventDate = $events[$eventIndex]['date'];
-    $eventTime = $events[$eventIndex]['time'];
-    $eventLoc = $events[$eventIndex]['location'];
+    // Release locks
+    flock($fpEvents, LOCK_UN);
+    flock($fpSignups, LOCK_UN);
+    fclose($fpEvents);
+    fclose($fpSignups);
 
-    // Volunteer Confirmation Email
-    $volunteer_subject = "Volunteer Confirmation: $eventTitle";
-    $volunteer_body = "
-    <html>
-    <body style='font-family: Arial, sans-serif; color: #333;'>
-        <div style='max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 5px;'>
-            <div style='background: #00447c; color: #fff; padding: 15px; text-align: center;'>
-                <h2 style='margin:0;'>Volunteer Confirmation</h2>
-            </div>
-            <div style='padding: 20px;'>
-                <p>Hi <strong>" . htmlspecialchars($name) . "</strong>,</p>
-                <p>Thank you for signing up to volunteer for <strong>" . htmlspecialchars($eventTitle) . "</strong>.</p>
-                <hr>
-                <p><strong>Date:</strong> " . htmlspecialchars($eventDate) . "</p>
-                <p><strong>Time:</strong> " . htmlspecialchars($eventTime) . "</p>
-                <p><strong>Location:</strong> " . htmlspecialchars($eventLoc) . "</p>
-                <hr>
-                <p>We look forward to seeing you!</p>
-            </div>
-            <div style='background: #f4f4f4; padding: 10px; text-align: center; font-size: 12px; color: #777;'>
-                Lions District 2-E2 ERC
-            </div>
-        </div>
-    </body>
-    </html>";
-
-    // Admin Notification Email
-    $admin_subject = "New Volunteer Signup: $name";
-    $admin_body = "
-    <html>
-    <body style='font-family: Arial, sans-serif; color: #333;'>
-        <div style='max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 5px;'>
-            <div style='background: #00447c; color: #fff; padding: 15px; text-align: center;'>
-                <h2 style='margin:0;'>New Volunteer Signup</h2>
-            </div>
-            <div style='padding: 20px;'>
-                <p><strong>Event:</strong> " . htmlspecialchars($eventTitle) . "</p>
-                <p><strong>Volunteer Name:</strong> " . htmlspecialchars($name) . "</p>
-                <p><strong>Volunteer Email:</strong> <a href='mailto:$email'>" . htmlspecialchars($email) . "</a></p>
-                <p><strong>Volunteer Phone:</strong> " . htmlspecialchars($phone) . "</p>
-            </div>
-        </div>
-    </body>
-    </html>";
-
+    // 8. Send Emails via SMTP (non-blocking — failure is logged but does not break registration)
     try {
-        // Send to Volunteer
+        require_once 'mail-utils.php';
+        $config = get_smtp_config();
+        $mail = new SimpleSMTP($config['host'], $config['port'], $config['user'], $config['pass']);
+
+        $eventTitle = $events[$eventIndex]['title'];
+        $eventDate = $events[$eventIndex]['date'];
+        $eventTime = $events[$eventIndex]['time'];
+        $eventLoc = $events[$eventIndex]['location'];
+
+        // Volunteer Confirmation Email
+        $volunteer_subject = "Volunteer Confirmation: $eventTitle";
+        $volunteer_content = "
+            <p>Hi <strong>" . htmlspecialchars($name) . "</strong>,</p>
+            <p>Thank you for signing up to volunteer for <strong>" . htmlspecialchars($eventTitle) . "</strong>.</p>
+            <hr style='border: 0; border-top: 1px solid #eee; margin: 20px 0;'>
+            <p><strong>Date:</strong> " . htmlspecialchars($eventDate) . "</p>
+            <p><strong>Time:</strong> " . htmlspecialchars($eventTime) . "</p>
+            <p><strong>Location:</strong> " . htmlspecialchars($eventLoc) . "</p>
+            <hr style='border: 0; border-top: 1px solid #eee; margin: 20px 0;'>
+            <p>We look forward to seeing you!</p>
+        ";
+        $volunteer_body = render_email_template("Volunteer Confirmation", $volunteer_content);
+
+        // Admin Notification Email
+        $admin_subject = "New Volunteer Signup: " . preg_replace('/[\r\n]/', '', $name);
+        $email_html = htmlspecialchars($email, ENT_QUOTES, 'UTF-8');
+        $admin_content = "
+            <p><strong>Event:</strong> " . htmlspecialchars($eventTitle) . "</p>
+            <p><strong>Volunteer Name:</strong> " . htmlspecialchars($name) . "</p>
+            <p><strong>Volunteer Email:</strong> <a href='mailto:" . $email_html . "'>" . $email_html . "</a></p>
+            <p><strong>Volunteer Phone:</strong> " . htmlspecialchars($phone) . "</p>
+        ";
+        $admin_body = render_email_template("New Volunteer Signup", $admin_content);
+
         $mail->send($config['user'], $email, $volunteer_subject, $volunteer_body, "Lions 2-E2 ERC");
-        
-        // Send to Admin
         $mail->send($config['user'], $config['admin_email'], $admin_subject, $admin_body, "Lions 2-E2 ERC");
     } catch (Exception $e) {
         error_log("SMTP Registration Error: " . $e->getMessage());
-        // We still return success since the signup was saved, but log the email failure
     }
 
     echo json_encode(['success' => true, 'message' => 'Registration successful!', 'newCount' => $events[$eventIndex]['people']]);
