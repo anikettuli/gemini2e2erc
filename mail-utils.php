@@ -13,17 +13,7 @@ require_once 'config.php';
  * Loads SMTP configuration from .env file
  */
 function get_smtp_config() {
-    $env_file = __DIR__ . '/.env';
-    $env_config = [];
-    if (file_exists($env_file)) {
-        $lines = file($env_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-        foreach ($lines as $line) {
-            $line = trim($line);
-            if ($line === '' || strpos($line, '#') === 0 || strpos($line, '=') === false) continue;
-            list($key, $value) = explode('=', $line, 2);
-            $env_config[trim($key)] = trim($value);
-        }
-    }
+    $env_config = parse_env_file(__DIR__ . '/.env');
 
     return [
         'host' => $env_config['SMTP_HOST'] ?? 'p3plzcpnl507374.prod.phx3.secureserver.net',

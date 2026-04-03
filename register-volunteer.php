@@ -113,8 +113,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $events[$eventIndex]['people'] = count($signups[$eventId]);
 
     // 7. Save Files ATOMICALLY via temp files while holding locks
-    function saveAtomic($file, $data, $fp) {
+    function saveAtomic($file, $data) {
         $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        if ($json === false) return false;
         $tmpFile = $file . '.tmp.' . getmypid() . '_' . rand(1000, 9999);
         if (file_put_contents($tmpFile, $json) !== false) {
             if (rename($tmpFile, $file)) {
@@ -125,8 +126,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         return false;
     }
 
-    saveAtomic($signupsFile, $signups, $fpSignups);
-    saveAtomic($eventsFile, $events, $fpEvents);
+    saveAtomic($signupsFile, $signups);
+    saveAtomic($eventsFile, $events);
 
     // Release locks
     flock($fpEvents, LOCK_UN);

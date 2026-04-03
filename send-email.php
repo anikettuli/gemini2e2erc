@@ -7,18 +7,10 @@
  * This solves issues where mail() is blocked or works silently.
  */
 
-// Set timezone to Central Time (Keller, TX)
-date_default_timezone_set('America/Chicago');
-
 // Load Configuration and Mail Utilities
 require_once 'mail-utils.php';
 
 $config = get_smtp_config();
-$SMTP_HOST = $config['host'];
-$SMTP_PORT = $config['port'];
-$SMTP_USER = $config['user'];
-$SMTP_PASS = $config['pass'];
-$TO_EMAIL  = $config['admin_email'];
 
 // Logging
 ini_set('display_errors', 0);
@@ -70,17 +62,17 @@ $html_body = render_email_template("New Website Inquiry", $content_html);
 // Send using our custom Lightweight SMTP class
 $error = null;
 try {
-    $mail = new SimpleSMTP($SMTP_HOST, $SMTP_PORT, $SMTP_USER, $SMTP_PASS);
-    
+    $mail = new SimpleSMTP($config['host'], $config['port'], $config['user'], $config['pass']);
+
     // Send to Admin with CC to User
     $mail->send(
-        $SMTP_USER,         // From
-        $TO_EMAIL,          // To (Admin)
-        $email_subject,     // Subject
-        $html_body,         // Body
-        "Lions 2-E2 ERC",   // From Name
-        $email,             // Reply-To (User's email)
-        $email              // CC (User's email)
+        $config['user'],            // From
+        $config['admin_email'],     // To (Admin)
+        $email_subject,             // Subject
+        $html_body,                 // Body
+        "Lions 2-E2 ERC",           // From Name
+        $email,                     // Reply-To (User's email)
+        $email                      // CC (User's email)
     );
     
     header("Location: index.html?status=success#contact");

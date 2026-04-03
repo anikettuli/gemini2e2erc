@@ -6,17 +6,7 @@ if (empty($_SESSION['csrf_token'])) {
 
 // Load Administrative Credentials from .env
 function get_admin_credentials() {
-    $env_file = __DIR__ . '/.env';
-    $env_config = [];
-    if (file_exists($env_file)) {
-        $lines = file($env_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-        foreach ($lines as $line) {
-            $line = trim($line);
-            if ($line === '' || strpos($line, '#') === 0 || strpos($line, '=') === false) continue;
-            list($key, $value) = explode('=', $line, 2);
-            $env_config[trim($key)] = trim($value);
-        }
-    }
+    $env_config = parse_env_file(__DIR__ . '/.env');
     return [
         'user' => $env_config['ADMIN_USER'] ?? 'admin',
         'pass' => $env_config['ADMIN_PASS'] ?? 'Lions@2025'
@@ -33,18 +23,16 @@ if (!isset($_SERVER['PHP_AUTH_USER']) || $_SERVER['PHP_AUTH_USER'] != $creds['us
 
 // Helper Functions
 function loadJSON($file) {
-    if (!file_exists($file)) return [];
-    
-    $fp = fopen($file, 'r');
+    $fp = @fopen($file, 'r');
     if (!$fp) return [];
-    
+
     if (flock($fp, LOCK_SH)) {
         $content = stream_get_contents($fp);
         flock($fp, LOCK_UN);
         fclose($fp);
         return json_decode($content, true) ?: [];
     }
-    
+
     fclose($fp);
     return [];
 }
@@ -55,7 +43,7 @@ function saveJSON($file, $data) {
 
     // Write to a temp file then atomically rename — works on all PHP versions
     $tmpFile = $file . '.tmp.' . getmypid();
-    if (file_put_contents($tmpFile, $json, LOCK_EX) === false) {
+    if (file_put_contents($tmpFile, $json) === false) {
         @unlink($tmpFile);
         return false;
     }
@@ -191,7 +179,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($action === 'save_board') {
-        $gallery_data = loadJSON('data/gallery-cache.json'); // need it if we use it elsewhere, but board is separate
         $oldBoard = loadJSON('data/board.json');
         $oldImages = array_column($oldBoard, 'image');
         
@@ -374,7 +361,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Load current data
 $events = loadJSON('data/events.json');
-$signups = loadJSON('data/signups.json');
+$signups = isset($signupsForEvent) ? $signupsForEvent : loadJSON('data/signups.json');
 
 // Auto-sync events 'people' count with actual signups
 $needsSync = false;

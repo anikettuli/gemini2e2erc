@@ -20,7 +20,7 @@ async function loadBoardMembers() {
 
         function renderMembers(members, container) {
             if (!container) return;
-            container.innerHTML = ''; // Safely clear container
+            container.innerHTML = '';
             
             if (members.length === 0) {
                 const emptyMsg = document.createElement('p');

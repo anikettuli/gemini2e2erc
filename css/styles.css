@@ -2244,6 +2244,7 @@ input[type="text"],
 
 .toast-success .toast-icon { color: #10b981; }
 .toast-error .toast-icon { color: #ef4444; }
+.toast-warning .toast-icon { color: #f59e0b; }
 .toast-info .toast-icon { color: #3b82f6; }
 
 .toast-content { flex-grow: 1; }
