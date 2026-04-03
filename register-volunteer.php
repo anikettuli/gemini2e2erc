@@ -46,8 +46,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $signupsContent = stream_get_contents($fpSignups);
     $eventsContent = stream_get_contents($fpEvents);
     
-    $signups = json_decode($signupsContent, true) ?: [];
-    $events = json_decode($eventsContent, true) ?: [];
+    $signups = json_decode($signupsContent, true);
+    if ($signups === null && json_last_error() !== JSON_ERROR_NONE) {
+        $signups = []; // Or handle error properly
+    }
+    if (!is_array($signups)) $signups = [];
+
+    $events = json_decode($eventsContent, true);
+    if ($events === null && json_last_error() !== JSON_ERROR_NONE) {
+        flock($fpEvents, LOCK_UN);
+        flock($fpSignups, LOCK_UN);
+        echo json_encode(['success' => false, 'message' => 'Internal Database Error']);
+        exit;
+    }
+    if (!is_array($events)) $events = [];
 
     // 3. Find Event
     $eventIndex = -1;
@@ -100,14 +112,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // 6. Update Event Count
     $events[$eventIndex]['people'] = count($signups[$eventId]);
 
-    // 7. Save Files
-    ftruncate($fpSignups, 0);
-    rewind($fpSignups);
-    fwrite($fpSignups, json_encode($signups, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
-    
-    ftruncate($fpEvents, 0);
-    rewind($fpEvents);
-    fwrite($fpEvents, json_encode($events, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+    // 7. Save Files ATOMICALLY via temp files while holding locks
+    function saveAtomic($file, $data, $fp) {
+        $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        $tmpFile = $file . '.tmp.' . getmypid() . '_' . rand(1000, 9999);
+        if (file_put_contents($tmpFile, $json) !== false) {
+            if (rename($tmpFile, $file)) {
+                return true;
+            }
+            @unlink($tmpFile);
+        }
+        return false;
+    }
+
+    saveAtomic($signupsFile, $signups, $fpSignups);
+    saveAtomic($eventsFile, $events, $fpEvents);
 
     // Release locks
     flock($fpEvents, LOCK_UN);
@@ -141,11 +160,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $volunteer_body = render_email_template("Volunteer Confirmation", $volunteer_content);
 
         // Admin Notification Email
-        $admin_subject = "New Volunteer Signup: $name";
+        $admin_subject = "New Volunteer Signup: " . preg_replace('/[\r\n]/', '', $name);
+        $email_html = htmlspecialchars($email, ENT_QUOTES, 'UTF-8');
         $admin_content = "
             <p><strong>Event:</strong> " . htmlspecialchars($eventTitle) . "</p>
             <p><strong>Volunteer Name:</strong> " . htmlspecialchars($name) . "</p>
-            <p><strong>Volunteer Email:</strong> <a href='mailto:$email'>" . htmlspecialchars($email) . "</a></p>
+            <p><strong>Volunteer Email:</strong> <a href='mailto:" . $email_html . "'>" . $email_html . "</a></p>
             <p><strong>Volunteer Phone:</strong> " . htmlspecialchars($phone) . "</p>
         ";
         $admin_body = render_email_template("New Volunteer Signup", $admin_content);

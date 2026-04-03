@@ -20,20 +20,32 @@ async function loadBoardMembers() {
 
         function renderMembers(members, container) {
             if (!container) return;
+            container.innerHTML = ''; // Safely clear container
+            
             if (members.length === 0) {
-                container.innerHTML = '<p class="text-dim">No members listed.</p>';
+                const emptyMsg = document.createElement('p');
+                emptyMsg.className = 'text-dim';
+                emptyMsg.textContent = 'No members listed.';
+                container.appendChild(emptyMsg);
                 return;
             }
-            let html = '';
+
             members.forEach(member => {
-                html += `
-                    <div class="board-member">
-                        <img src="${member.image}" alt="${member.name}" onerror="this.src='${SITE_CONFIG.defaultImage}'">
-                        <h4>${member.name}</h4>
-                    </div>
-                `;
+                const memberCard = document.createElement('div');
+                memberCard.className = 'board-member';
+                
+                const img = document.createElement('img');
+                img.src = member.image || SITE_CONFIG.defaultImage;
+                img.alt = member.name || 'Board Member';
+                img.onerror = function() { this.src = SITE_CONFIG.defaultImage; };
+                
+                const h4 = document.createElement('h4');
+                h4.textContent = member.name || '';
+                
+                memberCard.appendChild(img);
+                memberCard.appendChild(h4);
+                container.appendChild(memberCard);
             });
-            container.innerHTML = html;
         }
 
         renderMembers(currentMembers, currentContainer);

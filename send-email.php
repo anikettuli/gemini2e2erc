@@ -50,8 +50,10 @@ if (empty($name) || empty($email_raw) || empty($message) || !filter_var($email_r
 }
 $email = $email_raw; 
 
-// Prepare Content
-$email_subject = "$subject_raw: $name";
+// Prepare Content - Strip CR/LF to prevent SMTP header injection
+$safe_name = preg_replace('/[\r\n]/', ' ', $name);
+$safe_subject = preg_replace('/[\r\n]/', ' ', $subject_raw);
+$email_subject = "$safe_subject: $safe_name";
 
 $content_html = "
     <p><strong>Name:</strong> " . htmlspecialchars($name) . "</p>

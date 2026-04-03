@@ -1,5 +1,9 @@
 # Protect data directory from direct web access
 Deny from all
-<Files "*.json">
-    Deny from all
-</Files>
+
+# Allow specific public JSON files
+<FilesMatch "^(board|events|partners|testimonials)\.json$">
+    Order Deny,Allow
+    Allow from all
+    Satisfy Any
+</FilesMatch>

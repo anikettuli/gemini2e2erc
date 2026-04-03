@@ -4,7 +4,7 @@
  * Provides a single source of truth for site configuration
  */
 header('Content-Type: application/json');
-require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/config.php';
 
 echo json_encode([
     'email' => $GLOBAL_EMAIL ?? '2e2erc1854@gmail.com',

@@ -237,18 +237,32 @@ function showToast(message, type = 'info', title = '') {
   }
 
   const toast = document.createElement('div');
-  toast.className = `toast toast-${type}`;
+  const allowedTypes = ['success', 'error', 'info', 'warning'];
+  const safeType = allowedTypes.includes(type) ? type : 'info';
+  toast.className = `toast toast-${safeType}`;
   
-  const icon = type === 'success' ? '✓' : (type === 'error' ? '✕' : 'ℹ');
-  const defaultTitle = type.charAt(0).toUpperCase() + type.slice(1);
+  const icon = safeType === 'success' ? '✓' : (safeType === 'error' ? '✕' : 'ℹ');
+  const defaultTitle = safeType.charAt(0).toUpperCase() + safeType.slice(1);
 
-  toast.innerHTML = `
-    <div class="toast-icon">${icon}</div>
-    <div class="toast-content">
-      <div class="toast-title">${title || defaultTitle}</div>
-      <div class="toast-message">${message}</div>
-    </div>
-  `;
+  const iconEl = document.createElement('div');
+  iconEl.className = 'toast-icon';
+  iconEl.textContent = icon;
+
+  const contentEl = document.createElement('div');
+  contentEl.className = 'toast-content';
+
+  const titleEl = document.createElement('div');
+  titleEl.className = 'toast-title';
+  titleEl.textContent = title || defaultTitle;
+
+  const messageEl = document.createElement('div');
+  messageEl.className = 'toast-message';
+  messageEl.textContent = message;
+
+  contentEl.appendChild(titleEl);
+  contentEl.appendChild(messageEl);
+  toast.appendChild(iconEl);
+  toast.appendChild(contentEl);
 
   container.appendChild(toast);
 
