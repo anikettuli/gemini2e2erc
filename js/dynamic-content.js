@@ -5,28 +5,44 @@ document.addEventListener('DOMContentLoaded', () => {
     loadTestimonials();
 });
 
-// Load Board Members
+// Load Board Members (split into Current and Previous sections by tag)
 async function loadBoardMembers() {
-    const container = document.getElementById('board-grid');
-    if (!container) return;
+    const currentContainer = document.getElementById('board-grid-current');
+    const previousContainer = document.getElementById('board-grid-previous');
+    if (!currentContainer && !previousContainer) return;
 
     try {
         const response = await fetch('data/board.json');
         const boardMembers = await response.json();
 
-        let html = '';
-        boardMembers.forEach(member => {
-            html += `
-                <div class="board-member">
-                    <img src="${member.image}" alt="${member.name}" onerror="this.src='${SITE_CONFIG.defaultImage}'">
-                    <h4>${member.name}</h4>
-                </div>
-            `;
-        });
-        container.innerHTML = html;
+        const currentMembers = boardMembers.filter(m => !m.tag || m.tag === 'current');
+        const previousMembers = boardMembers.filter(m => m.tag === 'previous');
+
+        function renderMembers(members, container) {
+            if (!container) return;
+            if (members.length === 0) {
+                container.innerHTML = '<p class="text-dim">No members listed.</p>';
+                return;
+            }
+            let html = '';
+            members.forEach(member => {
+                html += `
+                    <div class="board-member">
+                        <img src="${member.image}" alt="${member.name}" onerror="this.src='${SITE_CONFIG.defaultImage}'">
+                        <h4>${member.name}</h4>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        renderMembers(currentMembers, currentContainer);
+        renderMembers(previousMembers, previousContainer);
+
     } catch (error) {
         console.error('Error loading board members:', error);
-        container.innerHTML = '<p>Unable to load board members.</p>';
+        if (currentContainer) currentContainer.innerHTML = '<p>Unable to load board members.</p>';
+        if (previousContainer) previousContainer.innerHTML = '';
     }
 }
 

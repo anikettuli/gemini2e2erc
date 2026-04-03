@@ -1,6 +1,7 @@
 <?php
 require_once 'config.php';
 header('Content-Type: application/json');
+set_time_limit(60); // Prevent 500 on slow SMTP connections
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // 1. Get Input
@@ -114,41 +115,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     fclose($fpEvents);
     fclose($fpSignups);
 
-    // 8. Send Emails via SMTP
-    require_once 'mail-utils.php';
-    $config = get_smtp_config();
-    $mail = new SimpleSMTP($config['host'], $config['port'], $config['user'], $config['pass']);
-
-    $eventTitle = $events[$eventIndex]['title'];
-    $eventDate = $events[$eventIndex]['date'];
-    $eventTime = $events[$eventIndex]['time'];
-    $eventLoc = $events[$eventIndex]['location'];
-
-    // Volunteer Confirmation Email
-    $volunteer_subject = "Volunteer Confirmation: $eventTitle";
-    $volunteer_content = "
-        <p>Hi <strong>" . htmlspecialchars($name) . "</strong>,</p>
-        <p>Thank you for signing up to volunteer for <strong>" . htmlspecialchars($eventTitle) . "</strong>.</p>
-        <hr style='border: 0; border-top: 1px solid #eee; margin: 20px 0;'>
-        <p><strong>Date:</strong> " . htmlspecialchars($eventDate) . "</p>
-        <p><strong>Time:</strong> " . htmlspecialchars($eventTime) . "</p>
-        <p><strong>Location:</strong> " . htmlspecialchars($eventLoc) . "</p>
-        <hr style='border: 0; border-top: 1px solid #eee; margin: 20px 0;'>
-        <p>We look forward to seeing you!</p>
-    ";
-    $volunteer_body = render_email_template("Volunteer Confirmation", $volunteer_content);
-
-    // Admin Notification Email
-    $admin_subject = "New Volunteer Signup: $name";
-    $admin_content = "
-        <p><strong>Event:</strong> " . htmlspecialchars($eventTitle) . "</p>
-        <p><strong>Volunteer Name:</strong> " . htmlspecialchars($name) . "</p>
-        <p><strong>Volunteer Email:</strong> <a href='mailto:$email'>" . htmlspecialchars($email) . "</a></p>
-        <p><strong>Volunteer Phone:</strong> " . htmlspecialchars($phone) . "</p>
-    ";
-    $admin_body = render_email_template("New Volunteer Signup", $admin_content);
-
+    // 8. Send Emails via SMTP (non-blocking — failure is logged but does not break registration)
     try {
+        require_once 'mail-utils.php';
+        $config = get_smtp_config();
+        $mail = new SimpleSMTP($config['host'], $config['port'], $config['user'], $config['pass']);
+
+        $eventTitle = $events[$eventIndex]['title'];
+        $eventDate = $events[$eventIndex]['date'];
+        $eventTime = $events[$eventIndex]['time'];
+        $eventLoc = $events[$eventIndex]['location'];
+
+        // Volunteer Confirmation Email
+        $volunteer_subject = "Volunteer Confirmation: $eventTitle";
+        $volunteer_content = "
+            <p>Hi <strong>" . htmlspecialchars($name) . "</strong>,</p>
+            <p>Thank you for signing up to volunteer for <strong>" . htmlspecialchars($eventTitle) . "</strong>.</p>
+            <hr style='border: 0; border-top: 1px solid #eee; margin: 20px 0;'>
+            <p><strong>Date:</strong> " . htmlspecialchars($eventDate) . "</p>
+            <p><strong>Time:</strong> " . htmlspecialchars($eventTime) . "</p>
+            <p><strong>Location:</strong> " . htmlspecialchars($eventLoc) . "</p>
+            <hr style='border: 0; border-top: 1px solid #eee; margin: 20px 0;'>
+            <p>We look forward to seeing you!</p>
+        ";
+        $volunteer_body = render_email_template("Volunteer Confirmation", $volunteer_content);
+
+        // Admin Notification Email
+        $admin_subject = "New Volunteer Signup: $name";
+        $admin_content = "
+            <p><strong>Event:</strong> " . htmlspecialchars($eventTitle) . "</p>
+            <p><strong>Volunteer Name:</strong> " . htmlspecialchars($name) . "</p>
+            <p><strong>Volunteer Email:</strong> <a href='mailto:$email'>" . htmlspecialchars($email) . "</a></p>
+            <p><strong>Volunteer Phone:</strong> " . htmlspecialchars($phone) . "</p>
+        ";
+        $admin_body = render_email_template("New Volunteer Signup", $admin_content);
+
         $mail->send($config['user'], $email, $volunteer_subject, $volunteer_body, "Lions 2-E2 ERC");
         $mail->send($config['user'], $config['admin_email'], $admin_subject, $admin_body, "Lions 2-E2 ERC");
     } catch (Exception $e) {

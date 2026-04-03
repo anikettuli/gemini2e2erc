@@ -1,66 +1,82 @@
 [
     {
         "name": "Jim Cook",
-        "image": "images/board/Jim-Cook.jpg"
+        "image": "images/board/Jim-Cook.jpg",
+        "tag": "previous"
     },
     {
         "name": "Governor Bob",
-        "image": "images/board/Governor-Bob.jpg"
+        "image": "images/board/Governor-Bob.jpg",
+        "tag": "previous"
     },
     {
         "name": "Carolyn G",
-        "image": "images/board/Carolyn-G.jpg"
+        "image": "images/board/Carolyn-G.jpg",
+        "tag": "previous"
     },
     {
         "name": "Vince",
-        "image": "images/board/Vince.jpg"
+        "image": "images/board/Vince.jpg",
+        "tag": "previous"
     },
     {
         "name": "Jeff",
-        "image": "images/board/Jeff.jpg"
+        "image": "images/board/Jeff.jpg",
+        "tag": "previous"
     },
     {
         "name": "Pete",
-        "image": "images/board/Pete.jpg"
+        "image": "images/board/Pete.jpg",
+        "tag": "previous"
     },
     {
         "name": "Clayton",
-        "image": "images/board/Clayton.jpg"
+        "image": "images/board/Clayton.jpg",
+        "tag": "previous"
     },
     {
         "name": "David",
-        "image": "images/board/David.jpg"
+        "image": "images/board/David.jpg",
+        "tag": "previous"
     },
     {
         "name": "Roman Figueroa",
-        "image": "images/board/Roman-Figueroa.png"
+        "image": "images/board/Roman-Figueroa.png",
+        "tag": "previous"
     },
     {
         "name": "Tom Hayford",
-        "image": "images/board/Tom-Hayford.png"
+        "image": "images/board/Tom-Hayford.png",
+        "tag": "previous"
     },
     {
         "name": "Susan Cole",
-        "image": "images/board/Susan-Cole.png"
+        "image": "images/board/Susan-Cole.png",
+        "tag": "previous"
     },
     {
         "name": "Jan Carrington",
-        "image": "images/board/Jan-Carrington.png"
+        "image": "images/board/Jan-Carrington.png",
+        "tag": "previous"
     },
     {
         "name": "Dennis Stiles",
-        "image": "images/board/Dennis-Stiles.png"
+        "image": "images/board/Dennis-Stiles.png",
+        "tag": "previous"
     },
     {
         "name": "Jon Atwood",
-        "image": "images/board/Jon-Atwood.png"
+        "image": "images/board/Jon-Atwood.png",
+        "tag": "previous"
     },
     {
         "name": "Kate Nelson",
-        "image": "images/board/Kate-Nelson.png"
+        "image": "images/board/Kate-Nelson.png",
+        "tag": "previous"
     },
     {
         "name": "Bob Cole",
-        "image": "images/board/Bob-Cole.png"
+        "image": "images/board/Bob-Cole.png",
+        "tag": "previous"
     }
 ]
