@@ -21,7 +21,7 @@ class EventCalendar {
         
         // Find the first event that is today or in the future
         const nextEvent = this.events.find(event => {
-            const eventDate = new Date(event.date);
+            const eventDate = new Date(event.date + 'T00:00:00');
             return eventDate >= today;
         });
         
@@ -69,10 +69,10 @@ class EventCalendar {
 
     async loadEvents() {
         try {
-            const response = await fetch('data/events.json');
+            const response = await fetch('data/events.json?v=' + Date.now()); // Prevent caching
             this.events = await response.json();
             // Sort events by date
-            this.events.sort((a, b) => new Date(a.date) - new Date(b.date));
+            this.events.sort((a, b) => new Date(a.date + 'T00:00:00') - new Date(b.date + 'T00:00:00'));
         } catch (error) {
             console.error('Error loading events:', error);
             this.events = [];
@@ -118,7 +118,12 @@ class EventCalendar {
         // Current month's days
         for (let day = 1; day <= lastDate; day++) {
             const currentDate = new Date(year, month, day);
-            const dateString = currentDate.toISOString().split('T')[0];
+            // Format to YYYY-MM-DD manually to avoid timezone shift from toISOString()
+            const y = currentDate.getFullYear();
+            const m = String(currentDate.getMonth() + 1).padStart(2, '0');
+            const d = String(currentDate.getDate()).padStart(2, '0');
+            const dateString = `${y}-${m}-${d}`;
+            
             const hasEvent = this.events.some(event => event.date === dateString);
             const isToday = this.isToday(currentDate);
             
@@ -153,7 +158,7 @@ class EventCalendar {
         today.setHours(0, 0, 0, 0);
         
         const upcoming = this.events.filter(event => {
-            const eventDate = new Date(event.date);
+            const eventDate = new Date(event.date + 'T00:00:00');
             return eventDate >= today;
         }).slice(0, 6); // Show next 6 events
 
@@ -307,7 +312,7 @@ class EventCalendar {
         
         // Find the first event that is today or in the future
         const nextEvent = this.events.find(event => {
-            const eventDate = new Date(event.date);
+            const eventDate = new Date(event.date + 'T00:00:00');
             return eventDate >= today;
         });
         

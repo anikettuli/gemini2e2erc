@@ -4,9 +4,27 @@ if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
-// Simple password protection
-$password = "Lions@2025"; // CHANGE THIS
-if (!isset($_SERVER['PHP_AUTH_USER']) || $_SERVER['PHP_AUTH_USER'] != 'admin' || $_SERVER['PHP_AUTH_PW'] != $password) {
+// Load Administrative Credentials from .env
+function get_admin_credentials() {
+    $env_file = __DIR__ . '/.env';
+    $env_config = [];
+    if (file_exists($env_file)) {
+        $lines = file($env_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        foreach ($lines as $line) {
+            $line = trim($line);
+            if ($line === '' || strpos($line, '#') === 0 || strpos($line, '=') === false) continue;
+            list($key, $value) = explode('=', $line, 2);
+            $env_config[trim($key)] = trim($value);
+        }
+    }
+    return [
+        'user' => $env_config['ADMIN_USER'] ?? 'admin',
+        'pass' => $env_config['ADMIN_PASS'] ?? 'Lions@2025'
+    ];
+}
+
+$creds = get_admin_credentials();
+if (!isset($_SERVER['PHP_AUTH_USER']) || $_SERVER['PHP_AUTH_USER'] != $creds['user'] || $_SERVER['PHP_AUTH_PW'] != $creds['pass']) {
     header('WWW-Authenticate: Basic realm="Admin Area"');
     header('HTTP/1.0 401 Unauthorized');
     echo 'Access Denied';
@@ -68,11 +86,16 @@ $error = "";
 
 // Handle POST actions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
-        die("CSRF token validation failed.");
+    // Check for POST size truncation (if post_max_size is exceeded)
+    if (empty($_POST) && $_SERVER['CONTENT_LENGTH'] > 0) {
+        $error = "The uploaded file is too large for the server to process. Please try a smaller image.";
+        $action = "error_too_large";
+    } elseif (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+        $error = "Session expired or invalid. Please reload the page and try again.";
+        $action = "error_csrf"; // Skip all other actions
+    } else {
+        $action = $_POST['action'] ?? '';
     }
-
-    $action = $_POST['action'] ?? '';
 
     if ($action === 'save_event') {
         $events = loadJSON('data/events.json');
@@ -80,11 +103,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         $imagePath = $_POST['existing_image'] ?? 'images/placeholder-event.svg';
         if (isset($_FILES['image']) && isValidImageUpload($_FILES['image'])) {
-            $tmp_name = $_FILES['image']['tmp_name'];
-            $name = basename($_FILES['image']['name']);
-            $target = "images/events/" . time() . "_" . preg_replace("/[^a-zA-Z0-9\._-]/", "_", $name);
-            if (move_uploaded_file($tmp_name, $target)) {
-                $imagePath = $target;
+            if ($_FILES['image']['size'] > 10 * 1024 * 1024) {
+                $error = "Event image exceeds 10MB limit.";
+            } else {
+                $tmp_name = $_FILES['image']['tmp_name'];
+                $name = basename($_FILES['image']['name']);
+                $target = "images/events/" . time() . "_" . preg_replace("/[^a-zA-Z0-9\._-]/", "_", $name);
+                if (move_uploaded_file($tmp_name, $target)) {
+                    $imagePath = $target;
+                }
             }
         } elseif (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
              $error = "Invalid image upload for event.";
