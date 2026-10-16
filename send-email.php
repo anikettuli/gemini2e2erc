@@ -23,10 +23,11 @@ $TO_EMAIL  = $config['admin_email'];
 // Logging
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
-$log_file = __DIR__ . '/email_errors.log';
+$log_dir = __DIR__ . '/temp';
+if (!is_dir($log_dir)) { @mkdir($log_dir, 0755, true); }
+$log_file = $log_dir . '/email_errors.log';
 ini_set('error_log', $log_file);
-// Create log file if verify writable
-if (!file_exists($log_file)) { @touch($log_file); @chmod($log_file, 0666); }
+if (!file_exists($log_file)) { @touch($log_file); @chmod($log_file, 0660); }
 error_reporting(E_ALL);
 
 // Only allow POST

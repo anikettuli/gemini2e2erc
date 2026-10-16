@@ -94,7 +94,11 @@ class SimpleSMTP {
         }
 
         $this->read(); 
-        $this->cmd("EHLO " . ($_SERVER['SERVER_NAME'] ?? 'localhost'));
+        $heloHost = $_SERVER['SERVER_NAME'] ?? '';
+        if (empty($heloHost) || $heloHost === 'localhost' || filter_var($heloHost, FILTER_VALIDATE_IP)) {
+            $heloHost = '2e2erc.org';
+        }
+        $this->cmd("EHLO " . $heloHost);
         
         if ($this->port == 587) {
             $this->cmd("STARTTLS");
@@ -105,7 +109,7 @@ class SimpleSMTP {
             if (!stream_socket_enable_crypto($this->socket, true, $crypto_method)) {
                 throw new Exception("STARTTLS failed");
             }
-            $this->cmd("EHLO " . ($_SERVER['SERVER_NAME'] ?? 'localhost'));
+            $this->cmd("EHLO " . $heloHost);
         }
 
         $this->cmd("AUTH LOGIN");

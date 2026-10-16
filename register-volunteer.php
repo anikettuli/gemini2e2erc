@@ -1,6 +1,9 @@
 <?php
+// Set timezone to Central Time
+date_default_timezone_set('America/Chicago');
+
 require_once 'config.php';
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=UTF-8');
 set_time_limit(60); // Prevent 500 on slow SMTP connections
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -12,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email_raw = trim($input['email'] ?? '');
     $phone = strip_tags(trim($input['phone'] ?? ''));
 
-    // Improved validation
+    // Validation
     if (!$eventId || !$name || !filter_var($email_raw, FILTER_VALIDATE_EMAIL)) {
         echo json_encode(['success' => false, 'message' => 'Valid name and email are required']);
         exit;
@@ -23,17 +26,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
     
-    $email = $email_raw;
+    $email = strtolower($email_raw);
 
-    // 2. Load and Update Data ATOMICALLY
+    // 2. Load and Update Data ATOMICALLY with flock
     $eventsFile = 'data/events.json';
     $signupsFile = 'data/signups.json';
 
-    // We open signups file first and lock it for the entire duration of the update
     $fpSignups = fopen($signupsFile, 'c+');
     $fpEvents = fopen($eventsFile, 'c+');
     
     if (!$fpSignups || !$fpEvents) {
+        if ($fpSignups) fclose($fpSignups);
+        if ($fpEvents) fclose($fpEvents);
         echo json_encode(['success' => false, 'message' => 'Database error']);
         exit;
     }
@@ -43,23 +47,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     flock($fpEvents, LOCK_EX);
 
     // Read Data
+    rewind($fpSignups);
+    rewind($fpEvents);
     $signupsContent = stream_get_contents($fpSignups);
     $eventsContent = stream_get_contents($fpEvents);
     
     $signups = json_decode($signupsContent, true);
-    if ($signups === null && json_last_error() !== JSON_ERROR_NONE) {
-        $signups = []; // Or handle error properly
+    if (!is_array($signups)) {
+        $signups = [];
     }
-    if (!is_array($signups)) $signups = [];
 
     $events = json_decode($eventsContent, true);
-    if ($events === null && json_last_error() !== JSON_ERROR_NONE) {
+    if (!is_array($events)) {
         flock($fpEvents, LOCK_UN);
         flock($fpSignups, LOCK_UN);
+        fclose($fpEvents);
+        fclose($fpSignups);
         echo json_encode(['success' => false, 'message' => 'Internal Database Error']);
         exit;
     }
-    if (!is_array($events)) $events = [];
 
     // 3. Find Event
     $eventIndex = -1;
@@ -73,14 +79,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($eventIndex === -1) {
         flock($fpEvents, LOCK_UN);
         flock($fpSignups, LOCK_UN);
+        fclose($fpEvents);
+        fclose($fpSignups);
         echo json_encode(['success' => false, 'message' => 'Event not found']);
         exit;
     }
 
+    // Reject registration for past events
+    $eventDateStr = $events[$eventIndex]['date'] ?? '';
+    if (!empty($eventDateStr)) {
+        $eventTimestamp = strtotime($eventDateStr);
+        if ($eventTimestamp !== false && $eventTimestamp < strtotime('today')) {
+            flock($fpEvents, LOCK_UN);
+            flock($fpSignups, LOCK_UN);
+            fclose($fpEvents);
+            fclose($fpSignups);
+            echo json_encode(['success' => false, 'message' => 'Registration for past events is closed']);
+            exit;
+        }
+    }
+
     // 4. Check Capacity
-    if ($events[$eventIndex]['people'] >= $events[$eventIndex]['maxPeople']) {
+    $maxPeople = (int)($events[$eventIndex]['maxPeople'] ?? 0);
+    $currentCount = (int)($events[$eventIndex]['people'] ?? 0);
+    if ($maxPeople > 0 && $currentCount >= $maxPeople) {
         flock($fpEvents, LOCK_UN);
         flock($fpSignups, LOCK_UN);
+        fclose($fpEvents);
+        fclose($fpSignups);
         echo json_encode(['success' => false, 'message' => 'Event is full']);
         exit;
     }
@@ -90,11 +116,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $signups[$eventId] = [];
     }
 
-    // Check for duplicate email for this event
+    // Check for case-insensitive duplicate email for this event
     foreach ($signups[$eventId] as $signup) {
-        if ($signup['email'] === $email) {
+        if (strcasecmp($signup['email'] ?? '', $email) === 0) {
             flock($fpEvents, LOCK_UN);
             flock($fpSignups, LOCK_UN);
+            fclose($fpEvents);
+            fclose($fpSignups);
             echo json_encode(['success' => false, 'message' => 'You are already registered for this event']);
             exit;
         }
@@ -112,21 +140,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // 6. Update Event Count
     $events[$eventIndex]['people'] = count($signups[$eventId]);
 
-    // 7. Save Files ATOMICALLY via temp files while holding locks
-    function saveAtomic($file, $data, $fp) {
+    // 7. Save Files Safely In-Place (maintaining POSIX flock without inode swap)
+    function saveLocked($fp, $data) {
         $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-        $tmpFile = $file . '.tmp.' . getmypid() . '_' . rand(1000, 9999);
-        if (file_put_contents($tmpFile, $json) !== false) {
-            if (rename($tmpFile, $file)) {
-                return true;
-            }
-            @unlink($tmpFile);
-        }
-        return false;
+        rewind($fp);
+        ftruncate($fp, 0);
+        fwrite($fp, $json);
+        fflush($fp);
     }
 
-    saveAtomic($signupsFile, $signups, $fpSignups);
-    saveAtomic($eventsFile, $events, $fpEvents);
+    saveLocked($fpSignups, $signups);
+    saveLocked($fpEvents, $events);
 
     // Release locks
     flock($fpEvents, LOCK_UN);
@@ -134,7 +158,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     fclose($fpEvents);
     fclose($fpSignups);
 
-    // 8. Send Emails via SMTP (non-blocking — failure is logged but does not break registration)
+    // 8. Send Emails via SMTP (non-blocking — failure logged but does not break registration)
     try {
         require_once 'mail-utils.php';
         $config = get_smtp_config();
