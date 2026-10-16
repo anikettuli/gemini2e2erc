@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="description" content="Lions District 2-E2 Eyeglass Recycling Center (ERC). We collect, inspect, clean, and measure recycled eyeglasses for humanitarian missions in 40+ countries.">
-  <meta name="theme-color" content="#004990">
+  <meta name="description" content="Lions District 2-E2 Eyeglass Recycling Center (ERC). We collect, sort, sanitize, and measure recycled eyeglasses for medical missions in 40+ countries.">
+  <meta name="theme-color" content="#030712">
 
   <!-- Open Graph / Meta -->
   <meta property="og:type" content="website">
@@ -12,13 +12,13 @@
   <meta property="og:description" content="Giving the gift of sight worldwide through recycled eyeglasses. 100% volunteer-run 501(c)(3) nonprofit.">
   <meta property="og:image" content="images/our-story-group.png">
 
-  <title>Lions District 2-E2 Eyeglass Recycling Center</title>
+  <title>Lions District 2-E2 Eyeglass Recycling Center &bull; Giving Sight Worldwide</title>
   <link rel="icon" type="image/png" href="e2e2rc_LOGO.png">
 
-  <!-- Typography & Libraries -->
+  <!-- Fonts & MapLibre GL -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@4.0.0/dist/maplibre-gl.css">
   <link rel="stylesheet" href="css/styles.css">
 
@@ -26,606 +26,645 @@
   <script>
     (function () {
       const saved = localStorage.getItem('theme');
-      const sysDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (saved === 'dark' || (!saved && sysDark)) {
-        document.documentElement.setAttribute('data-theme', 'dark');
+      if (saved === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
       }
     })();
   </script>
 </head>
 <body>
 
-  <!-- TOP ANNOUNCEMENT BANNER (Priority Task 8) -->
-  <div class="announcement-bar">
-    📍 <strong>Main Center Open Saturday 9:00 AM – 3:00 PM</strong> &bull; 5621 Bunker Blvd, Watauga, TX. Walk-in volunteers welcome!
-    <a href="#get-involved" class="js-tab-trigger" data-tab="get-involved">View Schedule &rarr;</a>
+  <!-- TOP LIVE STATUS / TICKER BAR -->
+  <div class="openui-ticker-bar">
+    <span class="live-pulse-dot"></span>
+    <span><strong>Main Center:</strong> Open Saturdays 9:00 AM – 3:00 PM &bull; 5621 Bunker Blvd, Watauga, TX</span>
+    <a href="#volunteer" class="js-tab-trigger" data-tab="volunteer">Volunteer Schedule &rarr;</a>
   </div>
 
-  <!-- SITE HEADER WITH OPENUI NAVIGATION -->
-  <header class="site-header">
-    <div class="header-container">
-      <a href="#home" class="brand-section js-tab-trigger" data-tab="home">
-        <img src="e2e2rc_LOGO.png" alt="Lions ERC Logo" class="brand-logo">
-        <div class="brand-text">
-          <h1>Lions District 2-E2 ERC</h1>
-          <p>Eyeglass Recycling Center</p>
+  <!-- FLOATING GLASS NAVIGATION DOCK -->
+  <div class="header-wrapper">
+    <header class="openui-nav">
+      <a href="#home" class="nav-brand js-tab-trigger" data-tab="home">
+        <img src="e2e2rc_LOGO.png" alt="Lions District 2-E2 ERC" class="brand-avatar">
+        <div>
+          <div class="brand-title">District 2-E2 ERC</div>
+          <div class="brand-subtitle">Eyeglass Recycling Center</div>
         </div>
       </a>
 
-      <!-- Desktop Nav -->
-      <nav class="desktop-nav" aria-label="Main Navigation">
-        <button class="nav-tab-btn active js-tab-nav" data-tab="home">Home</button>
-        <button class="nav-tab-btn js-tab-nav" data-tab="about">About</button>
-        <button class="nav-tab-btn js-tab-nav" data-tab="services">Services</button>
-        <button class="nav-tab-btn js-tab-nav" data-tab="get-involved">Volunteer</button>
-        <button class="nav-tab-btn js-tab-nav" data-tab="locations">Locations</button>
-        <button class="nav-tab-btn js-tab-nav" data-tab="contact">Contact</button>
+      <!-- Desktop Pill Menu -->
+      <nav class="openui-menu" aria-label="Main Navigation">
+        <button class="menu-pill active js-tab-nav" data-tab="home">Home</button>
+        <button class="menu-pill js-tab-nav" data-tab="about">About</button>
+        <button class="menu-pill js-tab-nav" data-tab="services">Services</button>
+        <button class="menu-pill js-tab-nav" data-tab="volunteer">Volunteer</button>
+        <button class="menu-pill js-tab-nav" data-tab="locations">Locations</button>
+        <button class="menu-pill js-tab-nav" data-tab="contact">Contact</button>
       </nav>
 
-      <!-- Action Utilities -->
-      <div class="header-actions">
-        <button class="btn-icon" id="themeToggleBtn" title="Toggle Dark/Light Mode" aria-label="Toggle Dark or Light Mode">
-          <span id="themeToggleIcon">☀️</span>
+      <!-- Actions -->
+      <div class="nav-actions">
+        <button class="btn-glass" id="themeToggleBtn" title="Toggle Light/Dark Theme" aria-label="Toggle Theme">
+          <span id="themeIconSpan">🌙</span>
         </button>
-        <button class="btn-cta header-cta-desktop js-tab-trigger" data-tab="get-involved">
+        <button class="btn-glow-primary header-hide-mobile js-tab-trigger" data-tab="volunteer">
           Volunteer Now
         </button>
-        <button class="mobile-menu-btn" id="mobileMenuToggle" aria-label="Open mobile menu">
-          <span id="mobileCurrentTabName">Home</span> &darr;
+        <button class="mobile-toggle-btn" id="mobileNavToggle" aria-label="Open navigation drawer">
+          <span id="mobileCurrentTabLabel">Home</span> &darr;
         </button>
       </div>
+    </header>
+
+    <!-- Mobile Drawer Menu -->
+    <div class="mobile-drawer" id="mobileDrawer">
+      <button class="menu-pill active js-tab-nav" data-tab="home">Home</button>
+      <button class="menu-pill js-tab-nav" data-tab="about">About</button>
+      <button class="menu-pill js-tab-nav" data-tab="services">Services</button>
+      <button class="menu-pill js-tab-nav" data-tab="volunteer">Volunteer</button>
+      <button class="menu-pill js-tab-nav" data-tab="locations">Locations</button>
+      <button class="menu-pill js-tab-nav" data-tab="contact">Contact</button>
     </div>
+  </div>
 
-    <!-- Mobile Navigation Drawer -->
-    <div class="mobile-nav-drawer" id="mobileNavDrawer">
-      <button class="nav-tab-btn active js-tab-nav" data-tab="home">Home</button>
-      <button class="nav-tab-btn js-tab-nav" data-tab="about">About</button>
-      <button class="nav-tab-btn js-tab-nav" data-tab="services">Services</button>
-      <button class="nav-tab-btn js-tab-nav" data-tab="get-involved">Volunteer</button>
-      <button class="nav-tab-btn js-tab-nav" data-tab="locations">Locations</button>
-      <button class="nav-tab-btn js-tab-nav" data-tab="contact">Contact</button>
-    </div>
-  </header>
+  <!-- MAIN OPENUI CONTENT VIEWPORT -->
+  <main class="openui-viewport">
 
-  <!-- MAIN TABBED CONTENT AREA -->
-  <main class="site-content">
-
-    <!-- TAB 1: HOME -->
+    <!-- ============================================================
+         TAB 1: HOME
+         ============================================================ -->
     <section id="tab-home" class="tab-pane active">
-      <div class="hero-card">
-        <div class="hero-pill">✨ 501(c)(3) Nonprofit Organization &bull; 100% Volunteer Run</div>
-        <h2>Giving the Gift of Sight to Those in Need Worldwide</h2>
-        <p class="hero-desc">
-          We collect, inspect, clean, and measure recycled eyeglasses to supply humanitarian and medical eye missions across 40+ countries. It costs less than 10&cent; to restore clear vision and transform a life.
-        </p>
-        <div class="hero-actions">
-          <button class="btn-cta js-tab-trigger" data-tab="get-involved">Volunteer With Us &rarr;</button>
-          <button class="nav-tab-btn js-tab-trigger" data-tab="locations" style="border: 1px solid var(--border-strong);">Find a Drop-Off Box</button>
+      
+      <!-- HERO BENTO GRID -->
+      <div class="hero-bento">
+        <!-- Main Hero Card -->
+        <div class="bento-card">
+          <div class="bento-shimmer-tag">
+            <span>✨ 501(c)(3) Nonprofit</span>
+            <span>&bull;</span>
+            <span>100% Volunteer Operated</span>
+          </div>
+          <h2 class="hero-title">Restoring Clear Vision to People in Need Worldwide.</h2>
+          <p class="hero-subtitle">
+            We collect, sanitize, and measure recycled eyeglasses to equip clinical humanitarian eye missions in over 40 countries. It takes less than 10&cent; to restore a life with sight.
+          </p>
+          <div class="hero-btn-row">
+            <button class="btn-glow-primary js-tab-trigger" data-tab="volunteer">Volunteer Schedule &rarr;</button>
+            <button class="menu-pill js-tab-trigger" data-tab="locations" style="border: 1px solid var(--border-medium); padding: 10px 20px;">
+              📍 Find Drop-Off Box
+            </button>
+          </div>
         </div>
-      </div>
 
-      <!-- MAIN CENTER & HOURS (Top of Home Page for Immediate Visitor Clarity) -->
-      <div class="card" style="border-left: 4px solid var(--accent-primary); margin-bottom: 32px;">
-        <div class="card-title">📍 Main Recycling Center &amp; Hours of Operation</div>
-        <div class="grid-2" style="margin-bottom: 0;">
+        <!-- Center Hub Quick Card -->
+        <div class="bento-card hero-hub-card">
           <div>
-            <p style="font-size: 1.05rem; font-weight: 700; margin-bottom: 4px;">5621 Bunker Blvd, Watauga, TX 76148</p>
-            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 12px;">
-              Entrance at rear of building. Follow the wooden walkway on the East side. Free parking available.
-            </p>
-            <p><strong>Phone:</strong> <a href="tel:+18177105403" style="color:var(--accent-primary); font-weight:600;">(817) 710-5403</a></p>
-            <p><strong>Email:</strong> <a href="mailto:2e2erc1854@gmail.com" style="color:var(--accent-primary); font-weight:600;">2e2erc1854@gmail.com</a></p>
+            <div class="hub-status-badge">
+              <span class="live-pulse-dot"></span>
+              <span>Open This Saturday</span>
+            </div>
+            <div class="hub-location">
+              <h3>Main Recycling Facility</h3>
+              <p>5621 Bunker Blvd, Watauga, TX 76148</p>
+            </div>
+            <div class="hours-pill-box">
+              <div class="hours-pill-row">
+                <span>Saturday Hours:</span>
+                <strong>9:00 AM &ndash; 3:00 PM</strong>
+              </div>
+              <div class="hours-pill-row">
+                <span>Mon &ndash; Fri:</span>
+                <span style="color:var(--text-secondary);">By Appointment</span>
+              </div>
+              <div class="hours-pill-row">
+                <span>Sunday:</span>
+                <span style="color:var(--text-tertiary);">Closed</span>
+              </div>
+            </div>
           </div>
+          <div style="font-size: 0.85rem; color: var(--text-secondary); border-top: 1px solid var(--border-subtle); padding-top: 12px;">
+            Entrance via wooden walkway on East side of building. Free parking.
+            <div style="margin-top: 6px;">
+              <a href="tel:+18177105403" style="color:var(--accent-cyan); font-weight:700; text-decoration:none;">📞 (817) 710-5403</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- METRICS COUNTER BENTO ROW -->
+      <div class="metrics-bento-grid">
+        <div class="metric-bento-cell">
+          <div class="metric-number">17,000+</div>
+          <div class="metric-label">Pairs Distributed (2023–24)</div>
+        </div>
+        <div class="metric-bento-cell">
+          <div class="metric-number">40+</div>
+          <div class="metric-label">Countries Served Globally</div>
+        </div>
+        <div class="metric-bento-cell">
+          <div class="metric-number">100%</div>
+          <div class="metric-label">All-Volunteer Operated</div>
+        </div>
+        <div class="metric-bento-cell">
+          <div class="metric-number">&lt; 10&cent;</div>
+          <div class="metric-label">Avg. Cost Per Restored Life</div>
+        </div>
+      </div>
+
+      <!-- INTERACTIVE VISION IMPACT CALCULATOR -->
+      <div class="calculator-box">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px;">
           <div>
-            <table style="width: 100%; font-size: 0.9rem;">
-              <tbody>
-                <tr>
-                  <td style="padding: 6px 0; font-weight: 600;">Saturday:</td>
-                  <td style="padding: 6px 0; color: var(--status-success); font-weight: 700;">9:00 AM &ndash; 3:00 PM (Open to Walk-ins)</td>
-                </tr>
-                <tr>
-                  <td style="padding: 6px 0; font-weight: 600;">Monday &ndash; Friday:</td>
-                  <td style="padding: 6px 0; color: var(--text-muted);">By Appointment</td>
-                </tr>
-                <tr>
-                  <td style="padding: 6px 0; font-weight: 600;">Sunday:</td>
-                  <td style="padding: 6px 0; color: var(--text-muted);">Closed</td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="bento-shimmer-tag" style="background:rgba(6, 182, 212, 0.12); color:var(--accent-cyan); border-color:rgba(6, 182, 212, 0.3);">
+              ⚡ Interactive Impact Simulator
+            </div>
+            <h3 style="font-family:var(--font-heading); font-size:1.6rem; font-weight:800; letter-spacing:-0.03em;">
+              See the Ripple Effect of Your Eyeglass Donation
+            </h3>
+          </div>
+          <span style="font-size:0.85rem; color:var(--text-secondary);">Real-time metrics based on ERC operations</span>
+        </div>
+
+        <div class="calc-slider-wrapper">
+          <label for="impactSlider">
+            <span>Pairs of Eyeglasses Donated / Processed:</span>
+            <strong id="calcGlassesCount" style="color:var(--accent-cyan); font-size:1.2rem;">50 Pairs</strong>
+          </label>
+          <input type="range" id="impactSlider" class="calc-slider" min="5" max="500" value="50" step="5">
+        </div>
+
+        <div class="calc-results-row">
+          <div class="calc-stat-pill">
+            <div class="calc-stat-val" id="calcCost">$4.00</div>
+            <div class="calc-stat-sub">Total Processing Cost</div>
+          </div>
+          <div class="calc-stat-pill">
+            <div class="calc-stat-val" id="calcLives" style="color:var(--accent-cyan);">50 People</div>
+            <div class="calc-stat-sub">Individuals Given Clear Vision</div>
+          </div>
+          <div class="calc-stat-pill">
+            <div class="calc-stat-val" id="calcWaste" style="color:var(--accent-emerald);">1.8 kg</div>
+            <div class="calc-stat-sub">Landfill Waste Diverted</div>
           </div>
         </div>
       </div>
 
-      <!-- STATS BY THE NUMBERS -->
-      <div class="grid-4">
-        <div class="stat-box">
-          <div class="number">17,000+</div>
-          <div class="label">Pairs in 2023–2024</div>
-        </div>
-        <div class="stat-box">
-          <div class="number">40+</div>
-          <div class="label">Countries Served</div>
-        </div>
-        <div class="stat-box">
-          <div class="number">100%</div>
-          <div class="label">Volunteer Driven</div>
-        </div>
-        <div class="stat-box">
-          <div class="number">501(c)(3)</div>
-          <div class="label">Nonprofit Status</div>
-        </div>
-      </div>
-
-      <!-- THE GLOBAL NEED & HUMAN IMPACT -->
-      <div class="card" style="margin-bottom: 32px;">
-        <h3 class="card-title">The Need for Clear Vision</h3>
-        <p style="color: var(--text-muted); margin-bottom: 20px;">
-          According to the World Health Organization, at least <strong>2.2 billion people globally</strong> have a near or distance vision impairment. Of these, over 1 billion cases remain completely unaddressed. A simple pair of glasses can change everything:
-        </p>
-        <div class="grid-4" style="margin-bottom: 0;">
-          <div class="card" style="background: var(--bg-subtle);">
-            <h4 style="margin-bottom: 6px;">👧 Children</h4>
-            <p style="font-size: 0.85rem; color: var(--text-muted);">Education, developmental milestones, and reading ability.</p>
+      <!-- 4-STAGE RECYCLING PIPELINE -->
+      <div style="margin-bottom: 36px;">
+        <h3 style="font-family:var(--font-heading); font-size:1.6rem; font-weight:800; letter-spacing:-0.03em; margin-bottom:16px;">
+          The 4-Stage Lens Precision Pipeline
+        </h3>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:16px;">
+          <div class="bento-card">
+            <span style="font-size:1.8rem; font-weight:800; color:var(--primary); line-height:1;">01</span>
+            <h4 style="font-size:1.15rem; font-weight:800; margin:10px 0 6px;">Optical Sorting</h4>
+            <p style="font-size:0.88rem; color:var(--text-secondary);">Separated into single vision, bifocal, progressive, reading glasses, and sunglasses.</p>
           </div>
-          <div class="card" style="background: var(--bg-subtle);">
-            <h4 style="margin-bottom: 6px;">💼 Adults</h4>
-            <p style="font-size: 0.85rem; color: var(--text-muted);">Employment opportunities, trade work, and economic independence.</p>
+          <div class="bento-card">
+            <span style="font-size:1.8rem; font-weight:800; color:var(--accent-cyan); line-height:1;">02</span>
+            <h4 style="font-size:1.15rem; font-weight:800; margin:10px 0 6px;">Ultrasonic Sanitization</h4>
+            <p style="font-size:0.88rem; color:var(--text-secondary);">Cleaned in multi-stage sanitizing baths to ensure hospital-grade hygiene.</p>
           </div>
-          <div class="card" style="background: var(--bg-subtle);">
-            <h4 style="margin-bottom: 6px;">👴 Seniors</h4>
-            <p style="font-size: 0.85rem; color: var(--text-muted);">Mobility, independence, and active engagement with family.</p>
+          <div class="bento-card">
+            <span style="font-size:1.8rem; font-weight:800; color:var(--accent-amber); line-height:1;">03</span>
+            <h4 style="font-size:1.15rem; font-weight:800; margin:10px 0 6px;">Lensometer Reading</h4>
+            <p style="font-size:0.88rem; color:var(--text-secondary);">Trained volunteers measure and verify exact sphere, cylinder, and axis on precision lensometers.</p>
           </div>
-          <div class="card" style="background: var(--bg-subtle);">
-            <h4 style="margin-bottom: 6px;">🌍 Communities</h4>
-            <p style="font-size: 0.85rem; color: var(--text-muted);">Reduced poverty, higher literacy, and collective resilience.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- 4-STEP RECYCLING PROCESS -->
-      <div class="card" style="margin-bottom: 32px;">
-        <h3 class="card-title">Our 4-Step Recycling Process</h3>
-        <div class="grid-4" style="margin-bottom: 0;">
-          <div class="card" style="background: var(--bg-subtle);">
-            <span style="font-weight: 800; color: var(--accent-primary);">01</span>
-            <h4 style="margin: 6px 0;">Sorting</h4>
-            <p style="font-size: 0.85rem; color: var(--text-muted);">Categorized by frame type, single vision, bifocal, trifocal, progressive, readers, and sunglasses.</p>
-          </div>
-          <div class="card" style="background: var(--bg-subtle);">
-            <span style="font-weight: 800; color: var(--accent-primary);">02</span>
-            <h4 style="margin: 6px 0;">Washing &amp; Sanitizing</h4>
-            <p style="font-size: 0.85rem; color: var(--text-muted);">Ultrasonic cleaning baths sanitize and prepare frames and lenses for their next owner.</p>
-          </div>
-          <div class="card" style="background: var(--bg-subtle);">
-            <span style="font-weight: 800; color: var(--accent-primary);">03</span>
-            <h4 style="margin: 6px 0;">Lensometer Measurement</h4>
-            <p style="font-size: 0.85rem; color: var(--text-muted);">Volunteers use precision lensometers to record exact optical sphere, cylinder, and axis.</p>
-          </div>
-          <div class="card" style="background: var(--bg-subtle);">
-            <span style="font-weight: 800; color: var(--accent-primary);">04</span>
-            <h4 style="margin: 6px 0;">Mission Packing</h4>
-            <p style="font-size: 0.85rem; color: var(--text-muted);">Individually labeled, bagged, and boxed for medical missions heading around the world.</p>
+          <div class="bento-card">
+            <span style="font-size:1.8rem; font-weight:800; color:var(--accent-emerald); line-height:1;">04</span>
+            <h4 style="font-size:1.15rem; font-weight:800; margin:10px 0 6px;">Mission Packaging</h4>
+            <p style="font-size:0.88rem; color:var(--text-secondary);">Individually labeled, indexed in inventory, and boxed for overseas medical teams.</p>
           </div>
         </div>
       </div>
 
       <!-- PARTNER TESTIMONIALS -->
-      <div style="margin-bottom: 32px;">
-        <h3 class="card-title" style="margin-bottom: 16px;">💬 Voices from Our Mission Partners</h3>
-        <div class="grid-3" id="testimonialsGrid">
+      <div style="margin-bottom: 24px;">
+        <h3 style="font-family:var(--font-heading); font-size:1.6rem; font-weight:800; letter-spacing:-0.03em; margin-bottom:16px;">
+          💬 Testimonials from Mission Partners
+        </h3>
+        <div class="metrics-bento-grid" id="testimonialsGrid" style="grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));">
           <!-- Loaded dynamically -->
         </div>
       </div>
+
     </section>
 
-    <!-- TAB 2: ABOUT -->
+    <!-- ============================================================
+         TAB 2: ABOUT
+         ============================================================ -->
     <section id="tab-about" class="tab-pane">
-      <div class="hero-card">
-        <div class="hero-pill">📖 Organization Background &bull; Est. 2013</div>
-        <h2>Our Story &amp; Leadership</h2>
-        <p class="hero-desc">
-          Founded in 2013 and chartered in 2014 as an official 501(c)(3) nonprofit, the District 2-E2 Eyeglass Recycling Center was built on the premise that no human being should lack clear vision due to geographic or financial limitations.
+      <div class="bento-card" style="margin-bottom: 32px;">
+        <div class="bento-shimmer-tag">📖 Est. 2013 &bull; 501(c)(3) Nonprofit</div>
+        <h2 class="hero-title">Our Story &amp; Leadership</h2>
+        <p class="hero-subtitle">
+          District 2-E2 Eyeglass Recycling Center was chartered in 2014 to ensure that cost and geography never prevent a person from receiving proper refractive vision care.
         </p>
       </div>
 
-      <div class="grid-2" style="align-items: center; margin-bottom: 36px;">
-        <div>
-          <h3 class="card-title">Our Mission &amp; Values</h3>
-          <p style="color: var(--text-muted); margin-bottom: 14px;">
-            The District 2-E2 Eyeglass Recycling Center provides eyeglasses without cost to medical and humanitarian missions who possess clinical methods for determining the refractive status of the eye.
-          </p>
-          <ul style="list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: 0.95rem;">
-            <li>🔹 <strong>Integrity:</strong> Honest stewardship of every donated frame and dollar.</li>
-            <li>🔹 <strong>Compassion:</strong> Dedicated service to vulnerable populations globally.</li>
-            <li>🔹 <strong>Sustainability:</strong> Keeping millions of usable items out of municipal landfills.</li>
-            <li>🔹 <strong>Community:</strong> Empowering corporate, youth, and civic volunteers.</li>
-            <li>🔹 <strong>Excellence:</strong> Strict optical measurement standards for clinical mission teams.</li>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:24px; align-items:center; margin-bottom:36px;">
+        <div class="bento-card">
+          <h3 style="font-family:var(--font-heading); font-size:1.5rem; font-weight:800; margin-bottom:12px;">Core Principles</h3>
+          <ul style="list-style:none; display:flex; flex-direction:column; gap:10px; font-size:0.95rem; color:var(--text-secondary);">
+            <li>🔹 <strong style="color:var(--text-primary);">Integrity:</strong> Honest stewardship of every donated pair of glasses and funding dollar.</li>
+            <li>🔹 <strong style="color:var(--text-primary);">Compassion:</strong> Unwavering commitment to vulnerable individuals worldwide.</li>
+            <li>🔹 <strong style="color:var(--text-primary);">Environmental Sustainability:</strong> Rescuing reusable frames from landfills.</li>
+            <li>🔹 <strong style="color:var(--text-primary);">Civic Community:</strong> Engaging students, scouts, Lions Clubs, and corporate teams.</li>
+            <li>🔹 <strong style="color:var(--text-primary);">Clinical Accuracy:</strong> Rigorous optical quality checks on all lens distributions.</li>
           </ul>
         </div>
         <div>
-          <img src="images/our-story-group.png" alt="Lions ERC Volunteer Team" style="width: 100%; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); box-shadow: var(--shadow-sm);">
+          <img src="images/our-story-group.png" alt="Lions ERC Volunteers" style="width:100%; border-radius:var(--radius-lg); border:1px solid var(--border-subtle); box-shadow:var(--shadow-md);">
         </div>
       </div>
 
-      <!-- BOARD OF DIRECTORS (Split as requested in Priority Tasks 2 & 9!) -->
-      <div class="card" style="margin-bottom: 32px;">
-        <h3 class="card-title">Current Board of Directors</h3>
-        <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 0.9rem;">
-          Our leadership team guides operations, facility logistics, and mission partner relationships.
+      <!-- BOARD OF DIRECTORS: CURRENT -->
+      <div style="margin-bottom: 36px;">
+        <h3 style="font-family:var(--font-heading); font-size:1.5rem; font-weight:800; letter-spacing:-0.03em; margin-bottom:8px;">
+          Current Board of Directors
+        </h3>
+        <p style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:18px;">
+          Our leadership team volunteers their time to govern center operations, safety, and outreach.
         </p>
-        <div class="board-grid-cards" id="currentBoardGrid">
+        <div class="board-cards-grid" id="currentBoardCards">
           <!-- Loaded dynamically -->
         </div>
       </div>
 
-      <div class="card" style="margin-bottom: 32px;">
-        <h3 class="card-title">Previous Board Members &amp; Honored Leaders</h3>
-        <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 0.9rem;">
-          We gratefully honor the past officers and board members who established our foundation.
+      <!-- BOARD OF DIRECTORS: PREVIOUS -->
+      <div style="margin-bottom: 36px;">
+        <h3 style="font-family:var(--font-heading); font-size:1.5rem; font-weight:800; letter-spacing:-0.03em; margin-bottom:8px;">
+          Previous Board Members &amp; Honored Leaders
+        </h3>
+        <p style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:18px;">
+          We honor past leaders who built and expanded the District 2-E2 recycling center.
         </p>
-        <div class="board-grid-cards" id="prevBoardGrid">
+        <div class="board-cards-grid" id="prevBoardCards">
           <!-- Loaded dynamically -->
         </div>
       </div>
 
-      <!-- OFFICIAL DOWNLOADS -->
-      <div class="card">
-        <h3 class="card-title">Official Forms &amp; Documents</h3>
-        <div class="grid-3" style="margin-bottom: 0;">
-          <div class="card" style="background: var(--bg-subtle);">
-            <h4>📖 ERC Brochure</h4>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin: 8px 0 16px;">Comprehensive overview of center services and donor information.</p>
-            <a href="files/ERC-Brochure.pdf" target="_blank" class="btn-cta" style="display:inline-block; font-size:0.8rem; padding:6px 14px;">Download PDF &darr;</a>
+      <!-- OFFICIAL DOCUMENT DOWNLOADS -->
+      <div>
+        <h3 style="font-family:var(--font-heading); font-size:1.5rem; font-weight:800; letter-spacing:-0.03em; margin-bottom:16px;">
+          Official Documents &amp; Forms
+        </h3>
+        <div class="download-bento-grid">
+          <div class="download-tile">
+            <div>
+              <h4>📖 Center Information Brochure</h4>
+              <p>Overview of mission, recycling process, and community impact.</p>
+            </div>
+            <a href="files/ERC-Brochure.pdf" target="_blank" class="btn-glow-primary" style="font-size:0.8rem; padding:6px 14px;">Download PDF &darr;</a>
           </div>
-          <div class="card" style="background: var(--bg-subtle);">
-            <h4>🏆 Helen Keller Award</h4>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin: 8px 0 16px;">Application for Lions Club members documenting volunteer service hours.</p>
-            <a href="files/Helen-Keller-Award-Application.pdf" target="_blank" class="btn-cta" style="display:inline-block; font-size:0.8rem; padding:6px 14px;">Download PDF &darr;</a>
+          <div class="download-tile">
+            <div>
+              <h4>🏆 Helen Keller Award Application</h4>
+              <p>For Lions Club members logging volunteer service hours at the ERC.</p>
+            </div>
+            <a href="files/Helen-Keller-Award-Application.pdf" target="_blank" class="btn-glow-primary" style="font-size:0.8rem; padding:6px 14px;">Download PDF &darr;</a>
           </div>
-          <div class="card" style="background: var(--bg-subtle);">
-            <h4>📋 Mission Request Form</h4>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin: 8px 0 16px;">For medical teams requesting eyeglasses for upcoming mission trips (30 days notice).</p>
-            <a href="files/Mission-Request-Form.pdf" target="_blank" class="btn-cta" style="display:inline-block; font-size:0.8rem; padding:6px 14px;">Download PDF &darr;</a>
+          <div class="download-tile">
+            <div>
+              <h4>📋 Medical Mission Request Form</h4>
+              <p>For medical mission teams requesting eyeglasses (minimum 30 days notice).</p>
+            </div>
+            <a href="files/Mission-Request-Form.pdf" target="_blank" class="btn-glow-primary" style="font-size:0.8rem; padding:6px 14px;">Download PDF &darr;</a>
           </div>
         </div>
       </div>
+
     </section>
 
-    <!-- TAB 3: SERVICES -->
+    <!-- ============================================================
+         TAB 3: SERVICES
+         ============================================================ -->
     <section id="tab-services" class="tab-pane">
-      <div class="hero-card">
-        <div class="hero-pill">📦 Recycling &amp; Acceptance Standards</div>
-        <h2>Accepted Donations &amp; Services</h2>
-        <p class="hero-desc">
-          We accept a variety of medical and technology items. Every item processed by our volunteers directly equips missions or helps fund operations.
+      <div class="bento-card" style="margin-bottom: 32px;">
+        <div class="bento-shimmer-tag">👓 Acceptance Guidelines</div>
+        <h2 class="hero-title">Accepted Donations &amp; Technical Services</h2>
+        <p class="hero-subtitle">
+          We process eyeglasses, laptops, mobile phones, and hearing aids. Learn what items we accept and how to donate.
         </p>
       </div>
 
-      <!-- ACCEPTED ITEMS -->
-      <div class="grid-4" style="margin-bottom: 32px;">
-        <div class="card">
-          <div style="font-size: 2rem; margin-bottom: 8px;">👓</div>
-          <h4 style="margin-bottom: 6px;">Eyeglasses &amp; Sunglasses</h4>
-          <p style="font-size: 0.85rem; color: var(--text-muted);">All prescription eyeglasses, reading glasses, bifocals, and sunglasses in <strong>any condition</strong>, including broken frames.</p>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:20px; margin-bottom:32px;">
+        <div class="bento-card">
+          <div style="font-size:2.4rem; margin-bottom:12px;">👓</div>
+          <h4 style="font-size:1.2rem; font-weight:800; margin-bottom:8px;">Eyeglasses &amp; Sunglasses</h4>
+          <p style="font-size:0.9rem; color:var(--text-secondary);">All prescription glasses, readers, bifocals, and sunglasses in <strong>any condition</strong>, including broken frames.</p>
         </div>
-        <div class="card">
-          <div style="font-size: 2rem; margin-bottom: 8px;">💻</div>
-          <h4 style="margin-bottom: 6px;">Laptops &amp; Tablets</h4>
-          <p style="font-size: 0.85rem; color: var(--text-muted);">Windows 11 ready or pre-installed laptops and tablets only. <em>(No desktop tower computers accepted).</em></p>
+        <div class="bento-card">
+          <div style="font-size:2.4rem; margin-bottom:12px;">💻</div>
+          <h4 style="font-size:1.2rem; font-weight:800; margin-bottom:8px;">Laptops &amp; Tablets</h4>
+          <p style="font-size:0.9rem; color:var(--text-secondary);">Windows 11 compatible or installed laptops and tablets only. <em>(No desktop computer towers).</em></p>
         </div>
-        <div class="card">
-          <div style="font-size: 2rem; margin-bottom: 8px;">📱</div>
-          <h4 style="margin-bottom: 6px;">Cell Phones</h4>
-          <p style="font-size: 0.85rem; color: var(--text-muted);">Smartphones and basic phones of any brand in any condition. All user data is thoroughly wiped prior to reuse.</p>
+        <div class="bento-card">
+          <div style="font-size:2.4rem; margin-bottom:12px;">📱</div>
+          <h4 style="font-size:1.2rem; font-weight:800; margin-bottom:8px;">Cell Phones</h4>
+          <p style="font-size:0.9rem; color:var(--text-secondary);">Smartphones and feature phones in any condition. Data is wiped completely prior to refurbishment.</p>
         </div>
-        <div class="card">
-          <div style="font-size: 2rem; margin-bottom: 8px;">🔊</div>
-          <h4 style="margin-bottom: 6px;">Hearing Aids</h4>
-          <p style="font-size: 0.85rem; color: var(--text-muted);">Functional or non-functional hearing aids. Repurposed in partnership with hearing health professionals.</p>
-        </div>
-      </div>
-
-      <!-- ITEMS CANNOT ACCEPT -->
-      <div class="alert alert-info">
-        <strong>⚠️ Items We Cannot Accept:</strong> Broken or shattered laptop screens, missing laptop keyboards, desktop computer towers, and household appliances. For questions, call <a href="tel:+18177105403">(817) 710-5403</a>.
-      </div>
-
-      <div class="grid-2" style="margin-bottom: 32px; align-items:center;">
-        <div>
-          <h3 class="card-title">How It Works: 5-Stage Lifecycle</h3>
-          <ol style="padding-left: 20px; color: var(--text-muted); display:flex; flex-direction:column; gap:10px; font-size:0.95rem;">
-            <li><strong>Collection:</strong> Picked up from 150+ partner drop-off boxes across North Texas.</li>
-            <li><strong>Initial Inspection:</strong> Assessed for lens viability and frame integrity.</li>
-            <li><strong>Processing:</strong> Washed, sanitized, and classified by category.</li>
-            <li><strong>Quality Check:</strong> Measured with automated and manual lensometers.</li>
-            <li><strong>Global Distribution:</strong> Packaged and handed off to verified mission trips.</li>
-          </ol>
-        </div>
-        <div>
-          <img src="images/process-lensometers.jpg" alt="Measuring Eyeglasses on Lensometers" style="width: 100%; border-radius: var(--radius-md); border:1px solid var(--border-subtle); box-shadow: var(--shadow-sm);">
+        <div class="bento-card">
+          <div style="font-size:2.4rem; margin-bottom:12px;">🔊</div>
+          <h4 style="font-size:1.2rem; font-weight:800; margin-bottom:8px;">Hearing Aids</h4>
+          <p style="font-size:0.9rem; color:var(--text-secondary);">Functional or non-functional hearing devices repurposed with professional audiology partners.</p>
         </div>
       </div>
 
-      <!-- FORMS -->
-      <div class="grid-2">
-        <div class="card">
-          <h4 style="margin-bottom: 8px;">📦 Host a Collection Box</h4>
-          <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 16px;">
-            Place an eyeglass collection box in your clinic, bank, school, or retail business.
-          </p>
-          <a href="#contact" class="btn-cta js-tab-trigger" data-tab="contact">Request a Collection Box &rarr;</a>
+      <div class="bento-card" style="border-left:4px solid var(--accent-rose); margin-bottom:32px; background:rgba(244, 63, 94, 0.05);">
+        <h4 style="font-size:1.1rem; font-weight:800; color:var(--accent-rose); margin-bottom:6px;">⚠️ Items We Cannot Accept</h4>
+        <p style="font-size:0.9rem; color:var(--text-secondary);">
+          Damaged or shattered laptop screens, missing laptop keyboards, desktop towers, and home electronics. For bulk or unusual donations, please contact us prior to delivery.
+        </p>
+      </div>
+
+      <div class="download-bento-grid">
+        <div class="download-tile">
+          <div>
+            <h4>📦 Host an Eyeglass Collection Box</h4>
+            <p>Place an official collection box in your optical clinic, office, or church.</p>
+          </div>
+          <a href="#contact" class="btn-glow-primary js-tab-trigger" data-tab="contact">Request a Box &rarr;</a>
         </div>
-        <div class="card">
-          <h4 style="margin-bottom: 8px;">🎓 Group Volunteer Form</h4>
-          <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 16px;">
-            Schedule a group service day for your corporate team, club, or scouts (up to 20 people).
-          </p>
-          <a href="files/Group-Volunteer-Form.pdf" target="_blank" class="btn-cta">Download Group Form &darr;</a>
+        <div class="download-tile">
+          <div>
+            <h4>🎓 Group Volunteer Service Request</h4>
+            <p>Plan a customized service day for corporate or youth groups up to 20 people.</p>
+          </div>
+          <a href="files/Group-Volunteer-Form.pdf" target="_blank" class="btn-glow-primary">Download Form &darr;</a>
         </div>
       </div>
     </section>
 
-    <!-- TAB 4: VOLUNTEER & CALENDAR -->
-    <section id="tab-get-involved" class="tab-pane">
-      <div class="hero-card">
-        <div class="hero-pill">🤝 Join the Sight Crew</div>
-        <h2>Volunteer With Us</h2>
-        <p class="hero-desc">
-          Whether you are an individual wanting to spend a Saturday morning giving back, or a group seeking a meaningful service project, your hands make a worldwide difference.
-        </p>
-      </div>
+    <!-- ============================================================
+         TAB 4: VOLUNTEER & CALENDAR
+         ============================================================ -->
+    <section id="tab-volunteer" class="tab-pane">
+      <div class="hero-bento">
+        <div class="bento-card">
+          <div class="bento-shimmer-tag">🤝 Hands-On Service &bull; All Skill Levels</div>
+          <h2 class="hero-title">Volunteer &amp; Change Lives</h2>
+          <p class="hero-subtitle">
+            Every pair of glasses sorted, washed, or measured brings vision to someone across the globe. Join us on Saturdays or schedule your group.
+          </p>
+        </div>
 
-      <!-- VOLUNTEERS IN ACTION (PHOTO MARQUEE) -->
-      <div style="margin-bottom: 32px;">
-        <h3 class="card-title">Volunteers in Action</h3>
-        <div class="gallery-viewport">
-          <div class="gallery-track" id="galleryMarqueeTrack">
-            <!-- Loaded dynamically from get-gallery-images.php -->
+        <div class="bento-card hero-hub-card">
+          <div>
+            <div class="hub-status-badge">
+              <span>📅 Saturday Workdays</span>
+            </div>
+            <h3>Open Volunteer Sessions</h3>
+            <p style="color:var(--text-secondary); font-size:0.9rem; margin-top:4px;">
+              Walk-ins are welcome during 2nd Saturday sessions. High school service hours verified.
+            </p>
           </div>
+          <button class="btn-glow-primary" onclick="window.location.hash='volunteer'; document.getElementById('upcomingEventsList')?.scrollIntoView({behavior:'smooth'});">
+            View Upcoming Dates &darr;
+          </button>
         </div>
       </div>
 
-      <!-- CALENDAR & DAY VIEW -->
-      <h3 class="card-title">Volunteer Calendar</h3>
-      <p style="color: var(--text-muted); margin-bottom: 18px; font-size: 0.9rem;">
-        Click any date with a dot to view scheduled volunteer sessions. Walk-ins are always welcome during 2nd Saturday sessions!
-      </p>
-
-      <div class="calendar-layout">
-        <div class="calendar-widget">
-          <div class="calendar-header">
-            <button class="calendar-nav-btn" id="calPrevBtn" aria-label="Previous month">&lt;</button>
-            <h3 id="calMonthTitle">Calendar</h3>
-            <button class="calendar-nav-btn" id="calNextBtn" aria-label="Next month">&gt;</button>
+      <!-- CALENDAR BENTO -->
+      <h3 style="font-family:var(--font-heading); font-size:1.5rem; font-weight:800; letter-spacing:-0.03em; margin-bottom:16px;">
+        Volunteer Schedule &amp; Day Picker
+      </h3>
+      <div class="calendar-bento">
+        <div class="cal-picker-card">
+          <div class="cal-header-row">
+            <button class="btn-glass" id="calPrevBtn" aria-label="Previous month">&lt;</button>
+            <h3 id="calHeaderTitle">Calendar</h3>
+            <button class="btn-glass" id="calNextBtn" aria-label="Next month">&gt;</button>
           </div>
-          <div class="calendar-weekdays">
+          <div style="display:grid; grid-template-columns:repeat(7,1fr); text-align:center; font-size:0.75rem; font-weight:700; color:var(--text-tertiary); margin-bottom:8px;">
             <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
           </div>
-          <div class="calendar-days-grid" id="calDaysGrid">
-            <!-- Dynamically generated days -->
+          <div class="cal-days-grid" id="calCellsGrid">
+            <!-- Dynamically populated -->
           </div>
         </div>
 
-        <div class="card" id="calDayEventsList">
-          <div style="text-align: center; padding: 40px 20px; color: var(--text-muted);">
-            <p style="font-size: 1.5rem; margin-bottom: 8px;">📅</p>
-            <p>Select a date on the calendar to see session details and register.</p>
+        <div class="bento-card" id="calDayEventsBox">
+          <div style="text-align:center; padding:50px 10px; color:var(--text-secondary);">
+            <p style="font-size:2rem; margin-bottom:8px;">🗓️</p>
+            <p>Select a date on the calendar to see session details.</p>
           </div>
         </div>
       </div>
 
-      <!-- ALL UPCOMING EVENTS GRID -->
-      <h3 class="card-title" style="margin-bottom: 16px;">All Upcoming Volunteer Sessions</h3>
-      <div class="grid-3" id="upcomingEventsGrid" style="margin-bottom: 36px;">
-        <!-- Loaded dynamically -->
+      <!-- UPCOMING EVENTS LIST -->
+      <h3 style="font-family:var(--font-heading); font-size:1.5rem; font-weight:800; letter-spacing:-0.03em; margin-bottom:16px;">
+        Upcoming Scheduled Sessions
+      </h3>
+      <div class="events-cards-grid" id="upcomingEventsList">
+        <!-- Dynamically populated -->
       </div>
 
-      <!-- PARTNERS WALL -->
-      <div class="card">
-        <h3 class="card-title">Our Partners in Service</h3>
-        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 16px;">
-          We are deeply thankful to our community partners, civic groups, and Lions Clubs:
+      <!-- PARTNERS IN SERVICE WALL -->
+      <div class="bento-card">
+        <h3 style="font-family:var(--font-heading); font-size:1.4rem; font-weight:800; margin-bottom:12px;">
+          Community Partners &amp; Civic Sponsors
+        </h3>
+        <p style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:16px;">
+          Special thanks to the organizations and clubs that support our mission:
         </p>
-        <ul id="partnersListContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px; list-style: none; font-size: 0.9rem; color: var(--text-muted);">
-          <!-- Loaded dynamically -->
-        </ul>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:10px;" id="partnersListGrid">
+          <!-- Dynamically populated -->
+        </div>
       </div>
     </section>
 
-    <!-- TAB 5: LOCATIONS (PRIORITY ZIP CODE SEARCH) -->
+    <!-- ============================================================
+         TAB 5: LOCATIONS (PRIORITY LIVE SEARCH)
+         ============================================================ -->
     <section id="tab-locations" class="tab-pane">
-      <div class="hero-card">
-        <div class="hero-pill">📍 150+ Drop-Off Points Across DFW</div>
-        <h2>Drop-Off Partner Locations</h2>
-        <p class="hero-desc">
-          Drop off used eyeglasses, cell phones, or hearing aids at any partner location across the Dallas-Fort Worth metroplex.
+      <div class="bento-card" style="margin-bottom: 24px;">
+        <div class="bento-shimmer-tag">📍 Over 200 Donation Boxes Across North Texas</div>
+        <h2 class="hero-title">Drop-Off Locations Directory</h2>
+        <p class="hero-subtitle">
+          Find a convenient eyeglass drop-off box near you. Filter instantly by zip code, city, partner name, or street address.
         </p>
       </div>
 
-      <!-- MAP VIEW -->
-      <div class="map-container-box">
-        <div id="allLocationsMap" style="width: 100%; height: 100%;"></div>
+      <!-- MAP VIEWPORT -->
+      <div class="map-viewport">
+        <div id="allLocationsMap" style="width:100%; height:100%;"></div>
       </div>
 
-      <!-- SEARCH TOOLBAR (Priority Task 7: Zip Code / City Search) -->
-      <div class="locations-toolbar">
-        <div class="search-input-wrapper">
-          <span class="search-icon">🔍</span>
-          <input type="text" id="locationSearchInput" class="search-input" placeholder="Search by Zip Code, City, Partner Name, or Street...">
+      <!-- TOOLBAR: LIVE SEARCH & CITY PILLS (Priority Task 7) -->
+      <div class="finder-toolbar">
+        <div class="search-field-box">
+          <span class="search-icon-fixed">🔍</span>
+          <input type="text" id="locationSearchInput" placeholder="Search by Zip Code, City, Partner Name, or Street Address...">
         </div>
-        <div id="locationsMatchCount" style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">
-          Loading locations...
+
+        <!-- City Quick Filter Pills -->
+        <div class="filter-pills-row">
+          <span style="font-size:0.75rem; font-weight:700; color:var(--text-tertiary); text-transform:uppercase;">City:</span>
+          <button class="city-pill active" data-city="all">All Locations</button>
+          <button class="city-pill" data-city="Fort Worth">Fort Worth</button>
+          <button class="city-pill" data-city="Arlington">Arlington</button>
+          <button class="city-pill" data-city="Watauga">Watauga</button>
+          <button class="city-pill" data-city="Keller">Keller</button>
+          <button class="city-pill" data-city="Aledo">Aledo</button>
+          <button class="city-pill" data-city="Denton">Denton</button>
+          <button class="city-pill" data-city="Colleyville">Colleyville</button>
+          <button class="city-pill" data-city="McKinney">McKinney</button>
+          <button class="city-pill" data-city="Plano">Plano</button>
+        </div>
+
+        <!-- A-Z Letter Pills -->
+        <div class="filter-pills-row">
+          <span style="font-size:0.75rem; font-weight:700; color:var(--text-tertiary); text-transform:uppercase;">Letter:</span>
+          <button class="letter-pill" data-letter="A">A</button>
+          <button class="letter-pill" data-letter="B">B</button>
+          <button class="letter-pill" data-letter="C">C</button>
+          <button class="letter-pill" data-letter="D">D</button>
+          <button class="letter-pill" data-letter="E">E</button>
+          <button class="letter-pill" data-letter="F">F</button>
+          <button class="letter-pill" data-letter="G">G</button>
+          <button class="letter-pill" data-letter="H">H</button>
+          <button class="letter-pill" data-letter="K">K</button>
+          <button class="letter-pill" data-letter="L">L</button>
+          <button class="letter-pill" data-letter="M">M</button>
+          <button class="letter-pill" data-letter="N">N</button>
+          <button class="letter-pill" data-letter="P">P</button>
+          <button class="letter-pill" data-letter="S">S</button>
+          <button class="letter-pill" data-letter="T">T</button>
+          <button class="letter-pill" data-letter="W">W</button>
+          <span id="locationsCountDisplay" style="margin-left:auto; font-size:0.85rem; font-weight:700; color:var(--accent-cyan);">
+            Loading locations...
+          </span>
         </div>
       </div>
 
-      <!-- A-Z QUICK JUMP BAR -->
-      <div class="az-chips" style="margin-bottom: 24px;">
-        <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); align-self: center; margin-right: 6px;">Jump:</span>
-        <button class="az-chip" data-letter="A">A</button>
-        <button class="az-chip" data-letter="B">B</button>
-        <button class="az-chip" data-letter="C">C</button>
-        <button class="az-chip" data-letter="D">D</button>
-        <button class="az-chip" data-letter="E">E</button>
-        <button class="az-chip" data-letter="F">F</button>
-        <button class="az-chip" data-letter="G">G</button>
-        <button class="az-chip" data-letter="H">H</button>
-        <button class="az-chip" data-letter="I">I</button>
-        <button class="az-chip" data-letter="J">J</button>
-        <button class="az-chip" data-letter="K">K</button>
-        <button class="az-chip" data-letter="L">L</button>
-        <button class="az-chip" data-letter="M">M</button>
-        <button class="az-chip" data-letter="N">N</button>
-        <button class="az-chip" data-letter="O">O</button>
-        <button class="az-chip" data-letter="P">P</button>
-        <button class="az-chip" data-letter="R">R</button>
-        <button class="az-chip" data-letter="S">S</button>
-        <button class="az-chip" data-letter="T">T</button>
-        <button class="az-chip" data-letter="U">U</button>
-        <button class="az-chip" data-letter="V">V</button>
-        <button class="az-chip" data-letter="W">W</button>
-      </div>
-
-      <!-- LOCATION CARDS LIST -->
-      <div class="location-grid-list" id="locationsCardList">
-        <!-- Rendered dynamically with live filter -->
-      </div>
-
-      <!-- FAQ (Native HTML5 Details) -->
-      <div style="margin-top: 36px;">
-        <h3 class="card-title">Drop-Off Locations FAQ</h3>
-        <details class="openui-faq">
-          <summary class="faq-summary">Do partner locations have the same hours as the main center?</summary>
-          <div class="faq-content">
-            No, each partner location (such as libraries, optical shops, and community centers) operates on their own business hours. Please verify their operating schedule before visiting.
-          </div>
-        </details>
-        <details class="openui-faq">
-          <summary class="faq-summary">Can I drop off laptops or computers at partner locations?</summary>
-          <div class="faq-content">
-            Drop-off boxes in partner locations are sized primarily for eyeglasses, cell phones, and hearing aids. For Windows 11 laptops and tablets, please bring them directly to the main center on Saturdays between 9 AM and 3 PM.
-          </div>
-        </details>
+      <!-- CARDS LIST -->
+      <div class="locations-grid" id="locationsContainer">
+        <!-- Dynamically rendered -->
       </div>
     </section>
 
-    <!-- TAB 6: CONTACT -->
+    <!-- ============================================================
+         TAB 6: CONTACT
+         ============================================================ -->
     <section id="tab-contact" class="tab-pane">
-      <div class="hero-card">
-        <div class="hero-pill">✉️ We're Here to Help</div>
-        <h2>Contact Our Team</h2>
-        <p class="hero-desc">
-          Have a question about scheduling a volunteer group, donating items, or requesting eyeglasses for a mission trip? We respond promptly.
-        </p>
+      <div class="hero-bento">
+        <div class="bento-card">
+          <div class="bento-shimmer-tag">✉️ Direct Inquiries &bull; Prompt Response</div>
+          <h2 class="hero-title">Contact Our Team</h2>
+          <p class="hero-subtitle">
+            Have questions about volunteering, hosting a collection box, or requesting eyeglasses for an upcoming eye clinic? Reach out today.
+          </p>
+        </div>
+
+        <div class="bento-card hero-hub-card">
+          <div>
+            <h3>Headquarters Contact</h3>
+            <p style="margin-top:6px; color:var(--text-secondary); font-size:0.9rem;">
+              <strong>Phone:</strong> <a href="tel:+18177105403" style="color:var(--accent-cyan); font-weight:700;">(817) 710-5403</a><br>
+              <strong>Email:</strong> <a href="mailto:2e2erc1854@gmail.com" style="color:var(--accent-cyan); font-weight:700;">2e2erc1854@gmail.com</a>
+            </p>
+          </div>
+          <div style="border-top:1px solid var(--border-subtle); padding-top:12px; font-size:0.85rem; color:var(--text-secondary);">
+            <strong>Mailing Address:</strong><br>
+            Lions District 2-E2 ERC<br>
+            P.O. Box 1854, Keller, TX 76244
+          </div>
+        </div>
       </div>
 
-      <div class="grid-2">
-        <!-- Sidebar Info -->
-        <div style="display: flex; flex-direction: column; gap: 16px;">
-          <div class="card">
-            <h4>📞 Phone</h4>
-            <p style="margin-top: 4px;"><a href="tel:+18177105403" style="color:var(--accent-primary); font-size:1.1rem; font-weight:700;">(817) 710-5403</a></p>
+      <div class="bento-card" style="max-width:700px; margin:0 auto;">
+        <h3 style="font-family:var(--font-heading); font-size:1.5rem; font-weight:800; margin-bottom:16px;">
+          Send an Online Message
+        </h3>
+        <form id="contactUsForm" action="send-email.php" method="POST">
+          <div class="form-group">
+            <label for="cName">Full Name *</label>
+            <input type="text" id="cName" name="name" class="form-control" required placeholder="Jane Doe">
           </div>
-          <div class="card">
-            <h4>✉️ Email</h4>
-            <p style="margin-top: 4px;"><a href="mailto:2e2erc1854@gmail.com" style="color:var(--accent-primary); font-size:1.05rem; font-weight:600;">2e2erc1854@gmail.com</a></p>
+          <div class="form-group">
+            <label for="cEmail">Email Address *</label>
+            <input type="email" id="cEmail" name="email" class="form-control" required placeholder="jane@example.com">
           </div>
-          <div class="card">
-            <h4>📍 Physical Center</h4>
-            <p style="color:var(--text-muted); margin-top:4px;">5621 Bunker Blvd<br>Watauga, TX 76148</p>
+          <div class="form-group">
+            <label for="cPhone">Phone Number</label>
+            <input type="tel" id="cPhone" name="phone" class="form-control" placeholder="(817) 555-0199">
           </div>
-          <div class="card">
-            <h4>📮 Mailing Address</h4>
-            <p style="color:var(--text-muted); margin-top:4px;">Lions District 2-E2 ERC<br>P.O. Box 1854<br>Keller, TX 76244</p>
+          <div class="form-group">
+            <label for="cSubject">Topic / Inquiry Subject *</label>
+            <select id="cSubject" name="subject" class="form-control" required>
+              <option value="">Choose topic...</option>
+              <option value="Volunteer Questions">Volunteer Questions</option>
+              <option value="Group Volunteer Day">Group Volunteer Day (Corporate/Clubs)</option>
+              <option value="Need Collection Boxes">Need Collection Boxes (Host a Box)</option>
+              <option value="Donate Items or Tech">Donate Items or Laptops</option>
+              <option value="Financial Donation">Financial Donation</option>
+              <option value="Mission Request">Mission Eyeglass Request</option>
+              <option value="General Inquiry">General Question</option>
+            </select>
           </div>
-        </div>
-
-        <!-- Contact Form -->
-        <div class="card">
-          <h3 class="card-title">Send a Message</h3>
-          <form id="siteContactForm" action="send-email.php" method="POST">
-            <div class="form-group">
-              <label for="contactName">Full Name *</label>
-              <input type="text" id="contactName" name="name" class="form-control" required placeholder="Your name">
-            </div>
-            <div class="form-group">
-              <label for="contactEmail">Email Address *</label>
-              <input type="email" id="contactEmail" name="email" class="form-control" required placeholder="your.email@example.com">
-            </div>
-            <div class="form-group">
-              <label for="contactPhone">Phone Number</label>
-              <input type="tel" id="contactPhone" name="phone" class="form-control" placeholder="(817) 000-0000">
-            </div>
-            <div class="form-group">
-              <label for="contactSubject">Subject / Topic *</label>
-              <select id="contactSubject" name="subject" class="form-control" required>
-                <option value="">Select a topic...</option>
-                <option value="Volunteer Questions">Volunteer Questions</option>
-                <option value="Group Volunteer Day">Group Volunteer Day (Corporate/Clubs)</option>
-                <option value="Need Collection Boxes">Need Collection Boxes (Host a Box)</option>
-                <option value="Donate Items or Tech">Donate Items or Electronics</option>
-                <option value="Financial Donation">Financial Donation</option>
-                <option value="Mission Request">Mission eyeglass request</option>
-                <option value="General Inquiry">General Question</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="contactMessage">Message *</label>
-              <textarea id="contactMessage" name="message" class="form-control" required placeholder="How can we help you?"></textarea>
-            </div>
-            <button type="submit" class="btn-cta" style="width: 100%;">Send Message &rarr;</button>
-          </form>
-        </div>
+          <div class="form-group">
+            <label for="cMessage">Message *</label>
+            <textarea id="cMessage" name="message" class="form-control" required rows="4" placeholder="How can our volunteer team assist you?"></textarea>
+          </div>
+          <button type="submit" class="btn-glow-primary" style="width:100%; justify-content:center; padding:12px;">
+            Transmit Message &rarr;
+          </button>
+        </form>
       </div>
     </section>
 
   </main>
 
   <!-- NATIVE ACCESSIBLE DIALOG MODAL (Volunteer Registration) -->
-  <dialog id="signupDialog" class="openui-dialog">
-    <div class="dialog-header">
-      <h3 style="font-size: 1.2rem; font-weight: 700;">Volunteer Registration</h3>
-      <button class="dialog-close-btn" id="dialogCloseBtn" aria-label="Close dialog">&times;</button>
+  <dialog id="volunteerModal" class="openui-modal">
+    <div class="modal-header">
+      <h3 style="font-family:var(--font-heading); font-size:1.3rem; font-weight:800;">Volunteer Session Signup</h3>
+      <button class="modal-close-btn" id="closeModalBtn" aria-label="Close modal">&times;</button>
     </div>
-    <div style="background: var(--bg-subtle); padding: 12px 16px; border-radius: var(--radius-sm); margin-bottom: 20px;">
-      <h4 id="modalEventTitleDisplay" style="color: var(--accent-primary); margin-bottom: 4px;">Session</h4>
-      <p id="modalEventTimeDisplay" style="font-size: 0.85rem; color: var(--text-muted);"></p>
+    <div style="background:var(--bg-deep); border:1px solid var(--border-subtle); padding:14px; border-radius:var(--radius-md); margin-bottom:20px;">
+      <h4 id="modalEventTitlePreview" style="color:var(--accent-cyan); font-weight:800; font-size:1.05rem; margin-bottom:4px;">Session</h4>
+      <p id="modalEventDatePreview" style="font-size:0.85rem; color:var(--text-secondary);"></p>
     </div>
-    <form id="volunteerRegistrationForm">
-      <input type="hidden" id="modalEventId" name="eventId">
+    <form id="volunteerSignupForm">
+      <input type="hidden" id="modalEventIdInput" name="eventId">
       <div class="form-group">
-        <label for="modalVolName">Your Full Name *</label>
-        <input type="text" id="modalVolName" class="form-control" required placeholder="Jane Doe">
+        <label for="volNameInput">Your Full Name *</label>
+        <input type="text" id="volNameInput" class="form-control" required placeholder="Jane Doe">
       </div>
       <div class="form-group">
-        <label for="modalVolEmail">Email Address *</label>
-        <input type="email" id="modalVolEmail" class="form-control" required placeholder="jane@example.com">
+        <label for="volEmailInput">Email Address *</label>
+        <input type="email" id="volEmailInput" class="form-control" required placeholder="jane@example.com">
       </div>
       <div class="form-group">
-        <label for="modalVolPhone">Phone Number</label>
-        <input type="tel" id="modalVolPhone" class="form-control" placeholder="(817) 555-0123">
+        <label for="volPhoneInput">Phone Number</label>
+        <input type="tel" id="volPhoneInput" class="form-control" placeholder="(817) 555-0123">
       </div>
-      <button type="submit" class="btn-cta" style="width: 100%; margin-top: 8px;">Confirm Volunteer Registration &rarr;</button>
+      <button type="submit" class="btn-glow-primary" style="width:100%; justify-content:center; padding:12px; margin-top:8px;">
+        Confirm Registration &rarr;
+      </button>
     </form>
   </dialog>
 
-  <!-- TOAST NOTIFICATION CONTAINER -->
-  <div id="toastContainer" aria-live="polite"></div>
+  <!-- TOAST NOTIFICATION DOCK -->
+  <div id="toastDock" aria-live="polite"></div>
 
   <!-- FOOTER -->
-  <footer class="site-footer">
-    <div class="footer-grid">
+  <footer class="openui-footer">
+    <div class="footer-grid-bento">
       <div class="footer-col">
         <h3>Lions District 2-E2 ERC</h3>
         <p>
-          We are a 501(c)(3) nonprofit organization dedicated to giving the gift of sight globally. Our facility sorts, cleans, measures, and ships thousands of recycled eyeglasses every year to medical missions and clinics worldwide.
+          A chartered 501(c)(3) nonprofit organization dedicated to giving the gift of sight globally. Operated entirely by volunteers who sort, clean, measure, and package recycled eyeglasses for international eye clinics.
         </p>
       </div>
       <div class="footer-col">
         <h3>Direct Contact</h3>
-        <p><strong>Phone:</strong> <a href="tel:+18177105403" style="color:inherit;">(817) 710-5403</a></p>
-        <p><strong>Email:</strong> <a href="mailto:2e2erc1854@gmail.com" style="color:inherit;">2e2erc1854@gmail.com</a></p>
-        <p><strong>Center:</strong> 5621 Bunker Blvd, Watauga, TX 76148</p>
+        <p>
+          <strong>Phone:</strong> <a href="tel:+18177105403" style="color:var(--accent-cyan); text-decoration:none;">(817) 710-5403</a><br>
+          <strong>Email:</strong> <a href="mailto:2e2erc1854@gmail.com" style="color:var(--accent-cyan); text-decoration:none;">2e2erc1854@gmail.com</a><br>
+          <strong>Center:</strong> 5621 Bunker Blvd, Watauga, TX 76148
+        </p>
       </div>
       <div class="footer-col">
         <h3>Mailing Address</h3>
@@ -636,9 +675,9 @@
         </p>
       </div>
     </div>
-    <div class="footer-bottom">
-      &copy; 2026 Lions District 2-E2 Eyeglass Recycling Center &bull; All Rights Reserved &bull; 
-      <a href="admin-view.php" title="Staff Portal" style="opacity: 0.6;">Admin Portal</a>
+    <div class="footer-bottom-line">
+      &copy; 2026 Lions District 2-E2 Eyeglass Recycling Center &bull; All Rights Reserved &bull;
+      <a href="admin-view.php" style="color:inherit; text-decoration:none; opacity:0.6;">Admin Portal</a>
     </div>
   </footer>
 
