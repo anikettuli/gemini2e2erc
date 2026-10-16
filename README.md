@@ -1,93 +1,68 @@
 # Lions District 2-E2 Eyeglass Recycling Center (ERC) Website
 
-A modern, responsive, and accessible website for the District 2-E2 Eyeglass Recycling Center. This project serves as the digital hub for volunteer coordination, donation information, and event management.
+A modern, responsive, and accessible web application for the District 2-E2 Eyeglass Recycling Center, built following **OpenUI** design system principles and optimized for standard GoDaddy shared/WordPress hosting environments (HTML5, Vanilla CSS, Modern ES6+ JavaScript, and PHP 7.4+).
 
-This project has been pushed to the public website.
+---
 
-## 🛠 Technical Stack
+## 🛠 Technical Architecture
 
 ### Frontend
-- **HTML5**: Semantic markup with accessibility (WCAG AAA) in mind.
-- **CSS3**: Custom styling with CSS Variables for theming (Light/Dark mode).
-- **JavaScript (ES6+)**: Vanilla JS for DOM manipulation, routing, and dynamic content loading.
-- **MapLibre GL JS**: Open-source mapping library for displaying drop-off locations.
+- **Framework & Guidelines**: Built using [OpenUI](https://openui.com) component standards & design tokens (sleek surfaces, accessible WCAG contrast, responsive layout grids).
+- **HTML5**: Semantic tags, native `<dialog>` for modal registration, and native `<details>`/`<summary>` for collapsible FAQs.
+- **CSS3 (Vanilla)**: High-performance, tokenized design system (`css/styles.css`) supporting system-aware Dark & Light modes with zero build dependencies.
+- **JavaScript (ES6+)**: Consolidated, high-performance vanilla JS module (`js/app.js`) handling hash routing, theme switching, live search, calendar logic, and AJAX requests.
+- **Mapping**: Open-source MapLibre GL JS rendering drop-off locations with pre-computed GPS coordinates.
 
-### Backend
-- **PHP**: Server-side scripting for form processing and administrative functions.
-    - `register-volunteer.php`: Handles volunteer signups and stores data in JSON.
-    - `send-email.php`: Processes contact form submissions.
-    - `admin-view.php`: Protected interface for viewing volunteer data.
-- **JSON**: Flat-file database structure for storing content and form submissions.
+### Backend & Deployment
+- **Target Platform**: GoDaddy cPanel / Managed WordPress / Apache Shared Hosting (PHP 7.4+).
+- **Core Endpoints**:
+  - `register-volunteer.php`: Concurrency-safe atomic registration with `flock(LOCK_EX)`, capacity validation, past-event checks, and automated SMTP confirmations.
+  - `send-email.php`: Contact form handler with CRLF injection protection, anti-spam validation, and SMTP relay.
+  - `admin-view.php`: Secure administrative dashboard protected by constant-time HTTP Basic Auth (`hash_equals`), CSRF tokens, session verification, and CSV volunteer export.
+  - `get-locations.php`, `get-config.php`, `get-gallery-images.php`: High-speed JSON endpoints.
+- **Security Firewalls (`.htaccess`)**:
+  - Enforces HTTPS and standard security headers (`X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`).
+  - Passes FastCGI/PHP-FPM authorization headers (`HTTP_AUTHORIZATION`).
+  - Denies public web access to `.env`, `data/signups.json`, `*.log`, and temporary files.
 
-### Data Architecture
-Content is decoupled from the HTML structure and stored in the `data/` directory:
-- `events.json`: Calendar events.
-- `board.json`: Board of Directors profiles.
-- `partners.json`: Mission partners.
-- `signups.json`: Volunteer registration database (generated).
+---
 
 ## 📂 Project Structure
 
 ```text
-├── admin-view.php          # Admin dashboard for volunteer management
-├── config.php              # Server-side configuration
-├── index.html              # Single Page Application (SPA) entry point
-├── register-volunteer.php  # Volunteer form processor
+├── .htaccess               # Apache configuration & security firewall
+├── admin-view.php          # Admin console (Volunteer signups, Events, Locations, CSV export)
+├── config.php              # Centralized site settings & environment helper
+├── get-config.php          # Public site config API
+├── get-gallery-images.php  # Public gallery images API
+├── get-locations.php       # Drop-off locations API with pre-computed coordinates
+├── index.html              # Main application entry point (OpenUI SPA)
+├── mail-utils.php          # Standalone lightweight SMTP client & branded email templates
+├── register-volunteer.php  # Atomic volunteer registration processor
 ├── send-email.php          # Contact form processor
 ├── css/
-│   └── styles.css          # Main stylesheet (includes Dark Mode)
-├── data/                   # JSON data stores
-│   ├── board.json
-│   ├── events.json
-│   └── signups.json        # Writable file for volunteer data
-├── js/
-│   ├── app.js              # Core logic: Routing, Theme, UI
-│   ├── calendar.js         # Event calendar rendering logic
-│   ├── config.js           # Client-side configuration (Email, Phone)
-│   ├── dynamic-content.js  # JSON fetcher and renderer
-│   └── locations.js        # MapLibre configuration and location data
-└── images/                 # Optimized assets
+│   └── styles.css          # Tokenized OpenUI design system (Light/Dark themes)
+├── data/
+│   ├── board.json          # Board of Directors profiles (Current & Previous)
+│   ├── events.json         # Scheduled volunteer events & capacities
+│   ├── locations.json      # 215 drop-off locations with GPS coordinates
+│   ├── partners.json       # Community partners & friends list
+│   ├── signups.json        # Writable volunteer registrations (protected)
+│   └── testimonials.json   # Partner testimonials
+├── files/                  # Downloadable official PDFs
+├── gallery/                # Volunteer action photo gallery
+├── images/                 # Optimized brand assets & event graphics
+└── js/
+    └── app.js              # Consolidated OpenUI application logic
 ```
 
-## 🌟 Key Functionality
+---
 
-### 1. Hash-Based Routing
-The site uses a lightweight SPA architecture. Navigation is handled via URL hashes (e.g., `#home`, `#get-involved`). `app.js` listens for hash changes to toggle visibility of content sections without full page reloads.
+## 🌟 Key Features
 
-### 2. Dynamic Content Loading
-To allow non-technical updates, content sections like the Board of Directors, Partners, and Events are fetched from JSON files in the `data/` folder and rendered client-side by `dynamic-content.js`.
-
-### 3. Volunteer Management System
-- **Registration**: Users submit the volunteer form (`#get-involved`).
-- **Processing**: `register-volunteer.php` validates inputs and appends the entry to `data/signups.json`.
-- **Administration**: `admin-view.php` provides a table view of all signups. *Note: Ensure this file is secured in production.*
-
-### 4. Interactive Map
-The Locations tab features an interactive map powered by MapLibre GL. It renders markers for drop-off locations defined in `js/locations.js`.
-
-### 5. Dark Mode
-A system-aware theme toggle allows users to switch between Light and Dark modes. Preferences are persisted in `localStorage`.
-
-## 🚀 Setup & Deployment
-
-### Prerequisites
-- A web server with **PHP 7.4+** support (Apache/Nginx).
-- Write permissions for the `data/` directory (for `signups.json`).
-
-### Local Development
-1. Clone the repository.
-2. Start a local PHP server:
-   ```bash
-   php -S localhost:8000
-   ```
-3. Open `http://localhost:8000` in your browser.
-
-### Production Deployment
-1. Upload all files to the public web directory.
-2. **Security**: Ensure `data/signups.json` is protected from direct public access via `.htaccess` or server config, while remaining writable by the PHP script.
-3. **Permissions**: Set write permissions (chmod 664 or 775) on `data/signups.json` so the server can save volunteer registrations.
-
-## ⚙️ Configuration
-
-- **Client-side**: Edit `js/config.js` to update global contact info (Email, Phone).
-- **Server-side**: Edit `config.php` for email sending settings (SMTP, headers).
+1. **Top Announcement Bar**: Displays Saturday open hours (9:00 AM – 3:00 PM), center address, and quick links.
+2. **Interactive Location Search**: Real-time filtering by **Zip Code, City, Partner Name, or Street Address** across 200+ drop-off locations with one-click Google Maps directions.
+3. **Volunteer Management**: Live calendar, capacity progress bars, spots-remaining indicators, and atomic registration.
+4. **Current & Previous Board Members**: Clear leadership sections with high-resolution portraits.
+5. **Staff Admin Suite**: Volunteer management with instant one-click CSV export, event scheduling, and partner location manager.
+6. **Dark / Light Mode**: Instant, flicker-free theme toggle with `localStorage` and OS preference syncing.

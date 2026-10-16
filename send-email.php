@@ -1,102 +1,90 @@
 <?php
 /**
- * Contact Form Email Handler (Standalone Authenticated SMTP)
- * 
- * Implements a lightweight SMTP client to send authenticated emails
- * without external dependencies (like PHPMailer/Composer).
- * This solves issues where mail() is blocked or works silently.
+ * Contact Form Processor
+ * Lions District 2-E2 ERC
  */
 
-// Set timezone to Central Time (Keller, TX)
-date_default_timezone_set('America/Chicago');
-
-// Load Configuration and Mail Utilities
-require_once 'mail-utils.php';
-
-$config = get_smtp_config();
-$SMTP_HOST = $config['host'];
-$SMTP_PORT = $config['port'];
-$SMTP_USER = $config['user'];
-$SMTP_PASS = $config['pass'];
-$TO_EMAIL  = $config['admin_email'];
-
-// Logging
-ini_set('display_errors', 0);
-ini_set('log_errors', 1);
-$log_file = __DIR__ . '/email_errors.log';
-ini_set('error_log', $log_file);
-// Create log file if verify writable
-if (!file_exists($log_file)) { @touch($log_file); @chmod($log_file, 0666); }
-error_reporting(E_ALL);
+require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/mail-utils.php';
 
 // Only allow POST
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: index.html");
+    header("Location: index.html#contact");
     exit;
 }
 
-// Sanitize Inputs
+// Check if request expects JSON
+$isAjax = (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') ||
+          (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false);
+
+// Retrieve inputs
 $name = strip_tags(trim($_POST["name"] ?? ''));
 $email_raw = trim($_POST["email"] ?? '');
 $phone = strip_tags(trim($_POST["phone"] ?? ''));
 $subject_raw = strip_tags(trim($_POST["subject"] ?? 'General Inquiry'));
 $message = trim($_POST["message"] ?? '');
-$subscribe = isset($_POST["subscribe"]) ? 'Yes' : 'No';
 
-// Use proper validation - Reject rather than sanitize
+// Validation
 if (empty($name) || empty($email_raw) || empty($message) || !filter_var($email_raw, FILTER_VALIDATE_EMAIL)) {
+    if ($isAjax) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => 'Please provide a valid name, email address, and message.']);
+        exit;
+    }
     header("Location: index.html?status=error&reason=invalid_input#contact");
     exit;
 }
-$email = $email_raw; 
 
-// Prepare Content - Strip CR/LF to prevent SMTP header injection
-$safe_name = preg_replace('/[\r\n]/', ' ', $name);
-$safe_subject = preg_replace('/[\r\n]/', ' ', $subject_raw);
-$email_subject = "$safe_subject: $safe_name";
+$email = strtolower($email_raw);
+
+// Clean CRLF to prevent SMTP header injection
+$clean_name = preg_replace('/[\r\n]/', ' ', $name);
+$clean_subject = preg_replace('/[\r\n]/', ' ', $subject_raw);
+$email_subject = "ERC Inquiry - $clean_subject: $clean_name";
 
 $content_html = "
-    <p><strong>Name:</strong> " . htmlspecialchars($name) . "</p>
-    <p><strong>Email:</strong> <a href='mailto:$email'>$email</a></p>
-    <p><strong>Phone:</strong> " . htmlspecialchars($phone) . "</p>
-    <p><strong>Subject:</strong> " . htmlspecialchars($subject_raw) . "</p>
-    <hr style='border: 0; border-top: 1px solid #eee; margin: 20px 0;'>
+    <p><strong>Name:</strong> " . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . "</p>
+    <p><strong>Email:</strong> <a href='mailto:" . htmlspecialchars($email, ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($email, ENT_QUOTES, 'UTF-8') . "</a></p>
+    <p><strong>Phone:</strong> " . htmlspecialchars($phone, ENT_QUOTES, 'UTF-8') . "</p>
+    <p><strong>Topic / Subject:</strong> " . htmlspecialchars($subject_raw, ENT_QUOTES, 'UTF-8') . "</p>
+    <hr>
     <h3>Message:</h3>
-    <p style='white-space: pre-wrap;'>" . htmlspecialchars($message) . "</p>
+    <p style='white-space: pre-wrap;'>" . nl2br(htmlspecialchars($message, ENT_QUOTES, 'UTF-8')) . "</p>
 ";
 
-$html_body = render_email_template("New Website Inquiry", $content_html);
+$html_body = render_email_template("New Website Contact Inquiry", $content_html);
 
-// Send using our custom Lightweight SMTP class
-$error = null;
 try {
-    $mail = new SimpleSMTP($SMTP_HOST, $SMTP_PORT, $SMTP_USER, $SMTP_PASS);
-    
-    // Send to Admin with CC to User
+    $smtp_conf = get_smtp_config();
+    $mail = new SimpleSMTP($smtp_conf['host'], $smtp_conf['port'], $smtp_conf['user'], $smtp_conf['pass']);
+
+    // Send to Admin with CC to Sender
     $mail->send(
-        $SMTP_USER,         // From
-        $TO_EMAIL,          // To (Admin)
-        $email_subject,     // Subject
-        $html_body,         // Body
-        "Lions 2-E2 ERC",   // From Name
-        $email,             // Reply-To (User's email)
-        $email              // CC (User's email)
+        $smtp_conf['user'],
+        $smtp_conf['admin_email'],
+        $email_subject,
+        $html_body,
+        "Lions 2-E2 ERC Contact Form",
+        $email,
+        $email
     );
-    
+
+    if ($isAjax) {
+        echo json_encode(['success' => true, 'message' => 'Your message has been sent successfully!']);
+        exit;
+    }
     header("Location: index.html?status=success#contact");
     exit;
 
 } catch (Exception $e) {
-    $error = $e->getMessage();
-    error_log("SMTP Error: " . $error);
-    
-    // Determine reason for URL
-    $reason = 'send_failed';
-    if (strpos($error, 'Authentic') !== false) $reason = 'auth_failed';
-    if (strpos($error, 'connect') !== false) $reason = 'connect_failed';
-    
-    // Fix: urlencode the reason to prevent header injection
-    header("Location: index.html?status=error&reason=" . urlencode($reason) . "#contact");
+    error_log("[ERC Contact Form] SMTP Exception: " . $e->getMessage());
+
+    if ($isAjax) {
+        http_response_code(500);
+        echo json_encode(['success' => false, 'message' => 'Unable to send message right now. Please call us or email directly.']);
+        exit;
+    }
+    header("Location: index.html?status=error&reason=send_failed#contact");
     exit;
 }
 ?>

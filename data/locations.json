@@ -2,217 +2,303 @@
   {
     "name": "AISD 9th Grade Campus",
     "address": "990 Bailey Ranch Rd, Aledo, TX 76008",
-    "phone": "(817) 441-4504"
+    "phone": "(817) 441-4504",
+    "lat": 32.7125695,
+    "lng": -97.6146799
   },
   {
     "name": "Accent Eye Care",
     "address": "3990 N. Collins, Suite 102, Arlington, TX 76005",
-    "phone": "(817) 261-2020"
+    "phone": "(817) 261-2020",
+    "lat": 32.7956177,
+    "lng": -97.0974999
   },
   {
     "name": "Advanced Vision Care",
     "address": "4919 South Hulen Street, Fort Worth TX 76132",
-    "phone": "(817) 370-2100"
+    "phone": "(817) 370-2100",
+    "lat": 32.6757755,
+    "lng": -97.3961926
   },
   {
     "name": "Advanced Vision Care",
     "address": "726 E. Lamar, Arlington, TX 76011",
-    "phone": "(817) 275-0655"
+    "phone": "(817) 275-0655",
+    "lat": 32.7631087,
+    "lng": -97.1086411
   },
   {
     "name": "Advantage Eyecare",
     "address": "6509 Precinct Line Rd, North Richland Hills TX 76180",
-    "phone": "(817) 788-2020"
+    "phone": "(817) 788-2020",
+    "lat": 32.8602615,
+    "lng": -97.1861557
   },
   {
     "name": "Aledo City Hall",
     "address": "104 Maverick St., Aledo, Tx 76008",
-    "phone": "(817) 441-7016"
+    "phone": "(817) 441-7016",
+    "lat": 32.6949161,
+    "lng": -97.6034043
   },
   {
     "name": "Aledo Family Eye Care",
     "address": "126 S Ranch House Rd, Suite 1000, Aledo TX 76008",
-    "phone": "(817) 441-0010"
+    "phone": "(817) 441-0010",
+    "lat": 32.731733053167,
+    "lng": -97.634204098284
   },
   {
     "name": "Alliance Eyewear Designs (Alliance Eye Care)",
     "address": "1600 W College,, Suite 390, Grapevine TX 76051",
-    "phone": "(817) 481-8955"
+    "phone": "(817) 481-8955",
+    "lat": 32.935674,
+    "lng": -97.093008
   },
   {
     "name": "Alpha Optical",
     "address": "3705 Eldorado Pkwy., McKinney, TX 75070",
-    "phone": "(972) 542-0331"
+    "phone": "(972) 542-0331",
+    "lat": 33.1679651,
+    "lng": -96.6680349
   },
   {
     "name": "America Best",
     "address": "5801 Long Prairie Rd., Suite 360, Flower Mound, TX 75028",
-    "phone": "(972) 355-3232"
+    "phone": "(972) 355-3232",
+    "lat": 33.0635371,
+    "lng": -97.0819953
   },
   {
     "name": "America's Best",
     "address": "811 NE Alsbury, Suite 100, Burleson, TX 76028",
-    "phone": "(817) 231-7131"
+    "phone": "(817) 231-7131",
+    "lat": 32.5629278,
+    "lng": -97.3236658
   },
   {
     "name": "America's Best ",
     "address": "5801 Long Prairie Rd., Suite 360, Flower Mound, TX 75028",
-    "phone": "(972) 355-3232"
+    "phone": "(972) 355-3232",
+    "lat": 33.0635371,
+    "lng": -97.0819953
   },
   {
     "name": "America's Best ",
     "address": "3016 Texas Sage Trail, Fort Worth, TX 76177",
-    "phone": "(817) 741-6828"
+    "phone": "(817) 741-6828",
+    "lat": 32.9122141,
+    "lng": -97.3130341
   },
   {
     "name": "America's Best ",
     "address": "420 East Round Grove Rd., Suite 610, Lewisville, TX 75067",
-    "phone": "(469) 528-1201"
+    "phone": "(469) 528-1201",
+    "lat": 33.0029479,
+    "lng": -96.9816665
   },
   {
     "name": "Americas Best - Robertson's Creek",
     "address": "5801 Long Prairie Road, Suite 360, Flower Mound TX 75028",
-    "phone": "(972) 355-3232"
+    "phone": "(972) 355-3232",
+    "lat": 33.0635371,
+    "lng": -97.0819953
   },
   {
-    "name": "America’s Best",
+    "name": "America\u2019s Best",
     "address": "780 E. Rd. to Six Flags, Arlington, TX 76011",
-    "phone": "(817) 505-1500"
+    "phone": "(817) 505-1500",
+    "lat": 32.75587706564,
+    "lng": -97.100504459088
   },
   {
     "name": "Anderson Optical & Hearing Aid Co",
     "address": "2248 Central Drive, Suite 113, Bedford TX 76021",
-    "phone": "(817) 354-4350"
+    "phone": "(817) 354-4350",
+    "lat": 32.8434326,
+    "lng": -97.1328664
   },
   {
     "name": "Azle Memorial Library",
     "address": "333 W. Main, Azle, Texas 76020",
-    "phone": "(817) 752-2682"
+    "phone": "(817) 752-2682",
+    "lat": 32.9009309,
+    "lng": -97.5520641
   },
   {
     "name": "Ball Family Vision",
     "address": "3020 Broadmoor Lane, Suite 300, Flower Mound, TX 75022",
-    "phone": "(972) 221-2020"
+    "phone": "(972) 221-2020",
+    "lat": 33.033204,
+    "lng": -97.077253
   },
   {
     "name": "Ball Family Vision",
     "address": "3020 Broadmoor Lane, Suite 300, Flower Mound TX 75022",
-    "phone": "(972) 221-2020"
+    "phone": "(972) 221-2020",
+    "lat": 33.033204,
+    "lng": -97.077253
   },
   {
     "name": "Ball Family Vision",
     "address": "3020 Broadmoor Lane, Suite 300, Flower Mound, TX 75022",
-    "phone": "(972) 221-2020"
+    "phone": "(972) 221-2020",
+    "lat": 33.033204,
+    "lng": -97.077253
   },
   {
     "name": "Bank of America",
     "address": "4200 Amon Carter Blvd., Fort Worth TX 76155",
-    "phone": "(817) 864-2200"
+    "phone": "(817) 864-2200",
+    "lat": 32.8248922,
+    "lng": -97.0477582
   },
   {
     "name": "Barton Eye Associates",
     "address": "3930 Glade Road Suite 122, Colleyville TX 76034",
-    "phone": "(817) 283-3393"
+    "phone": "(817) 283-3393",
+    "lat": 32.8824952,
+    "lng": -97.1027244
   },
   {
     "name": "Baskin-Robbins",
     "address": "2700 E Eldorado Pkwy, Little Elm TX 75068",
-    "phone": "(972) 987-4355"
+    "phone": "(972) 987-4355",
+    "lat": 33.1758928,
+    "lng": -96.8888472
   },
   {
     "name": "Bedford Public Library",
     "address": "2424 Forest Ridge Dr., Bedford TX 76021",
-    "phone": "(817) 952-2350"
+    "phone": "(817) 952-2350",
+    "lat": 32.8460996,
+    "lng": -97.1417728
   },
   {
     "name": "Bennett's Printing & Office Supply",
     "address": "300 E Chambers St, Cleburne TX 76031",
-    "phone": "(817) 641-9861"
+    "phone": "(817) 641-9861",
+    "lat": 32.3469884,
+    "lng": -97.3836251
   },
   {
     "name": "Best Value West Pharmacy",
     "address": "124 W. Renfro St., Burleson, TX 76028",
-    "phone": "(817) 295-6128"
+    "phone": "(817) 295-6128",
+    "lat": 32.5431527,
+    "lng": -97.3225476
   },
   {
     "name": "Bettye Myers Middle School",
     "address": "131 Garza Rd., Shady Shores TX 76208",
-    "phone": "(940) 369-1500"
+    "phone": "(940) 369-1500",
+    "lat": 33.1625296,
+    "lng": -97.0420182
   },
   {
     "name": "Burleson Eye Care (Dr. Steven Bresnahan)",
     "address": "201 NW Renfro  St., Burleson, TX 76028",
-    "phone": "(817) 295-5601"
+    "phone": "(817) 295-5601",
+    "lat": 32.544423,
+    "lng": -97.32672
   },
   {
     "name": "Burleson Police Dept.",
     "address": "1161 SW Wilshire Blvd., Burleson, TX 76028",
-    "phone": "(817) 426-9903"
+    "phone": "(817) 426-9903",
+    "lat": 32.5254975,
+    "lng": -97.3432771
   },
   {
     "name": "Burleson Public Library",
     "address": "248 SW Johnson St., Burleson, TX 76028",
-    "phone": "(817) 426-9210"
+    "phone": "(817) 426-9210",
+    "lat": 32.540584664724,
+    "lng": -97.327757959729
   },
   {
     "name": "Cataract & Eye Center Of Cleburne, Dr. Steve G Surratt",
     "address": "1665 Woodard Ave, Suite 209, Cleburne TX 76033",
-    "phone": "(817) 641-2020"
+    "phone": "(817) 641-2020",
+    "lat": 32.3418448,
+    "lng": -97.4256745
   },
   {
     "name": "Ciera Bank",
     "address": "301 S Fm 1187, Aledo TX 76008",
-    "phone": "(817) 441-5200"
+    "phone": "(817) 441-5200",
+    "lat": 32.689261,
+    "lng": -97.602201
   },
   {
     "name": "Clear Eye Care",
     "address": "220 S. Denton Tap Rd., Coppell TX 75019",
-    "phone": "(982) 745-8760"
+    "phone": "(982) 745-8760",
+    "lat": 32.9649541,
+    "lng": -96.9929133
   },
   {
     "name": "Clearview Eyecare and Laser Center",
     "address": "1980 East State Highway 114, Southlake TX 76092",
-    "phone": "(817) 329-2700"
+    "phone": "(817) 329-2700",
+    "lat": 32.9496044,
+    "lng": -97.1304112
   },
   {
     "name": "Cleburne Chamber of Commerce",
     "address": "1511 W Henderson St, Cleburne TX 76033",
-    "phone": "(817) 645-2455"
+    "phone": "(817) 645-2455",
+    "lat": 32.339668,
+    "lng": -97.410099
   },
   {
     "name": "Cleburne Eye Clinic",
     "address": "839 N Nolan River Rd, Cleburne TX 76033",
-    "phone": "(817) 645-2411"
+    "phone": "(817) 645-2411",
+    "lat": 32.3465033,
+    "lng": -97.4274843
   },
   {
     "name": "Cleburne Public Library",
     "address": "302 W Henderson St, Cleburne TX 76033",
-    "phone": "(817) 645-0934"
+    "phone": "(817) 645-0934",
+    "lat": 32.3473801,
+    "lng": -97.388898
   },
   {
     "name": "Cleburne Seventh-Day Adventist Church",
     "address": "111 Meadow View Dr, Cleburne TX 76033",
-    "phone": "(817) 645-2520"
+    "phone": "(817) 645-2520",
+    "lat": 32.3331752,
+    "lng": -97.4258557
   },
   {
     "name": "Cleburne Times Review",
     "address": "108 S. Anglin St., Cleburne TX 76033",
-    "phone": "(817) 645-2441"
+    "phone": "(817) 645-2441",
+    "lat": 32.3465807,
+    "lng": -97.3849072
   },
   {
     "name": "Colleyville Vision Associates",
     "address": "5205 Heritage Avenue, Colleyville TX 76034",
-    "phone": "(817) 788-3937"
+    "phone": "(817) 788-3937",
+    "lat": 32.8846809,
+    "lng": -97.1053371
   },
   {
     "name": "Costco Clear Vision Associates",
     "address": "851 South State Highway 121, Lewisville, TX 75067",
-    "phone": "(469) 948-1027"
+    "phone": "(469) 948-1027",
+    "lat": 32.9883294,
+    "lng": -97.0123919
   },
   {
     "name": "Costco Optical",
     "address": "5300 Overton Ridge Blvd, Fort Worth TX 76132",
-    "phone": "(817) 210-0001"
+    "phone": "(817) 210-0001",
+    "lat": 32.6781262,
+    "lng": -97.4083865
   },
   {
     "name": "Costco Optical",
@@ -227,37 +313,51 @@
   {
     "name": "Crosier-Pearson Cleburne Funeral Home",
     "address": "512 N Ridgeway Dr, Cleburne TX 76033",
-    "phone": "(817) 648-0522"
+    "phone": "(817) 648-0522",
+    "lat": 32.3463267,
+    "lng": -97.4121724
   },
   {
     "name": "Cross Timbers Family YMCA",
     "address": "2021 Cross Timbers Rd., Flower Mound TX 75028",
-    "phone": "(972) 539-9622"
+    "phone": "(972) 539-9622",
+    "lat": 33.0336569,
+    "lng": -97.0590758
   },
   {
     "name": "Decatur Eye Center",
     "address": "303 Washburn, Decatur, TX  76234",
-    "phone": "(940) 627-2020"
+    "phone": "(940) 627-2020",
+    "lat": 33.2325559,
+    "lng": -97.593708
   },
   {
     "name": "District 2E2 Eyeglass Recycling Center",
     "address": "5621 Bunker Blvd., Watauga TX 76148",
-    "phone": ""
+    "phone": "",
+    "lat": 32.8707405,
+    "lng": -97.2620445
   },
   {
     "name": "Doctors Fleitman and York Associates",
     "address": "2020 US Hwy 82, Gainesville, TX 76240",
-    "phone": "(940) 612-2020"
+    "phone": "(940) 612-2020",
+    "lat": 33.6425145,
+    "lng": -97.1237071
   },
   {
     "name": "Donut Box",
     "address": "2700 E Eldorado Pkwy, Suite 101, Little Elm TX 75068",
-    "phone": "(469) 200-5957"
+    "phone": "(469) 200-5957",
+    "lat": 33.1758928,
+    "lng": -96.8888472
   },
   {
     "name": "Dr. Nancy Davis, OD (Roanoke Family Eyecare)",
     "address": "1228 NW Highway 377, Roanoke TX 76262",
-    "phone": "(817) 491-4994"
+    "phone": "(817) 491-4994",
+    "lat": 33.01358457846,
+    "lng": -97.220135182953
   },
   {
     "name": "Dr. Robert Chiang",
@@ -267,132 +367,184 @@
   {
     "name": "Dr. Steve Surratt",
     "address": "610 NE Big Bend Trail, Glen Rose TX 76043",
-    "phone": "(254) 898-8733"
+    "phone": "(254) 898-8733",
+    "lat": 32.2404001,
+    "lng": -97.7523454
   },
   {
     "name": "Dr. Tad Billmire",
     "address": "104 S. Washburn, Decatur, TX  76234",
-    "phone": "(940) 627-3739"
+    "phone": "(940) 627-3739",
+    "lat": 33.23145,
+    "lng": -97.5937529
   },
   {
     "name": "Dry Clean Super Center",
     "address": "2409 FM 423, Little Elm TX 75068",
-    "phone": "(972) 712-4222"
+    "phone": "(972) 712-4222",
+    "lat": 33.1820247,
+    "lng": -96.8872908
   },
   {
     "name": "Eagle Ranch Vision Source",
     "address": "7201 Boat Club Road, Fort Worth TX 76179",
-    "phone": "(817) 750-2233"
+    "phone": "(817) 750-2233",
+    "lat": 32.8669252,
+    "lng": -97.4267217
   },
   {
     "name": "East Parker County Library",
     "address": "201 N FM 1187, Aledo, Texas 76008",
-    "phone": "(817) 441-6545"
+    "phone": "(817) 441-6545",
+    "lat": 32.6989445,
+    "lng": -97.6036975
   },
   {
     "name": "Edward Jones",
     "address": "1640 W. Chapman Drive, No. 200, Sanger, TX 76266",
-    "phone": "(940) 458-7866"
+    "phone": "(940) 458-7866",
+    "lat": 33.366910216638,
+    "lng": -97.18278828578
   },
   {
     "name": "Euless Public Library",
     "address": "201 N Ector Dr., Euless TX 76039",
-    "phone": "(817) 685-1480"
+    "phone": "(817) 685-1480",
+    "lat": 32.838137,
+    "lng": -97.090829
   },
   {
     "name": "Eyecrafters",
     "address": "1714 Precinct Line Road, Suite 700, Hurst TX 76054",
-    "phone": "(817) 514-0004"
+    "phone": "(817) 514-0004",
+    "lat": 32.8458788,
+    "lng": -97.1860855
   },
   {
     "name": "Eyemasters (Visionworks)",
     "address": "9549 Sage Meadow Trail, Alliance Town Center, Fort Worth TX 76177",
-    "phone": "(817) 750-0383"
+    "phone": "(817) 750-0383",
+    "lat": 32.9113553,
+    "lng": -97.3145512
   },
   {
     "name": "Eyemasters (Visionworks)",
     "address": "8436 Denton Hwy. 377, Suite 210, Towne Shopping Center, Watauga TX 76148",
-    "phone": "(817) 427-8746"
+    "phone": "(817) 427-8746",
+    "lat": 32.89308373462,
+    "lng": -97.258845283156
   },
   {
     "name": "Eyemasters (Visionworks)",
     "address": "4800 South Hulen Street, Suite 1520, Hulen Mall, Fort Worth TX 76132",
-    "phone": "(817) 292-3977"
+    "phone": "(817) 292-3977",
+    "lat": 32.677764995973,
+    "lng": -97.395432082284
   },
   {
     "name": "Eyemasters (Visionworks)",
     "address": "1101 Melbourne Rd., Suite 3091, North East Mall, Hurst TX 76053",
-    "phone": "(817) 284-2717"
+    "phone": "(817) 284-2717",
+    "lat": 32.828731110199,
+    "lng": -97.197324382005
   },
   {
     "name": "Eyes Nouveau",
     "address": "3000 South Hulen Street, Suite 104, Fort Worth TX 76109",
-    "phone": "(817) 738-2027"
+    "phone": "(817) 738-2027",
+    "lat": 32.7051248,
+    "lng": -97.3908887
   },
   {
     "name": "Eyes Nouveau",
     "address": "1247 Main Street, Southlake TX 76092",
-    "phone": "(817) 481-2070"
+    "phone": "(817) 481-2070",
+    "lat": 32.9425095,
+    "lng": -97.1327853
   },
   {
     "name": "Eyes On Rufe Snow - Dr. Paul Rea OD",
     "address": "5755 Rufe Snow Drive, Suite 100, North Richland Hills TX 76180",
-    "phone": "(817) 656-1111"
+    "phone": "(817) 656-1111",
+    "lat": 32.8520638,
+    "lng": -97.238726
   },
   {
     "name": "Eyetex Opticians",
     "address": "556 W Bedford Euless Rd, Suite B, Hurst TX 76053",
-    "phone": "(817) 268-2292"
+    "phone": "(817) 268-2292",
+    "lat": 32.834047,
+    "lng": -97.1781633
   },
   {
     "name": "Eyeworks",
     "address": "3105 Southlake Blvd, Southlake TX 76092",
-    "phone": "(817) 310-3989"
+    "phone": "(817) 310-3989",
+    "lat": 32.9382081,
+    "lng": -97.1046505
   },
   {
     "name": "Faith Lutheran Church",
     "address": "6000 Morriss Rd., Flower Mound TX 75028",
-    "phone": "(972) 539-1031"
+    "phone": "(972) 539-1031",
+    "lat": 33.0182646,
+    "lng": -97.0541373
   },
   {
     "name": "Faith Lutheran Church",
     "address": "6000 Morriss Rd., Flower Mound, TX 75028",
-    "phone": "(972) 539-1031"
+    "phone": "(972) 539-1031",
+    "lat": 33.0182646,
+    "lng": -97.0541373
   },
   {
     "name": "First Baptist Church",
     "address": "708 S. 5th Street, Sanger, TX 76266",
-    "phone": "(940) 458-7416"
+    "phone": "(940) 458-7416",
+    "lat": 33.354402,
+    "lng": -97.1730341
   },
   {
     "name": "First Baptist Church",
     "address": "1251 Valley Ridge Blvd., Lewisville, TX 75077",
-    "phone": "(972) 436-5502"
+    "phone": "(972) 436-5502",
+    "lat": 33.0580647,
+    "lng": -97.0258911
   },
   {
     "name": "First Baptist Church",
     "address": "1251 Valley Ridge Blvd., Lewisville TX 75077",
-    "phone": "(972) 436-5502"
+    "phone": "(972) 436-5502",
+    "lat": 33.0580647,
+    "lng": -97.0258911
   },
   {
     "name": "First Eye Care",
     "address": "751 Mid-Cities Blvd., Hurst TX 76054",
-    "phone": "(817) 656-2020"
+    "phone": "(817) 656-2020",
+    "lat": 32.8619017,
+    "lng": -97.1847638
   },
   {
     "name": "First Eye Care",
     "address": "2400 Airport Freeway, Suite 140, Bedford TX 76022",
-    "phone": "(817) 284-2964"
+    "phone": "(817) 284-2964",
+    "lat": 32.836461,
+    "lng": -97.1303814
   },
   {
     "name": "First Eye Care - MyEyeDr.",
     "address": "2301 Eldorado Pkwy., McKinney, TX 75070",
-    "phone": "(972) 540-2015"
+    "phone": "(972) 540-2015",
+    "lat": 33.1709761,
+    "lng": -96.6466834
   },
   {
     "name": "First Financial Bank - Aledo",
     "address": "505 Fm-1187 N, Aledo TX 76008",
-    "phone": "(817) 341-5200"
+    "phone": "(817) 341-5200",
+    "lat": 32.7023223,
+    "lng": -97.6035718
   },
   {
     "name": "First Financial Bank-Glen Rose",
@@ -402,197 +554,275 @@
   {
     "name": "First Methodist Church",
     "address": "104 S. Miller, Decatur, TX  76234",
-    "phone": "(940) 627-3362"
+    "phone": "(940) 627-3362",
+    "lat": 33.2339161,
+    "lng": -97.5844929
   },
   {
     "name": "First National Bank",
     "address": "899 NE Alsbury Blvd., Burleson, TX 76028",
-    "phone": "(817) 295-0461"
+    "phone": "(817) 295-0461",
+    "lat": 32.5638186,
+    "lng": -97.3205679
   },
   {
     "name": "Fleming Vision Care",
     "address": "1700 Rufe Snow Drive, Keller, TX  76248",
-    "phone": "(817) 514-1000"
+    "phone": "(817) 514-1000",
+    "lat": 32.903996,
+    "lng": -97.236473
   },
   {
     "name": "Flower Mound Eyecare",
     "address": "3851 Long Prairie, No. 100, Flower Mound, TX 75028",
-    "phone": "(972) 724-3030"
+    "phone": "(972) 724-3030",
+    "lat": 33.037381424404,
+    "lng": -97.069692199315
   },
   {
     "name": "Flower Mound Eyecare",
     "address": "3851 Long Prairie Rd., Suite 100, Flower Mound TX 75028",
-    "phone": "(972) 724-3030"
+    "phone": "(972) 724-3030",
+    "lat": 33.0377037,
+    "lng": -97.0701794
   },
   {
     "name": "Flower Mound Pharmacy",
     "address": "1001 Cross Timbers Rd., Suite 1170, Flower Mound TX 75028",
-    "phone": "(972) 355-4614"
+    "phone": "(972) 355-4614",
+    "lat": 33.0413838,
+    "lng": -97.0418668
   },
   {
     "name": "Flower Mound Senior Center",
     "address": "2701 W Windsor Dr., Flower Mound TX 75028",
-    "phone": "(972) 874-6110"
+    "phone": "(972) 874-6110",
+    "lat": 33.047168,
+    "lng": -97.0722176
   },
   {
     "name": "Flower Mound Senior Center",
     "address": "2701 W Windsor Dr., Flower Mound, TX 75028",
-    "phone": "(972) 874-7275"
+    "phone": "(972) 874-7275",
+    "lat": 33.047168,
+    "lng": -97.0722176
   },
   {
     "name": "Frost Bank Colleyville",
     "address": "4718 Colleyville Blvd., Suite 100, Colleyville, TX 76034",
-    "phone": "(817) 420-5200"
+    "phone": "(817) 420-5200",
+    "lat": 32.8762889,
+    "lng": -97.1609661
   },
   {
     "name": "Glen Rose Medical Center",
     "address": "1021 Holden St., Glen Rose TX 76043",
-    "phone": "(254) 897-2215"
+    "phone": "(254) 897-2215",
+    "lat": 32.2422177,
+    "lng": -97.7462609
   },
   {
     "name": "Grandview Library",
     "address": "112 3rd St., Grandview TX 76050",
-    "phone": "(817) 866-3965"
+    "phone": "(817) 866-3965",
+    "lat": 32.2712993,
+    "lng": -97.1792733
   },
   {
     "name": "Great Eye Dr. of Burleson",
     "address": "209 Market St., Burleson, TX 76028",
-    "phone": "(817) 295-0186"
+    "phone": "(817) 295-0186",
+    "lat": 32.5375952,
+    "lng": -97.3342517
   },
   {
     "name": "Hair Studio",
     "address": "1278 Justin Rd., Lewisville TX 75077",
-    "phone": "(972) 317-0011"
+    "phone": "(972) 317-0011",
+    "lat": 33.0712309,
+    "lng": -97.0263416
   },
   {
     "name": "Harvest House",
     "address": "349 NW Renfro St., Burleson, TX 76028",
-    "phone": "(817) 295-6252"
+    "phone": "(817) 295-6252",
+    "lat": 32.5467219,
+    "lng": -97.3294234
   },
   {
     "name": "Health Markets",
     "address": "9151 Boulevard 26, Suite B-1B, North Richland Hills TX 76180",
-    "phone": "(817) 255-3100"
+    "phone": "(817) 255-3100",
+    "lat": 32.8330336,
+    "lng": -97.2157254
   },
   {
     "name": "Heritage Eye Center",
     "address": "1501 Redbud, McKinney, TX 75069",
-    "phone": "(972) 548-0771"
+    "phone": "(972) 548-0771",
+    "lat": 33.212176,
+    "lng": -96.63493
   },
   {
     "name": "Highland Village Town Hall (Human Resources)",
     "address": "1000 Highland Village Rd., Highland Village, TX 75077",
-    "phone": "(972) 317-5558"
+    "phone": "(972) 317-5558",
+    "lat": 33.084855,
+    "lng": -97.0527107
   },
   {
     "name": "Hurst Public Library",
     "address": "901 Precinct Line Rd., Hurst, TX 76053",
-    "phone": "(817) 788-7300"
+    "phone": "(817) 788-7300",
+    "lat": 32.8262008,
+    "lng": -97.1871548
   },
   {
     "name": "Iconic Eye Care",
     "address": "2105 Harwood Rd., Suite 126, Bedford, TX 76021",
-    "phone": "(817) 678-5543"
+    "phone": "(817) 678-5543",
+    "lat": 32.8522054,
+    "lng": -97.1342241
   },
   {
     "name": "Independent Financial",
     "address": "201 West Ellison St., Burleson, TX 76028",
-    "phone": "(817) 295-1186"
+    "phone": "(817) 295-1186",
+    "lat": 32.541911,
+    "lng": -97.323185
   },
   {
     "name": "InterBank",
     "address": "200 N FM 1187, Aledo, Texas 76008",
-    "phone": "(817) 441-1717"
+    "phone": "(817) 441-1717",
+    "lat": 32.698459,
+    "lng": -97.603267
   },
   {
     "name": "J C Penney - Northeast Mall",
     "address": "1101 Melbourne Rd., Suite 5000, Hurst TX 76053",
-    "phone": "(817) 284-4761"
+    "phone": "(817) 284-4761",
+    "lat": 32.83031,
+    "lng": -97.2010559
   },
   {
     "name": "Jets Pizza",
     "address": "2001 Cross Timbers Rd., Flower Mound, TX 75028",
-    "phone": "(972) 221-5387"
+    "phone": "(972) 221-5387",
+    "lat": 33.034392,
+    "lng": -97.057371
   },
   {
     "name": "Johnson County Tax Office - Cleburne Annex",
     "address": "2 N Mill St, Cleburne TX 76033",
-    "phone": "(817) 558-0122"
+    "phone": "(817) 558-0122",
+    "lat": 32.346749,
+    "lng": -97.387274
   },
   {
     "name": "Keller Eye Associates",
     "address": "1004 Keller Pkwy, Suite 102, Keller, TX  76248",
-    "phone": "(817) 431-3937"
+    "phone": "(817) 431-3937",
+    "lat": 32.9333527,
+    "lng": -97.2274136
   },
   {
     "name": "Keller Eye Care",
     "address": "601 S. Main Street, Suite 601, Keller, TX  76248",
-    "phone": "(817) 379-6200"
+    "phone": "(817) 379-6200",
+    "lat": 32.928867,
+    "lng": -97.253814
   },
   {
     "name": "Kroger Marketplace",
     "address": "2671 Little Elm Pkwy, Little Elm TX 75068",
-    "phone": "(469) 888-5518"
+    "phone": "(469) 888-5518",
+    "lat": 33.1706192,
+    "lng": -96.8913741
   },
   {
     "name": "Lakeside Eye Care",
     "address": "1025 Long Prairie Rd., Suite 100, Flower Mound TX 75022",
-    "phone": "(972) 874-3926"
+    "phone": "(972) 874-3926",
+    "lat": 32.9981923,
+    "lng": -97.0663514
   },
   {
     "name": "Landmark Grill",
     "address": "1297 Justin Rd., Suite 310, Lewisville TX 75077",
-    "phone": "(972) 317-4867"
+    "phone": "(972) 317-4867",
+    "lat": 33.0712357,
+    "lng": -97.026949
   },
   {
     "name": "LensCrafters",
     "address": "2401 S Stemmons Fwy., Suite 2000, Lewisville TX 75067",
-    "phone": "(972) 315-0111"
+    "phone": "(972) 315-0111",
+    "lat": 33.0014211,
+    "lng": -96.9706848
   },
   {
     "name": "Lenscrafters",
     "address": "2401 S Stemmons Fwy., Suite 2000, Lewisville, TX 75067",
-    "phone": "(972) 315-0111"
+    "phone": "(972) 315-0111",
+    "lat": 33.0014211,
+    "lng": -96.9706848
   },
   {
     "name": "Lewisville Library",
     "address": "1197 W. Main, Lewisville, TX 75067",
-    "phone": "(972) 219-3570"
+    "phone": "(972) 219-3570",
+    "lat": 33.0430705,
+    "lng": -97.0232052
   },
   {
     "name": "Lewisville Public Library",
     "address": "1197 W Main St., Lewisville TX 75067",
-    "phone": "(972) 219-3570"
+    "phone": "(972) 219-3570",
+    "lat": 33.0430705,
+    "lng": -97.0232052
   },
   {
     "name": "Lewisville Senior Center",
     "address": "1950 S Valley Pkwy., Lewisville, TX 75067",
-    "phone": "(972) 219-5050"
+    "phone": "(972) 219-5050",
+    "lat": 33.0197602,
+    "lng": -97.0203716
   },
   {
     "name": "Lewisville Walmart",
     "address": "801 W Main St., Lewisville, TX 75067",
-    "phone": "(972) 436-7932"
+    "phone": "(972) 436-7932",
+    "lat": 33.0472099,
+    "lng": -97.0140137
   },
   {
     "name": "Liberty Hotel",
     "address": "205 S. Caddo St., Cleburne, TX 76031",
-    "phone": "(817) 556-3700"
+    "phone": "(817) 556-3700",
+    "lat": 32.3460649,
+    "lng": -97.3853346
   },
   {
     "name": "Little Elm Eye Care",
     "address": "1200 East Eldorado Pkwy, Suite 100, Little Elm TX 75068",
-    "phone": "(972) 292-0900"
+    "phone": "(972) 292-0900",
+    "lat": 33.168772,
+    "lng": -96.918587
   },
   {
     "name": "Little Elm Lakefront Senior Center",
     "address": "100 W Eldorado Pkwy., Little Elm 75068",
-    "phone": "(972) 731-1464"
+    "phone": "(972) 731-1464",
+    "lat": 33.1579713,
+    "lng": -96.9399173
   },
   {
     "name": "Little Elm Pharmacy",
     "address": "800 W Eldorado Pkwy, Suite 100, Little Elm TX 75068",
-    "phone": "(972) 294-2877"
+    "phone": "(972) 294-2877",
+    "lat": 33.1552555,
+    "lng": -96.9435426
   },
   {
     "name": "M A Shurtz Optometrist",
@@ -602,172 +832,240 @@
   {
     "name": "Market Street",
     "address": "3800 Long Prairie Rd., Flower Mound, TX 75028",
-    "phone": "(972) 355-4007"
+    "phone": "(972) 355-4007",
+    "lat": 33.0373153,
+    "lng": -97.0679055
   },
   {
     "name": "Market Street Pharmacy",
     "address": "5605 Colleyville Blvd., Colleyville, TX 76034",
-    "phone": "(817) 577-5030"
+    "phone": "(817) 577-5030",
+    "lat": 32.8892842,
+    "lng": -97.1468567
   },
   {
     "name": "Marsh Eye Center",
     "address": "670 E. Southlake Blvd, Southlake TX 76092",
-    "phone": "(817) 329-6466"
+    "phone": "(817) 329-6466",
+    "lat": 32.9411508,
+    "lng": -97.1421194
   },
   {
     "name": "Marvel Eye Center",
     "address": "6273 Granbury Road, Fort Worth TX 76133",
-    "phone": "(817) 346-7333"
+    "phone": "(817) 346-7333",
+    "lat": 32.6581311,
+    "lng": -97.4014968
   },
   {
     "name": "Marvel Eye Center",
     "address": "302 Grapevine Hwy, Hurst TX 76054",
-    "phone": "(817) 427-2600"
+    "phone": "(817) 427-2600",
+    "lat": 32.8519467,
+    "lng": -97.190731
   },
   {
     "name": "McKinney Eyeworks",
     "address": "7668 Eldorado Pkwy., No. 100",
-    "phone": "(972) 562-7015"
+    "phone": "(972) 562-7015",
+    "lat": 33.1743403,
+    "lng": -96.7608781
   },
   {
     "name": "Monarch Dental",
     "address": "2700 E Eldorado Pkwy, Suite 106, Little Elm TX 75068",
-    "phone": "(972) 987-4944"
+    "phone": "(972) 987-4944",
+    "lat": 33.1758928,
+    "lng": -96.8888472
   },
   {
     "name": "Muenster Memorial Hospital",
     "address": "605 N Maple Street, Muenster TX 76252",
-    "phone": "(940) 759-2271"
+    "phone": "(940) 759-2271",
+    "lat": 33.654714378792,
+    "lng": -97.379908105734
   },
   {
     "name": "MyEyeDr.",
     "address": "8329 Whitley Rd., Watauga, TX  76148",
-    "phone": "(817) 431-2020"
+    "phone": "(817) 431-2020",
+    "lat": 32.886881,
+    "lng": -97.254907
   },
   {
     "name": "MyEyeDr.",
     "address": "12457 Timberland Blvd., Suite 201, Keller, TX  76248",
-    "phone": "(817) 741-4177"
+    "phone": "(817) 741-4177",
+    "lat": 32.9564494,
+    "lng": -97.2543318
   },
   {
     "name": "MyEyeDr.",
     "address": "9816 N. Beach Street, Fort Worth, TX 76244",
-    "phone": "(817) 741-2020"
+    "phone": "(817) 741-2020",
+    "lat": 32.9167308,
+    "lng": -97.2895844
   },
   {
     "name": "MyEyeDr.",
     "address": "5832 Boat Club Dr., Fort Worth, Texas 76135",
-    "phone": "(817) 237-7153"
+    "phone": "(817) 237-7153",
+    "lat": 32.840134440408,
+    "lng": -97.425236986204
   },
   {
     "name": "MyEyeDr. / Dr. Brenda Floyd",
     "address": "2410 S Stemmons Fwy., Suite E, Lewisville TX 75067",
-    "phone": "(972) 315-5202"
+    "phone": "(972) 315-5202",
+    "lat": 33.0062241,
+    "lng": -96.9721696
   },
   {
     "name": "NBT Financial",
     "address": "400 East Renfro St., Burleson, TX 76028",
-    "phone": "(817) 426-6268"
+    "phone": "(817) 426-6268",
+    "lat": 32.5435145,
+    "lng": -97.3127611
   },
   {
     "name": "Natural Grocers",
     "address": "110 W. University Dr., Denton TX 76201",
-    "phone": "(940) 387-1100"
+    "phone": "(940) 387-1100",
+    "lat": 33.2306909,
+    "lng": -97.1336446
   },
   {
     "name": "New Hope Wellness Center",
     "address": "1650 W Chapman Drive, Sanger, TX 76266",
-    "phone": "(940) 220-9288"
+    "phone": "(940) 220-9288",
+    "lat": 33.3668878,
+    "lng": -97.1829568
   },
   {
     "name": "North Dallas Eye Associates",
     "address": "1850 Lakepointe Dr., Suite 200, Lewisville TX 75057",
-    "phone": "(972) 436-5040"
+    "phone": "(972) 436-5040",
+    "lat": 33.0174856,
+    "lng": -96.9792641
   },
   {
     "name": "North Texas Eye Care",
     "address": "101 River Oaks, Suite 100, Southlake TX 76092",
-    "phone": "(817) 562-2101"
+    "phone": "(817) 562-2101",
+    "lat": 32.9360531,
+    "lng": -97.1893733
   },
   {
     "name": "North Texas Family Dental",
     "address": "617 North 10th Street, Suite 204, Sanger, TX 76266",
-    "phone": "(940) 458-9000"
+    "phone": "(940) 458-9000",
+    "lat": 33.3656082,
+    "lng": -97.1780618
   },
   {
     "name": "North Texas Vision Center / Richard Jolly, M.D.",
     "address": "818 US Hwy 82, Gainesville, TX 76240",
-    "phone": "(940) 665-9111"
+    "phone": "(940) 665-9111",
+    "lat": 33.640916,
+    "lng": -97.1384386
   },
   {
     "name": "Ogletree Eye Care",
     "address": "3551 Justin Rd., Suite 150, Flower Mound TX 75028",
-    "phone": "(972) 355-5152"
+    "phone": "(972) 355-5152",
+    "lat": 33.0714499,
+    "lng": -97.0845719
   },
   {
     "name": "Ogletree Eye Center",
     "address": "3551 Justin Rd., Ste 150, Flower Mound, Texas, 75028",
-    "phone": "(972) 355-5152"
+    "phone": "(972) 355-5152",
+    "lat": 33.0714499,
+    "lng": -97.0845719
   },
   {
     "name": "Optical Infinity",
     "address": "860 Hebron Pkwy., Suite 102, Lewisville TX 75057",
-    "phone": "(972) 316-3937"
+    "phone": "(972) 316-3937",
+    "lat": 33.0123535,
+    "lng": -96.9637182
   },
   {
     "name": "Optical Infinity (Dr. Battani)",
     "address": "860 Hebron Pkwy., No. 103, Lewisville, TX 75057",
-    "phone": "(972) 316-3937"
+    "phone": "(972) 316-3937",
+    "lat": 33.012718283409,
+    "lng": -96.96291339005
   },
   {
     "name": "Optical Mart",
     "address": "8222 Bedford-Euless Road, North Richland Hills TX 76180",
-    "phone": "(817) 427-1438"
+    "phone": "(817) 427-1438",
+    "lat": 32.8336826,
+    "lng": -97.2047202
   },
   {
     "name": "Ousley Vision Center",
     "address": "2430 Justin Rd., Highland Village, TX 75077",
-    "phone": "(972) 317-3937"
+    "phone": "(972) 317-3937",
+    "lat": 33.0735444,
+    "lng": -97.0650852
   },
   {
     "name": "Ousley Vision Center",
     "address": "2430 Justin Rd; FM 407, Highland Village TX 75077",
-    "phone": "(972) 317-3937"
+    "phone": "(972) 317-3937",
+    "lat": 33.073511367478,
+    "lng": -97.065057974508
   },
   {
     "name": "Pearl Vision",
     "address": "2403 S Stemmons, Ste 113, Lewisville, TX, 75067",
-    "phone": "(972) 316-1113"
+    "phone": "(972) 316-1113",
+    "lat": 33.0057269,
+    "lng": -97.0193546
   },
   {
     "name": "Pearle Vision Center",
     "address": "5860 No.Tarrant Parkway, Suite 108, Fort Worth TX 76137",
-    "phone": "(817) 656-0440"
+    "phone": "(817) 656-0440",
+    "lat": 32.89472676176,
+    "lng": -97.259913359793
   },
   {
     "name": "PediPlace",
     "address": "502 S Old Orchard Ln., Suite 126, Lewisville TX 75067",
-    "phone": "(972) 436-7962"
+    "phone": "(972) 436-7962",
+    "lat": 33.0402355,
+    "lng": -97.0278189
   },
   {
     "name": "Pinnacle Bank",
     "address": "651 NE Alsbury Blvd., Burleson, TX 76028",
-    "phone": "(817) 426-0168"
+    "phone": "(817) 426-0168",
+    "lat": 32.5617193,
+    "lng": -97.3274652
   },
   {
     "name": "Pinnacle Bank",
     "address": "1403 W Henderson St, Cleburne TX 76033",
-    "phone": "(817) 641-1500"
+    "phone": "(817) 641-1500",
+    "lat": 32.3407757,
+    "lng": -97.4065532
   },
   {
     "name": "Pinnacle Bank",
     "address": "226 W Katherine P Raines Rd, Cleburne TX 76033",
-    "phone": "(817) 202-7070"
+    "phone": "(817) 202-7070",
+    "lat": 32.3828968,
+    "lng": -97.3968423
   },
   {
     "name": "Pinnacle Eye Associates - MyEyeDr.",
     "address": "1650 N. Lake Forest Dr., No. 100, McKinney, TX 75071",
-    "phone": "(972) 369-1411"
+    "phone": "(972) 369-1411",
+    "lat": 33.213604632642,
+    "lng": -96.679898569452
   },
   {
     "name": "Prosperity Bank",
@@ -777,67 +1075,93 @@
   {
     "name": "Real Performance Fitness and Training",
     "address": "1014 N Nolan River Rd, Suite B, Cleburne TX 76033",
-    "phone": "(817) 556-2484"
+    "phone": "(817) 556-2484",
+    "lat": 32.3550533,
+    "lng": -97.4261993
   },
   {
     "name": "Red Wing Shoes",
     "address": "100 SW Wilshire, Burleson, TX 76028",
-    "phone": "(817) 426-0030"
+    "phone": "(817) 426-0030",
+    "lat": 32.5400345,
+    "lng": -97.3318057
   },
   {
     "name": "Roanoke Fire Department",
     "address": "201 Fairway Drive, Roanoke TX 76262",
-    "phone": "(817) 491-2301"
+    "phone": "(817) 491-2301",
+    "lat": 33.0052166,
+    "lng": -97.2331021
   },
   {
     "name": "Rock 101 Patio Grill",
     "address": "2833 Eldorado Pkwy,, Frisco TX 75033",
-    "phone": "(214) 618-1616"
+    "phone": "(214) 618-1616",
+    "lat": 33.1780581,
+    "lng": -96.8646544
   },
   {
     "name": "S & J Pharmacy",
     "address": "801 W Chapman Dr., Suite 100, Sanger, TX 76266",
-    "phone": "(940) 458-4448"
+    "phone": "(940) 458-4448",
+    "lat": 33.3668694,
+    "lng": -97.1772382
   },
   {
     "name": "Salvation Army",
     "address": "111 S. Anglin St., Cleburne, TX 76031",
-    "phone": "(817) 558-1296"
+    "phone": "(817) 558-1296",
+    "lat": 32.3466393,
+    "lng": -97.3844471
   },
   {
     "name": "Sam'S Club",
     "address": "751 W. Main St., Lewisville, TX 75067",
-    "phone": "(972) 219-7009"
+    "phone": "(972) 219-7009",
+    "lat": 33.0462751,
+    "lng": -97.0111806
   },
   {
     "name": "Sam's Club Optical Center",
     "address": "751 W Main St., Lewisville TX 75067",
-    "phone": "(972) 219-7009"
+    "phone": "(972) 219-7009",
+    "lat": 33.0462751,
+    "lng": -97.0111806
   },
   {
     "name": "Sam's Club Optical Center",
     "address": "201 Golden Triangle Blvd., Keller, TX  76248",
-    "phone": "(817) 898-6174"
+    "phone": "(817) 898-6174",
+    "lat": 32.9331707,
+    "lng": -97.2558662
   },
   {
     "name": "Sanger Bank",
     "address": "501 N. Stemmons St., Sanger, TX 76266",
-    "phone": "(940) 458-4600"
+    "phone": "(940) 458-4600",
+    "lat": 33.364224,
+    "lng": -97.1814727
   },
   {
     "name": "Sanger Crisis Center",
     "address": "100 North 5th Street, Sanger, TX 76266",
-    "phone": "(940) 312-3772"
+    "phone": "(940) 312-3772",
+    "lat": 33.360726,
+    "lng": -97.173608
   },
   {
     "name": "Sanger Education Foundation",
     "address": "400 Bolivar Street, Suite 102, Sanger, TX 76266",
-    "phone": "(940) 600-8890"
+    "phone": "(940) 600-8890",
+    "lat": 33.362193,
+    "lng": -97.172303
   },
   {
     "name": "Sanger Eye Care",
     "address": "410 Bolivar St., Sanger, TX 76266",
-    "phone": "(940) 458-3937"
+    "phone": "(940) 458-3937",
+    "lat": 33.362191,
+    "lng": -97.1723521
   },
   {
     "name": "Sanger Lions Club",
@@ -847,12 +1171,16 @@
   {
     "name": "Sharp Eyes (Dr Floyd)",
     "address": "2410 S Stemmons, Ste E, Lewisville, TX 75067",
-    "phone": "(972) 315-5202"
+    "phone": "(972) 315-5202",
+    "lat": 33.0053392,
+    "lng": -97.0193818
   },
   {
     "name": "Simply Eyes",
     "address": "5615 Colleyville Blvd., Suite 460, Colleyville TX 76034",
-    "phone": "(817) 485-3300"
+    "phone": "(817) 485-3300",
+    "lat": 32.8910742,
+    "lng": -97.1479148
   },
   {
     "name": "Smile McKinney",
@@ -862,42 +1190,58 @@
   {
     "name": "Somervell Citizens Center",
     "address": "209 SW Barnard, Glen Rose TX 76043",
-    "phone": "(254) 897-2139"
+    "phone": "(254) 897-2139",
+    "lat": 32.2266479,
+    "lng": -97.7636019
   },
   {
     "name": "Sonny Donuts",
     "address": "2405 FM 423, Little Elm TX 75068",
-    "phone": "(214) 387-6949"
+    "phone": "(214) 387-6949",
+    "lat": 33.1820247,
+    "lng": -96.8872908
   },
   {
     "name": "Southlake Family Eye Care",
     "address": "510 E. Southlake Blvd., Suite 100, Southlake TX 76092",
-    "phone": "(817) 481-1665"
+    "phone": "(817) 481-1665",
+    "lat": 32.9411361,
+    "lng": -97.1436708
   },
   {
     "name": "Southwest Vision Center",
     "address": "7728 Mid Cities Blvd, North Richland Hills TX 76180",
-    "phone": "(817) 281-3386"
+    "phone": "(817) 281-3386",
+    "lat": 32.8602447,
+    "lng": -97.2271291
   },
   {
     "name": "Speks Optical",
     "address": "1850 Lakepointe Dr., Suite 200, Lewisville TX 75057",
-    "phone": "(972) 906-1999"
+    "phone": "(972) 906-1999",
+    "lat": 33.0174856,
+    "lng": -96.9792641
   },
   {
     "name": "Squaw Valley Golf Course",
     "address": "2439 E. Hwy 67, Glen Rose TX 76043",
-    "phone": "(254) 897-7956"
+    "phone": "(254) 897-7956",
+    "lat": 32.217503466698,
+    "lng": -97.787686096034
   },
   {
     "name": "St. Michael's Catholic Church",
     "address": "3713 E Harwood Rd., Bedford TX 76021",
-    "phone": "(817) 283-8746"
+    "phone": "(817) 283-8746",
+    "lat": 32.8536144,
+    "lng": -97.1563709
   },
   {
     "name": "Stanford House Senior Activity Center",
     "address": "401 W Garnett St, Gainesville TX 76240",
-    "phone": "(940) 668-1452"
+    "phone": "(940) 668-1452",
+    "lat": 33.620305,
+    "lng": -97.148113
   },
   {
     "name": "State Farm Insurance (Roxanne Haug)",
@@ -907,122 +1251,170 @@
   {
     "name": "Stone's Defense",
     "address": "904 S. 5th Street, Sanger, TX 76266",
-    "phone": "(940) 222-5984"
+    "phone": "(940) 222-5984",
+    "lat": 33.3553021,
+    "lng": -97.1738182
   },
   {
     "name": "Super Target Optical",
     "address": "1400 Precinct Line Road, Hurst TX 76053",
-    "phone": "(817) 282-8925"
+    "phone": "(817) 282-8925",
+    "lat": 32.8366448,
+    "lng": -97.1833149
   },
   {
     "name": "Target Optical",
     "address": "1401 W Glade Rd,, Euless TX 76039",
-    "phone": "(817) 358-8651"
+    "phone": "(817) 358-8651",
+    "lat": 32.8804275,
+    "lng": -97.105038
   },
   {
     "name": "Texas Eye & Laser Center",
     "address": "1872 Norwood Dr., Suite 200, Hurst TX 76054",
-    "phone": "(817) 768-6620"
+    "phone": "(817) 768-6620",
+    "lat": 32.8494485,
+    "lng": -97.169451
   },
   {
     "name": "Texas State Optical",
     "address": "5611 Colleyville Blvd, Colleyville, TX 76034 ",
-    "phone": "(214) 256-1273"
+    "phone": "(214) 256-1273",
+    "lat": 32.8905008,
+    "lng": -97.1464013
   },
   {
     "name": "Texas State Optical",
     "address": "1607 W Henderson St, Cleburne TX 76033",
-    "phone": "(817) 241-2914"
+    "phone": "(817) 241-2914",
+    "lat": 32.3380043,
+    "lng": -97.4112458
   },
   {
     "name": "Texas State Optical",
     "address": "1124 W Main St., Lewisville TX 75067",
-    "phone": "(972) 203-6582"
+    "phone": "(972) 203-6582",
+    "lat": 33.0422456,
+    "lng": -97.0209905
   },
   {
     "name": "Texas State Optical",
     "address": "1124 W Main, Lewisville, TX 75067",
-    "phone": "(972) 221-2561"
+    "phone": "(972) 221-2561",
+    "lat": 33.0419382,
+    "lng": -97.0215914
   },
   {
     "name": "Texas Vision Center - Northeast Mall",
     "address": "5062 NE Mall Blvd, Hurst TX 76053",
-    "phone": "(817) 595-2982"
+    "phone": "(817) 595-2982",
+    "lat": 32.8287458,
+    "lng": -97.2039652
   },
   {
     "name": "The Colony Vision Center",
     "address": "4709 TX-121, Suite 122, The Colony TX 75056",
-    "phone": "(972) 625-2020"
+    "phone": "(972) 625-2020",
+    "lat": 33.0666486,
+    "lng": -96.8885063
   },
   {
     "name": "The Salon Escape",
     "address": "711 N 5th Street, Sanger, TX 76266",
-    "phone": "(940) 458-2711"
+    "phone": "(940) 458-2711",
+    "lat": 33.3655727,
+    "lng": -97.1740878
   },
   {
     "name": "Today's Vision",
     "address": "945 Melbourne Road, Hurst TX 76053",
-    "phone": "(817) 589-1100"
+    "phone": "(817) 589-1100",
+    "lat": 32.8258212,
+    "lng": -97.1985949
   },
   {
     "name": "Total Eye Care",
     "address": "6114 Colleyville Blvd, Colleyville TX 76034",
-    "phone": "(817) 416-0333"
+    "phone": "(817) 416-0333",
+    "lat": 32.8977361,
+    "lng": -97.1443983
   },
   {
     "name": "Trinity Vision",
     "address": "1629 Precinct Line Rd., Hurst TX 76054",
-    "phone": "(817) 656-7222"
+    "phone": "(817) 656-7222",
+    "lat": 32.8458788,
+    "lng": -97.1860855
   },
   {
     "name": "US Social Security Administration",
     "address": "1711 W Henderson St, Cleburne TX 76033",
-    "phone": "(800) 772-1213"
+    "phone": "(800) 772-1213",
+    "lat": 32.3337634,
+    "lng": -97.4244181
   },
   {
     "name": "United Cooperative Services",
     "address": "3309 N. Main, Cleburne TX 76033",
-    "phone": "(817) 556-4000"
+    "phone": "(817) 556-4000",
+    "lat": 32.410914,
+    "lng": -97.383646
   },
   {
     "name": "United Presbyterian Church",
     "address": "1510 W Westhill Dr, Cleburne TX 76033",
-    "phone": "(817) 641-6646"
+    "phone": "(817) 641-6646",
+    "lat": 32.3286143,
+    "lng": -97.4175342
   },
   {
     "name": "Village Vision Center",
     "address": "2300 Highland Rd., No. 200, Highland Village, TX 75077",
-    "phone": "(972) 317-3888"
+    "phone": "(972) 317-3888",
+    "lat": 33.072490890965,
+    "lng": -97.057671538774
   },
   {
     "name": "Vision Central",
     "address": "2250 Airport Freeway, Suite 310, Bedford TX 76022",
-    "phone": ""
+    "phone": "",
+    "lat": 32.836457,
+    "lng": -97.1322557
   },
   {
     "name": "Vision City Arlington",
     "address": "5520 S. Cooper St., Suite 110, Arlington, TX 76005",
-    "phone": "(817) 467-2020"
+    "phone": "(817) 467-2020",
+    "lat": 32.6570818,
+    "lng": -97.1347013
   },
   {
     "name": "Vision City Watauga",
     "address": "7604 Denton Highway, Suite 208, Watauga TX 76148",
-    "phone": "(817) 503-7997"
+    "phone": "(817) 503-7997",
+    "lat": 32.8826034,
+    "lng": -97.260013
   },
   {
     "name": "Vision Plaza (Dr. Andre Le)",
     "address": "312 East Renfro, No. 107, Burleson, TX 76028",
-    "phone": "(817) 295-9696"
+    "phone": "(817) 295-9696",
+    "lat": 32.543433408286,
+    "lng": -97.315735824074
   },
   {
     "name": "Vision Source",
     "address": "856 TX 114, Suite 100, Roanoke TX 76262",
-    "phone": "(682) 237-2103"
+    "phone": "(682) 237-2103",
+    "lat": 33.0104119,
+    "lng": -97.2343029
   },
   {
     "name": "Vision Source Planet Eyewear",
     "address": "500 Flower Mound Rd., No. 108, Flower Mound, TX 75028",
-    "phone": "(972) 539-6868"
+    "phone": "(972) 539-6868",
+    "lat": 33.009974220821,
+    "lng": -97.034255461822
   },
   {
     "name": "Vision Works",
@@ -1032,46 +1424,64 @@
   {
     "name": "Visionworks South Towne Crossing",
     "address": "130 NW John Jones, No. 216, Burleson, TX 76028",
-    "phone": "(817) 295-4785"
+    "phone": "(817) 295-4785",
+    "lat": 32.521907413913,
+    "lng": -97.349527459069
   },
   {
     "name": "Vista Eye Associates",
     "address": "12584 N. Beach Street, Suite 122, Keller, TX 76244",
-    "phone": "(817) 431-4100"
+    "phone": "(817) 431-4100",
+    "lat": 32.9553276,
+    "lng": -97.2791701
   },
   {
     "name": "Walmart",
     "address": "800 US 287, Decatur, TX  76234",
-    "phone": "(940) 627-5546"
+    "phone": "(940) 627-5546",
+    "lat": 33.2291931,
+    "lng": -97.5788525
   },
   {
     "name": "Walmart Burleson",
     "address": "951 SW Wilshire Blvd., Burleson, TX 76028",
-    "phone": "(817) 572-9574"
+    "phone": "(817) 572-9574",
+    "lat": 32.5277428,
+    "lng": -97.3377838
   },
   {
     "name": "Walmart Crowley",
     "address": "1221 FM 1187, Crowley, TX 76036 ",
-    "phone": "(682) 233-7834"
+    "phone": "(682) 233-7834",
+    "lat": 32.5770382,
+    "lng": -97.3389968
   },
   {
     "name": "Wedgwood Optical",
     "address": "5709 Westcreek Drive, Fort Worth TX 76133",
-    "phone": "(817) 292-1622"
+    "phone": "(817) 292-1622",
+    "lat": 32.6626726,
+    "lng": -97.3617922
   },
   {
     "name": "Wedgwood Optometry Associates",
     "address": "6404 McCart Avenue, Fort Worth TX 76133",
-    "phone": "(817) 349-7499"
+    "phone": "(817) 349-7499",
+    "lat": 32.651641,
+    "lng": -97.3652989
   },
   {
     "name": "What's on Tap",
     "address": "201 Town Center Ln. , Suite 1107, Keller, TX 76248",
-    "phone": "(817) 741-6494"
+    "phone": "(817) 741-6494",
+    "lat": 32.933479,
+    "lng": -97.226968
   },
   {
     "name": "YMCA",
     "address": "2021 Cross Timbers Road, Flower Mound, TX 75028",
-    "phone": "(972) 539-9622"
+    "phone": "(972) 539-9622",
+    "lat": 33.0336569,
+    "lng": -97.0590758
   }
 ]

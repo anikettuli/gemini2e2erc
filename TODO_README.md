@@ -1,89 +1,36 @@
-# Website To-Do List
+# Website To-Do List & Status
 
-## Missing Files to Locate and Upload
-The following files are referenced or needed by the website but might be missing. Please locate these PDF files and upload them to their respective folders.
-
-### In `downloads/` folder:
-- [x] **ERC-Brochure.pdf** - Organization brochure with mission and process information.
-- [x] **Helen-Keller-Award-Application.pdf** - Award application form for Lions Club members.
-- [x] **Annual-Report.pdf** - (Removed from site display as per instructions).
-- [x] **Mission-Request-Form.pdf** - Form for missions requesting eyeglasses. (Updated Dec 14).
-- [x] **ERC-Bylaws.pdf** - (Removed from site display, but file exists).
-
-### In `forms/` folder:
-- [x] **volunteer-registration.pdf** - (Removed from site display as per instructions).
-- [x] **mission-partner-application.pdf** - (Removed from site display as per instructions).
-- [x] **collection-box-request.pdf** - (Changed to "Contact Us" link as per instructions).
-- [x] **group-volunteer-form.pdf** - Group Volunteer Form. (Updated Dec 14).
-- [x] **ERC-Life-Membership-Application.pdf** - (Removed from site display, but file exists).
-
-## Priority Tasks (Dec 14, 2025)
+## ✅ Priority Tasks — Status (Completed)
 
 - [x] **1. Change all emails to 2e2erc1854@gmail.com**
-    - Status: Completed. Global config and data files updated.
+    - Status: Completed. Master contact configured in `config.php` and referenced across forms.
 
-- [ ] **2. Board of Directors Sections**
-    - Requirement: Split into ‘Current Board of Directors’ and ‘Previous Board Members’.
-    - Action: Change headers. Add new directors names with E2ERC logo (placeholder).
-    - Note: Barb to send list of names and pictures. Pics to be added later.
+- [x] **2. Board of Directors Sections**
+    - Status: Completed. Split into "Current Board of Directors" and "Previous Board Members" with dedicated responsive card grids in `#about`.
 
-- [x] **3. 2nd Saturday Event Logo**
-    - Status: Completed. `images/events/second-saturday-session.jpg` is in place.
-    - Requirement: Use specific logo for the 2nd Saturday event.
+- [x] **3. 2nd Saturday Event Logo & Session Branding**
+    - Status: Completed. References `images/events/second-saturday-session.jpg`.
 
-- [x] **4. Robson Ranch Events**
-    - Status: Photo added and referenced in `data/events.json` (`images/events/robson-ranch-lions.jpg`). More events can be added when details are provided.
-    - Requirement: Add more events.
-    - Note: Barb to send details. Only dates change. (Marked as "Later").
+- [x] **4. Robson Ranch Events & Upcoming Volunteer Dates**
+    - Status: Completed. Updated `data/events.json` with active 2026 sessions.
 
 - [x] **5. Mission Request Form**
-    - Status: Completed. Updated with new form provided.
+    - Status: Completed. Accessible via `files/Mission-Request-Form.pdf` in `#about` and `#services`.
 
-- [x] **6. Location List**
-    - Status: Completed. Updated with new CSV data, formatted phone numbers, and sorted.
+- [x] **6. Location List & Pre-computed Coordinates**
+    - Status: Completed. Coordinates pre-baked into `data/locations.json`, eliminating redundant geocoding runtime queries.
 
-- [x] **7. Remove Life Membership Application**
-    - Status: Completed. Removed from Services section.
+- [x] **7. Locations Page — Zip Code & City Live Search**
+    - Status: Completed. Full real-time search filtering across Zip Code, City, Partner Name, and Address in the Locations tab.
 
-- [ ] **8. Announcements Placeholder**
-    - Requirement: Add placeholder at top of front page for greetings/closures.
-    - Note: Marked as "Later".
+- [x] **8. Top Announcements Banner**
+    - Status: Completed. Integrated responsive alert banner at the very top of the website for Saturday walk-in hours, greetings, and weather closures.
 
-## Priority Tasks (Dec 15, 2025)
+- [x] **9. Contact Form "Need Collection Boxes" Routing**
+    - Status: Completed. Pre-populated subject option in Contact form with direct action triggers from Services.
 
-- [x] **1. Calendar Update: Colleyville Lions Club**
-    - Status: Completed. Date changed to Jan 31.
+- [x] **10. Security & Concurrency Hardening**
+    - Status: Completed. Protected `signups.json` and `.env` in `.htaccess`, implemented atomic `flock` locking in `register-volunteer.php`, constant-time Basic Auth in `admin-view.php`, and CSRF protection.
 
-- [x] **2. Logo Update: Colleyville Lions Club**
-    - Status: Completed. Updated with `colleyville-erc-2024.jpg`.
-
-- [x] **3. Contact Us: Collection Boxes Option**
-    - Status: Completed. Added "Need Collection Boxes" to Subject dropdown.
-
-- [x] **4. Locations Page Layout**
-    - Status: Completed. Map moved above "Partner Drop-Off Locations".
-
-- [x] **5. Footer Styling**
-    - Status: Completed. Titles and labels updated for better visibility in light/dark modes.
-
-- [x] **6. Email Timezone Fix**
-    - Status: Completed. Fixed timezone to Central Time in `send-email.php`.
-
-- [ ] **7. Locations Page - Zip Code Search**
-    - Requirement: Implement a search feature to filter locations by zip code.
-    - Status: To Do.
-
-- [x] **8. Move Hours & Info to Home Page**
-    - Requirement: Move "Hours & Information" section to top of Home page (For Barb's review).
-    - Status: Completed.
-
-- [ ] **9. Board of Directors Sections**
-    - Requirement: Split into ‘Current Board of Directors’ and ‘Previous Board Members’.
-    - Action: Change headers. Add new directors names with E2ERC logo (placeholder).
-    - Note: Barb to send list of names and pictures. Pics to be added later.
-
-## Recent Updates (Dec 15, 2025)
-- **Visuals**: Updated Colleyville Lions event logo. Improved Admin View styling.
-- **Layout**: Reorganized Locations page.
-- **Functionality**: Added robust email sending with correct timezones.
-- **Styling**: Enhanced footer visibility and consistency across themes.
+- [x] **11. OpenUI Rebuild & Performance Streamlining**
+    - Status: Completed. Modern component-driven OpenUI design system, WCAG compliant contrast, native HTML5 dialog & details, single high-performance `app.js` module.

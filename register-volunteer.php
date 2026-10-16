@@ -1,184 +1,216 @@
 <?php
-require_once 'config.php';
+/**
+ * Volunteer Registration Processor
+ * Lions District 2-E2 Eyeglass Recycling Center
+ */
+
+require_once __DIR__ . '/config.php';
 header('Content-Type: application/json');
-set_time_limit(60); // Prevent 500 on slow SMTP connections
+set_time_limit(30);
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // 1. Get Input
-    $input = json_decode(file_get_contents('php://input'), true);
-    
-    $eventId = $input['eventId'] ?? null;
-    $name = strip_tags(trim($input['name'] ?? ''));
-    $email_raw = trim($input['email'] ?? '');
-    $phone = strip_tags(trim($input['phone'] ?? ''));
+if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+    http_response_code(405);
+    echo json_encode(['success' => false, 'message' => 'Method Not Allowed']);
+    exit;
+}
 
-    // Improved validation
-    if (!$eventId || !$name || !filter_var($email_raw, FILTER_VALIDATE_EMAIL)) {
-        echo json_encode(['success' => false, 'message' => 'Valid name and email are required']);
-        exit;
-    }
-    
-    if (!empty($phone) && strlen($phone) > 20) {
-        echo json_encode(['success' => false, 'message' => 'Invalid phone number']);
-        exit;
-    }
-    
-    $email = $email_raw;
+// 1. Parse Input (Supports both JSON payload and standard form encoded)
+$raw_input = file_get_contents('php://input');
+$input = json_decode($raw_input, true);
+if (!is_array($input)) {
+    $input = $_POST;
+}
 
-    // 2. Load and Update Data ATOMICALLY
-    $eventsFile = 'data/events.json';
-    $signupsFile = 'data/signups.json';
+$eventId = isset($input['eventId']) ? (int)$input['eventId'] : 0;
+$name = strip_tags(trim($input['name'] ?? ''));
+$email_raw = trim($input['email'] ?? '');
+$phone = strip_tags(trim($input['phone'] ?? ''));
 
-    // We open signups file first and lock it for the entire duration of the update
-    $fpSignups = fopen($signupsFile, 'c+');
-    $fpEvents = fopen($eventsFile, 'c+');
-    
-    if (!$fpSignups || !$fpEvents) {
-        echo json_encode(['success' => false, 'message' => 'Database error']);
-        exit;
-    }
+// Validate Name & Email
+if (!$eventId || empty($name) || !filter_var($email_raw, FILTER_VALIDATE_EMAIL)) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'message' => 'A valid name and email address are required.']);
+    exit;
+}
 
-    // Acquire exclusive locks on both files
-    flock($fpSignups, LOCK_EX);
-    flock($fpEvents, LOCK_EX);
+if (!empty($phone) && strlen($phone) > 25) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'message' => 'Invalid phone number format.']);
+    exit;
+}
 
-    // Read Data
-    $signupsContent = stream_get_contents($fpSignups);
-    $eventsContent = stream_get_contents($fpEvents);
-    
-    $signups = json_decode($signupsContent, true);
-    if ($signups === null && json_last_error() !== JSON_ERROR_NONE) {
-        $signups = []; // Or handle error properly
-    }
-    if (!is_array($signups)) $signups = [];
+$email = strtolower($email_raw);
 
-    $events = json_decode($eventsContent, true);
-    if ($events === null && json_last_error() !== JSON_ERROR_NONE) {
-        flock($fpEvents, LOCK_UN);
-        flock($fpSignups, LOCK_UN);
-        echo json_encode(['success' => false, 'message' => 'Internal Database Error']);
-        exit;
-    }
-    if (!is_array($events)) $events = [];
+// 2. Concurrency-Safe Atomic File Locking
+$eventsFile = __DIR__ . '/data/events.json';
+$signupsFile = __DIR__ . '/data/signups.json';
 
-    // 3. Find Event
-    $eventIndex = -1;
-    foreach ($events as $index => $event) {
-        if ($event['id'] == $eventId) {
-            $eventIndex = $index;
-            break;
-        }
-    }
+$fpSignups = @fopen($signupsFile, 'c+');
+$fpEvents = @fopen($eventsFile, 'c+');
 
-    if ($eventIndex === -1) {
-        flock($fpEvents, LOCK_UN);
-        flock($fpSignups, LOCK_UN);
-        echo json_encode(['success' => false, 'message' => 'Event not found']);
-        exit;
-    }
+if (!$fpSignups || !$fpEvents) {
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Server database access error.']);
+    exit;
+}
 
-    // 4. Check Capacity
-    if ($events[$eventIndex]['people'] >= $events[$eventIndex]['maxPeople']) {
-        flock($fpEvents, LOCK_UN);
-        flock($fpSignups, LOCK_UN);
-        echo json_encode(['success' => false, 'message' => 'Event is full']);
-        exit;
-    }
+// Acquire exclusive locks
+flock($fpSignups, LOCK_EX);
+flock($fpEvents, LOCK_EX);
 
-    // 5. Add Signup
-    if (!isset($signups[$eventId])) {
-        $signups[$eventId] = [];
-    }
+// Read current data
+$signupsRaw = stream_get_contents($fpSignups);
+$eventsRaw = stream_get_contents($fpEvents);
 
-    // Check for duplicate email for this event
-    foreach ($signups[$eventId] as $signup) {
-        if ($signup['email'] === $email) {
-            flock($fpEvents, LOCK_UN);
-            flock($fpSignups, LOCK_UN);
-            echo json_encode(['success' => false, 'message' => 'You are already registered for this event']);
-            exit;
-        }
-    }
+$signups = json_decode($signupsRaw, true);
+if (!is_array($signups)) {
+    $signups = [];
+}
 
-    $newSignup = [
-        'name' => $name,
-        'email' => $email,
-        'phone' => $phone,
-        'timestamp' => date('Y-m-d H:i:s')
-    ];
-
-    $signups[$eventId][] = $newSignup;
-
-    // 6. Update Event Count
-    $events[$eventIndex]['people'] = count($signups[$eventId]);
-
-    // 7. Save Files ATOMICALLY via temp files while holding locks
-    function saveAtomic($file, $data, $fp) {
-        $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-        $tmpFile = $file . '.tmp.' . getmypid() . '_' . rand(1000, 9999);
-        if (file_put_contents($tmpFile, $json) !== false) {
-            if (rename($tmpFile, $file)) {
-                return true;
-            }
-            @unlink($tmpFile);
-        }
-        return false;
-    }
-
-    saveAtomic($signupsFile, $signups, $fpSignups);
-    saveAtomic($eventsFile, $events, $fpEvents);
-
-    // Release locks
+$events = json_decode($eventsRaw, true);
+if (!is_array($events)) {
     flock($fpEvents, LOCK_UN);
     flock($fpSignups, LOCK_UN);
     fclose($fpEvents);
     fclose($fpSignups);
-
-    // 8. Send Emails via SMTP (non-blocking — failure is logged but does not break registration)
-    try {
-        require_once 'mail-utils.php';
-        $config = get_smtp_config();
-        $mail = new SimpleSMTP($config['host'], $config['port'], $config['user'], $config['pass']);
-
-        $eventTitle = $events[$eventIndex]['title'];
-        $eventDate = $events[$eventIndex]['date'];
-        $eventTime = $events[$eventIndex]['time'];
-        $eventLoc = $events[$eventIndex]['location'];
-
-        // Volunteer Confirmation Email
-        $volunteer_subject = "Volunteer Confirmation: $eventTitle";
-        $volunteer_content = "
-            <p>Hi <strong>" . htmlspecialchars($name) . "</strong>,</p>
-            <p>Thank you for signing up to volunteer for <strong>" . htmlspecialchars($eventTitle) . "</strong>.</p>
-            <hr style='border: 0; border-top: 1px solid #eee; margin: 20px 0;'>
-            <p><strong>Date:</strong> " . htmlspecialchars($eventDate) . "</p>
-            <p><strong>Time:</strong> " . htmlspecialchars($eventTime) . "</p>
-            <p><strong>Location:</strong> " . htmlspecialchars($eventLoc) . "</p>
-            <hr style='border: 0; border-top: 1px solid #eee; margin: 20px 0;'>
-            <p>We look forward to seeing you!</p>
-        ";
-        $volunteer_body = render_email_template("Volunteer Confirmation", $volunteer_content);
-
-        // Admin Notification Email
-        $admin_subject = "New Volunteer Signup: " . preg_replace('/[\r\n]/', '', $name);
-        $email_html = htmlspecialchars($email, ENT_QUOTES, 'UTF-8');
-        $admin_content = "
-            <p><strong>Event:</strong> " . htmlspecialchars($eventTitle) . "</p>
-            <p><strong>Volunteer Name:</strong> " . htmlspecialchars($name) . "</p>
-            <p><strong>Volunteer Email:</strong> <a href='mailto:" . $email_html . "'>" . $email_html . "</a></p>
-            <p><strong>Volunteer Phone:</strong> " . htmlspecialchars($phone) . "</p>
-        ";
-        $admin_body = render_email_template("New Volunteer Signup", $admin_content);
-
-        $mail->send($config['user'], $email, $volunteer_subject, $volunteer_body, "Lions 2-E2 ERC");
-        $mail->send($config['user'], $config['admin_email'], $admin_subject, $admin_body, "Lions 2-E2 ERC");
-    } catch (Exception $e) {
-        error_log("SMTP Registration Error: " . $e->getMessage());
-    }
-
-    echo json_encode(['success' => true, 'message' => 'Registration successful!', 'newCount' => $events[$eventIndex]['people']]);
-
-} else {
-    echo json_encode(['success' => false, 'message' => 'Invalid request method']);
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Events database could not be loaded.']);
+    exit;
 }
+
+// 3. Locate Event
+$eventIndex = -1;
+foreach ($events as $idx => $ev) {
+    if ((int)$ev['id'] === $eventId) {
+        $eventIndex = $idx;
+        break;
+    }
+}
+
+if ($eventIndex === -1) {
+    flock($fpEvents, LOCK_UN);
+    flock($fpSignups, LOCK_UN);
+    fclose($fpEvents);
+    fclose($fpSignups);
+    http_response_code(404);
+    echo json_encode(['success' => false, 'message' => 'The selected event was not found.']);
+    exit;
+}
+
+$targetEvent = $events[$eventIndex];
+
+// 4. Reject Signups for Past Events
+$eventDateTimestamp = strtotime($targetEvent['date'] . ' 23:59:59');
+if ($eventDateTimestamp < time()) {
+    flock($fpEvents, LOCK_UN);
+    flock($fpSignups, LOCK_UN);
+    fclose($fpEvents);
+    fclose($fpSignups);
+    http_response_code(400);
+    echo json_encode(['success' => false, 'message' => 'Registration is closed for past events.']);
+    exit;
+}
+
+// 5. Check Capacity
+if ($targetEvent['people'] >= $targetEvent['maxPeople']) {
+    flock($fpEvents, LOCK_UN);
+    flock($fpSignups, LOCK_UN);
+    fclose($fpEvents);
+    fclose($fpSignups);
+    http_response_code(409);
+    echo json_encode(['success' => false, 'message' => 'This event has reached full volunteer capacity.']);
+    exit;
+}
+
+// 6. Case-Insensitive Duplicate Check
+$eventSignups = $signups[(string)$eventId] ?? [];
+foreach ($eventSignups as $existing) {
+    if (strcasecmp($existing['email'], $email) === 0) {
+        flock($fpEvents, LOCK_UN);
+        flock($fpSignups, LOCK_UN);
+        fclose($fpEvents);
+        fclose($fpSignups);
+        http_response_code(409);
+        echo json_encode(['success' => false, 'message' => 'You are already registered for this event.']);
+        exit;
+    }
+}
+
+// 7. Append New Volunteer Registration
+$newRegistration = [
+    'name' => $name,
+    'email' => $email,
+    'phone' => $phone,
+    'timestamp' => date('Y-m-d H:i:s')
+];
+
+$signups[(string)$eventId][] = $newRegistration;
+$events[$eventIndex]['people'] = count($signups[(string)$eventId]);
+
+// 8. In-Place Atomic Write while holding locks (preserves inode & descriptor lock)
+ftruncate($fpSignups, 0);
+rewind($fpSignups);
+fwrite($fpSignups, json_encode($signups, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+fflush($fpSignups);
+
+ftruncate($fpEvents, 0);
+rewind($fpEvents);
+fwrite($fpEvents, json_encode($events, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+fflush($fpEvents);
+
+// Release Locks safely
+flock($fpEvents, LOCK_UN);
+flock($fpSignups, LOCK_UN);
+fclose($fpEvents);
+fclose($fpSignups);
+
+// 9. Send Email Confirmations (Non-blocking)
+try {
+    require_once __DIR__ . '/mail-utils.php';
+    $smtp_conf = get_smtp_config();
+    if (!empty($smtp_conf['host']) && !empty($smtp_conf['user'])) {
+        $mail = new SimpleSMTP($smtp_conf['host'], $smtp_conf['port'], $smtp_conf['user'], $smtp_conf['pass']);
+
+        $eventTitle = $targetEvent['title'];
+        $eventDate = $targetEvent['date'];
+        $eventTime = $targetEvent['time'];
+        $eventLoc = $targetEvent['location'];
+
+        // Volunteer confirmation message
+        $vContent = "
+            <p>Hi <strong>" . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . "</strong>,</p>
+            <p>Thank you for signing up to volunteer with the Lions District 2-E2 Eyeglass Recycling Center!</p>
+            <hr>
+            <p><strong>Event:</strong> " . htmlspecialchars($eventTitle, ENT_QUOTES, 'UTF-8') . "</p>
+            <p><strong>Date:</strong> " . htmlspecialchars($eventDate, ENT_QUOTES, 'UTF-8') . "</p>
+            <p><strong>Time:</strong> " . htmlspecialchars($eventTime, ENT_QUOTES, 'UTF-8') . "</p>
+            <p><strong>Location:</strong> " . htmlspecialchars($eventLoc, ENT_QUOTES, 'UTF-8') . "</p>
+            <hr>
+            <p>We are grateful for your time and service. See you there!</p>
+        ";
+        $vBody = render_email_template("Volunteer Confirmation", $vContent);
+
+        // Admin notification message
+        $aContent = "
+            <p><strong>Event:</strong> " . htmlspecialchars($eventTitle, ENT_QUOTES, 'UTF-8') . "</p>
+            <p><strong>Volunteer Name:</strong> " . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . "</p>
+            <p><strong>Email:</strong> <a href='mailto:" . htmlspecialchars($email, ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($email, ENT_QUOTES, 'UTF-8') . "</a></p>
+            <p><strong>Phone:</strong> " . htmlspecialchars($phone, ENT_QUOTES, 'UTF-8') . "</p>
+            <p><strong>Current Capacity:</strong> " . $events[$eventIndex]['people'] . " / " . $targetEvent['maxPeople'] . "</p>
+        ";
+        $aBody = render_email_template("New Volunteer Registered", $aContent);
+
+        $mail->send($smtp_conf['user'], $email, "Volunteer Confirmation: $eventTitle", $vBody, "Lions 2-E2 ERC");
+        $mail->send($smtp_conf['user'], $smtp_conf['admin_email'], "Volunteer Signup: $name ($eventTitle)", $aBody, "Lions 2-E2 ERC");
+    }
+} catch (Exception $e) {
+    error_log("Volunteer Email Dispatch Error: " . $e->getMessage());
+}
+
+echo json_encode([
+    'success' => true,
+    'message' => 'Registration confirmed! Thank you for volunteering.',
+    'newCount' => $events[$eventIndex]['people'],
+    'maxPeople' => $targetEvent['maxPeople']
+]);
 ?>

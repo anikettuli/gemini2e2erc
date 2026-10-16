@@ -1,14 +1,16 @@
 <?php
 /**
  * Configuration API
- * Provides a single source of truth for site configuration
+ * Provides single source of truth for site settings to frontend.
  */
 header('Content-Type: application/json');
 require_once __DIR__ . '/config.php';
 
 echo json_encode([
-    'email' => $GLOBAL_EMAIL ?? '2e2erc1854@gmail.com',
-    'phone' => $GLOBAL_PHONE ?? '(817) 710-5403',
-    'phoneLink' => '+1' . preg_replace('/\D/', '', $GLOBAL_PHONE ?? '8177105403')
+    'email' => $GLOBAL_EMAIL,
+    'phone' => $GLOBAL_PHONE,
+    'phoneLink' => $GLOBAL_PHONE_LINK,
+    'address' => $GLOBAL_ADDRESS,
+    'mailing' => $GLOBAL_MAILING
 ]);
 ?>
