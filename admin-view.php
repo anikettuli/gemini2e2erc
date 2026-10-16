@@ -23,12 +23,33 @@ function get_admin_credentials() {
     ];
 }
 
+// Support FastCGI / PHP-FPM Authorization header forwarding
+if (!isset($_SERVER['PHP_AUTH_USER'])) {
+    $authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? '';
+    if (!empty($authHeader) && stripos($authHeader, 'Basic ') === 0) {
+        $decoded = base64_decode(substr($authHeader, 6));
+        if ($decoded && strpos($decoded, ':') !== false) {
+            list($authUser, $authPw) = explode(':', $decoded, 2);
+            $_SERVER['PHP_AUTH_USER'] = $authUser;
+            $_SERVER['PHP_AUTH_PW'] = $authPw;
+        }
+    }
+}
+
 $creds = get_admin_credentials();
-if (!isset($_SERVER['PHP_AUTH_USER']) || $_SERVER['PHP_AUTH_USER'] != $creds['user'] || $_SERVER['PHP_AUTH_PW'] != $creds['pass']) {
+$authUser = $_SERVER['PHP_AUTH_USER'] ?? '';
+$authPass = $_SERVER['PHP_AUTH_PW'] ?? '';
+
+if (!hash_equals($creds['user'], $authUser) || !hash_equals($creds['pass'], $authPass)) {
     header('WWW-Authenticate: Basic realm="Admin Area"');
     header('HTTP/1.0 401 Unauthorized');
     echo 'Access Denied';
     exit;
+}
+
+if (empty($_SESSION['admin_authenticated'])) {
+    session_regenerate_id(true);
+    $_SESSION['admin_authenticated'] = true;
 }
 
 // Helper Functions
@@ -84,6 +105,39 @@ function isValidImageUpload($fileArray) {
 
 $message = "";
 $error = "";
+
+// Export signups as CSV
+if (isset($_GET['action']) && $_GET['action'] === 'export_signups') {
+    $signups = loadJSON('data/signups.json');
+    $events = loadJSON('data/events.json');
+    $eventTitles = [];
+    foreach ($events as $ev) {
+        $eventTitles[$ev['id']] = ($ev['title'] ?? 'Event') . ' (' . ($ev['date'] ?? '') . ')';
+    }
+
+    header('Content-Type: text/csv; charset=UTF-8');
+    header('Content-Disposition: attachment; filename="volunteer_signups_' . date('Y-m-d') . '.csv"');
+    $out = fopen('php://output', 'w');
+    fputcsv($out, ['Event ID', 'Event Title', 'Volunteer Name', 'Email', 'Phone', 'Timestamp']);
+
+    foreach ($signups as $eventId => $list) {
+        $title = $eventTitles[$eventId] ?? "Event $eventId";
+        if (is_array($list)) {
+            foreach ($list as $s) {
+                fputcsv($out, [
+                    $eventId,
+                    $title,
+                    $s['name'] ?? '',
+                    $s['email'] ?? '',
+                    $s['phone'] ?? '',
+                    $s['timestamp'] ?? ''
+                ]);
+            }
+        }
+    }
+    fclose($out);
+    exit;
+}
 
 // Handle POST actions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -332,39 +386,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($action === 'save_config') {
-        $email = $_POST['global_email'];
-        $phone = $_POST['global_phone'];
-        $safe_email = var_export($email, true);
-        $safe_phone = var_export($phone, true);
+        $email = filter_var(trim($_POST['global_email'] ?? ''), FILTER_VALIDATE_EMAIL);
+        $phone = preg_replace('/[^\d\+\-\(\)\s\.]/', '', trim($_POST['global_phone'] ?? ''));
         
-        $configContent = "<?php\n// Global configuration for email and phone\n\$GLOBAL_EMAIL = $safe_email;\n\$GLOBAL_PHONE = $safe_phone;\n?>";
-        if (file_put_contents('config.php', $configContent)) {
-            $message = "Global settings updated!";
+        if (!$email) {
+            $error = "Invalid global email address provided.";
+        } elseif (strlen($phone) > 30) {
+            $error = "Invalid global phone number.";
         } else {
-            $error = "Failed to update config.php";
+            $safe_email = var_export($email, true);
+            $safe_phone = var_export($phone, true);
+            $configContent = "<?php\n// Global configuration for email and phone\n\$GLOBAL_EMAIL = $safe_email;\n\$GLOBAL_PHONE = $safe_phone;\n?>\n";
+            if (file_put_contents('config.php', $configContent, LOCK_EX)) {
+                $message = "Global settings updated!";
+            } else {
+                $error = "Failed to update config.php";
+            }
         }
     }
 
     if ($action === 'upload_form') {
-        $targetFilename = $_POST['target_filename'];
+        $targetFilename = $_POST['target_filename'] ?? '';
         if (isset($_FILES['new_form']) && $_FILES['new_form']['error'] === UPLOAD_ERR_OK) {
             $tmp_name = $_FILES['new_form']['tmp_name'];
             $cleanFilename = basename($targetFilename);
-            $targetPath = "files/" . $cleanFilename;
+            $existingForms = array_map('basename', glob(__DIR__ . '/files/*.pdf') ?: []);
 
-            if ($cleanFilename !== '') {
+            if ($cleanFilename !== '' && in_array($cleanFilename, $existingForms, true)) {
                 $ext = strtolower(pathinfo($cleanFilename, PATHINFO_EXTENSION));
-                if ($ext === 'pdf' && mime_content_type($tmp_name) === 'application/pdf') {
+                $finfo = finfo_open(FILEINFO_MIME_TYPE);
+                $mime = finfo_file($finfo, $tmp_name);
+                finfo_close($finfo);
+
+                if ($ext === 'pdf' && $mime === 'application/pdf') {
+                    $targetPath = __DIR__ . "/files/" . $cleanFilename;
                     if (move_uploaded_file($tmp_name, $targetPath)) {
                         $message = "Form '$cleanFilename' successfully updated!";
                     } else {
                         $error = "Failed to upload the new form.";
                     }
                 } else {
-                     $error = "Invalid form upload. Only PDFs are allowed.";
+                    $error = "Invalid form upload. Only authentic PDF files are allowed.";
                 }
             } else {
-                 $error = "Invalid target filename.";
+                $error = "Unauthorized target form filename.";
             }
         } else {
             $error = "Upload error or no file provided.";
@@ -815,8 +880,9 @@ $current_phone = $GLOBAL_PHONE ?? "(817) 710-5403";
         <!-- SIGNUPS SECTION -->
         <section id="signups" class="section">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
                     <h2>Volunteer Signups</h2>
+                    <a href="admin-view.php?action=export_signups" class="btn btn-accent" style="text-decoration: none;"><i class="fas fa-file-csv"></i> Export CSV</a>
                 </div>
                 <?php foreach ($events as $event): 
                     $eventSignups = $signups[$event['id']] ?? [];

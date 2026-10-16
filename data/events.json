@@ -130,5 +130,53 @@
         "image": "images/events/colleyville-erc-2024.jpg",
         "description": "Colleyville Lions Club monthly volunteer day. Experience our 4-step eyeglass recycling process.",
         "contact": "2e2erc1854@gmail.com"
+    },
+    {
+        "id": 20,
+        "title": "2nd Saturday Open Session",
+        "date": "2026-11-14",
+        "time": "9:00 AM - 12:00 PM",
+        "people": 0,
+        "maxPeople": 20,
+        "location": "Main Center - 5621 Bunker Blvd, Watauga, TX 76148",
+        "image": "images/events/second-saturday-session.jpg",
+        "description": "Open volunteer session. Help sort, clean, and measure donated eyeglasses for international missions.",
+        "contact": "2e2erc1854@gmail.com"
+    },
+    {
+        "id": 21,
+        "title": "Colleyville Lions Volunteer Day",
+        "date": "2026-11-21",
+        "time": "9:00 AM - 12:00 PM",
+        "people": 0,
+        "maxPeople": 20,
+        "location": "Main Center - 5621 Bunker Blvd, Watauga, TX 76148",
+        "image": "images/events/colleyville-erc-2024.jpg",
+        "description": "Colleyville Lions Club service morning processing eyeglass donations.",
+        "contact": "2e2erc1854@gmail.com"
+    },
+    {
+        "id": 22,
+        "title": "Metroport NCL Volunteer Session",
+        "date": "2026-12-05",
+        "time": "9:00 AM - 12:00 PM",
+        "people": 0,
+        "maxPeople": 20,
+        "location": "Main Center - 5621 Bunker Blvd, Watauga, TX 76148",
+        "image": "images/events/dfw-metroport-ncl-logo.jpg",
+        "description": "National Charity League Metroport chapter session sorting and packaging eyeglasses.",
+        "contact": "2e2erc1854@gmail.com"
+    },
+    {
+        "id": 23,
+        "title": "2nd Saturday Holiday Session",
+        "date": "2026-12-12",
+        "time": "9:00 AM - 1:00 PM",
+        "people": 0,
+        "maxPeople": 25,
+        "location": "Main Center - 5621 Bunker Blvd, Watauga, TX 76148",
+        "image": "images/events/second-saturday-session.jpg",
+        "description": "December open volunteer session. All volunteers and walk-ins welcome!",
+        "contact": "2e2erc1854@gmail.com"
     }
 ]

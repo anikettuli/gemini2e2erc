@@ -1,9 +1,20 @@
 # Protect data directory from direct web access
-Deny from all
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Order Deny,Allow
+    Deny from all
+</IfModule>
 
 # Allow specific public JSON files
-<FilesMatch "^(board|events|partners|testimonials)\.json$">
-    Order Deny,Allow
-    Allow from all
-    Satisfy Any
+<FilesMatch "^(board|events|partners|testimonials|locations)\.json$">
+    <IfModule mod_authz_core.c>
+        Require all granted
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order Deny,Allow
+        Allow from all
+        Satisfy Any
+    </IfModule>
 </FilesMatch>
