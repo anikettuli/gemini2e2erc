@@ -9,8 +9,8 @@ $pageMeta = [
     'title'       => 'Lions District 2-E2 Eyeglass Recycling Center | Watauga, TX',
     'description' => '100% volunteer Lions optical recycling center in Watauga, TX collecting eyewear, hearing aids, cell phones, and Windows 11 devices to serve 40+ countries.',
     'canonical'   => '/',
-    'preload_img' => '/images/our-story-group.png',
-    'og_image'    => '/images/our-story-group.png',
+    'preload_img' => erc_media_url('images/our-story-group.png'),
+    'og_image'    => erc_media_url('images/our-story-group.png'),
     'css'         => ['/css/pages/editorial.css'],
     'js_modules'  => ['/js/pages/editorial.js'],
     'json_ld'     => [],
@@ -26,445 +26,707 @@ if (is_array($testimonialsRaw)) {
         }
     }
 }
-$featuredQuote = $testimonials[1] ?? ($testimonials[0] ?? null);
+
+$pipelineStages = [
+    [
+        'num'      => '01',
+        'slug'     => 'collection',
+        'short'    => 'COLLECTION',
+        'title'    => 'COLLECTION',
+        'meta'     => '214 DFW BINS · 34 CITIES',
+        'fig'      => 'FIG. 01 · REGIONAL INTAKE NETWORK',
+        'summary'  => 'Donated prescription glasses, reading glasses, sunglasses, hearing aids, wiped phones, and Windows 11 laptops arrive from 214 drop-off bins across 34 North Texas cities, Lions Clubs, corporate drives, walk-ins, and pre-arranged shipments.',
+        'spec'     => 'Watauga HQ + 214 host boxes',
+    ],
+    [
+        'num'      => '02',
+        'slug'     => 'triage',
+        'short'    => 'TRIAGE & SORT',
+        'title'    => 'INSPECTION & SORTING',
+        'meta'     => '5 OPTICAL PATHWAYS',
+        'fig'      => 'FIG. 02 · OPTICAL SEPARATION MATRIX',
+        'summary'  => 'Volunteers inspect frame integrity and separate eyewear into five primary optical pathways: non-prescription sunglasses, reading glasses, nearsighted (minus/concave), farsighted (plus/convex), and bifocal, trifocal, progressive, and prism lenses.',
+        'spec'     => 'Usability check · broken frames repurposed',
+    ],
+    [
+        'num'      => '03',
+        'slug'     => 'washing',
+        'short'    => 'SANITIZE',
+        'title'    => 'WASHING & RACK DRYING',
+        'meta'     => 'CLINICAL SANITIZATION',
+        'fig'      => 'FIG. 03 · ULTRASONIC WASH & AIR DRY',
+        'summary'  => 'Frames and lenses are thoroughly washed, sanitized, and rack-dried by Saturday workteams and weekday volunteer groups before entering the optical measurement bench.',
+        'spec'     => 'Clean, dry & ready for lensometry',
+    ],
+    [
+        'num'      => '04',
+        'slug'     => 'lensometry',
+        'short'    => 'LENSOMETRY',
+        'title'    => 'LENSOMETER NEUTRALIZATION',
+        'meta'     => '0.25-DIOPTER PRECISION',
+        'fig'      => 'FIG. 04 · 0.25D RETICLE CALIBRATION',
+        'summary'  => 'Trained volunteers measure exact spherical power on tabletop lensometers so partner optometrists and medical clinic teams receive accurately neutralized prescriptions.',
+        'spec'     => 'Calibrated tabletop lensometers',
+    ],
+    [
+        'num'      => '05',
+        'slug'     => 'packing',
+        'short'    => '50-PAIR BOX',
+        'title'    => 'QUALITY CHECK & 50-PAIR PACKING',
+        'meta'     => '+0.25 TO ±5.00+ BRACKETS',
+        'fig'      => 'FIG. 05 · STANDARDIZED 50-PAIR CARTON',
+        'summary'  => 'Each verified pair passes final quality inspection, receives individual tagging and bagging, and is packed into uniform 50-pair cartons sorted by 0.25-diopter increment.',
+        'spec'     => 'Single Vision +/- · Readers · Sunglasses',
+    ],
+    [
+        'num'      => '06',
+        'slug'     => 'dispatch',
+        'short'    => 'DISPATCH',
+        'title'    => 'GLOBAL MISSION DISPATCH',
+        'meta'     => '38 DOCUMENTED NATIONS · 40+ SERVED',
+        'fig'      => 'FIG. 06 · WATAUGA TO FIELD CLINICS',
+        'summary'  => 'Verified nonprofit missions with refractive-error testing order 50-pair boxes at least 30 days ahead. Eyewear is supplied free of hardware cost (not for resale; mission covers shipping) for under $0.10 US per pair.',
+        'spec'     => '21,696 pairs shipped in 2024–2025',
+    ],
+];
 
 require __DIR__ . '/includes/head.php';
 require __DIR__ . '/includes/header.php';
 ?>
-<main id="main-content" class="site-main ed-page" tabindex="-1">
-  <!-- Editorial Hero -->
-  <section class="ed-hero" aria-labelledby="home-hero-title">
-    <div class="ed-wrap">
-      <div class="ed-hero__grid">
-        <div>
-          <div class="ed-hero__crest">
-            <img
-              class="ed-hero__logo"
-              src="/e2e2rc_LOGO.png"
-              alt="Official circular emblem of the Lions District 2-E2 Eyeglass Recycling Center"
-              width="96"
-              height="96"
-            >
-            <span class="ed-hero__crest-text">Lions District 2-E2 · Watauga, TX · 501(c)(3) Since 2014</span>
-          </div>
+<main id="main-content" class="site-main v2-page" tabindex="-1">
+  <!-- 01/04 Skippable Optical Calibration Intro Bar (sessionStorage-once, bypassed on reduced motion) -->
+  <div class="v2-calib-bar" data-calib-bar role="region" aria-label="Optical workshop calibration status">
+    <div class="container v2-calib-bar__inner">
+      <div class="v2-calib-bar__status">
+        <span class="v2-pulse v2-pulse--live" aria-hidden="true"></span>
+        <span class="v2-calib-bar__step mono" data-calib-step>04/04</span>
+        <span class="v2-calib-bar__label mono" data-calib-label>OPTICAL BENCH CALIBRATED · 0.25D READY</span>
+      </div>
+      <div class="v2-calib-bar__track" aria-hidden="true">
+        <span class="v2-calib-bar__fill" data-calib-fill></span>
+      </div>
+      <button type="button" class="btn btn--secondary btn--sm v2-calib-bar__skip" data-calib-skip hidden>
+        <span>SKIP INTRO</span>
+      </button>
+    </div>
+  </div>
 
-          <h1 id="home-hero-title" class="ed-display">
-            North Texas Optical Care, Refurbished for the World.
+  <!-- Atmospheric Poster Hero -->
+  <section class="v2-hero" aria-labelledby="home-hero-title">
+    <div class="container v2-hero__container">
+      <div class="v2-eyebrow v2-hero__eyebrow">
+        <span>LIONS DISTRICT 2-E2 // WATAUGA, TEXAS</span>
+        <span class="v2-eyebrow__rule" aria-hidden="true"></span>
+        <span>501(C)(3) SINCE 2014 · 100% VOLUNTEER</span>
+      </div>
+
+      <div class="v2-hero__grid">
+        <div class="v2-hero__copy">
+          <h1 id="home-hero-title" class="v2-display v2-display--hero">
+            <span class="v2-hero__line">GIVING <span class="v2-knockout">SIGHT</span></span>
+            <span class="v2-hero__line">TO 40+ <span class="v2-nowrap">NATIONS<span class="v2-dot" aria-hidden="true"></span></span></span>
           </h1>
 
-          <p class="ed-lead">
-            Every Saturday inside our 100% volunteer Watauga workshop, neighbors and Lions Club teams clean, neutralize, and verify donated eyeglasses to 0.25-diopter precision—delivering clear sight to humanitarian clinics in 40+ countries for less than $0.10 a pair.
+          <p class="v2-hero__statement">
+            21,696 pairs shipped in 2024–2025 for under $0.10 a pair.
           </p>
 
-          <div class="ed-actions">
-            <a class="ed-btn ed-btn--primary" href="/donate">
-              <?= erc_icon('glasses') ?>
-              <span>Donate Glasses &amp; Tech</span>
+          <p class="v2-hero__submono mono">
+            214 DFW DROP BINS · 0.25-DIOPTER PRECISION · ZERO PAID STAFF
+          </p>
+
+          <p class="lead v2-hero__lead">
+            Inside our Watauga workshop, neighbors and Lions Club volunteers clean, neutralize, and pack donated eyewear into standardized 50-pair cartons for nonprofit vision clinics worldwide.
+          </p>
+
+          <div class="v2-hero__actions">
+            <a class="btn v2-btn-pill btn--lg" href="/donate">
+              <?= erc_icon('glasses', ['width' => '18', 'height' => '18']) ?>
+              <span>DONATE GLASSES &amp; TECH</span>
             </a>
-            <a class="ed-btn ed-btn--secondary" href="/locations">
-              <?= erc_icon('map-pin') ?>
-              <span>Find a Drop-Off Bin</span>
+            <a class="btn btn--secondary btn--lg" href="/locations">
+              <?= erc_icon('map-pin', ['width' => '18', 'height' => '18']) ?>
+              <span>FIND A DROP BIN (214)</span>
             </a>
-            <a class="ed-btn ed-btn--ghost" href="/volunteer">
-              <?= erc_icon('calendar') ?>
-              <span>Volunteer Saturday</span>
-            </a>
-          </div>
-        </div>
-
-        <figure class="ed-hero__figure">
-          <img
-            class="ed-hero__img"
-            src="/images/our-story-group.png"
-            alt="Founding team and Lions Club volunteers standing together outside the Lions District 2-E2 Eyeglass Recycling Center in Watauga, Texas"
-            width="695"
-            height="360"
-            fetchpriority="high"
-            loading="eager"
-            decoding="async"
-          >
-          <figcaption class="ed-hero__caption">
-            <span>Founders &amp; volunteer leaders at our Watauga center</span>
-            <span class="ed-mono">5621 Bunker Blvd</span>
-          </figcaption>
-        </figure>
-      </div>
-
-      <!-- Live Saturday Watauga Hours & East-Side Walkway Callout -->
-      <div class="ed-dispatch-strip">
-        <div class="ed-dispatch-panel" role="region" aria-label="Watauga Center Hours and Rear Entrance Access">
-          <div class="ed-dispatch-block">
-            <div class="ed-hours-badge" data-watauga-hours data-state="appointment">
-              <?= erc_icon('clock') ?>
-              <span data-watauga-hours-text>Saturdays 9:00 AM – 3:00 PM CT · Mon–Fri by Appointment</span>
-            </div>
-            <div class="ed-dispatch-title">
-              <?= erc_icon('calendar') ?>
-              <span>Watauga Center Operating Hours</span>
-            </div>
-            <p class="ed-dispatch-meta">
-              Open most Saturdays <span class="ed-mono">9:00 AM – 3:00 PM</span> (volunteer sessions <span class="ed-mono">9–12</span> &amp; <span class="ed-mono">12–3</span>). Weekdays by appointment; closed Sundays.
-            </p>
-          </div>
-
-          <div class="ed-dispatch-block">
-            <div class="ed-dispatch-title">
-              <?= erc_icon('navigation') ?>
-              <span>East-Side Wooden Walkway Entrance</span>
-            </div>
-            <p class="ed-dispatch-meta">
-              <strong>5621 Bunker Blvd, Watauga, TX 76148</strong> · Free on-site parking. Follow the wooden walkway along the <strong>east side</strong> of the building to reach the <strong>rear entrance</strong>.
-            </p>
-          </div>
-
-          <div class="ed-actions">
-            <a class="ed-btn ed-btn--secondary" href="/locations">
-              <?= erc_icon('map-pin') ?>
-              <span>Map &amp; 214 Bins</span>
+            <a class="btn btn--ghost btn--lg" href="/volunteer">
+              <?= erc_icon('calendar', ['width' => '18', 'height' => '18']) ?>
+              <span>VOLUNTEER SATURDAY</span>
             </a>
           </div>
         </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- Verified Impact Metrics -->
-  <section class="ed-band ed-band--subtle" aria-labelledby="home-metrics-title">
-    <div class="ed-wrap ed-metrics-wrap">
-      <div class="ed-section-head">
-        <div class="ed-section-head__copy">
-          <span class="ed-kicker"><?= erc_icon('sparkles') ?> Verified Dispatch Ledger</span>
-          <h2 id="home-metrics-title" class="ed-h2">Measurable Reach from North Texas Volunteers</h2>
-          <p class="ed-lead">
-            Every figure below comes directly from our Lion-Year shipping records (<span class="ed-mono">July 1 – June 30</span>) and active regional collection network.
+        <div class="v2-hero__stage">
+          <p class="v2-note v2-hero__note-top">
+            <span>our Watauga crew &amp; founders</span>
+            <?= erc_curved_arrow('down-left') ?>
           </p>
-        </div>
-        <a class="ed-btn ed-btn--ghost" href="/missions#shipping-history">
-          <span>Full 2013–2025 Ledger</span>
-          <?= erc_icon('arrow-right') ?>
-        </a>
-      </div>
 
-      <ul class="ed-metrics-grid">
-        <li class="ed-metric-card">
-          <span class="ed-metric-value">21,696</span>
-          <span class="ed-metric-label">Pairs Shipped (2024–2025)</span>
-          <p class="ed-metric-note">17,692 foreign + 4,004 local mission pairs—our highest recorded Lion Year.</p>
-        </li>
-        <li class="ed-metric-card ed-metric-card--gold">
-          <span class="ed-metric-value">214</span>
-          <span class="ed-metric-label">Drop-Off Bins Across 34 Cities</span>
-          <p class="ed-metric-note">Partner collection boxes across Tarrant County and North Texas.</p>
-        </li>
-        <li class="ed-metric-card">
-          <span class="ed-metric-value">40+</span>
-          <span class="ed-metric-label">Countries Served Worldwide</span>
-          <p class="ed-metric-note">The Americas, Africa, Asia, Europe, and Fiji via partner clinics.</p>
-        </li>
-        <li class="ed-metric-card ed-metric-card--emerald">
-          <span class="ed-metric-value">&lt; $0.10</span>
-          <span class="ed-metric-label">Processing Cost per Pair</span>
-          <p class="ed-metric-note">Under 10&cent; US per pair thanks to donated eyewear and community labor.</p>
-        </li>
-        <li class="ed-metric-card ed-metric-card--gold">
-          <span class="ed-metric-value">100%</span>
-          <span class="ed-metric-label">Volunteer-Run Since 2013</span>
-          <p class="ed-metric-note">Zero paid staff; 501(c)(3) tax-exempt nonprofit recognized in 2014.</p>
-        </li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- 4 Clear Visitor Intent Pathways -->
-  <section class="ed-band ed-band--surface" aria-labelledby="home-pathways-title">
-    <div class="ed-wrap">
-      <div class="ed-section-head">
-        <div class="ed-section-head__copy">
-          <span class="ed-kicker"><?= erc_icon('heart-handshake') ?> How to Take Part</span>
-          <h2 id="home-pathways-title" class="ed-h2">Four Clear Ways to Put Sight Within Reach</h2>
-          <p class="ed-lead">
-            Whether you have a drawer of spare frames, two hours on a Saturday morning, or a humanitarian clinic preparing for departure, start directly where you belong.
-          </p>
-        </div>
-      </div>
-
-      <div class="ed-grid ed-grid--4">
-        <article class="ed-card ed-card--clickable">
-          <div class="ed-card__icon-box">
-            <?= erc_icon('glasses') ?>
-          </div>
-          <h3 class="ed-h3">
-            <a class="ed-card-link" href="/donate">Donate Glasses &amp; Tech</a>
-          </h3>
-          <p class="ed-prose">
-            Give prescription glasses, readers, or sunglasses in any condition—plus hearing aids, wiped cell phones, and Windows 11 laptops or tablets.
-          </p>
-          <footer class="ed-card__footer">
-            <span>See accepted items</span>
-            <?= erc_icon('arrow-right') ?>
-          </footer>
-        </article>
-
-        <article class="ed-card ed-card--clickable">
-          <div class="ed-card__icon-box ed-card__icon-box--gold">
-            <?= erc_icon('map-pin') ?>
-          </div>
-          <h3 class="ed-h3">
-            <a class="ed-card-link" href="/locations">Find a Drop-Off Bin</a>
-          </h3>
-          <p class="ed-prose">
-            Search 214 North Texas drop-off bins across 34 cities or visit our Watauga headquarters on Saturdays from 9:00 AM to 3:00 PM.
-          </p>
-          <footer class="ed-card__footer">
-            <span>Open map &amp; directory</span>
-            <?= erc_icon('arrow-right') ?>
-          </footer>
-        </article>
-
-        <article class="ed-card ed-card--clickable">
-          <div class="ed-card__icon-box ed-card__icon-box--emerald">
-            <?= erc_icon('users') ?>
-          </div>
-          <h3 class="ed-h3">
-            <a class="ed-card-link" href="/volunteer">Volunteer Saturday</a>
-          </h3>
-          <p class="ed-prose">
-            Drop in individually on Saturdays or schedule a group of up to 20 from your club, school, church, or company—no prior experience needed.
-          </p>
-          <footer class="ed-card__footer">
-            <span>View calendar &amp; sign up</span>
-            <?= erc_icon('arrow-right') ?>
-          </footer>
-        </article>
-
-        <article class="ed-card ed-card--clickable">
-          <div class="ed-card__icon-box">
-            <?= erc_icon('globe') ?>
-          </div>
-          <h3 class="ed-h3">
-            <a class="ed-card-link" href="/missions#mission-requests">Request Mission Eyewear</a>
-          </h3>
-          <p class="ed-prose">
-            Qualifying nonprofit clinics with refractive testing may order 50-pair diopter boxes at zero hardware cost (30-day lead time; mission covers shipping).
-          </p>
-          <footer class="ed-card__footer">
-            <span>Mission request guide</span>
-            <?= erc_icon('arrow-right') ?>
-          </footer>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- Visual 6-Stage Optical Refurbishment Overview -->
-  <section class="ed-band" aria-labelledby="home-process-title">
-    <div class="ed-wrap">
-      <div class="ed-section-head">
-        <div class="ed-section-head__copy">
-          <span class="ed-kicker"><?= erc_icon('recycle') ?> Optical Workshop Process</span>
-          <h2 id="home-process-title" class="ed-h2">From Neighborhood Collection Box to Verified Prescription</h2>
-          <p class="ed-lead">
-            Six disciplined steps transform unsorted donations into ready-to-dispense, labeled 50-pair mission cartons graded to <span class="ed-mono">0.25</span> diopters.
-          </p>
-        </div>
-        <a class="ed-btn ed-btn--secondary" href="/donate#refurbishment-process">
-          <span>Diopter &amp; Sorting Details</span>
-          <?= erc_icon('arrow-right') ?>
-        </a>
-      </div>
-
-      <ol class="ed-process-grid">
-        <li class="ed-process-step">
-          <div class="ed-step-head">
-            <span class="ed-step-num" aria-hidden="true">01</span>
-            <h3 class="ed-h4">Collection</h3>
-          </div>
-          <p class="ed-prose">
-            Gathered from 214 North Texas drop-off bins, Lions Clubs, corporate drives, walk-ins, and shipped boxes.
-          </p>
-        </li>
-
-        <li class="ed-process-step">
-          <div class="ed-step-head">
-            <span class="ed-step-num" aria-hidden="true">02</span>
-            <h3 class="ed-h4">Inspection &amp; Initial Sorting</h3>
-          </div>
-          <p class="ed-prose">
-            Separated into non-prescription sunglasses, readers, nearsighted (minus), farsighted (plus), and multifocal/prism lenses.
-          </p>
-        </li>
-
-        <li class="ed-process-step">
-          <div class="ed-step-head">
-            <span class="ed-step-num" aria-hidden="true">03</span>
-            <h3 class="ed-h4">Washing, Sanitizing &amp; Drying</h3>
-          </div>
-          <p class="ed-prose">
-            Frames and lenses are thoroughly washed, sanitized, and rack-dried by volunteer workteams before optical testing.
-          </p>
-        </li>
-
-        <li class="ed-process-step">
-          <div class="ed-step-head">
-            <span class="ed-step-num" aria-hidden="true">04</span>
-            <h3 class="ed-h4">Lensometry Measurement</h3>
-          </div>
-          <p class="ed-prose">
-            Volunteers measure exact spherical/lens power on tabletop lensometers so field doctors receive accurate pairs.
-          </p>
-        </li>
-
-        <li class="ed-process-step">
-          <div class="ed-step-head">
-            <span class="ed-step-num" aria-hidden="true">05</span>
-            <h3 class="ed-h4">Quality Check &amp; 50-Pair Packing</h3>
-          </div>
-          <p class="ed-prose">
-            Tagged, bagged, and boxed in standardized 50-pair cartons organized by <span class="ed-mono">0.25</span>-diopter increment.
-          </p>
-        </li>
-
-        <li class="ed-process-step">
-          <div class="ed-step-head">
-            <span class="ed-step-num" aria-hidden="true">06</span>
-            <h3 class="ed-h4">Humanitarian Mission Dispatch</h3>
-          </div>
-          <p class="ed-prose">
-            Shipped free of hardware cost (mission covers freight) to nonprofit medical clinics in 40+ countries.
-          </p>
-        </li>
-      </ol>
-
-      <div class="ed-workshop-pair">
-        <figure class="ed-media-frame">
-          <img
-            class="ed-media-frame__img"
-            src="/gallery/drying-glasses.jpg"
-            alt="Volunteers inspecting and air-drying freshly washed eyeglasses on workshop racks"
-            loading="lazy"
-            decoding="async"
-          >
-          <figcaption class="ed-media-frame__caption">
-            <strong>Stage 03 · Wash &amp; Sanitize:</strong> Freshly cleaned eyewear drying on workshop racks prior to lensometry.
-          </figcaption>
-        </figure>
-
-        <figure class="ed-media-frame">
-          <div class="erc-rotated-frame erc-rotated-frame--landscape">
+          <figure class="v2-hero__photo-frame">
             <img
-              class="is-ccw90-no-exif"
-              src="/images/process-lensometers.jpg"
-              alt="Volunteers operating optical lensometers at the Watauga workshop to measure lens prescriptions"
-              width="1200"
-              height="900"
-              loading="lazy"
+              class="v2-hero__img"
+              src="<?= e(erc_media_url('images/our-story-group.png')) ?>"
+              alt="Founding leaders and Lions Club volunteers standing outside the Watauga Eyeglass Recycling Center at 5621 Bunker Blvd"
+              width="695"
+              height="360"
+              fetchpriority="high"
+              loading="eager"
               decoding="async"
             >
+            <figcaption class="v2-hero__caption">
+              <span class="mono">5621 BUNKER BLVD · WATAUGA, TX 76148</span>
+              <span class="mono">SAT 9AM–3PM CT</span>
+            </figcaption>
+          </figure>
+
+          <div class="v2-hero__inset-row">
+            <figure class="v2-hero__inset-card">
+              <img
+                class="v2-hero__inset-img"
+                src="<?= e(erc_media_url('gallery/drying-glasses.jpg')) ?>"
+                alt="Volunteers inspecting and air-drying sanitized eyeglasses on workshop racks"
+                loading="eager"
+                decoding="async"
+              >
+              <figcaption class="mono">STAGE 03 · RACK DRYING</figcaption>
+            </figure>
+
+            <div class="v2-hero__access-callout">
+              <p class="v2-note v2-hero__note-walkway">
+                <span>east-side wooden walkway to rear door</span>
+                <?= erc_curved_arrow('up-left') ?>
+              </p>
+              <p class="v2-hero__access-text">
+                <strong>Free on-site parking.</strong> Follow the wooden walkway along the east side of the building to the rear entrance. Weekdays by appointment at
+                <a class="v2-inline-link mono" href="tel:<?= e($GLOBAL_PHONE_LINK) ?>"><?= e($GLOBAL_PHONE) ?></a>.
+              </p>
+            </div>
           </div>
-          <figcaption class="ed-media-frame__caption">
-            <strong>Stage 04 · Lensometry:</strong> Determining exact diopter measurements so clinics can match patients rapidly.
-          </figcaption>
-        </figure>
+        </div>
+      </div>
+
+      <!-- Bottom Live Telemetry Bar -->
+      <div class="v2-hero__telemetry-bar" role="region" aria-label="Live Watauga workshop telemetry">
+        <div class="v2-telemetry">
+          <span class="v2-pulse v2-pulse--live" aria-hidden="true"></span>
+          <span>WATAUGA WORKSHOP · 5621 BUNKER BLVD · <span data-ct-clock>SAT 9AM–3PM CT</span></span>
+        </div>
+
+        <div class="v2-hero__telemetry-right">
+          <a class="btn btn--secondary btn--sm" href="#impact-board">
+            <span>SCROLL &darr;</span>
+          </a>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Featured Verbatim Partner Quote -->
-  <?php if (is_array($featuredQuote)): ?>
-    <section class="ed-band ed-band--tint" aria-labelledby="home-quote-title">
-      <div class="ed-wrap">
-        <div class="ed-section-head">
-          <div class="ed-section-head__copy">
-            <span class="ed-kicker"><?= erc_icon('globe') ?> Voice from the Field</span>
-            <h2 id="home-quote-title" class="ed-h2">Why Precision Sorting Matters at Partner Clinics</h2>
-          </div>
-          <a class="ed-btn ed-btn--secondary" href="/missions#clinic-stories">
-            <span>All 4 Partner Testimonials</span>
-            <?= erc_icon('arrow-right') ?>
-          </a>
-        </div>
-
-        <figure class="ed-quote-card">
-          <blockquote>
-            &ldquo;<?= e((string)($featuredQuote['text'] ?? '')) ?>&rdquo;
-          </blockquote>
-          <figcaption>
-            <span class="ed-quote-author"><?= e((string)($featuredQuote['author'] ?? '')) ?></span>
-            <?php if (trim((string)($featuredQuote['organization'] ?? '')) !== ''): ?>
-              <span class="ed-quote-org"><?= e((string)$featuredQuote['organization']) ?></span>
-            <?php endif; ?>
-          </figcaption>
-        </figure>
-      </div>
-    </section>
-  <?php endif; ?>
-
-  <!-- Watauga HQ & P.O. Box 1854 Summary -->
-  <section class="ed-band ed-band--surface ed-band--last" aria-labelledby="home-hq-title">
-    <div class="ed-wrap">
-      <div class="ed-section-head">
-        <div class="ed-section-head__copy">
-          <span class="ed-kicker"><?= erc_icon('building-2') ?> Center &amp; Mailing Addresses</span>
-          <h2 id="home-hq-title" class="ed-h2">Visit Our Workshop or Support by Mail</h2>
-        </div>
+  <!-- Mechanical Solari Split-Flap Impact Board -->
+  <section id="impact-board" class="section v2-solari-section" aria-labelledby="solari-title">
+    <div class="container">
+      <div class="v2-eyebrow">
+        <span>VERIFIED DISPATCH LEDGER</span>
+        <span class="v2-eyebrow__rule" aria-hidden="true"></span>
+        <span>LION YEAR JULY 1 – JUNE 30 · EST. 2013</span>
       </div>
 
-      <div class="ed-grid ed-grid--2">
-        <article class="ed-card">
-          <div class="ed-card__icon-box">
-            <?= erc_icon('map-pin') ?>
-          </div>
-          <h3 class="ed-h3">Watauga Processing Center</h3>
-          <dl class="ed-dl">
-            <div class="ed-dl__row">
-              <dt>Physical Address</dt>
-              <dd>5621 Bunker Blvd, Watauga, TX 76148</dd>
-            </div>
-            <div class="ed-dl__row">
-              <dt>Entrance &amp; Parking</dt>
-              <dd>Free on-site parking. Follow the wooden walkway along the east side of the building to the rear entrance.</dd>
-            </div>
-            <div class="ed-dl__row">
-              <dt>Phone &amp; Email (24h Turnaround)</dt>
-              <dd>
-                <a class="ed-inline-link ed-mono" href="tel:<?= e($GLOBAL_PHONE_LINK) ?>"><?= e($GLOBAL_PHONE) ?></a>
-                &middot;
-                <a class="ed-inline-link" href="mailto:<?= e($GLOBAL_EMAIL) ?>"><?= e($GLOBAL_EMAIL) ?></a>
-              </dd>
-            </div>
-          </dl>
-          <div class="ed-actions">
-            <a class="ed-btn ed-btn--primary" href="/contact">Contact &amp; Forms</a>
-            <a class="ed-btn ed-btn--secondary" href="/locations">214 Drop-Off Bins</a>
-          </div>
-        </article>
+      <div class="v2-solari-head">
+        <h2 id="solari-title" class="v2-display v2-display--lg">
+          <span>ONE <span class="v2-nowrap">CENTER<span class="v2-dot" aria-hidden="true"></span></span></span>
+          <span>GLOBAL <span class="v2-nowrap"><span class="v2-accent-text">SIGHT</span><span class="v2-dot" aria-hidden="true"></span></span></span>
+        </h2>
+        <p class="lead">
+          Six verified operational benchmarks from our Watauga bench and 2013–2025 shipping ledger. Spin the mechanical split-flap board to cycle each telemetry card.
+        </p>
+      </div>
 
-        <article class="ed-card ed-card--subtle">
-          <div class="ed-card__icon-box ed-card__icon-box--gold">
-            <?= erc_icon('landmark') ?>
+      <div class="v2-solari-housing" data-solari-board>
+        <div class="v2-solari-housing__top">
+          <div class="v2-solari-status-wrap">
+            <span class="v2-pulse" aria-hidden="true"></span>
+            <span class="mono" data-solari-status>CYCLING VERIFIED METRICS</span>
           </div>
-          <h3 class="ed-h3">Mailing &amp; 501(c)(3) Check Donations</h3>
-          <dl class="ed-dl">
-            <div class="ed-dl__row">
-              <dt>Mailing Address</dt>
-              <dd>
-                Lions District 2-E2 ERC<br>
-                P.O. Box 1854<br>
-                Keller, TX 76244
-              </dd>
-            </div>
-            <div class="ed-dl__row">
-              <dt>Nonprofit &amp; Financial Stewardship</dt>
-              <dd>
-                District 2-E2 Lions Eyeglass Recycling Center Foundation (501(c)(3) recognized 2014). 100% of financial contributions support mission shipping, processing supplies, and facility operations.
-              </dd>
-            </div>
-          </dl>
-          <div class="ed-actions">
-            <a class="ed-btn ed-btn--gold" href="/donate#monetary-gifts">How to Donate by Check</a>
-            <a class="ed-btn ed-btn--secondary" href="/about#recognition">Lions Awards</a>
+
+          <div class="v2-solari-segments" data-solari-segments aria-hidden="true">
+            <span class="is-active"></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
           </div>
-        </article>
+
+          <div class="v2-solari-counter mono" data-solari-counter>FACT 01/06</div>
+        </div>
+
+        <!-- 2 rows x 9 columns mechanical split-flap board -->
+        <div class="v2-solari-grid" data-solari-grid aria-hidden="true">
+          <?php
+          // Initial server-rendered state: Fact 01 ("21,696+" / "PAIRS")
+          $initRow1 = str_split('21,696+  ');
+          $initRow2 = str_split('PAIRS    ');
+          foreach ($initRow1 as $colIdx => $ch):
+              $isAccent = $ch !== ' ';
+          ?>
+            <div class="v2-flap<?= $isAccent ? ' v2-flap--accent' : '' ?>" data-row="0" data-col="<?= $colIdx ?>">
+              <div class="v2-flap__top"><span><?= e($ch === ' ' ? "\u{00A0}" : $ch) ?></span></div>
+              <div class="v2-flap__bottom"><span><?= e($ch === ' ' ? "\u{00A0}" : $ch) ?></span></div>
+              <div class="v2-flap__hinge"></div>
+            </div>
+          <?php endforeach; ?>
+          <?php foreach ($initRow2 as $colIdx => $ch): ?>
+            <div class="v2-flap" data-row="1" data-col="<?= $colIdx ?>">
+              <div class="v2-flap__top"><span><?= e($ch === ' ' ? "\u{00A0}" : $ch) ?></span></div>
+              <div class="v2-flap__bottom"><span><?= e($ch === ' ' ? "\u{00A0}" : $ch) ?></span></div>
+              <div class="v2-flap__hinge"></div>
+            </div>
+          <?php endforeach; ?>
+        </div>
+
+        <div class="v2-solari-housing__foot">
+          <p class="v2-solari-caption" data-solari-caption aria-live="polite">
+            <strong>21,696+ Pairs (2024–2025):</strong> 17,692 foreign + 4,004 local mission pairs shipped in our highest recorded Lion Year.
+          </p>
+          <span class="v2-solari-tag mono" data-solari-tag>LION YEAR 2024–2025</span>
+        </div>
+      </div>
+
+      <div class="v2-solari-controls">
+        <button type="button" class="btn btn--secondary v2-solari-spin" data-solari-spin>
+          <?= erc_icon('refresh-cw', ['width' => '17', 'height' => '17']) ?>
+          <span>&#8635; SPIN BOARD</span>
+        </button>
+
+        <div class="v2-solari-pills" role="group" aria-label="Select verified benchmark">
+          <button type="button" class="btn btn--secondary btn--sm v2-solari-pill" data-solari-index="0" aria-pressed="true">01 · PAIRS</button>
+          <button type="button" class="btn btn--secondary btn--sm v2-solari-pill" data-solari-index="1" aria-pressed="false">02 · BINS</button>
+          <button type="button" class="btn btn--secondary btn--sm v2-solari-pill" data-solari-index="2" aria-pressed="false">03 · NATIONS</button>
+          <button type="button" class="btn btn--secondary btn--sm v2-solari-pill" data-solari-index="3" aria-pressed="false">04 · COST</button>
+          <button type="button" class="btn btn--secondary btn--sm v2-solari-pill" data-solari-index="4" aria-pressed="false">05 · GRADE</button>
+          <button type="button" class="btn btn--secondary btn--sm v2-solari-pill" data-solari-index="5" aria-pressed="false">06 · BOXES</button>
+        </div>
+
+        <a class="btn btn--ghost btn--sm" href="/missions#shipping-history">
+          <span>FULL 2013–2025 LEDGER</span>
+          <?= erc_icon('arrow-right', ['width' => '16', 'height' => '16']) ?>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Connected SVG Optical Transit Line ("THE ROUTE OF EVERY PAIR") -->
+  <section id="optical-pipeline" class="section section--subtle v2-transit-section" aria-labelledby="pipeline-title">
+    <div class="container">
+      <div class="v2-eyebrow">
+        <span>32.8707&deg; N, 97.2621&deg; W</span>
+        <span class="v2-eyebrow__rule" aria-hidden="true"></span>
+        <span>0.25-DIOPTER REFURBISHMENT LINE</span>
+      </div>
+
+      <div class="v2-transit-header">
+        <div>
+          <h2 id="pipeline-title" class="v2-display v2-display--lg">
+            <span>THE ROUTE OF</span>
+            <span>EVERY <span class="v2-nowrap"><span class="v2-accent-text">PAIR</span><span class="v2-dot" aria-hidden="true"></span></span></span>
+          </h2>
+        </div>
+        <div class="v2-transit-header__aside">
+          <p class="v2-note">
+            <span>from drop box to clinic table</span>
+            <?= erc_curved_arrow('down-left') ?>
+          </p>
+          <p class="lead">
+            Six disciplined stages transform unsorted neighborhood donations into ready-to-dispense 50-pair cartons graded to <span class="mono">0.25</span> diopters.
+          </p>
+        </div>
+      </div>
+
+      <!-- Interactive Transit Arc + Station Selector -->
+      <div class="v2-transit-rail" data-transit-rail>
+        <div class="v2-transit-rail__controls">
+          <div class="v2-transit-tabs" role="tablist" aria-label="Refurbishment pipeline stations">
+            <?php foreach ($pipelineStages as $idx => $stage): ?>
+              <button
+                type="button"
+                role="tab"
+                class="v2-transit-tab"
+                id="tab-stage-<?= e($stage['num']) ?>"
+                aria-selected="<?= $idx === 0 ? 'true' : 'false' ?>"
+                aria-controls="stage-card-<?= e($stage['num']) ?>"
+                data-stage-trigger="<?= $idx ?>"
+              >
+                <span class="mono"><?= e($stage['num']) ?></span>
+                <span><?= e($stage['short']) ?></span>
+              </button>
+            <?php endforeach; ?>
+          </div>
+
+          <div class="v2-transit-nav-btns">
+            <button type="button" class="btn btn--secondary btn--sm" data-stage-prev aria-label="Previous pipeline stage">
+              <?= erc_icon('chevron-left', ['width' => '16', 'height' => '16']) ?>
+              <span>PREV</span>
+            </button>
+            <button type="button" class="btn btn--secondary btn--sm" data-stage-next aria-label="Next pipeline stage">
+              <span>NEXT</span>
+              <?= erc_icon('chevron-right', ['width' => '16', 'height' => '16']) ?>
+            </button>
+          </div>
+        </div>
+
+        <!-- Connected Catenary Suspension SVG Arc -->
+        <div class="v2-transit-svg-wrap" aria-hidden="true">
+          <svg
+            class="v2-transit-svg"
+            viewBox="0 0 1200 132"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="none"
+          >
+            <!-- Anchor pylons -->
+            <line x1="80" y1="16" x2="80" y2="128" stroke="currentColor" stroke-opacity="0.22" stroke-width="1.5" />
+            <line x1="600" y1="16" x2="600" y2="128" stroke="currentColor" stroke-opacity="0.22" stroke-width="1.5" />
+            <line x1="1120" y1="16" x2="1120" y2="128" stroke="currentColor" stroke-opacity="0.22" stroke-width="1.5" />
+
+            <!-- Full dashed trajectory catenary -->
+            <path
+              d="M 80 28 Q 340 106 600 28 Q 860 106 1120 28"
+              stroke="currentColor"
+              stroke-opacity="0.28"
+              stroke-width="2"
+              stroke-dasharray="5 6"
+            />
+
+            <!-- Active vermilion suspension cable (updated via JS stroke-dasharray/dashoffset or path segment) -->
+            <path
+              class="v2-transit-arc-active"
+              data-transit-active-path
+              d="M 80 28 Q 340 106 600 28 Q 860 106 1120 28"
+              stroke="var(--accent-ink)"
+              stroke-width="3"
+              stroke-linecap="round"
+            />
+
+            <!-- 6 Vertical Suspension Hanger Cables & Station Nodes -->
+            <g data-transit-nodes>
+              <line x1="80" y1="28" x2="80" y2="128" stroke="var(--accent-ink)" stroke-width="1.5" stroke-opacity="0.65" data-hanger="0" />
+              <circle cx="80" cy="28" r="7" fill="var(--accent-ink)" data-node-dot="0" />
+
+              <line x1="288" y1="64" x2="288" y2="128" stroke="currentColor" stroke-width="1.25" stroke-opacity="0.28" data-hanger="1" />
+              <circle cx="288" cy="64" r="5.5" fill="var(--surface)" stroke="currentColor" stroke-opacity="0.45" stroke-width="2" data-node-dot="1" />
+
+              <line x1="496" y1="54" x2="496" y2="128" stroke="currentColor" stroke-width="1.25" stroke-opacity="0.28" data-hanger="2" />
+              <circle cx="496" cy="54" r="5.5" fill="var(--surface)" stroke="currentColor" stroke-opacity="0.45" stroke-width="2" data-node-dot="2" />
+
+              <line x1="704" y1="54" x2="704" y2="128" stroke="currentColor" stroke-width="1.25" stroke-opacity="0.28" data-hanger="3" />
+              <circle cx="704" cy="54" r="5.5" fill="var(--surface)" stroke="currentColor" stroke-opacity="0.45" stroke-width="2" data-node-dot="3" />
+
+              <line x1="912" y1="64" x2="912" y2="128" stroke="currentColor" stroke-width="1.25" stroke-opacity="0.28" data-hanger="4" />
+              <circle cx="912" cy="64" r="5.5" fill="var(--surface)" stroke="currentColor" stroke-opacity="0.45" stroke-width="2" data-node-dot="4" />
+
+              <line x1="1120" y1="28" x2="1120" y2="128" stroke="currentColor" stroke-width="1.25" stroke-opacity="0.28" data-hanger="5" />
+              <circle cx="1120" cy="28" r="5.5" fill="var(--surface)" stroke="currentColor" stroke-opacity="0.45" stroke-width="2" data-node-dot="5" />
+            </g>
+          </svg>
+        </div>
+
+        <!-- 6 Schematic Blueprint Station Cards -->
+        <div class="v2-schematic-grid">
+          <?php foreach ($pipelineStages as $idx => $stage): ?>
+            <article
+              id="stage-card-<?= e($stage['num']) ?>"
+              class="v2-schematic-card v2-schematic-card--split v2-station-card<?= $idx === 0 ? ' is-active' : '' ?>"
+              data-stage-card="<?= $idx ?>"
+            >
+              <div class="v2-station-card__body">
+                <div class="v2-schematic-card__head">
+                  <span class="v2-schematic-card__num"><?= e($stage['num']) ?></span>
+                  <span><?= e($stage['meta']) ?></span>
+                </div>
+
+                <h3 class="v2-schematic-card__title"><?= e($stage['title']) ?></h3>
+                <p class="v2-station-card__desc"><?= e($stage['summary']) ?></p>
+
+                <div class="v2-station-card__foot">
+                  <span class="badge badge--brand"><?= e($stage['spec']) ?></span>
+                </div>
+              </div>
+
+              <div class="v2-schematic-box">
+                <span class="v2-schematic-box__caption"><?= e($stage['fig']) ?></span>
+
+                <?php if ($stage['num'] === '01'): ?>
+                  <svg class="v2-blueprint-svg" viewBox="0 0 260 130" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <circle cx="44" cy="36" r="14" stroke="currentColor" stroke-opacity="0.35" stroke-width="1.5" />
+                    <circle cx="44" cy="36" r="4" fill="currentColor" fill-opacity="0.4" />
+                    <circle cx="130" cy="24" r="14" stroke="currentColor" stroke-opacity="0.35" stroke-width="1.5" />
+                    <circle cx="130" cy="24" r="4" fill="currentColor" fill-opacity="0.4" />
+                    <circle cx="216" cy="36" r="14" stroke="currentColor" stroke-opacity="0.35" stroke-width="1.5" />
+                    <circle cx="216" cy="36" r="4" fill="currentColor" fill-opacity="0.4" />
+                    <path d="M44 50 L118 86 M130 38 L130 82 M216 50 L142 86" stroke="currentColor" stroke-opacity="0.35" stroke-width="1.5" stroke-dasharray="3 4" />
+                    <rect x="86" y="84" width="88" height="34" rx="6" stroke="var(--accent-ink)" stroke-width="2" />
+                    <text x="130" y="105" text-anchor="middle" fill="var(--accent-ink)" font-family="monospace" font-size="11" font-weight="700">214 BINS → HQ</text>
+                  </svg>
+                <?php elseif ($stage['num'] === '02'): ?>
+                  <svg class="v2-blueprint-svg" viewBox="0 0 260 130" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <!-- Concave (-) vs Convex (+) vs Sunglasses/Multifocal -->
+                    <path d="M36 32 C46 50, 46 80, 36 98 L54 98 C46 80, 46 50, 54 32 Z" stroke="currentColor" stroke-opacity="0.55" stroke-width="1.5" />
+                    <path d="M108 32 C94 52, 94 78, 108 98 C122 78, 122 52, 108 32 Z" stroke="var(--accent-ink)" stroke-width="2" />
+                    <circle cx="172" cy="65" r="24" stroke="currentColor" stroke-opacity="0.45" stroke-width="1.5" />
+                    <path d="M150 72 A22 14 0 0 0 194 72" stroke="var(--accent-ink)" stroke-width="1.75" />
+                    <rect x="210" y="42" width="32" height="46" rx="4" stroke="currentColor" stroke-opacity="0.45" stroke-width="1.5" />
+                    <line x1="210" y1="65" x2="242" y2="65" stroke="currentColor" stroke-opacity="0.35" stroke-dasharray="3 3" />
+                    <text x="45" y="118" text-anchor="middle" fill="currentColor" fill-opacity="0.65" font-family="monospace" font-size="9">MINUS -</text>
+                    <text x="108" y="118" text-anchor="middle" fill="var(--accent-ink)" font-family="monospace" font-size="9">PLUS +</text>
+                    <text x="172" y="118" text-anchor="middle" fill="currentColor" fill-opacity="0.65" font-family="monospace" font-size="9">BIFOCAL</text>
+                    <text x="226" y="118" text-anchor="middle" fill="currentColor" fill-opacity="0.65" font-family="monospace" font-size="9">SUN</text>
+                  </svg>
+                <?php elseif ($stage['num'] === '03'): ?>
+                  <svg class="v2-blueprint-svg" viewBox="0 0 260 130" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <rect x="24" y="34" width="212" height="66" rx="10" stroke="currentColor" stroke-opacity="0.45" stroke-width="1.5" />
+                    <path d="M40 58 Q60 48 80 58 T120 58 T160 58 T200 58 T224 58" stroke="var(--accent-ink)" stroke-width="2" />
+                    <path d="M40 76 Q60 66 80 76 T120 76 T160 76 T200 76 T224 76" stroke="currentColor" stroke-opacity="0.4" stroke-width="1.5" />
+                    <circle cx="90" cy="22" r="5" stroke="var(--accent-ink)" stroke-width="1.5" />
+                    <circle cx="135" cy="18" r="7" stroke="currentColor" stroke-opacity="0.45" stroke-width="1.5" />
+                    <circle cx="176" cy="24" r="4" stroke="var(--accent-ink)" stroke-width="1.5" />
+                    <text x="130" y="118" text-anchor="middle" fill="currentColor" fill-opacity="0.65" font-family="monospace" font-size="9.5">WASH · SANITIZE · RACK DRY</text>
+                  </svg>
+                <?php elseif ($stage['num'] === '04'): ?>
+                  <div class="v2-stage4-media">
+                    <div class="erc-rotated-frame erc-rotated-frame--landscape">
+                      <img
+                        class="is-ccw90-no-exif"
+                        src="<?= e(erc_media_url('images/process-lensometers.jpg')) ?>"
+                        alt="Volunteers operating optical lensometers at the Watauga workshop to measure lens prescriptions"
+                        width="1200"
+                        height="900"
+                        loading="eager"
+                        decoding="async"
+                      >
+                    </div>
+                    <svg class="v2-blueprint-svg v2-blueprint-svg--compact" viewBox="0 0 260 76" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                      <circle cx="52" cy="38" r="26" stroke="currentColor" stroke-opacity="0.4" stroke-width="1.5" />
+                      <circle cx="52" cy="38" r="14" stroke="var(--accent-ink)" stroke-width="1.75" stroke-dasharray="3 3" />
+                      <line x1="20" y1="38" x2="84" y2="38" stroke="var(--accent-ink)" stroke-width="1.5" />
+                      <line x1="52" y1="6" x2="52" y2="70" stroke="var(--accent-ink)" stroke-width="1.5" />
+                      <text x="168" y="34" text-anchor="middle" fill="var(--accent-ink)" font-family="monospace" font-size="14" font-weight="700">0.25D STEP</text>
+                      <text x="168" y="52" text-anchor="middle" fill="currentColor" fill-opacity="0.65" font-family="monospace" font-size="9.5">SPH / AXIS READOUT</text>
+                    </svg>
+                  </div>
+                <?php elseif ($stage['num'] === '05'): ?>
+                  <svg class="v2-blueprint-svg" viewBox="0 0 260 130" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <polygon points="130,16 214,44 130,72 46,44" stroke="var(--accent-ink)" stroke-width="2" />
+                    <polygon points="46,44 130,72 130,114 46,86" stroke="currentColor" stroke-opacity="0.45" stroke-width="1.5" />
+                    <polygon points="214,44 130,72 130,114 214,86" stroke="currentColor" stroke-opacity="0.45" stroke-width="1.5" />
+                    <line x1="88" y1="30" x2="172" y2="58" stroke="var(--accent-ink)" stroke-width="1.25" stroke-dasharray="4 3" />
+                    <text x="130" y="126" text-anchor="middle" fill="var(--accent-ink)" font-family="monospace" font-size="10" font-weight="700">50 PAIRS / DIOPTER CARTON</text>
+                  </svg>
+                <?php else: ?>
+                  <svg class="v2-blueprint-svg" viewBox="0 0 260 130" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <circle cx="52" cy="65" r="7" fill="var(--accent-ink)" />
+                    <path d="M52 65 Q120 14 210 28" stroke="var(--accent-ink)" stroke-width="2" />
+                    <path d="M52 65 Q132 54 222 65" stroke="currentColor" stroke-opacity="0.55" stroke-width="1.5" stroke-dasharray="4 4" />
+                    <path d="M52 65 Q120 112 206 98" stroke="var(--accent-ink)" stroke-width="1.75" stroke-dasharray="4 3" />
+                    <circle cx="210" cy="28" r="5" stroke="var(--accent-ink)" stroke-width="2" />
+                    <circle cx="222" cy="65" r="5" stroke="currentColor" stroke-opacity="0.6" stroke-width="1.75" />
+                    <circle cx="206" cy="98" r="5" stroke="var(--accent-ink)" stroke-width="2" />
+                    <text x="130" y="122" text-anchor="middle" fill="currentColor" fill-opacity="0.65" font-family="monospace" font-size="9.5">AMERICAS · AFRICA · ASIA · EUROPE · FIJI</text>
+                  </svg>
+                <?php endif; ?>
+              </div>
+            </article>
+          <?php endforeach; ?>
+        </div>
+      </div>
+
+      <div class="v2-transit-footer">
+        <a class="btn btn--secondary" href="/donate#refurbishment-process">
+          <span>DIOPTER &amp; PACKAGING SPECS</span>
+          <?= erc_icon('arrow-right', ['width' => '16', 'height' => '16']) ?>
+        </a>
+        <a class="btn btn--primary" href="/volunteer">
+          <?= erc_icon('users', ['width' => '16', 'height' => '16']) ?>
+          <span>JOIN A SATURDAY WORKTEAM</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contrast Stage Sheet: THREE WAYS IN + Verbatim Testimonials -->
+  <section class="section">
+    <div class="v2-sheet" aria-labelledby="ways-in-title">
+      <div class="v2-sheet__inner">
+        <div class="v2-eyebrow">
+          <span>&mdash; PARTICIPATION PASSES</span>
+          <span class="v2-eyebrow__rule" aria-hidden="true"></span>
+          <span>100% VOLUNTEER-RUN · 501(C)(3)</span>
+        </div>
+
+        <div class="v2-sheet-head">
+          <h2 id="ways-in-title" class="v2-display v2-display--lg">
+            <span>THREE WAYS <span class="v2-nowrap"><span class="v2-accent-text">IN</span><span class="v2-dot" aria-hidden="true"></span></span></span>
+          </h2>
+          <div class="v2-sheet-head__note">
+            <p class="v2-note">
+              <span>pick your pass</span>
+              <?= erc_curved_arrow('down-left') ?>
+            </p>
+            <p class="lead">
+              Whether you have one spare frame, a Saturday morning, or a medical mission team preparing for departure, jump directly to your station.
+            </p>
+          </div>
+        </div>
+
+        <div class="v2-tickets-grid">
+          <article class="v2-ticket">
+            <div class="v2-ticket__main">
+              <div class="v2-ticket__meta">
+                <span>PASS 01 · NEIGHBORHOOD DROP-OFF</span>
+                <span>214 LOCATIONS</span>
+              </div>
+              <h3 class="v2-ticket__title">DROP A PAIR</h3>
+              <p class="v2-ticket__desc">
+                Drop off prescription glasses, readers, or sunglasses in any condition across 34 North Texas cities—or bring hearing aids, wiped phones, and Windows 11 devices to Watauga HQ.
+              </p>
+              <div class="v2-ticket__actions">
+                <a class="btn btn--primary" href="/locations">
+                  <?= erc_icon('map-pin', ['width' => '16', 'height' => '16']) ?>
+                  <span>FIND A DROP BIN</span>
+                </a>
+                <a class="btn btn--secondary" href="/donate">
+                  <span>ELIGIBILITY GUIDE</span>
+                </a>
+              </div>
+            </div>
+            <div class="v2-ticket__stub">
+              <span class="v2-ticket__serial">NO. 01 · DROP A PAIR</span>
+              <span class="badge badge--brand">DFW · 34 CITIES</span>
+            </div>
+          </article>
+
+          <article class="v2-ticket">
+            <div class="v2-ticket__main">
+              <div class="v2-ticket__meta">
+                <span>PASS 02 · WATAUGA WORKSHOP</span>
+                <span>SAT 9AM–3PM CT</span>
+              </div>
+              <h3 class="v2-ticket__title">WORK A SHIFT</h3>
+              <p class="v2-ticket__desc">
+                Walk in Saturdays or reserve a slot for your club, school, church, or company (up to 20 volunteers per group). On-site training provided; no prior optical experience needed.
+              </p>
+              <div class="v2-ticket__actions">
+                <a class="btn btn--primary" href="/volunteer">
+                  <?= erc_icon('calendar', ['width' => '16', 'height' => '16']) ?>
+                  <span>VIEW SHIFTS &amp; SIGN UP</span>
+                </a>
+              </div>
+            </div>
+            <div class="v2-ticket__stub">
+              <span class="v2-ticket__serial">NO. 02 · WORK A SHIFT</span>
+              <span class="badge badge--brand">UP TO 20 / GROUP</span>
+            </div>
+          </article>
+
+          <article class="v2-ticket">
+            <div class="v2-ticket__main">
+              <div class="v2-ticket__meta">
+                <span>PASS 03 · HUMANITARIAN CLINICS</span>
+                <span>30-DAY LEAD TIME</span>
+              </div>
+              <h3 class="v2-ticket__title">REQUEST MISSION</h3>
+              <p class="v2-ticket__desc">
+                Qualifying nonprofit missions with refractive testing receive 50-pair diopter boxes free of hardware cost (strictly not for resale; mission covers shipping expenses).
+              </p>
+              <div class="v2-ticket__actions">
+                <a class="btn btn--primary" href="/missions#mission-requests">
+                  <?= erc_icon('globe', ['width' => '16', 'height' => '16']) ?>
+                  <span>REQUEST EYEWEAR</span>
+                </a>
+              </div>
+            </div>
+            <div class="v2-ticket__stub">
+              <span class="v2-ticket__serial">NO. 03 · REQUEST MISSION</span>
+              <span class="badge badge--brand">50-PAIR BOXES</span>
+            </div>
+          </article>
+        </div>
+
+        <!-- Verbatim Partner Clinic Testimonials -->
+        <?php if (!empty($testimonials)): ?>
+          <div class="v2-testimonials-block" aria-labelledby="field-voices-title">
+            <div class="v2-eyebrow">
+              <span>&mdash; VOICES FROM PARTNER CLINICS</span>
+              <span class="v2-eyebrow__rule" aria-hidden="true"></span>
+              <span>VERBATIM FIELD REPORTS</span>
+            </div>
+
+            <div class="v2-testimonials-head">
+              <h3 id="field-voices-title" class="v2-display v2-display--md">
+                WHERE EVERY PAIR <span class="v2-nowrap"><span class="v2-accent-text">LANDS</span><span class="v2-dot" aria-hidden="true"></span></span>
+              </h3>
+              <a class="btn btn--secondary btn--sm" href="/missions#clinic-stories">
+                <span>MISSIONS &amp; GLOBAL REACH</span>
+                <?= erc_icon('arrow-right', ['width' => '16', 'height' => '16']) ?>
+              </a>
+            </div>
+
+            <div class="v2-quotes-grid">
+              <?php foreach ($testimonials as $qIdx => $quote): ?>
+                <figure class="v2-quote-card">
+                  <div class="v2-quote-card__top mono">
+                    <span>FIELD DISPATCH 0<?= $qIdx + 1 ?></span>
+                  </div>
+                  <blockquote class="v2-quote-card__text">
+                    &ldquo;<?= e((string)($quote['text'] ?? '')) ?>&rdquo;
+                  </blockquote>
+                  <figcaption class="v2-quote-card__meta">
+                    <span class="v2-quote-card__author"><?= e((string)($quote['author'] ?? '')) ?></span>
+                    <?php if (trim((string)($quote['organization'] ?? '')) !== ''): ?>
+                      <span class="v2-quote-card__org"><?= e((string)$quote['organization']) ?></span>
+                    <?php endif; ?>
+                  </figcaption>
+                </figure>
+              <?php endforeach; ?>
+            </div>
+          </div>
+        <?php endif; ?>
+
+        <!-- Watauga HQ & P.O. Box Summary -->
+        <div class="v2-hq-strip">
+          <div class="v2-hq-strip__card">
+            <span class="mono v2-hq-strip__label">PHYSICAL CENTER &amp; DROP-OFF</span>
+            <p class="v2-hq-strip__title">5621 Bunker Blvd, Watauga, TX 76148</p>
+            <p class="v2-hq-strip__text">
+              Saturdays 9:00 AM – 3:00 PM CT; Mon–Fri by appointment; closed Sundays. Free on-site parking — follow the east-side wooden walkway to the rear entrance.
+            </p>
+            <div class="v2-hq-strip__actions">
+              <a class="btn btn--secondary btn--sm" href="tel:<?= e($GLOBAL_PHONE_LINK) ?>">
+                <?= erc_icon('phone', ['width' => '15', 'height' => '15']) ?>
+                <span><?= e($GLOBAL_PHONE) ?></span>
+              </a>
+              <a class="btn btn--secondary btn--sm" href="/contact">
+                <?= erc_icon('mail', ['width' => '15', 'height' => '15']) ?>
+                <span>CONTACT &amp; FORMS</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="v2-hq-strip__card">
+            <span class="mono v2-hq-strip__label">MAILING &amp; 501(C)(3) CHECK DONATIONS</span>
+            <p class="v2-hq-strip__title">P.O. Box 1854, Keller, TX 76244</p>
+            <p class="v2-hq-strip__text">
+              Payable to <strong>Lions District 2-E2 ERC</strong>. 100% of financial contributions support mission shipping, processing supplies, and facility operations (501(c)(3) recognized 2014).
+            </p>
+            <div class="v2-hq-strip__actions">
+              <a class="btn btn--primary btn--sm" href="/donate#monetary-gifts">
+                <?= erc_icon('dollar-sign', ['width' => '15', 'height' => '15']) ?>
+                <span>CHECK &amp; MAIL GUIDE</span>
+              </a>
+              <a class="btn btn--secondary btn--sm" href="/about#recognition">
+                <?= erc_icon('award', ['width' => '15', 'height' => '15']) ?>
+                <span>HELEN KELLER &amp; LIFE AWARDS</span>
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
