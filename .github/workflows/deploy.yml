@@ -18,7 +18,7 @@ jobs:
           apk add --no-cache php-json 2>/dev/null || true
 
       - name: Get latest code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Configure git safe directory
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
@@ -31,7 +31,7 @@ jobs:
           php tests/smoke.php
 
       - name: Sync files
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
