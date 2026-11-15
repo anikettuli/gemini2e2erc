@@ -372,6 +372,11 @@ function showToast(message, type = 'info', title = '') {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  const yearEl = document.getElementById('currentYear');
+  if (yearEl) {
+    yearEl.textContent = String(new Date().getFullYear());
+  }
+
   const galleryManager = new GalleryManager();
   new ThemeManager();
   new Router(galleryManager);
