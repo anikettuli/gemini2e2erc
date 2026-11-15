@@ -207,7 +207,7 @@ if (!function_exists('erc_load_env')) {
             $images[] = 'gallery/' . $item['file'];
         }
 
-        natsort($images);
+        natcasesort($images);
         return array_values($images);
     }
 

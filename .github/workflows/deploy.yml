@@ -14,13 +14,11 @@ jobs:
     steps:
       - name: Install dependencies
         run: |
-          apk add --no-cache git libwebp-tools php
+          apk add --no-cache git php
           apk add --no-cache php-json 2>/dev/null || true
 
       - name: Get latest code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Needed for changed-files action
 
       - name: Configure git safe directory
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
@@ -31,30 +29,6 @@ jobs:
             [ -f "$f" ] && php -l "$f"
           done
           php tests/smoke.php
-
-      - name: Get changed image files
-        id: changed-images
-        uses: step-security/changed-files@v46
-        with:
-          separator: "\n"
-          files: |
-            **/*.jpg
-            **/*.jpeg
-            **/*.png
-
-      - name: Convert changed images to WebP
-        if: steps.changed-images.outputs.any_changed == 'true'
-        env:
-          CHANGED_FILES: ${{ steps.changed-images.outputs.all_changed_files }}
-        run: |
-          echo "Converting changed images to WebP..."
-          printf '%s\n' "$CHANGED_FILES" | while IFS= read -r file; do
-            if [ -n "$file" ] && [ -f "$file" ]; then
-              echo "Converting: $file"
-              cwebp -q 85 -m 6 "$file" -o "${file%.*}.webp"
-            fi
-          done
-          echo "Done converting ${{ steps.changed-images.outputs.changed_files_count }} image(s)"
 
       - name: Sync files
         uses: SamKirkland/FTP-Deploy-Action@v4.3.6
@@ -68,13 +42,16 @@ jobs:
             **/.git*
             **/.git*/**
             **/node_modules/**
+            **/.env*
             *.md
             **/*.md
             data/*.json
             data/*.lock
             data/*.log
-            gallery/*
-            images/events/*
-            images/board/*
+            data/*.tmp.*
+            files/**
+            gallery/**
+            images/**
+            e2e2rc_LOGO.png
             tools/**
             tests/**

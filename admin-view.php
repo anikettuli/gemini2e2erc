@@ -1040,6 +1040,7 @@ $usingDefaultPassword = !empty($authConfig['is_legacy_default']);
         .main-content {
             margin-left: 220px;
             flex: 1;
+            min-width: 0;
             padding: 2rem;
         }
 
@@ -1180,11 +1181,25 @@ $usingDefaultPassword = !empty($authConfig['is_legacy_default']);
             to { transform: translateY(0); opacity: 1; }
         }
 
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
         @media (max-width: 1024px) {
             .sidebar { width: 80px; padding: 2rem 0.5rem; }
             .sidebar .logo span, .sidebar .nav-links li a span { display: none; }
             .sidebar .nav-links li a { justify-content: center; }
             .main-content { margin-left: 80px; }
+        }
+
+        @media (max-width: 768px) {
+            .main-content { padding: 1.25rem; }
+            .card { padding: 1.25rem; }
+            .form-grid { grid-template-columns: 1fr; }
+            .form-full { grid-column: span 1; }
+            .board-row > div { grid-column: span 1 !important; flex-wrap: wrap; }
         }
 
         .gallery-grid {
@@ -1327,6 +1342,7 @@ $usingDefaultPassword = !empty($authConfig['is_legacy_default']);
                 <?php if (count($upcoming) === 0): ?>
                     <p style="color: var(--text-dim);">No upcoming events scheduled.</p>
                 <?php else: ?>
+                    <div class="table-responsive">
                     <table>
                         <thead>
                             <tr>
@@ -1353,6 +1369,7 @@ $usingDefaultPassword = !empty($authConfig['is_legacy_default']);
                             <?php endforeach; ?>
                         </tbody>
                     </table>
+                    </div>
                 <?php endif; ?>
             </div>
         </section>
@@ -1375,6 +1392,7 @@ $usingDefaultPassword = !empty($authConfig['is_legacy_default']);
                             <?php echo htmlspecialchars((string)$event['title'], ENT_QUOTES, 'UTF-8'); ?>
                             <small style="color: var(--text-dim); font-weight: normal; font-size: 0.9rem;">(<?php echo htmlspecialchars((string)$event['date'], ENT_QUOTES, 'UTF-8'); ?>)</small>
                         </h3>
+                        <div class="table-responsive">
                         <table>
                             <thead>
                                 <tr>
@@ -1405,6 +1423,7 @@ $usingDefaultPassword = !empty($authConfig['is_legacy_default']);
                                 <?php endforeach; ?>
                             </tbody>
                         </table>
+                        </div>
                     </div>
                 <?php
                     endif;
@@ -1473,6 +1492,7 @@ $usingDefaultPassword = !empty($authConfig['is_legacy_default']);
                     </form>
                 </div>
 
+                <div class="table-responsive">
                 <table>
                     <thead>
                         <tr>
@@ -1506,6 +1526,7 @@ $usingDefaultPassword = !empty($authConfig['is_legacy_default']);
                         <?php endforeach; ?>
                     </tbody>
                 </table>
+                </div>
             </div>
         </section>
 
@@ -1544,7 +1565,7 @@ $usingDefaultPassword = !empty($authConfig['is_legacy_default']);
                     </form>
                 </div>
 
-                <div style="max-height: 600px; overflow-y: auto;">
+                <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
                     <table>
                         <thead>
                             <tr>

@@ -1,14 +1,18 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
+  # Pass HTTP Basic Auth headers through Apache CGI/FastCGI/PHP-FPM on cPanel
+  RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
   # Force HTTPS
   RewriteCond %{HTTPS} off
   RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
   # Serve companion .webp image automatically when supported and present on disk
   RewriteCond %{HTTP_ACCEPT} image/webp
-  RewriteCond %{DOCUMENT_ROOT}/$1.webp -f
-  RewriteRule ^(.+)\.(jpe?g|png)$ $1.webp [T=image/webp,E=accept:1]
+  RewriteCond %{REQUEST_FILENAME} ^(.+)\.(jpe?g|png)$ [NC]
+  RewriteCond %1.webp -f
+  RewriteRule ^(.+)\.(jpe?g|png)$ $1.webp [NC,T=image/webp,E=accept:1]
 </IfModule>
 
 # Block direct HTTP access to dotfiles (.env, .git), logs, lockfiles, temp files, docs, and internal PHP includes

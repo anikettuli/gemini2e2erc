@@ -77,7 +77,29 @@ class Router {
         this.mobileMenuTrigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
         if (this.dropdownArrow) this.dropdownArrow.classList.toggle('open', isOpen);
       });
+
+      document.addEventListener('click', (e) => {
+        if (!this.mobileNav.classList.contains('open')) return;
+        if (!this.mobileNav.contains(e.target) && !this.mobileMenuTrigger.contains(e.target)) {
+          this.closeMobileMenu();
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && this.mobileNav.classList.contains('open')) {
+          const focusInside = this.mobileNav.contains(document.activeElement);
+          this.closeMobileMenu();
+          if (focusInside) this.mobileMenuTrigger.focus();
+        }
+      });
     }
+  }
+
+  closeMobileMenu() {
+    if (!this.mobileNav) return;
+    this.mobileNav.classList.remove('open');
+    if (this.mobileMenuTrigger) this.mobileMenuTrigger.setAttribute('aria-expanded', 'false');
+    if (this.dropdownArrow) this.dropdownArrow.classList.remove('open');
   }
 
   navigateToHash() {
@@ -120,11 +142,7 @@ class Router {
       document.title = PAGE_TITLES[tab];
     }
 
-    if (this.mobileNav) {
-      this.mobileNav.classList.remove('open');
-      if (this.mobileMenuTrigger) this.mobileMenuTrigger.setAttribute('aria-expanded', 'false');
-      if (this.dropdownArrow) this.dropdownArrow.classList.remove('open');
-    }
+    this.closeMobileMenu();
 
     this.activateTabResources(tab);
 
@@ -270,6 +288,10 @@ class GalleryManager {
     } catch (error) {
       this.loaded = false;
       console.error('Error loading gallery images:', error);
+      const p = document.createElement('p');
+      p.className = 'text-center w-full p-2 text-dim';
+      p.textContent = 'Unable to load gallery images.';
+      this.galleryTrack.replaceChildren(p);
     }
   }
 
@@ -372,6 +394,19 @@ function showToast(message, type = 'info', title = '') {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('img[data-fallback-src]').forEach(img => {
+    const applyFallback = () => {
+      if (!img.dataset.fallbackApplied && img.dataset.fallbackSrc) {
+        img.dataset.fallbackApplied = 'true';
+        img.src = img.dataset.fallbackSrc;
+      }
+    };
+    img.addEventListener('error', applyFallback);
+    if (img.complete && img.naturalWidth === 0) {
+      applyFallback();
+    }
+  });
+
   const yearEl = document.getElementById('currentYear');
   if (yearEl) {
     yearEl.textContent = String(new Date().getFullYear());

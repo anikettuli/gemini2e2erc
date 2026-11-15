@@ -5,14 +5,16 @@ class EventCalendar {
     this.currentMonth = new Date();
     this.selectedDate = null;
     this.initialized = false;
+    this.listenersAttached = false;
   }
 
   async init() {
     if (this.initialized) return;
-    this.initialized = true;
-    await this.loadEvents();
-    this.setCurrentMonthToNextEvent();
     this.addEventListeners();
+    const loaded = await this.loadEvents();
+    if (!loaded) return;
+    this.initialized = true;
+    this.setCurrentMonthToNextEvent();
     this.renderCalendar();
     this.renderUpcomingEvents();
     this.autoSelectNextEvent();
@@ -36,6 +38,9 @@ class EventCalendar {
   }
 
   addEventListeners() {
+    if (this.listenersAttached) return;
+    this.listenersAttached = true;
+
     const calendarContainer = document.getElementById('volunteerCalendar');
     if (calendarContainer) {
       calendarContainer.addEventListener('click', (e) => {
@@ -90,9 +95,11 @@ class EventCalendar {
       const data = await response.json();
       this.events = Array.isArray(data) ? data : [];
       this.events.sort((a, b) => new Date(a.date + 'T00:00:00') - new Date(b.date + 'T00:00:00'));
+      return true;
     } catch (error) {
       console.error('Error loading events:', error);
       this.events = [];
+      return false;
     }
   }
 
