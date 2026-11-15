@@ -1,4 +1,986 @@
-/* Stage 2 Section Styles: Volunteer Calendar, Gallery & Contact/FAQ (Worker C) */
+/* ==========================================================================
+   Section 4 (Volunteer Hub) & Section 6 (Contact, Forms & FAQ) — v3
+   ========================================================================== */
+
 @layer sections {
-  /* Volunteer calendar, photo gallery, contact form & FAQ rules authored in Stage 2 */
+  /* ========================================================================
+     Section 4: Volunteer Saturdays
+     ======================================================================== */
+  .vol-header-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-4) var(--space-6);
+    margin-block-end: clamp(1.75rem, 3.5vw, 2.5rem);
+  }
+
+  .vol-section-head {
+    margin-block-end: 0;
+  }
+
+  .vol-group-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .vol-workspace {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-6);
+    align-items: start;
+  }
+
+  @media (min-width: 60rem) {
+    .vol-workspace {
+      grid-template-columns: minmax(21.5rem, 25rem) minmax(0, 1fr);
+    }
+  }
+
+  /* Month Calendar Card */
+  .vol-cal-card {
+    padding: var(--space-4) 0.5rem;
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  @media (min-width: 30rem) {
+    .vol-cal-card {
+      padding: var(--space-5);
+    }
+  }
+
+  @media (min-width: 60rem) {
+    .vol-cal-card {
+      position: sticky;
+      inset-block-start: 5.5rem;
+    }
+  }
+
+  .vol-cal-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .vol-cal-nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .vol-cal-nav-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-inline-size: 2.75rem;
+    min-block-size: 2.75rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--rule);
+    background-color: var(--surface);
+    color: var(--fg);
+    transition:
+      background-color var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out);
+  }
+
+  .vol-cal-nav-btn:hover {
+    background-color: var(--surface-2);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .vol-cal-month {
+    font-size: var(--text-md);
+    font-weight: 600;
+    min-inline-size: 8.25rem;
+    text-align: center;
+    color: var(--fg);
+  }
+
+  .vol-reset-pill {
+    padding: 0.45rem 0.875rem;
+    font-size: var(--text-xs);
+  }
+
+  .vol-cal-weekdays,
+  .vol-cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(44px, 1fr));
+    gap: 2px;
+    min-inline-size: 0;
+  }
+
+  @media (min-width: 30rem) {
+    .vol-cal-weekdays,
+    .vol-cal-grid {
+      gap: 4px;
+    }
+  }
+
+  .vol-cal-weekdays span {
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding-block: 0.25rem;
+  }
+
+  .vol-cal-pad {
+    min-block-size: 44px;
+  }
+
+  .vol-cal-day {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-inline-size: 44px;
+    min-block-size: 44px;
+    inline-size: 100%;
+    padding: 0.25rem;
+    border-radius: var(--radius-md);
+    border: 1px solid transparent;
+    background-color: transparent;
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--fg-2);
+    transition:
+      background-color var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out);
+  }
+
+  .vol-cal-day:disabled {
+    color: var(--muted);
+    opacity: 0.55;
+    cursor: default;
+  }
+
+  .vol-cal-day.has-events {
+    background-color: color-mix(in srgb, var(--accent) 10%, var(--surface));
+    border-color: color-mix(in srgb, var(--accent) 32%, transparent);
+    color: var(--fg);
+    font-weight: 600;
+  }
+
+  .vol-cal-day.has-events:hover {
+    background-color: color-mix(in srgb, var(--accent) 18%, var(--surface));
+    border-color: var(--accent);
+  }
+
+  .vol-cal-day.is-selected {
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent);
+  }
+
+  .vol-cal-day__dot {
+    inline-size: 0.375rem;
+    block-size: 0.375rem;
+    border-radius: 50%;
+    background-color: var(--accent);
+  }
+
+  .vol-cal-day.is-selected .vol-cal-day__dot {
+    background-color: var(--on-accent);
+  }
+
+  .vol-cal-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding-block-start: var(--space-3);
+    border-block-start: 1px solid var(--rule);
+    font-size: var(--text-xs);
+    color: var(--muted);
+  }
+
+  .vol-cal-legend {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .vol-cal-legend__dot {
+    inline-size: 0.5rem;
+    block-size: 0.5rem;
+    border-radius: 50%;
+    background-color: var(--accent);
+  }
+
+  /* Upcoming Sessions Panel */
+  .vol-sessions-col {
+    display: grid;
+    gap: var(--space-4);
+    min-inline-size: 0;
+  }
+
+  .vol-sessions-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .vol-sessions-title {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--fg);
+  }
+
+  .vol-sessions-list {
+    display: grid;
+    gap: var(--space-3);
+    min-inline-size: 0;
+  }
+
+  .vol-sessions-list[data-expanded='true'] {
+    max-block-size: 36rem;
+    overflow-y: auto;
+    padding-inline-end: 0.25rem;
+    scrollbar-gutter: stable;
+  }
+
+  .vol-session-card {
+    padding: var(--space-4);
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .vol-session-card__main {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    min-inline-size: 0;
+  }
+
+  .vol-session-card__thumb {
+    inline-size: 3.25rem;
+    block-size: 3.25rem;
+    border-radius: var(--radius-md);
+    object-fit: cover;
+    flex-shrink: 0;
+    background-color: var(--surface-2);
+    border: 1px solid var(--rule);
+  }
+
+  .vol-session-card__body {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    display: grid;
+    gap: 0.25rem;
+  }
+
+  .vol-session-card__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .vol-session-card__when {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--accent);
+  }
+
+  .vol-badge--full {
+    background-color: var(--status-warn-bg);
+    border-color: color-mix(in srgb, var(--status-warn-ink) 35%, transparent);
+    color: var(--status-warn-ink);
+  }
+
+  .vol-session-card__title {
+    font-size: var(--text-md);
+    font-weight: 600;
+    color: var(--fg);
+    line-height: 1.25;
+  }
+
+  .vol-session-card__desc {
+    font-size: var(--text-sm);
+    color: var(--fg-2);
+    line-height: 1.45;
+  }
+
+  .vol-session-card__loc {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: var(--text-xs);
+    color: var(--muted);
+  }
+
+  .vol-session-card__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding-block-start: var(--space-3);
+    border-block-start: 1px solid var(--rule);
+  }
+
+  .vol-meter-wrap {
+    display: grid;
+    gap: 0.3rem;
+    flex: 1 1 9.5rem;
+    min-inline-size: 8.5rem;
+    max-inline-size: 14rem;
+  }
+
+  .vol-meter {
+    inline-size: 100%;
+    block-size: 0.375rem;
+    border-radius: var(--radius-pill);
+    background-color: var(--bg-alt);
+    overflow: hidden;
+    border: 1px solid var(--rule);
+  }
+
+  .vol-meter__fill {
+    block-size: 100%;
+    inline-size: var(--vol-fill, 0%);
+    background-color: var(--accent);
+    border-radius: var(--radius-pill);
+    transition: inline-size var(--duration-base) var(--ease-out);
+  }
+
+  .vol-meter__label {
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+
+  .vol-session-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .vol-cal-menu-wrap {
+    position: relative;
+  }
+
+  .vol-cal-popover {
+    margin: 0;
+    padding: 0.35rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--rule-strong);
+    background-color: var(--surface);
+    color: var(--fg);
+    box-shadow: var(--shadow-md);
+    min-inline-size: 11.5rem;
+    display: grid;
+    gap: 0.2rem;
+  }
+
+  .vol-cal-popover:not(:popover-open) {
+    display: none;
+  }
+
+  .vol-cal-popover__item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    inline-size: 100%;
+    min-block-size: 2.75rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-sm);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--fg);
+    text-decoration: none;
+    text-align: start;
+    transition: background-color var(--duration-fast) var(--ease-out);
+  }
+
+  .vol-cal-popover__item:hover {
+    background-color: var(--surface-2);
+    color: var(--accent);
+  }
+
+  .vol-sessions-toggle-row {
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  /* 6-Photo Workshop Strip */
+  .vol-gallery-strip {
+    margin-block-start: clamp(2.5rem, 5vw, 3.75rem);
+    padding-block-start: clamp(2rem, 4vw, 2.75rem);
+    border-block-start: 1px solid var(--rule);
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .vol-gallery-strip__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  .vol-gallery-strip__title {
+    margin-block-start: 0.3rem;
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--fg);
+  }
+
+  .vol-gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
+  }
+
+  @media (min-width: 40rem) {
+    .vol-gallery-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .vol-gallery-grid {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+  }
+
+  .vol-gallery-thumb {
+    display: block;
+    inline-size: 100%;
+    min-block-size: 44px;
+    padding: 0;
+    overflow: hidden;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--rule);
+    background-color: var(--bg-alt);
+    aspect-ratio: 4 / 3;
+    transition:
+      border-color var(--duration-fast) var(--ease-out),
+      box-shadow var(--duration-fast) var(--ease-out);
+  }
+
+  .vol-gallery-thumb:hover {
+    border-color: var(--accent);
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* CRITICAL: gallery/lensometers.jpg relies on EXIF orientation -> transform MUST remain none */
+  .vol-gallery-img,
+  .vol-lightbox__img {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    transform: none;
+    image-orientation: from-image;
+  }
+
+  /* ========================================================================
+     Registration Modal (Top-Anchored for 0.00px close-button shift)
+     ======================================================================== */
+  dialog.vol-reg-dialog.drawer {
+    inline-size: min(34rem, calc(100vw - 1.5rem));
+    max-inline-size: calc(100vw - 1.5rem);
+    margin: 1rem auto auto;
+    max-block-size: calc(100dvh - 2rem);
+  }
+
+  .vol-reg-body {
+    display: grid;
+    gap: var(--space-4);
+    align-content: start;
+  }
+
+  .vol-reg-summary {
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--rule);
+    background-color: var(--bg-alt);
+    display: grid;
+    gap: 0.25rem;
+  }
+
+  .vol-reg-summary__title {
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--fg);
+  }
+
+  .vol-reg-summary__meta {
+    font-size: var(--text-xs);
+    color: var(--fg-2);
+  }
+
+  .vol-alert {
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--status-danger-ink);
+    background-color: var(--status-danger-bg);
+    color: var(--status-danger-ink);
+    font-size: var(--text-sm);
+    font-weight: 500;
+  }
+
+  .vol-reg-form {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .vol-reg-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 32rem) {
+    .vol-reg-row {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+  }
+
+  .vol-field-error {
+    font-size: var(--text-xs);
+    font-weight: 500;
+    color: var(--status-danger-ink);
+  }
+
+  .vol-group-note {
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-md);
+    border: 1px solid color-mix(in srgb, var(--accent) 32%, transparent);
+    background-color: color-mix(in srgb, var(--accent) 8%, var(--surface));
+    font-size: var(--text-sm);
+    color: var(--fg-2);
+  }
+
+  .vol-group-note a {
+    color: var(--accent);
+    font-weight: 600;
+    text-underline-offset: 3px;
+  }
+
+  .vol-reg-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .vol-reg-success {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .vol-reg-success__banner {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--status-success-ink);
+    background-color: var(--status-success-bg);
+    color: var(--status-success-ink);
+  }
+
+  .vol-reg-success__banner h4 {
+    color: inherit;
+    font-size: var(--text-base);
+    margin-block-end: 0.25rem;
+  }
+
+  .vol-reg-success__banner p {
+    font-size: var(--text-sm);
+    color: inherit;
+  }
+
+  .vol-reg-success__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  /* ========================================================================
+     17-Photo Gallery Lightbox Modal
+     ======================================================================== */
+  dialog.vol-lightbox.drawer {
+    inline-size: min(60rem, calc(100vw - 1.5rem));
+    max-inline-size: calc(100vw - 1.5rem);
+  }
+
+  .vol-lightbox__title-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .vol-lightbox__body {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .vol-lightbox__viewer {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .vol-lightbox__nav {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-inline-size: 2.75rem;
+    min-block-size: 2.75rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--rule-strong);
+    background-color: var(--surface);
+    color: var(--fg);
+  }
+
+  .vol-lightbox__nav:hover {
+    background-color: var(--surface-2);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .vol-lightbox__figure {
+    display: grid;
+    gap: var(--space-2);
+    min-inline-size: 0;
+  }
+
+  .vol-lightbox__img {
+    inline-size: 100%;
+    block-size: clamp(14rem, 48dvh, 30rem);
+    object-fit: contain;
+    border-radius: var(--radius-md);
+    background-color: var(--bg-alt);
+    border: 1px solid var(--rule);
+  }
+
+  .vol-lightbox__caption {
+    font-size: var(--text-sm);
+    color: var(--fg-2);
+    text-align: center;
+    margin-inline: auto;
+  }
+
+  .vol-lightbox__thumbs {
+    display: flex;
+    gap: var(--space-2);
+    overflow-x: auto;
+    padding-block: 0.25rem;
+    scrollbar-width: thin;
+  }
+
+  .vol-lightbox__thumb-btn {
+    flex: 0 0 auto;
+    inline-size: 3.5rem;
+    block-size: 2.75rem;
+    padding: 0;
+    border-radius: var(--radius-sm);
+    border: 2px solid transparent;
+    overflow: hidden;
+    background-color: var(--bg-alt);
+    opacity: 0.72;
+    transition:
+      opacity var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out);
+  }
+
+  .vol-lightbox__thumb-btn:hover {
+    opacity: 1;
+  }
+
+  .vol-lightbox__thumb-btn.is-active {
+    opacity: 1;
+    border-color: var(--accent);
+  }
+
+  .vol-lightbox__thumb-btn img {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    transform: none;
+    image-orientation: from-image;
+  }
+
+  /* ========================================================================
+     Section 6: Contact, Official PDFs, FAQ & Inquiry Form
+     ======================================================================== */
+  .contact-status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    margin-block-end: var(--space-6);
+    border-radius: var(--radius-md);
+    border: 1px solid currentColor;
+  }
+
+  .contact-status--success {
+    background-color: var(--status-success-bg);
+    color: var(--status-success-ink);
+  }
+
+  .contact-status--error {
+    background-color: var(--status-danger-bg);
+    color: var(--status-danger-ink);
+  }
+
+  .contact-status__inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-inline-size: 0;
+  }
+
+  .contact-status__icon {
+    flex-shrink: 0;
+  }
+
+  .contact-status__text {
+    font-size: var(--text-sm);
+    font-weight: 500;
+  }
+
+  .contact-status__close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-inline-size: 2.75rem;
+    min-block-size: 2.75rem;
+    border-radius: var(--radius-pill);
+    color: inherit;
+    flex-shrink: 0;
+  }
+
+  .contact-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-6);
+    align-items: start;
+  }
+
+  @media (min-width: 60rem) {
+    .contact-layout {
+      grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+    }
+  }
+
+  .contact-info-col {
+    display: grid;
+    gap: var(--space-6);
+    min-inline-size: 0;
+  }
+
+  .contact-card-title {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--fg);
+    margin-block-end: var(--space-4);
+  }
+
+  .contact-channels-list {
+    display: grid;
+    gap: var(--space-4);
+    margin: 0;
+  }
+
+  .contact-channel-row {
+    display: grid;
+    gap: 0.3rem;
+  }
+
+  .contact-channel-val {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .contact-channel-link {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 2.75rem;
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    overflow-wrap: anywhere;
+  }
+
+  .contact-channel-text {
+    font-size: var(--text-sm);
+    color: var(--fg-2);
+    line-height: 1.5;
+  }
+
+  .contact-response-note {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-block-start: var(--space-4);
+    padding-block-start: var(--space-4);
+    border-block-start: 1px solid var(--rule);
+    font-size: var(--text-xs);
+    color: var(--muted);
+  }
+
+  /* 6 Official PDFs Grid */
+  .forms-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-2);
+  }
+
+  @media (min-width: 36rem) {
+    .forms-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .form-download-link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-block-size: 3.5rem;
+    padding: 0.625rem 0.75rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--rule);
+    background-color: var(--surface-2);
+    text-decoration: none;
+    color: var(--fg);
+    min-inline-size: 0;
+    transition:
+      border-color var(--duration-fast) var(--ease-out),
+      background-color var(--duration-fast) var(--ease-out);
+  }
+
+  .form-download-link:hover {
+    border-color: var(--accent);
+    background-color: var(--surface);
+  }
+
+  .form-download-link__icon {
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .form-download-link__copy {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    display: grid;
+    gap: 0.1rem;
+  }
+
+  .form-download-link__title {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--fg);
+    line-height: 1.25;
+  }
+
+  .form-download-link__meta {
+    font-size: 0.72rem;
+    color: var(--muted);
+    line-height: 1.3;
+  }
+
+  .form-download-link__badge {
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 0.15rem 0.45rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--rule);
+    color: var(--fg-2);
+    background-color: var(--surface);
+    flex-shrink: 0;
+  }
+
+  .contact-faq-block {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .contact-faq-block .contact-card-title {
+    margin-block-end: var(--space-2);
+  }
+
+  /* Contact Form Card */
+  .contact-form-col {
+    min-inline-size: 0;
+  }
+
+  @media (min-width: 60rem) {
+    .contact-form-col {
+      position: sticky;
+      inset-block-start: 5.5rem;
+    }
+  }
+
+  .contact-form-card .contact-card-title {
+    margin-block-end: var(--space-2);
+  }
+
+  .contact-form-intro {
+    font-size: var(--text-sm);
+    color: var(--fg-2);
+    margin-block-end: var(--space-5);
+  }
+
+  .contact-form {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .contact-form-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 34rem) {
+    .contact-form-row {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+  }
+
+  .contact-message-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .contact-char-counter {
+    font-size: var(--text-xs);
+    color: var(--muted);
+  }
+
+  .contact-submit-btn {
+    inline-size: 100%;
+  }
 }

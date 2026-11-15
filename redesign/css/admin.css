@@ -307,7 +307,7 @@
   }
 
   /* ========================================================================
-     Buttons (Vermilion --accent + --on-accent, >= 44x44px)
+     Buttons (Optical Cobalt --accent + --on-accent, >= 44x44px)
      ======================================================================== */
   .btn {
     display: inline-flex;
@@ -316,13 +316,13 @@
     gap: 0.45rem;
     min-block-size: 2.75rem;
     min-inline-size: 2.75rem;
-    padding: 0.55rem 1.05rem;
+    padding: 0.55rem 1.1rem;
     border-radius: var(--radius-pill);
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
     font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    letter-spacing: var(--tracking-sans);
+    text-transform: none;
     line-height: 1.25;
     text-decoration: none;
     border: 1px solid transparent;
@@ -339,8 +339,8 @@
   .btn-sm {
     min-block-size: 2.75rem;
     min-inline-size: 2.75rem;
-    padding: 0.4rem 0.9rem;
-    font-size: 0.72rem;
+    padding: 0.45rem 0.95rem;
+    font-size: 0.8125rem;
   }
 
   .btn-icon {
@@ -425,11 +425,11 @@
     background: transparent;
     border: 0;
     color: var(--fg-2);
-    font-family: var(--font-mono);
-    font-size: 0.74rem;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
     font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    letter-spacing: var(--tracking-sans);
+    text-transform: none;
     white-space: nowrap;
     cursor: pointer;
     scroll-snap-align: start;
@@ -623,32 +623,38 @@
 
   .admin-form input[type="file"] {
     inline-size: 100%;
+    max-inline-size: 100%;
     min-inline-size: 0;
     min-block-size: 2.75rem;
-    padding: 0.45rem 0.6rem;
+    padding: 0.35rem 0.6rem;
     border: 1px dashed var(--rule-strong);
     border-radius: var(--radius-md);
     background-color: var(--bg-2);
     color: var(--fg);
     font-family: var(--font-sans);
-    font-size: 0.9rem;
+    font-size: 0.875rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
     cursor: pointer;
   }
 
   .admin-form input[type="file"]::file-selector-button {
-    min-block-size: 2rem;
-    padding: 0.25rem 0.75rem;
+    min-block-size: 2.25rem;
+    padding: 0.35rem 0.85rem;
     margin-inline-end: 0.65rem;
     border-radius: var(--radius-pill);
     border: 1px solid var(--rule-strong);
     background-color: var(--surface-2);
     color: var(--fg);
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
     font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
     cursor: pointer;
+  }
+
+  .admin-card code {
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
 
   .admin-form :is(input, select, textarea):user-invalid {
