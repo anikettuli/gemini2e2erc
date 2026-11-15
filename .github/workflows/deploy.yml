@@ -18,7 +18,7 @@ jobs:
           apk add --no-cache php-json 2>/dev/null || true
 
       - name: Get latest code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Configure git safe directory
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
@@ -55,3 +55,6 @@ jobs:
             e2e2rc_LOGO.png
             tools/**
             tests/**
+            redesign/**
+            **/.agents/**
+            skills-lock.json
