@@ -1256,13 +1256,71 @@ function initVolunteerPage() {
 
   let regLiveAnnouncer = null;
   let announceTimer = null;
+  let suppressFieldBlurValidation = false;
+  let suppressBlurResetTimer = null;
   const regFields = [regNameInput, regEmailInput, regPhoneInput].filter(
     (el) => el instanceof HTMLInputElement
   );
   const touchedFields = new Set();
 
+  function clearSuppressBlurValidation() {
+    suppressFieldBlurValidation = false;
+    if (suppressBlurResetTimer !== null) {
+      window.clearTimeout(suppressBlurResetTimer);
+      suppressBlurResetTimer = null;
+    }
+  }
+
+  function armSuppressBlurValidation() {
+    suppressFieldBlurValidation = true;
+    if (suppressBlurResetTimer !== null) {
+      window.clearTimeout(suppressBlurResetTimer);
+    }
+    suppressBlurResetTimer = window.setTimeout(() => {
+      suppressFieldBlurValidation = false;
+      suppressBlurResetTimer = null;
+    }, 600);
+  }
+
   if (regDialog) {
     wireDialogDismiss(regDialog);
+
+    const handleDismissIntentPointer = (event) => {
+      const target = event.target;
+      if (
+        target === regDialog ||
+        (target instanceof Element && target.closest('.vol-dialog__close, [data-dialog-close]'))
+      ) {
+        armSuppressBlurValidation();
+      }
+    };
+
+    regDialog.addEventListener('pointerdown', handleDismissIntentPointer, { capture: true });
+    regDialog.addEventListener('touchstart', handleDismissIntentPointer, {
+      capture: true,
+      passive: true,
+    });
+    regDialog.addEventListener(
+      'keydown',
+      (event) => {
+        if (event.key === 'Tab') {
+          clearSuppressBlurValidation();
+        }
+      },
+      { capture: true }
+    );
+    regDialog.addEventListener(
+      'focusin',
+      (event) => {
+        if (
+          event.target instanceof Element &&
+          event.target.closest('#volunteerSignupForm input, #volunteerSignupForm select, #volunteerSignupForm textarea')
+        ) {
+          clearSuppressBlurValidation();
+        }
+      },
+      { capture: true }
+    );
 
     // Persistent empty live region kept always rendered inside dialog
     regLiveAnnouncer = document.createElement('div');
@@ -1272,6 +1330,7 @@ function initVolunteerPage() {
     regDialog.appendChild(regLiveAnnouncer);
 
     regDialog.addEventListener('close', () => {
+      clearSuppressBlurValidation();
       state.isSubmittingReg = false;
       const trigger = state.lastRegTrigger;
       state.lastRegTrigger = null;
@@ -1368,6 +1427,7 @@ function initVolunteerPage() {
   }
 
   function resetRegistrationForm() {
+    clearSuppressBlurValidation();
     touchedFields.clear();
     if (regForm) {
       regForm.reset();
@@ -1422,7 +1482,19 @@ function initVolunteerPage() {
   }
 
   regFields.forEach((field) => {
-    field.addEventListener('blur', () => {
+    field.addEventListener('blur', (event) => {
+      const related = event.relatedTarget;
+      const isDismissTarget =
+        related instanceof Element &&
+        Boolean(related.closest('.vol-dialog__close, [data-dialog-close]'));
+      if (
+        suppressFieldBlurValidation ||
+        isDismissTarget ||
+        regDialog?.hasAttribute('data-closing') ||
+        !regDialog?.open
+      ) {
+        return;
+      }
       if (field.required || field.value.trim() !== '' || touchedFields.has(field)) {
         touchedFields.add(field);
         const valid = syncFieldValidationUI(field, true);

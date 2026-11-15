@@ -1581,8 +1581,10 @@
 
   /* Registration Modal Specifics */
   dialog.vol-dialog {
+    --_dialog-top-gap: clamp(0.75rem, 4dvh, 3rem);
+    margin-block: var(--_dialog-top-gap) auto;
     inline-size: min(94dvw, 35rem);
-    max-block-size: calc(100dvh - 1.5rem);
+    max-block-size: calc(100dvh - var(--_dialog-top-gap) - 0.75rem);
     overflow-y: auto;
   }
 
