@@ -178,7 +178,7 @@ $impactGroups = [
       <button
         type="button"
         class="btn btn--secondary btn--lg"
-        data-open-drawer="boardDrawer"
+        data-dialog-open="boardDrawer"
       >
         <?= erc_icon('users', ['width' => '18', 'height' => '18']) ?>
         <span>Meet the Board of Directors (<span class="mono"><?= $abtEsc((string) count($boardMembers)) ?></span>)</span>
@@ -187,7 +187,7 @@ $impactGroups = [
       <button
         type="button"
         class="btn btn--secondary btn--lg"
-        data-open-drawer="partnersDrawer"
+        data-dialog-open="partnersDrawer"
       >
         <?= erc_icon('heart-handshake', ['width' => '18', 'height' => '18']) ?>
         <span>View Lions Clubs &amp; Partners (<span class="mono"><?= $abtEsc((string) count($partnersList)) ?></span>)</span>
@@ -212,7 +212,7 @@ $impactGroups = [
     <button
       type="button"
       class="drawer__close"
-      data-close-drawer
+      data-dialog-close
       aria-label="Close Board of Directors"
       autofocus
     >
@@ -301,7 +301,7 @@ $impactGroups = [
     <button
       type="button"
       class="drawer__close"
-      data-close-drawer
+      data-dialog-close
       aria-label="Close Lions Clubs and Partners"
       autofocus
     >

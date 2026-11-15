@@ -146,7 +146,7 @@ $faqs = [
 <section id="contact" class="section" aria-labelledby="contact-title" tabindex="-1">
   <div class="container">
     <div class="section-head">
-      <p class="kicker">Contact, Forms &amp; FAQ</p>
+      <p class="kicker">06 &middot; Contact, Forms &amp; FAQ</p>
       <h2 id="contact-title" class="h2">Reach the Watauga center or download official forms.</h2>
       <p class="lead">
         100% volunteer-run. Volunteers check voicemail and email daily and typically respond within <strong>24 hours</strong>.

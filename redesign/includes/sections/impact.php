@@ -268,7 +268,7 @@ foreach ($shippingLedger as $row) {
       <button
         type="button"
         class="btn btn--secondary btn--lg"
-        data-open-drawer="ledgerDrawer"
+        data-dialog-open="ledgerDrawer"
       >
         <?= erc_icon('scale', ['width' => '18', 'height' => '18']) ?>
         <span>View 12-Year Shipping Ledger (2013&ndash;2025)</span>
@@ -291,7 +291,7 @@ foreach ($shippingLedger as $row) {
     <button
       type="button"
       class="drawer__close"
-      data-close-drawer
+      data-dialog-close
       aria-label="Close 12-Year Shipping Ledger"
       autofocus
     >

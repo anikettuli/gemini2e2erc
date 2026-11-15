@@ -183,7 +183,7 @@ if (count($stripItems) < 6) {
   <div class="container">
     <div class="vol-header-row">
       <div class="section-head vol-section-head">
-        <p class="kicker">Volunteer Saturdays</p>
+        <p class="kicker">04 &middot; Volunteer Saturdays</p>
         <h2 id="volunteer-title" class="h2">Join a Saturday workshop in Watauga.</h2>
         <p class="lead">
           Open Saturdays <strong>9:00 AM &ndash; 3:00 PM</strong> (morning <span class="mono">9&ndash;12</span> and afternoon <span class="mono">12&ndash;3</span> shifts).

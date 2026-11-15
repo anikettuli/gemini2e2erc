@@ -128,9 +128,6 @@ $baseSchema = [
   <link rel="stylesheet" href="/vendor/maplibre-gl/maplibre-gl.css">
   <link rel="stylesheet" href="/css/tokens.css">
   <link rel="stylesheet" href="/css/app.css">
-  <link rel="stylesheet" href="/css/sections-story.css">
-  <link rel="stylesheet" href="/css/dropoff.css">
-  <link rel="stylesheet" href="/css/volunteer-contact.css">
   <script type="module" src="/js/theme.js"></script>
   <script type="module" src="/js/app.js"></script>
   <script type="module" src="/js/locations.js"></script>

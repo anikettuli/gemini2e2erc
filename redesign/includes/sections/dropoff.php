@@ -53,7 +53,7 @@ $totalSeedCount = count($dropoffSeed);
 <section id="drop-off" class="section section--alt dropoff-section" aria-labelledby="dropoff-title" tabindex="-1">
   <div class="container">
     <div class="section-head dropoff-head">
-      <p class="kicker">Donate &amp; Drop Off</p>
+      <p class="kicker">01 &middot; Donate &amp; Drop Off</p>
       <h2 id="dropoff-title" class="h2">Drop off used eyewear across 34 North Texas cities.</h2>
       <p class="lead">
         Donate eyewear, hearing aids, phones, and Windows 11 laptops at <?= $dropoffEscape((string) $totalSeedCount) ?> DFW bins or Watauga HQ.
