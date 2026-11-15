@@ -256,20 +256,24 @@ class EventCalendar {
     const details = document.createElement('div');
     details.className = 'event-details';
 
-    const addDetail = (label, value, extraNode = null) => {
+    const addDetail = (emoji, label, value, extraNode = null) => {
       const row = document.createElement('div');
       row.className = 'event-detail';
       const strong = document.createElement('strong');
-      strong.textContent = label + ' ';
+      const iconSpan = document.createElement('span');
+      iconSpan.className = 'emoji-icon';
+      iconSpan.setAttribute('aria-hidden', 'true');
+      iconSpan.textContent = emoji;
+      strong.append(iconSpan, document.createTextNode(` ${label} `));
       row.append(strong, document.createTextNode(String(value || '')));
       if (extraNode) row.appendChild(extraNode);
       details.appendChild(row);
       return row;
     };
 
-    addDetail('📅 Date:', this.formatDate(event.date));
-    addDetail('🕐 Time:', event.time);
-    addDetail('📍 Location:', event.location);
+    addDetail('📅', 'Date:', this.formatDate(event.date));
+    addDetail('🕐', 'Time:', event.time);
+    addDetail('📍', 'Location:', event.location);
 
     const capWrap = document.createDocumentFragment();
     const bar = document.createElement('div');
@@ -286,12 +290,12 @@ class EventCalendar {
 
     if (!isDayView) {
       capWrap.append(bar, spotsSpan);
-      addDetail('👥 Capacity:', `${people}/${maxPeople} volunteers`, capWrap);
+      addDetail('👥', 'Capacity:', `${people}/${maxPeople} volunteers`, capWrap);
     } else {
       const inlineSpots = document.createElement('span');
       inlineSpots.className = isFull ? 'spots-left full' : 'spots-left';
       inlineSpots.textContent = isFull ? ' (Full)' : ` (${spotsLeft} spot${spotsLeft === 1 ? '' : 's'} left)`;
-      addDetail('👥 Volunteers:', `${people}/${maxPeople}`, inlineSpots);
+      addDetail('👥', 'Volunteers:', `${people}/${maxPeople}`, inlineSpots);
     }
 
     const desc = document.createElement('p');
@@ -360,7 +364,8 @@ class EventCalendar {
       const emptyWrap = document.createElement('div');
       emptyWrap.className = 'events-display-empty';
       const icon = document.createElement('p');
-      icon.className = 'text-lg m-0';
+      icon.className = 'text-lg m-0 emoji-icon';
+      icon.setAttribute('aria-hidden', 'true');
       icon.textContent = '📅';
       const text = document.createElement('p');
       text.textContent = `No events on ${this.formatDate(dateString)}`;

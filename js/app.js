@@ -334,7 +334,13 @@ function showToast(message, type = 'info', title = '') {
   const safeType = allowedTypes.includes(type) ? type : 'info';
   toast.className = `toast toast-${safeType}`;
 
-  const icon = safeType === 'success' ? '✓' : (safeType === 'error' ? '✕' : 'ℹ');
+  const iconMap = {
+    success: '✓\uFE0E',
+    error: '✕\uFE0E',
+    warning: '!\uFE0E',
+    info: 'ℹ\uFE0E'
+  };
+  const icon = iconMap[safeType] || iconMap.info;
   const defaultTitle = safeType.charAt(0).toUpperCase() + safeType.slice(1);
 
   const iconEl = document.createElement('div');
