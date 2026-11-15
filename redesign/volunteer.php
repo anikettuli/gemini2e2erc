@@ -82,40 +82,65 @@ function erc_volunteer_gcal_url(array $event): string
 }
 
 /**
- * Derive a clean, descriptive caption from a gallery image path.
+ * Classify a volunteer session into a domain ticket category & tone.
+ *
+ * @return array{tag: string, tone: string}
  */
-function erc_volunteer_gallery_caption(string $relativePath): string
+function erc_volunteer_ticket_meta(string $title, string $description): array
+{
+    $hay = strtolower($title . ' ' . $description);
+    if (str_contains($hay, '2nd saturday') || str_contains($hay, 'open session')) {
+        return ['tag' => 'OPEN SHIFT', 'tone' => 'open'];
+    }
+    if (str_contains($hay, 'board') || str_contains($hay, 'pdg') || str_contains($hay, 'governor')) {
+        return ['tag' => 'LEADERSHIP', 'tone' => 'board'];
+    }
+    if (str_contains($hay, 'ncl') || str_contains($hay, 'charity league')) {
+        return ['tag' => 'NCL CHAPTER', 'tone' => 'ncl'];
+    }
+    if (str_contains($hay, 'lions')) {
+        return ['tag' => 'LIONS CREW', 'tone' => 'lions'];
+    }
+    return ['tag' => 'GROUP SHIFT', 'tone' => 'partner'];
+}
+
+/**
+ * Derive a clean, descriptive caption and filmstrip note from a gallery image path.
+ *
+ * @return array{caption: string, note: string}
+ */
+function erc_volunteer_gallery_meta(string $relativePath): array
 {
     $filename = basename($relativePath);
-    static $knownCaptions = [
-        '2nd-saturday-group.jpg'      => '2nd Saturday Open Session Volunteers',
-        'bsa-troop-76.jpg'            => 'BSA Troop 76 Service Day',
-        'coahuila-bound.jpg'          => 'Coahuila Mission Shipment Ready',
-        'colleyville-erc-2024.jpg'    => 'Colleyville Lions ERC Service Day (2024)',
-        'computers.jpg'               => 'Donated Electronics Intake Station',
-        'drying-glasses.jpg'          => 'Washing, Sanitizing & Rack Drying Eyeglasses',
-        'founders-workday.jpg'        => 'Ft. Worth Founder Lions Workday',
-        'grapevine-erc-2025.jpg'      => 'Grapevine Lions Service Day (2025)',
-        'kids-sorting.jpg'            => 'Youth Volunteers Sorting Donated Eyewear',
-        'kumc-kids.jpg'               => 'Keller United Methodist Youth Group Sorting',
-        'lensometers.jpg'             => 'Measuring Prescriptions on Tabletop Lensometers',
-        'mckinney-mp1.jpg'            => 'McKinney Lions Volunteer Team',
-        'metroport-ncl.jpg'           => 'DFW Metroport NCL Chapter Volunteers',
-        'midland-delivery.jpg'        => 'Midland Eyeglass Delivery',
-        'panama-bound.jpg'            => 'Panama Mission Box Preparation',
-        'past-district-governors.jpg' => 'Past District Governors Service Day',
-        'peru-bound.jpg'              => 'Peru Medical Mission Shipment',
+    static $knownMeta = [
+        '2nd-saturday-group.jpg'      => ['caption' => '2nd Saturday Open Session Volunteers', 'note' => 'walk-ins welcome'],
+        'bsa-troop-76.jpg'            => ['caption' => 'BSA Troop 76 Service Day', 'note' => 'scouting crew'],
+        'coahuila-bound.jpg'          => ['caption' => 'Coahuila Mission Shipment Ready', 'note' => 'boxed for Mexico'],
+        'colleyville-erc-2024.jpg'    => ['caption' => 'Colleyville Lions ERC Service Day (2024)', 'note' => 'club shift'],
+        'computers.jpg'               => ['caption' => 'Donated Electronics Intake Station', 'note' => 'w11 laptops & phones'],
+        'drying-glasses.jpg'          => ['caption' => 'Washing, Sanitizing & Rack Drying Eyeglasses', 'note' => 'station 02'],
+        'founders-workday.jpg'        => ['caption' => 'Ft. Worth Founder Lions Workday', 'note' => 'lions at bench'],
+        'grapevine-erc-2025.jpg'      => ['caption' => 'Grapevine Lions Service Day (2025)', 'note' => '0.25D sorting'],
+        'kids-sorting.jpg'            => ['caption' => 'Youth Volunteers Sorting Donated Eyewear', 'note' => 'all hands on'],
+        'kumc-kids.jpg'               => ['caption' => 'Keller United Methodist Youth Group Sorting', 'note' => 'youth service'],
+        'lensometers.jpg'             => ['caption' => 'Measuring Prescriptions on Tabletop Lensometers', 'note' => 'station 03'],
+        'mckinney-mp1.jpg'            => ['caption' => 'McKinney Lions Volunteer Team', 'note' => 'partner club'],
+        'metroport-ncl.jpg'           => ['caption' => 'DFW Metroport NCL Chapter Volunteers', 'note' => 'regular crew'],
+        'midland-delivery.jpg'        => ['caption' => 'Midland Eyeglass Delivery', 'note' => 'bulk intake'],
+        'panama-bound.jpg'            => ['caption' => 'Panama Mission Box Preparation', 'note' => '50 pairs / box'],
+        'past-district-governors.jpg' => ['caption' => 'Past District Governors Service Day', 'note' => 'pdg shift'],
+        'peru-bound.jpg'              => ['caption' => 'Peru Medical Mission Shipment', 'note' => 'chincha bound'],
     ];
     $key = strtolower($filename);
-    if (isset($knownCaptions[$key])) {
-        return $knownCaptions[$key];
+    if (isset($knownMeta[$key])) {
+        return $knownMeta[$key];
     }
 
     $stem = preg_replace('/\.[^.]+$/', '', $filename) ?? $filename;
     $stem = preg_replace('/[-_]+/', ' ', $stem) ?? $stem;
     $stem = trim((string)preg_replace('/\s+/', ' ', $stem));
     if ($stem === '') {
-        return 'ERC Volunteer Workshop Photo';
+        return ['caption' => 'ERC Volunteer Workshop Photo', 'note' => 'watauga workshop'];
     }
     $words = explode(' ', $stem);
     $acronyms = ['erc', 'ncl', 'bsa', 'dfw', 'saso', 'pdg', 'kumc'];
@@ -128,7 +153,7 @@ function erc_volunteer_gallery_caption(string $relativePath): string
         }
     }
     unset($w);
-    return implode(' ', $words);
+    return ['caption' => implode(' ', $words), 'note' => 'workshop archive'];
 }
 
 $chicagoTz = new DateTimeZone('America/Chicago');
@@ -162,7 +187,7 @@ foreach ($rawEvents as $ev) {
     $description = trim((string)($ev['description'] ?? ''));
     $evContact = trim((string)($ev['contact'] ?? $contactEmail));
 
-    $dt = DateTimeImmutable::createFromFormat('!Y-m-d', $dateStr, new DateTimeZone('America/Chicago'));
+    $dt = DateTimeImmutable::createFromFormat('!Y-m-d', $dateStr, $chicagoTz);
     $formattedDate = $dt ? $dt->format('D, M j, Y') : $dateStr;
     $monthKey = substr($dateStr, 0, 7);
     $monthLabel = $dt ? $dt->format('F Y') : $monthKey;
@@ -171,6 +196,7 @@ foreach ($rawEvents as $ev) {
     $isFull = $maxPeople > 0 && $people >= $maxPeople;
     $remaining = $maxPeople > 0 ? max(0, $maxPeople - $people) : null;
     $range = erc_volunteer_parse_time_range($timeStr);
+    $ticketMeta = erc_volunteer_ticket_meta($title, $description);
 
     $item = [
         'id'            => $id,
@@ -193,6 +219,8 @@ foreach ($rawEvents as $ev) {
         'isLogo'        => $isLogo,
         'description'   => $description,
         'contact'       => $evContact,
+        'ticketTag'     => $ticketMeta['tag'],
+        'ticketTone'    => $ticketMeta['tone'],
     ];
     $item['gcalUrl'] = erc_volunteer_gcal_url($item);
     $normalizedEvents[] = $item;
@@ -209,6 +237,13 @@ usort($normalizedEvents, static function (array $a, array $b): int {
     }
     return $a['id'] <=> $b['id'];
 });
+
+// Assign display serial index 01..NN after chronological sort
+foreach ($normalizedEvents as $idx => &$evRef) {
+    $evRef['serial'] = sprintf('SHIFT · %02d', $idx + 1);
+    $evRef['passCode'] = sprintf('SHIFT-%04d', (int)$evRef['id']);
+}
+unset($evRef);
 
 $upcomingEvents = array_values(array_filter($normalizedEvents, static fn(array $e): bool => !$e['isPast']));
 $hasUpcoming = count($upcomingEvents) > 0;
@@ -242,16 +277,20 @@ if (!is_array($rawGallery)) {
     $rawGallery = [];
 }
 $galleryItems = [];
-foreach ($rawGallery as $idx => $relPath) {
+foreach ($rawGallery as $relPath) {
     $rel = ltrim((string)$relPath, '/');
     if ($rel === '') {
         continue;
     }
+    $idx = count($galleryItems);
+    $gMeta = erc_volunteer_gallery_meta($rel);
     $galleryItems[] = [
-        'index'   => count($galleryItems),
+        'index'   => $idx,
+        'frameId' => sprintf('FRM-%02d', $idx + 1),
         'path'    => $rel,
         'url'     => erc_media_url($rel),
-        'caption' => erc_volunteer_gallery_caption($rel),
+        'caption' => $gMeta['caption'],
+        'note'    => $gMeta['note'],
     ];
 }
 
@@ -275,8 +314,8 @@ if ($safeJsonPayload === false) {
 
 $pageMeta = [
     'slug'        => 'volunteer',
-    'title'       => 'Volunteer & Schedule | Lions District 2-E2 Eyeglass Recycling Center',
-    'description' => 'Join Saturday volunteer shifts (9:00 AM - 3:00 PM) or schedule a group of up to 20 at 5621 Bunker Blvd, Watauga, TX. Browse sessions, register online, export to calendar, and view workshop photos.',
+    'title'       => 'Volunteer & Shift Dispatch | Lions District 2-E2 Eyeglass Recycling Center',
+    'description' => 'Claim a Saturday volunteer shift (9:00 AM - 3:00 PM) or book a group of up to 20 at 5621 Bunker Blvd, Watauga, TX. Interactive calendar, live seat counts, .ics/Google Calendar export, and 17-frame workshop filmstrip.',
     'canonical'   => '/volunteer',
     'preload_img' => '/gallery/2nd-saturday-group.jpg',
     'og_image'    => '/gallery/2nd-saturday-group.jpg',
@@ -290,223 +329,172 @@ require __DIR__ . '/includes/header.php';
 ?>
 <main id="main-content" class="site-main vol-page" tabindex="-1">
 
-  <!-- 1. Hero & Saturday Arrival Essentials -->
+  <!-- 1. Monumental v2 Poster Header & Workshop Briefing -->
   <section id="volunteer-hero" class="vol-hero" aria-labelledby="vol-hero-title">
-    <div class="vol-wrap vol-hero__grid">
-      <div class="vol-hero__copy">
-        <p class="vol-eyebrow">
-          <?= erc_icon('users', ['class' => 'vol-icon-sm']) ?>
-          <span>100% Volunteer-Run · Watauga Workshop</span>
-        </p>
-        <h1 id="vol-hero-title" class="vol-hero__title">Volunteer at the Eyeglass Recycling Center</h1>
-        <p class="vol-hero__lead">
-          Every pair of eyeglasses shipped free of charge to humanitarian eye clinics across <strong>40+ countries</strong> is sorted, cleaned, measured, and boxed by unpaid community volunteers in Watauga, Texas. <strong>No prior optical experience is needed</strong>—we train you on-site.
-        </p>
-        <div class="vol-hero__actions">
-          <a href="#schedule" class="vol-btn vol-btn--primary">
-            <?= erc_icon('calendar-days', ['class' => 'vol-icon-sm']) ?>
-            <span>Browse Volunteer Schedule</span>
-          </a>
-          <a href="#group-volunteering" class="vol-btn vol-btn--secondary">
-            <?= erc_icon('user-plus', ['class' => 'vol-icon-sm']) ?>
-            <span>Schedule a Group (Up to 20)</span>
-          </a>
-          <a href="#workstations" class="vol-btn vol-btn--ghost">
-            <span>See Volunteer Workstations</span>
-            <?= erc_icon('arrow-right', ['class' => 'vol-icon-sm']) ?>
-          </a>
-        </div>
-        <dl class="vol-quick-facts" aria-label="Volunteer essentials at a glance">
-          <div class="vol-quick-fact">
-            <dt>Saturday Walk-Ins</dt>
-            <dd class="vol-mono">9:00 AM – 3:00 PM</dd>
-          </div>
-          <div class="vol-quick-fact">
-            <dt>Group Capacity</dt>
-            <dd class="vol-mono">Up to 20 / shift</dd>
-          </div>
-          <div class="vol-quick-fact">
-            <dt>Prior Experience</dt>
-            <dd>None (training on-site)</dd>
-          </div>
-        </dl>
+    <div class="vol-wrap">
+      <div class="v2-eyebrow vol-hero__eyebrow">
+        <span>SHIFT DISPATCH &middot; WATAUGA OPTICAL WORKSHOP</span>
+        <span class="v2-eyebrow__rule" aria-hidden="true"></span>
+        <span class="v2-telemetry" id="wataugaHoursBadge">
+          <span class="v2-pulse v2-pulse--live" aria-hidden="true"></span>
+          <span id="wataugaHoursText">SATURDAYS 9:00 AM &ndash; 3:00 PM CT</span>
+        </span>
       </div>
 
-      <aside class="vol-arrival-card" aria-label="Watauga Center arrival and entrance directions">
-        <div class="vol-arrival-card__media">
-          <img
-            src="/gallery/2nd-saturday-group.jpg"
-            alt="Volunteers gathered inside the Watauga Eyeglass Recycling Center workshop during a 2nd Saturday service session"
-            width="1200"
-            height="800"
-            fetchpriority="high"
-            decoding="async"
-          >
+      <div class="vol-hero__grid">
+        <div class="vol-hero__copy">
+          <h1 id="vol-hero-title" class="v2-display v2-display--hero vol-hero__display">
+            HANDS ON.<br>
+            <span class="v2-knockout">SIGHT</span> OUT<span class="v2-dot" aria-hidden="true"></span>
+          </h1>
+
+          <p class="v2-note vol-hero__note">
+            <span>no optical experience needed &mdash; we train you in 10 minutes</span>
+            <?= erc_curved_arrow('down-left') ?>
+          </p>
+
+          <p class="vol-hero__lead">
+            Every pair of refurbished glasses shipped free of charge to humanitarian eye clinics across
+            <strong>40+ countries</strong> is inspected, washed, measured to <span class="vol-mono">0.25</span>-diopter precision,
+            and boxed by unpaid community volunteers in Watauga, Texas. Walk in on Saturday or claim an open shift pass below.
+          </p>
+
+          <div class="vol-hero__actions">
+            <a href="#schedule" class="btn btn--primary btn--lg">
+              <?= erc_icon('calendar-days') ?>
+              <span>CLAIM A SHIFT</span>
+            </a>
+            <a href="#group-volunteering" class="btn btn--secondary btn--lg">
+              <?= erc_icon('users') ?>
+              <span>BOOK A GROUP (UP TO 20)</span>
+            </a>
+            <a href="/files/Group-Volunteer-Form.pdf" download class="btn btn--ghost">
+              <?= erc_icon('download') ?>
+              <span>Group-Volunteer-Form.pdf</span>
+            </a>
+          </div>
+
+          <dl class="vol-telemetry-grid" aria-label="Workshop shift telemetry">
+            <div class="vol-telemetry-cell">
+              <dt>SATURDAY WALK-INS</dt>
+              <dd class="vol-mono">9:00 AM &ndash; 3:00 PM</dd>
+              <dd class="vol-telemetry-sub">Shifts: 9&ndash;12 &amp; 12&ndash;3 CT</dd>
+            </div>
+            <div class="vol-telemetry-cell">
+              <dt>GROUP CAPACITY</dt>
+              <dd class="vol-mono">UP TO 20 / SHIFT</dd>
+              <dd class="vol-telemetry-sub">Schools, Lions, NCL, BSA, teams</dd>
+            </div>
+            <div class="vol-telemetry-cell">
+              <dt>PRIOR EXPERIENCE</dt>
+              <dd>NONE REQUIRED</dd>
+              <dd class="vol-telemetry-sub">100% volunteer-run workshop</dd>
+            </div>
+            <div class="vol-telemetry-cell">
+              <dt>UNIT ECONOMICS</dt>
+              <dd class="vol-mono">&lt; $0.10 / PAIR</dd>
+              <dd class="vol-telemetry-sub">Shipped free to 40+ countries</dd>
+            </div>
+          </dl>
         </div>
-        <div class="vol-arrival-card__body">
-          <div class="vol-arrival-card__status-row">
-            <span class="vol-status-pill" id="wataugaHoursBadge">
-              <?= erc_icon('clock', ['class' => 'vol-icon-xs']) ?>
-              <span id="wataugaHoursText">Open Most Saturdays · 9:00 AM – 3:00 PM</span>
-            </span>
+
+        <aside class="vol-arrival-card" aria-label="Watauga Center arrival and entrance directions">
+          <div class="vol-arrival-card__topbar">
+            <span class="vol-mono">HQ DISPATCH &middot; 32.8707&deg; N, 97.2621&deg; W</span>
+            <span class="vol-arrival-badge vol-mono">FREE PARKING</span>
           </div>
-          <h2 class="vol-arrival-card__heading">Watauga Workshop Arrival</h2>
-          <p class="vol-arrival-card__address">
-            <?= erc_icon('map-pin', ['class' => 'vol-icon-sm']) ?>
-            <span><strong>5621 Bunker Blvd, Watauga, TX 76148</strong> · Free on-site parking</span>
-          </p>
-          <div class="vol-walkway-callout">
-            <?= erc_icon('navigation', ['class' => 'vol-icon-sm']) ?>
-            <p>
-              <strong>Entrance Directions:</strong> Follow the <strong>wooden walkway along the east side of the building</strong> to reach the <strong>rear entrance</strong> (door is at the back on the east side).
-            </p>
-          </div>
-          <p class="vol-arrival-card__hours">
-            <strong>Weekdays (Mon–Fri):</strong> By appointment · <strong>Sunday:</strong> Closed
-          </p>
-          <div class="vol-arrival-card__links">
-            <a href="tel:<?= e($contactPhoneLink) ?>" class="vol-inline-link">
-              <?= erc_icon('phone', ['class' => 'vol-icon-xs']) ?>
-              <span class="vol-mono"><?= e($contactPhone) ?></span>
-            </a>
-            <a href="mailto:<?= e($contactEmail) ?>" class="vol-inline-link">
-              <?= erc_icon('mail', ['class' => 'vol-icon-xs']) ?>
-              <span><?= e($contactEmail) ?></span>
-            </a>
-            <a
-              href="https://www.google.com/maps/dir/?api=1&amp;destination=5621+Bunker+Blvd,+Watauga,+TX+76148"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="vol-inline-link"
+
+          <div class="vol-arrival-card__media">
+            <img
+              src="/gallery/2nd-saturday-group.jpg"
+              alt="Volunteers gathered inside the Watauga Eyeglass Recycling Center workshop during a 2nd Saturday service session"
+              width="1200"
+              height="800"
+              fetchpriority="high"
+              decoding="async"
             >
-              <?= erc_icon('external-link', ['class' => 'vol-icon-xs']) ?>
-              <span>Directions</span>
-            </a>
           </div>
-        </div>
-      </aside>
-    </div>
-  </section>
 
-  <!-- 2. Individual Volunteering & Volunteer Workstations -->
-  <section id="workstations" class="vol-section vol-section--band" aria-labelledby="vol-workstations-title">
-    <div class="vol-wrap">
-      <div class="vol-section__header">
-        <div>
-          <p class="vol-section__kicker">How a Shift Works</p>
-          <h2 id="vol-workstations-title" class="vol-section__title">What Volunteers Do at the Center</h2>
-          <p class="vol-section__desc">
-            Individuals are welcome to drop in during Saturday hours (<strong>9:00 AM – 3:00 PM</strong>) or sign up online for scheduled open sessions like our <strong>2nd Saturday Open Session</strong> (typically <strong>12:00 PM – 3:00 PM</strong>). When you arrive, a workshop lead pairs you with any active station—zero prior optical background required.
-          </p>
-        </div>
-      </div>
+          <div class="vol-arrival-card__body">
+            <h2 class="vol-arrival-card__heading">5621 BUNKER BLVD, WATAUGA, TX 76148</h2>
 
-      <div class="vol-stations-layout">
-        <ol class="vol-stations-grid">
-          <li class="vol-station-card">
-            <div class="vol-station-card__top">
-              <span class="vol-station-num vol-mono" aria-hidden="true">01</span>
-              <span class="vol-station-icon"><?= erc_icon('glasses', ['class' => 'vol-icon-md']) ?></span>
+            <div class="vol-walkway-callout">
+              <?= erc_icon('navigation', ['class' => 'vol-icon-sm']) ?>
+              <p>
+                <strong>Rear Entrance Access:</strong> Free parking on-site. Follow the
+                <strong>wooden walkway along the east side of the building</strong> to the
+                <strong>rear entrance</strong> (door is at the back on the east side).
+              </p>
             </div>
-            <h3 class="vol-station-card__title">Sorting &amp; Initial Inspection</h3>
-            <p class="vol-station-card__body">
-              Inspect donated eyewear and sort frames into single-vision prescription, reading glasses, bifocals/trifocals/progressives/prisms, and non-prescription sunglasses. Broken frames are set aside for parts or repair, alongside intake of donated hearing aids, cell phones, and Windows 11-ready laptops and tablets.
-            </p>
-          </li>
 
-          <li class="vol-station-card">
-            <div class="vol-station-card__top">
-              <span class="vol-station-num vol-mono" aria-hidden="true">02</span>
-              <span class="vol-station-icon"><?= erc_icon('sparkles', ['class' => 'vol-icon-md']) ?></span>
-            </div>
-            <h3 class="vol-station-card__title">Washing, Sanitizing &amp; Drying</h3>
-            <p class="vol-station-card__body">
-              Wash donated frames and lenses thoroughly, sanitize every pair, and set them neatly on drying racks so clinic partners receive clean, ready-to-fit eyewear.
-            </p>
-          </li>
+            <dl class="vol-hours-ledger">
+              <div class="vol-hours-ledger__row">
+                <dt>Saturday</dt>
+                <dd class="vol-mono">9:00 AM &ndash; 3:00 PM</dd>
+              </div>
+              <div class="vol-hours-ledger__row">
+                <dt>Mon &ndash; Fri</dt>
+                <dd>By Appointment</dd>
+              </div>
+              <div class="vol-hours-ledger__row">
+                <dt>Sunday</dt>
+                <dd>Closed</dd>
+              </div>
+            </dl>
 
-          <li class="vol-station-card">
-            <div class="vol-station-card__top">
-              <span class="vol-station-num vol-mono" aria-hidden="true">03</span>
-              <span class="vol-station-icon"><?= erc_icon('eye', ['class' => 'vol-icon-md']) ?></span>
-            </div>
-            <h3 class="vol-station-card__title">Measuring Prescriptions (Lensometry)</h3>
-            <p class="vol-station-card__body">
-              Measure exact sphere and optical power in <span class="vol-mono">0.25</span>-diopter increments using tabletop lensometers. Experienced Lions and workshop leads teach the dials step by step right at the bench.
-            </p>
-          </li>
-
-          <li class="vol-station-card">
-            <div class="vol-station-card__top">
-              <span class="vol-station-num vol-mono" aria-hidden="true">04</span>
-              <span class="vol-station-icon"><?= erc_icon('package', ['class' => 'vol-icon-md']) ?></span>
-            </div>
-            <h3 class="vol-station-card__title">Packing 50-Pair Mission Boxes</h3>
-            <p class="vol-station-card__body">
-              Perform a final quality check, label each pair, and pack standardized <strong class="vol-mono">50</strong>-pair mission boxes by <span class="vol-mono">0.25</span>-diopter bracket (<span class="vol-mono">+0.25</span> to <span class="vol-mono">+5.00+</span> Plus &amp; Readers, <span class="vol-mono">-0.25</span> to <span class="vol-mono">-5.00+</span> Minus, and Sunglasses).
-            </p>
-          </li>
-
-          <li class="vol-station-card">
-            <div class="vol-station-card__top">
-              <span class="vol-station-num vol-mono" aria-hidden="true">05</span>
-              <span class="vol-station-icon"><?= erc_icon('file-text', ['class' => 'vol-icon-md']) ?></span>
-            </div>
-            <h3 class="vol-station-card__title">Administrative &amp; Logistics Support</h3>
-            <p class="vol-station-card__body">
-              Welcome Saturday walk-ins, log incoming donations from our <span class="vol-mono">214</span> DFW collection bins, stage mission orders, and keep workstation supplies stocked.
-            </p>
-          </li>
-        </ol>
-
-        <div class="vol-stations-photos" aria-label="Workstation photos">
-          <figure class="vol-station-photo">
-            <div class="erc-rotated-frame erc-rotated-frame--landscape vol-station-photo__frame">
-              <img
-                class="is-ccw90-no-exif"
-                src="/images/process-lensometers.jpg"
-                alt="Volunteers measuring donated eyeglass prescriptions at tabletop lensometers in Watauga"
-                width="1200"
-                height="900"
-                loading="lazy"
-                decoding="async"
+            <div class="vol-arrival-card__links">
+              <a href="tel:<?= e($contactPhoneLink) ?>" class="vol-inline-link">
+                <?= erc_icon('phone', ['class' => 'vol-icon-xs']) ?>
+                <span class="vol-mono"><?= e($contactPhone) ?></span>
+              </a>
+              <a href="mailto:<?= e($contactEmail) ?>" class="vol-inline-link">
+                <?= erc_icon('mail', ['class' => 'vol-icon-xs']) ?>
+                <span><?= e($contactEmail) ?></span>
+              </a>
+              <a
+                href="https://www.google.com/maps/dir/?api=1&amp;destination=5621+Bunker+Blvd,+Watauga,+TX+76148"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="vol-inline-link"
               >
+                <?= erc_icon('external-link', ['class' => 'vol-icon-xs']) ?>
+                <span>Map Directions</span>
+              </a>
             </div>
-            <figcaption>Tabletop lensometry station where volunteers read exact <span class="vol-mono">0.25</span>-diopter prescriptions.</figcaption>
-          </figure>
-          <figure class="vol-station-photo">
-            <div class="vol-station-photo__frame vol-station-photo__frame--plain">
-              <img
-                src="/gallery/drying-glasses.jpg"
-                alt="Volunteers arranging washed and sanitized eyeglasses on drying racks"
-                width="1200"
-                height="900"
-                loading="lazy"
-                decoding="async"
-              >
-            </div>
-            <figcaption>Washed and sanitized frames drying on workshop racks prior to inspection and boxing.</figcaption>
-          </figure>
-        </div>
+          </div>
+        </aside>
       </div>
     </div>
   </section>
 
-  <!-- 3. Interactive Schedule, Calendar & Online Shift Registration -->
-  <section id="schedule" class="vol-section" aria-labelledby="vol-schedule-title">
+  <!-- 2. Interactive Shift Board, Monthly Calendar & Perforated .v2-ticket Passes -->
+  <section id="schedule" class="vol-section vol-section--schedule" aria-labelledby="vol-schedule-title">
     <div class="vol-wrap">
+      <div class="v2-eyebrow">
+        <span>LIVE SHIFT BOARD &middot; CLAIM YOUR PASS</span>
+        <span class="v2-eyebrow__rule" aria-hidden="true"></span>
+        <span data-ct-clock>AMERICA / CHICAGO</span>
+      </div>
+
       <div class="vol-section__header vol-section__header--split">
         <div>
-          <p class="vol-section__kicker">Schedule &amp; Online Registration</p>
-          <h2 id="vol-schedule-title" class="vol-section__title">Scheduled Volunteer Sessions</h2>
+          <h2 id="vol-schedule-title" class="v2-display v2-display--lg vol-section__display">
+            SCHEDULED <span class="v2-accent-text">SHIFTS</span><span class="v2-dot" aria-hidden="true"></span>
+          </h2>
           <p class="vol-section__desc">
-            Select a session to reserve your spot online, download an <span class="vol-mono">.ics</span> calendar reminder, or add directly to Google Calendar (<span class="vol-mono">America/Chicago</span>). Walk-ins are also always welcome Saturdays <span class="vol-mono">9:00 AM – 3:00 PM</span>.
+            Select any calendar date or perforated dispatch pass to claim a seat online, download an
+            <span class="vol-mono">.ics</span> reminder, or export to Google Calendar (<span class="vol-mono">America/Chicago</span>).
+            Walk-ins are always welcome Saturdays <span class="vol-mono">9:00 AM &ndash; 3:00 PM</span>.
           </p>
         </div>
+        <p class="v2-note vol-schedule-note">
+          <span>pick a pass &amp; tap claim shift</span>
+          <?= erc_curved_arrow('down-left') ?>
+        </p>
       </div>
 
-      <!-- Filter & Scope Bar -->
-      <div class="vol-controls" aria-label="Filter volunteer sessions">
+      <!-- Filter & Scope Controls -->
+      <div class="vol-controls" aria-label="Filter volunteer shifts">
         <div class="vol-controls__row">
           <div class="vol-segmented" role="group" aria-label="Session timeframe">
             <button
@@ -516,7 +504,7 @@ require __DIR__ . '/includes/header.php';
               data-scope="upcoming"
               aria-pressed="<?= $defaultScope === 'upcoming' ? 'true' : 'false' ?>"
             >
-              <span>Upcoming</span>
+              <span>UPCOMING</span>
               <span class="vol-count-pill vol-mono" id="upcomingCountPill"><?= count($upcomingEvents) ?></span>
             </button>
             <button
@@ -526,7 +514,7 @@ require __DIR__ . '/includes/header.php';
               data-scope="all"
               aria-pressed="<?= $defaultScope === 'all' ? 'true' : 'false' ?>"
             >
-              <span>All Scheduled Sessions</span>
+              <span>ALL SESSIONS</span>
               <span class="vol-count-pill vol-mono" id="allCountPill"><?= count($normalizedEvents) ?></span>
             </button>
           </div>
@@ -544,7 +532,7 @@ require __DIR__ . '/includes/header.php';
               type="search"
               id="eventSearchInput"
               class="vol-search-input"
-              placeholder="Search sessions, clubs, or dates..."
+              placeholder="Search shifts, clubs, or dates..."
               autocomplete="off"
               autocorrect="off"
               spellcheck="false"
@@ -556,15 +544,23 @@ require __DIR__ . '/includes/header.php';
           <div class="vol-notice-banner" id="seedScheduleNotice" role="status">
             <?= erc_icon('info', ['class' => 'vol-icon-sm']) ?>
             <p>
-              Showing all <strong class="vol-mono"><?= count($normalizedEvents) ?></strong> scheduled sessions in the directory (latest posted month: <strong><?= e($eventMonthsList[count($eventMonthsList) - 1]['label'] ?? $defaultMonth) ?></strong>). Newly added future sessions will appear automatically under <em>Upcoming</em>—and Saturday walk-ins (<span class="vol-mono">9:00 AM – 3:00 PM</span>) remain open year-round.
+              Showing all <strong class="vol-mono"><?= count($normalizedEvents) ?></strong> scheduled sessions in the directory
+              (latest posted month: <strong><?= e($eventMonthsList[count($eventMonthsList) - 1]['label'] ?? $defaultMonth) ?></strong>).
+              Newly posted future dates appear automatically under <em>Upcoming</em>&mdash;and Saturday walk-ins
+              (<span class="vol-mono">9:00 AM &ndash; 3:00 PM</span>) remain open year-round.
             </p>
           </div>
         <?php endif; ?>
       </div>
 
       <div class="vol-schedule-layout">
-        <!-- Monthly Calendar Column -->
+        <!-- Monthly Calendar Matrix -->
         <aside class="vol-calendar-panel" aria-labelledby="calMonthHeading">
+          <div class="vol-calendar-panel__eyebrow vol-mono">
+            <span>SHIFT MATRIX</span>
+            <span>SAT WALK-INS OPEN</span>
+          </div>
+
           <div class="vol-calendar-header">
             <button
               type="button"
@@ -576,7 +572,7 @@ require __DIR__ . '/includes/header.php';
             </button>
             <h3 id="calMonthHeading" class="vol-calendar-title" aria-live="polite">
               <?php
-                $defDt = DateTimeImmutable::createFromFormat('!Y-m', $defaultMonth, new DateTimeZone('America/Chicago'));
+                $defDt = DateTimeImmutable::createFromFormat('!Y-m', $defaultMonth, $chicagoTz);
                 echo e($defDt ? $defDt->format('F Y') : $defaultMonth);
               ?>
             </h3>
@@ -597,6 +593,7 @@ require __DIR__ . '/includes/header.php';
                   type="button"
                   class="vol-month-jump <?= $em['key'] === $defaultMonth ? 'is-active' : '' ?>"
                   data-jump-month="<?= e($em['key']) ?>"
+                  aria-pressed="<?= $em['key'] === $defaultMonth ? 'true' : 'false' ?>"
                 >
                   <span><?= e($em['label']) ?></span>
                   <span class="vol-mono">(<?= (int)$em['count'] ?>)</span>
@@ -619,9 +616,8 @@ require __DIR__ . '/includes/header.php';
                 </tr>
               </thead>
               <tbody id="volunteerCalendarBody">
-                <!-- Server-rendered fallback for defaultMonth; hydrated seamlessly by volunteer.js -->
                 <?php
-                  $calDt = DateTimeImmutable::createFromFormat('!Y-m-d', $defaultMonth . '-01', new DateTimeZone('America/Chicago'));
+                  $calDt = DateTimeImmutable::createFromFormat('!Y-m-d', $defaultMonth . '-01', $chicagoTz);
                   if ($calDt) {
                       $firstDow = (int)$calDt->format('w');
                       $daysInMonth = (int)$calDt->format('t');
@@ -667,36 +663,36 @@ require __DIR__ . '/includes/header.php';
 
           <div class="vol-calendar-footer">
             <div class="vol-calendar-legend">
-              <span class="vol-legend-item"><span class="vol-legend-swatch vol-legend-swatch--event" aria-hidden="true"></span> Scheduled session</span>
-              <span class="vol-legend-item"><span class="vol-legend-swatch vol-legend-swatch--sat" aria-hidden="true"></span> Saturday walk-in window</span>
+              <span class="vol-legend-item"><span class="vol-legend-swatch vol-legend-swatch--event" aria-hidden="true"></span> Scheduled shift</span>
+              <span class="vol-legend-item"><span class="vol-legend-swatch vol-legend-swatch--sat" aria-hidden="true"></span> Saturday walk-in</span>
             </div>
             <div class="vol-calendar-filter-bar">
               <label class="vol-checkbox-label">
                 <input type="checkbox" id="filterByCalMonthCheck">
-                <span>Show selected calendar month only</span>
+                <span>Filter list by calendar month</span>
               </label>
               <button type="button" class="vol-link-btn" id="clearDayFilterBtn" hidden>Clear date filter</button>
             </div>
           </div>
         </aside>
 
-        <!-- Event List Column -->
+        <!-- Perforated .v2-ticket Dispatch Pass Grid -->
         <div class="vol-events-column">
           <div class="vol-events-status-bar">
-            <p id="eventsFilterSummary" class="vol-events-summary" aria-live="polite">
-              Showing <span class="vol-mono"><?= count($defaultScope === 'upcoming' ? $upcomingEvents : $normalizedEvents) ?></span> scheduled session(s).
+            <p id="eventsFilterSummary" class="vol-events-summary vol-mono" aria-live="polite">
+              SHOWING <?= count($defaultScope === 'upcoming' ? $upcomingEvents : $normalizedEvents) ?> SHIFT PASS(ES)
             </p>
           </div>
 
           <div id="eventsEmptyState" class="vol-empty-card" hidden>
             <?= erc_icon('calendar', ['class' => 'vol-icon-lg']) ?>
-            <h3 id="eventsEmptyHeading">No matching sessions in this view</h3>
+            <h3 id="eventsEmptyHeading">No matching shifts in this view</h3>
             <p id="eventsEmptyCopy">
-              Walk-in volunteers are always welcome most Saturdays from <strong>9:00 AM – 3:00 PM</strong> at 5621 Bunker Blvd, Watauga, TX 76148.
+              Walk-in volunteers are always welcome most Saturdays from <strong>9:00 AM &ndash; 3:00 PM</strong> at 5621 Bunker Blvd, Watauga, TX 76148.
             </p>
             <div class="vol-empty-card__actions">
-              <button type="button" class="vol-btn vol-btn--primary" id="resetFiltersBtn">Show All Scheduled Sessions</button>
-              <a href="#group-volunteering" class="vol-btn vol-btn--secondary">Book a Group Session</a>
+              <button type="button" class="btn btn--primary" id="resetFiltersBtn">Show All Scheduled Shifts</button>
+              <a href="#group-volunteering" class="btn btn--secondary">Book a Group Session</a>
             </div>
           </div>
 
@@ -706,6 +702,7 @@ require __DIR__ . '/includes/header.php';
                 $isHiddenByDefaultScope = ($defaultScope === 'upcoming' && $ev['isPast']);
                 $pct = $ev['maxPeople'] > 0 ? min(100, (int)round(($ev['people'] / $ev['maxPeople']) * 100)) : 0;
                 $popId = 'cal-menu-' . $ev['id'];
+                $toneClass = 'vol-ticket--' . $ev['ticketTone'];
               ?>
               <div
                 class="vol-event-item"
@@ -715,93 +712,90 @@ require __DIR__ . '/includes/header.php';
                 data-event-past="<?= $ev['isPast'] ? '1' : '0' ?>"
                 <?= $isHiddenByDefaultScope ? 'hidden' : '' ?>
               >
-                <article class="vol-event-card <?= $ev['isPast'] ? 'is-past' : '' ?> <?= $ev['isFull'] ? 'is-full' : '' ?>">
-                  <div class="vol-event-card__media <?= $ev['isLogo'] ? 'is-logo' : '' ?>">
-                    <img
-                      src="<?= e($ev['imageUrl']) ?>"
-                      alt="<?= e($ev['title']) ?>"
-                      width="320"
-                      height="240"
-                      loading="lazy"
-                      decoding="async"
-                      data-fallback="/images/placeholder-event.svg"
-                    >
-                  </div>
-
-                  <div class="vol-event-card__body">
-                    <div class="vol-event-card__badges">
-                      <span class="vol-date-badge vol-mono"><?= e($ev['formattedDate']) ?></span>
-                      <?php if ($ev['isPast']): ?>
-                        <span class="vol-state-badge vol-state-badge--past">Past Date</span>
-                      <?php elseif ($ev['isFull']): ?>
-                        <span class="vol-state-badge vol-state-badge--full">Event Full</span>
-                      <?php elseif ($ev['remaining'] !== null && $ev['remaining'] <= 3): ?>
-                        <span class="vol-state-badge vol-state-badge--warn">Filling Fast</span>
-                      <?php else: ?>
-                        <span class="vol-state-badge vol-state-badge--open">Open</span>
-                      <?php endif; ?>
+                <article class="v2-ticket vol-ticket <?= e($toneClass) ?> <?= $ev['isPast'] ? 'is-past' : '' ?> <?= $ev['isFull'] ? 'is-full' : '' ?>">
+                  <div class="v2-ticket__main vol-ticket__main">
+                    <div class="v2-ticket__meta">
+                      <span class="vol-ticket__admit">
+                        <span class="vol-ticket__accent-dot" aria-hidden="true"></span>
+                        <span>ADMIT ONE &middot; <?= e($ev['ticketTag']) ?></span>
+                      </span>
+                      <div class="vol-ticket__badges">
+                        <span class="vol-date-badge vol-mono"><?= e($ev['formattedDate']) ?></span>
+                        <?php if ($ev['isPast']): ?>
+                          <span class="vol-state-badge vol-state-badge--past">Past Date</span>
+                        <?php elseif ($ev['isFull']): ?>
+                          <span class="vol-state-badge vol-state-badge--full">Shift Full</span>
+                        <?php elseif ($ev['remaining'] !== null && $ev['remaining'] <= 3): ?>
+                          <span class="vol-state-badge vol-state-badge--warn">Filling Fast</span>
+                        <?php else: ?>
+                          <span class="vol-state-badge vol-state-badge--open">Open</span>
+                        <?php endif; ?>
+                      </div>
                     </div>
 
-                    <h3 class="vol-event-card__title"><?= e($ev['title']) ?></h3>
-
-                    <ul class="vol-event-meta">
-                      <li>
-                        <?= erc_icon('clock', ['class' => 'vol-icon-xs']) ?>
-                        <span class="vol-mono"><?= e($ev['time']) ?></span>
-                      </li>
-                      <li>
-                        <?= erc_icon('map-pin', ['class' => 'vol-icon-xs']) ?>
-                        <span><?= e($ev['location']) ?></span>
-                      </li>
-                    </ul>
+                    <div class="vol-ticket__headline-row">
+                      <div class="vol-ticket__thumb <?= $ev['isLogo'] ? 'is-logo' : '' ?>">
+                        <img
+                          src="<?= e($ev['imageUrl']) ?>"
+                          alt="<?= e($ev['title']) ?>"
+                          width="120"
+                          height="120"
+                          loading="lazy"
+                          decoding="async"
+                          data-fallback="/images/placeholder-event.svg"
+                        >
+                      </div>
+                      <div class="vol-ticket__headline-copy">
+                        <h3 class="v2-ticket__title vol-ticket__title"><?= e($ev['title']) ?></h3>
+                        <ul class="vol-event-meta">
+                          <li>
+                            <?= erc_icon('clock', ['class' => 'vol-icon-xs']) ?>
+                            <span class="vol-mono"><?= e($ev['time']) ?></span>
+                          </li>
+                          <li>
+                            <?= erc_icon('map-pin', ['class' => 'vol-icon-xs']) ?>
+                            <span><?= e($ev['location']) ?></span>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
 
                     <?php if ($ev['description'] !== ''): ?>
                       <p class="vol-event-card__desc"><?= e($ev['description']) ?></p>
                     <?php endif; ?>
 
-                    <div class="vol-capacity">
-                      <div class="vol-capacity__row">
-                        <span class="vol-capacity__label">Registered Seats</span>
-                        <span class="vol-capacity__value vol-mono" data-capacity-text>
-                          <?php if ($ev['maxPeople'] > 0): ?>
-                            <?= (int)$ev['people'] ?> / <?= (int)$ev['maxPeople'] ?>
-                            (<?= (int)$ev['remaining'] ?> <?= $ev['remaining'] === 1 ? 'spot' : 'spots' ?> left)
-                          <?php else: ?>
-                            <?= (int)$ev['people'] ?> registered
-                          <?php endif; ?>
-                        </span>
-                      </div>
-                      <?php if ($ev['maxPeople'] > 0): ?>
-                        <div
-                          class="vol-meter"
-                          role="progressbar"
-                          aria-label="Session capacity"
-                          aria-valuemin="0"
-                          aria-valuemax="<?= (int)$ev['maxPeople'] ?>"
-                          aria-valuenow="<?= (int)$ev['people'] ?>"
-                          data-capacity-bar
-                        >
-                          <span class="vol-meter__fill" style="--fill-pct: <?= $pct ?>%;"></span>
+                    <div class="vol-ticket__bottom-row">
+                      <div class="vol-capacity">
+                        <div class="vol-capacity__row">
+                          <span class="vol-capacity__label">SEAT METER</span>
+                          <span class="vol-capacity__value vol-mono" data-capacity-text>
+                            <?php if ($ev['maxPeople'] > 0): ?>
+                              <?= (int)$ev['people'] ?> / <?= (int)$ev['maxPeople'] ?>
+                              (<?= (int)$ev['remaining'] ?> <?= $ev['remaining'] === 1 ? 'spot' : 'spots' ?> left)
+                            <?php else: ?>
+                              <?= (int)$ev['people'] ?> registered
+                            <?php endif; ?>
+                          </span>
                         </div>
-                      <?php endif; ?>
-                    </div>
-
-                    <div class="vol-event-card__actions">
-                      <button
-                        type="button"
-                        class="vol-btn vol-btn--primary vol-register-btn"
-                        data-action="open-register"
-                        data-event-id="<?= (int)$ev['id'] ?>"
-                        <?= $ev['isFull'] ? 'disabled' : '' ?>
-                      >
-                        <?= erc_icon($ev['isFull'] ? 'circle-alert' : 'user-plus', ['class' => 'vol-icon-xs']) ?>
-                        <span><?= $ev['isFull'] ? 'Event Full' : 'Register' ?></span>
-                      </button>
+                        <?php if ($ev['maxPeople'] > 0): ?>
+                          <div
+                            class="vol-meter"
+                            role="progressbar"
+                            aria-label="Session capacity"
+                            aria-valuemin="0"
+                            aria-valuemax="<?= (int)$ev['maxPeople'] ?>"
+                            aria-valuenow="<?= (int)$ev['people'] ?>"
+                            data-capacity-bar
+                          >
+                            <span class="vol-meter__fill" style="--fill-pct: <?= $pct ?>%;"></span>
+                          </div>
+                        <?php endif; ?>
+                      </div>
 
                       <div class="vol-cal-menu-wrap">
                         <button
                           type="button"
-                          class="vol-btn vol-btn--secondary vol-cal-trigger"
+                          class="btn btn--secondary btn--sm vol-cal-trigger"
                           popovertarget="<?= e($popId) ?>"
                           data-popover-trigger="<?= e($popId) ?>"
                         >
@@ -832,6 +826,20 @@ require __DIR__ . '/includes/header.php';
                       </div>
                     </div>
                   </div>
+
+                  <div class="v2-ticket__stub vol-ticket__stub">
+                    <span class="v2-ticket__serial vol-ticket__serial"><?= e($ev['serial']) ?></span>
+                    <button
+                      type="button"
+                      class="btn btn--primary vol-claim-btn"
+                      data-action="open-register"
+                      data-event-id="<?= (int)$ev['id'] ?>"
+                      <?= $ev['isFull'] ? 'disabled' : '' ?>
+                    >
+                      <span><?= $ev['isFull'] ? 'SHIFT FULL' : 'CLAIM SHIFT' ?></span>
+                      <?= erc_icon($ev['isFull'] ? 'circle-alert' : 'arrow-right', ['class' => 'vol-icon-xs']) ?>
+                    </button>
+                  </div>
                 </article>
               </div>
             <?php endforeach; ?>
@@ -841,74 +849,201 @@ require __DIR__ . '/includes/header.php';
     </div>
   </section>
 
-  <!-- 4. Group Volunteer Days -->
-  <section id="group-volunteering" class="vol-section vol-section--band" aria-labelledby="vol-group-title">
-    <div class="vol-wrap vol-group-grid">
-      <div class="vol-group-copy">
-        <p class="vol-section__kicker">Organizations, Teams &amp; Youth Service</p>
-        <h2 id="vol-group-title" class="vol-section__title">Group Volunteer Days</h2>
-        <p class="vol-group-lead">
-          Bring your team or organization to the Watauga workshop for a dedicated three-hour service shift. We accommodate up to <strong class="vol-mono">20 volunteers</strong> per group in our morning (<span class="vol-mono">9:00 AM – 12:00 PM</span>) or afternoon (<span class="vol-mono">12:00 PM – 3:00 PM</span>) window.
-        </p>
-
-        <h3 class="vol-subhead">Organizations We Regularly Host</h3>
-        <ul class="vol-group-tags">
-          <li>Corporate teams</li>
-          <li>Schools &amp; student clubs</li>
-          <li>Lions Clubs</li>
-          <li>National Charity League (NCL) chapters</li>
-          <li>Scouting troops (BSA / Eagle Scouts)</li>
-          <li>SASO chapters</li>
-          <li>Church youth groups</li>
-          <li>Civic &amp; community organizations</li>
-        </ul>
+  <!-- 3. Workshop Stations & Group Volunteer Days -->
+  <section id="workstations" class="vol-section vol-section--band" aria-labelledby="vol-workstations-title">
+    <div class="vol-wrap">
+      <div class="v2-eyebrow">
+        <span>WORKSHOP STATIONS &middot; ON-SITE TRAINING</span>
+        <span class="v2-eyebrow__rule" aria-hidden="true"></span>
+        <span>05 BENCHES</span>
       </div>
 
-      <div class="vol-group-card">
-        <h3 class="vol-group-card__title">Schedule a Group Session</h3>
-        <ol class="vol-group-steps">
-          <li>
-            <strong>Choose a shift window:</strong> Morning (<span class="vol-mono">9:00 AM – 12:00 PM</span>) or Afternoon (<span class="vol-mono">12:00 PM – 3:00 PM</span>), for up to <span class="vol-mono">20</span> volunteers.
+      <div class="vol-section__header">
+        <h2 id="vol-workstations-title" class="v2-display v2-display--md vol-section__display">
+          WHAT VOLUNTEERS DO AT THE CENTER<span class="v2-dot" aria-hidden="true"></span>
+        </h2>
+        <p class="vol-section__desc">
+          Individuals are welcome to drop in during Saturday open hours (<span class="vol-mono">9:00 AM &ndash; 3:00 PM</span>) or sign up online for sessions like our <strong>2nd Saturday Open Session</strong> (typically <span class="vol-mono">12:00 PM &ndash; 3:00 PM</span>). Our team trains you right at the bench.
+        </p>
+      </div>
+
+      <div class="vol-stations-layout">
+        <ol class="vol-stations-grid">
+          <li class="vol-station-card">
+            <div class="vol-station-card__top">
+              <span class="vol-station-num vol-mono" aria-hidden="true">01</span>
+              <span class="vol-station-icon"><?= erc_icon('glasses', ['class' => 'vol-icon-md']) ?></span>
+            </div>
+            <h3 class="vol-station-card__title">SORTING &amp; INITIAL INSPECTION</h3>
+            <p class="vol-station-card__body">
+              Inspect donated eyewear and sort into single-vision prescription, reading glasses, bifocals/trifocals/progressives/prisms, and non-prescription sunglasses. Broken frames are set aside for repair or parts alongside donated hearing aids, cell phones, and Windows 11-ready laptops and tablets.
+            </p>
           </li>
-          <li>
-            <strong>Complete the form or reach out:</strong> Download our one-page scheduling form and email it to <a href="mailto:<?= e($contactEmail) ?>"><?= e($contactEmail) ?></a>, call <a href="tel:<?= e($contactPhoneLink) ?>" class="vol-mono"><?= e($contactPhone) ?></a>, or send an online inquiry.
+
+          <li class="vol-station-card">
+            <div class="vol-station-card__top">
+              <span class="vol-station-num vol-mono" aria-hidden="true">02</span>
+              <span class="vol-station-icon"><?= erc_icon('sparkles', ['class' => 'vol-icon-md']) ?></span>
+            </div>
+            <h3 class="vol-station-card__title">WASHING, SANITIZING &amp; DRYING</h3>
+            <p class="vol-station-card__body">
+              Wash frames and lenses thoroughly, sanitize every pair, and arrange them on workshop drying racks so clinic partners receive clean, ready-to-dispense eyewear.
+            </p>
           </li>
-          <li>
-            <strong>Confirm &amp; arrive:</strong> Park free on-site at <span class="vol-mono">5621 Bunker Blvd</span> and follow the wooden walkway along the east side of the building to the rear entrance.
+
+          <li class="vol-station-card">
+            <div class="vol-station-card__top">
+              <span class="vol-station-num vol-mono" aria-hidden="true">03</span>
+              <span class="vol-station-icon"><?= erc_icon('eye', ['class' => 'vol-icon-md']) ?></span>
+            </div>
+            <h3 class="vol-station-card__title">MEASURING PRESCRIPTIONS (LENSOMETRY)</h3>
+            <p class="vol-station-card__body">
+              Determine exact lens prescriptions in <span class="vol-mono">0.25</span>-diopter increments using tabletop lensometers. Experienced Lions show you the dials step by step.
+            </p>
+          </li>
+
+          <li class="vol-station-card">
+            <div class="vol-station-card__top">
+              <span class="vol-station-num vol-mono" aria-hidden="true">04</span>
+              <span class="vol-station-icon"><?= erc_icon('package', ['class' => 'vol-icon-md']) ?></span>
+            </div>
+            <h3 class="vol-station-card__title">PACKING 50-PAIR MISSION BOXES</h3>
+            <p class="vol-station-card__body">
+              Complete final quality checks, label each pair, and pack standardized <strong class="vol-mono">50</strong>-pair mission boxes by <span class="vol-mono">0.25</span>-diopter bracket (<span class="vol-mono">+0.25</span> to <span class="vol-mono">+5.00+</span> Plus &amp; Readers, <span class="vol-mono">-0.25</span> to <span class="vol-mono">-5.00+</span> Minus, and Sunglasses).
+            </p>
+          </li>
+
+          <li class="vol-station-card">
+            <div class="vol-station-card__top">
+              <span class="vol-station-num vol-mono" aria-hidden="true">05</span>
+              <span class="vol-station-icon"><?= erc_icon('file-text', ['class' => 'vol-icon-md']) ?></span>
+            </div>
+            <h3 class="vol-station-card__title">ADMIN &amp; LOGISTICS SUPPORT</h3>
+            <p class="vol-station-card__body">
+              Welcome Saturday walk-ins, log incoming donations from our <span class="vol-mono">214</span> DFW collection bins, stage mission shipments, and keep benches supplied.
+            </p>
           </li>
         </ol>
 
-        <div class="vol-group-card__actions">
-          <a href="/files/Group-Volunteer-Form.pdf" download class="vol-btn vol-btn--primary">
-            <?= erc_icon('download', ['class' => 'vol-icon-sm']) ?>
-            <span>Download Group-Volunteer-Form.pdf</span>
-          </a>
-          <a href="/contact?subject=group-volunteer" class="vol-btn vol-btn--secondary">
-            <?= erc_icon('mail', ['class' => 'vol-icon-sm']) ?>
-            <span>Request Group Date Online</span>
-          </a>
+        <div class="vol-stations-photos" aria-label="Workstation photos">
+          <figure class="vol-station-photo">
+            <div class="erc-rotated-frame erc-rotated-frame--landscape vol-station-photo__frame">
+              <img
+                class="is-ccw90-no-exif"
+                src="/images/process-lensometers.jpg"
+                alt="Volunteers measuring donated eyeglass prescriptions at tabletop lensometers in Watauga"
+                width="1200"
+                height="900"
+                loading="lazy"
+                decoding="async"
+              >
+            </div>
+            <figcaption>Tabletop lensometry station where volunteers read <span class="vol-mono">0.25</span>-diopter prescriptions.</figcaption>
+          </figure>
+          <figure class="vol-station-photo">
+            <div class="vol-station-photo__frame vol-station-photo__frame--plain">
+              <img
+                src="/gallery/drying-glasses.jpg"
+                alt="Volunteers arranging washed and sanitized eyeglasses on drying racks"
+                width="1200"
+                height="900"
+                loading="lazy"
+                decoding="async"
+              >
+            </div>
+            <figcaption>Washed and sanitized eyewear drying on workshop racks prior to inspection and boxing.</figcaption>
+          </figure>
         </div>
+      </div>
 
-        <p class="vol-group-card__contact">
-          Direct scheduling: <a href="tel:<?= e($contactPhoneLink) ?>" class="vol-mono"><?= e($contactPhone) ?></a> · <a href="mailto:<?= e($contactEmail) ?>"><?= e($contactEmail) ?></a>
-        </p>
+      <!-- Group Volunteer Days Sub-Block -->
+      <div id="group-volunteering" class="vol-group-panel">
+        <div class="vol-group-grid">
+          <div class="vol-group-copy">
+            <div class="v2-eyebrow">
+              <span>GROUP DISPATCH &middot; UP TO 20 VOLUNTEERS</span>
+              <span class="v2-eyebrow__rule" aria-hidden="true"></span>
+            </div>
+            <h2 id="vol-group-title" class="v2-display v2-display--md vol-section__display">
+              GROUP VOLUNTEER DAYS<span class="v2-dot" aria-hidden="true"></span>
+            </h2>
+            <p class="vol-group-lead">
+              Reserve a dedicated three-hour shift for your team or civic organization in our morning
+              (<span class="vol-mono">9:00 AM &ndash; 12:00 PM</span>) or afternoon (<span class="vol-mono">12:00 PM &ndash; 3:00 PM</span>) window, accommodating up to <strong class="vol-mono">20 volunteers</strong> per group.
+            </p>
+
+            <h3 class="vol-subhead">Organizations We Host</h3>
+            <ul class="vol-group-tags">
+              <li>Corporate teams</li>
+              <li>Schools &amp; student clubs</li>
+              <li>Lions Clubs</li>
+              <li>National Charity League (NCL) chapters</li>
+              <li>Scouting troops (BSA / Eagle Scouts)</li>
+              <li>SASO chapters</li>
+              <li>Church youth groups</li>
+              <li>Civic &amp; community organizations</li>
+            </ul>
+          </div>
+
+          <div class="vol-group-card">
+            <div class="vol-group-card__head">
+              <span class="vol-mono">GROUP BOOKING PROTOCOL</span>
+              <span class="vol-mono">MAX 20 / SHIFT</span>
+            </div>
+            <h3 class="vol-group-card__title">SCHEDULE A GROUP SESSION</h3>
+            <ol class="vol-group-steps">
+              <li>
+                <strong>Choose a window:</strong> Morning (<span class="vol-mono">9:00 AM &ndash; 12:00 PM</span>) or Afternoon (<span class="vol-mono">12:00 PM &ndash; 3:00 PM</span>), up to <span class="vol-mono">20</span> volunteers.
+              </li>
+              <li>
+                <strong>Submit the form or contact us:</strong> Download <span class="vol-mono">Group-Volunteer-Form.pdf</span> and email it to <a href="mailto:<?= e($contactEmail) ?>"><?= e($contactEmail) ?></a>, call <a href="tel:<?= e($contactPhoneLink) ?>" class="vol-mono"><?= e($contactPhone) ?></a>, or request a date online.
+              </li>
+              <li>
+                <strong>Arrive at Bunker Blvd:</strong> Park free on-site at <span class="vol-mono">5621 Bunker Blvd</span> and follow the wooden walkway along the east side of the building to the rear entrance.
+              </li>
+            </ol>
+
+            <div class="vol-group-card__actions">
+              <a href="/files/Group-Volunteer-Form.pdf" download class="btn btn--primary">
+                <?= erc_icon('download', ['class' => 'vol-icon-sm']) ?>
+                <span>Download Group-Volunteer-Form.pdf</span>
+              </a>
+              <a href="/contact?subject=group-volunteer" class="btn btn--secondary">
+                <?= erc_icon('mail', ['class' => 'vol-icon-sm']) ?>
+                <span>Request Group Date</span>
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- 5. Community Volunteer Photo Gallery & Lightbox -->
-  <section id="volunteer-gallery" class="vol-section" aria-labelledby="vol-gallery-title">
-    <div class="vol-wrap">
+  <!-- 4. .v2-sheet Contrast Stage — Workshop Contact Sheet / Filmstrip Gallery (17 Photos) -->
+  <section id="volunteer-gallery" class="v2-sheet vol-gallery-sheet" aria-labelledby="vol-gallery-title">
+    <div class="v2-sheet__inner">
+      <div class="v2-eyebrow">
+        <span>35MM CONTACT SHEET &middot; WORKSHOP &amp; MISSION ARCHIVE</span>
+        <span class="v2-eyebrow__rule" aria-hidden="true"></span>
+        <span class="vol-mono"><span id="galleryTotalBadge"><?= count($galleryItems) ?></span> FRAMES</span>
+      </div>
+
       <div class="vol-section__header vol-section__header--split">
         <div>
-          <p class="vol-section__kicker">Workshop &amp; Mission Dispatch Archive</p>
-          <h2 id="vol-gallery-title" class="vol-section__title">Community Volunteer Photo Gallery</h2>
+          <h2 id="vol-gallery-title" class="v2-display v2-display--lg vol-section__display">
+            WORKSHOP FILMSTRIP<span class="v2-dot" aria-hidden="true"></span>
+          </h2>
           <p class="vol-section__desc">
-            Lions Clubs, youth chapters, and mission deliveries in action. Select any photo to open the accessible high-resolution viewer (<span class="vol-mono" id="galleryTotalBadge"><?= count($galleryItems) ?></span> photos).
+            Lions Clubs, youth chapters, lensometry benches, and outbound mission crates captured inside our Watauga center. Select any frame for the high-resolution keyboard lightbox.
           </p>
         </div>
+
         <div class="vol-gallery-toolbar">
-          <button type="button" class="vol-btn vol-btn--secondary" id="refreshGalleryBtn">
+          <p class="v2-note vol-gallery-note">
+            <span>click any frame to inspect</span>
+            <?= erc_curved_arrow('down-left') ?>
+          </p>
+          <button type="button" class="btn btn--secondary" id="refreshGalleryBtn">
             <?= erc_icon('refresh-cw', ['class' => 'vol-icon-xs']) ?>
             <span>Refresh Photos</span>
           </button>
@@ -917,18 +1052,26 @@ require __DIR__ . '/includes/header.php';
 
       <p id="galleryStatusMsg" class="vol-gallery-status" aria-live="polite" hidden></p>
 
-      <ul id="volunteerGalleryGrid" class="vol-gallery-grid">
+      <ul id="volunteerGalleryGrid" class="vol-filmstrip-grid">
         <?php foreach ($galleryItems as $item): ?>
-          <li class="vol-gallery-item">
+          <li class="vol-filmstrip-item">
             <button
               type="button"
-              class="vol-gallery-card"
+              class="vol-frame-card"
               data-gallery-index="<?= (int)$item['index'] ?>"
               data-gallery-src="<?= e($item['url']) ?>"
               data-gallery-caption="<?= e($item['caption']) ?>"
-              aria-label="Open photo: <?= e($item['caption']) ?>"
+              aria-label="Open frame <?= e($item['frameId']) ?>: <?= e($item['caption']) ?>"
             >
-              <span class="vol-gallery-card__media">
+              <span class="vol-frame-card__sprockets" aria-hidden="true">
+                <span class="vol-frame-card__serial vol-mono"><?= e($item['frameId']) ?></span>
+                <span class="vol-frame-card__perf"></span>
+                <span class="vol-frame-card__zoom">
+                  <?= erc_icon('zoom-in', ['class' => 'vol-icon-xs']) ?>
+                </span>
+              </span>
+
+              <span class="vol-frame-card__media">
                 <img
                   src="<?= e($item['url']) ?>"
                   alt="<?= e($item['caption']) ?>"
@@ -937,11 +1080,12 @@ require __DIR__ . '/includes/header.php';
                   width="640"
                   height="480"
                 >
-                <span class="vol-gallery-card__zoom" aria-hidden="true">
-                  <?= erc_icon('zoom-in', ['class' => 'vol-icon-sm']) ?>
-                </span>
               </span>
-              <span class="vol-gallery-card__caption"><?= e($item['caption']) ?></span>
+
+              <span class="vol-frame-card__footer">
+                <span class="vol-frame-card__caption"><?= e($item['caption']) ?></span>
+                <span class="vol-frame-card__note"><?= e($item['note']) ?></span>
+              </span>
             </button>
           </li>
         <?php endforeach; ?>
@@ -949,41 +1093,56 @@ require __DIR__ . '/includes/header.php';
     </div>
   </section>
 
-  <!-- 6. Watauga Arrival & Next Steps Strip -->
-  <section id="arrival-guide" class="vol-section vol-section--band" aria-labelledby="vol-arrival-title">
+  <!-- 5. Watauga Arrival & Next Steps Strip -->
+  <section id="arrival-guide" class="vol-section vol-section--arrival" aria-labelledby="vol-arrival-title">
     <div class="vol-wrap vol-arrival-strip">
       <div class="vol-arrival-strip__main">
-        <p class="vol-section__kicker">Visiting the Center</p>
-        <h2 id="vol-arrival-title" class="vol-section__title">Finding the Entrance at 5621 Bunker Blvd</h2>
+        <div class="v2-eyebrow">
+          <span>VISITING THE CENTER</span>
+          <span class="v2-eyebrow__rule" aria-hidden="true"></span>
+        </div>
+        <h2 id="vol-arrival-title" class="v2-display v2-display--sm vol-section__display">
+          FINDING 5621 BUNKER BLVD<span class="v2-dot" aria-hidden="true"></span>
+        </h2>
         <p>
-          Free parking is available right in front of the building at <strong>5621 Bunker Blvd, Watauga, TX 76148</strong>. Please follow the <strong>wooden walkway along the east side of the building to the rear entrance</strong>—the workshop door is at the back on the east side.
+          Free parking is available right in front of the building at <strong>5621 Bunker Blvd, Watauga, TX 76148</strong>. Follow the <strong>wooden walkway along the east side of the building to the rear entrance</strong>&mdash;the workshop door is at the back on the east side.
         </p>
       </div>
       <div class="vol-arrival-strip__links">
-        <a href="/locations" class="vol-btn vol-btn--secondary">
+        <a href="/locations" class="btn btn--secondary">
           <?= erc_icon('map-pin', ['class' => 'vol-icon-sm']) ?>
           <span>Explore 214 Drop-Off Bins</span>
         </a>
-        <a href="/donate" class="vol-btn vol-btn--secondary">
+        <a href="/donate" class="btn btn--secondary">
           <?= erc_icon('glasses', ['class' => 'vol-icon-sm']) ?>
-          <span>See Accepted Donations</span>
+          <span>Accepted Donations</span>
         </a>
-        <a href="/contact?subject=volunteer" class="vol-btn vol-btn--primary">
+        <a href="/contact?subject=volunteer" class="btn btn--primary">
           <?= erc_icon('mail', ['class' => 'vol-icon-sm']) ?>
-          <span>Ask a Volunteer Question</span>
+          <span>Ask a Question</span>
         </a>
       </div>
     </div>
   </section>
 
-  <!-- Native Modal: Volunteer Shift Registration -->
-  <dialog id="volunteerRegDialog" class="vol-dialog" closedby="any" aria-labelledby="volRegDialogTitle">
+  <!-- Native Modal: Dark Obsidian Shift Registration Console -->
+  <dialog id="volunteerRegDialog" class="vol-dialog vol-console-dialog" closedby="any" aria-labelledby="volRegDialogTitle">
     <div class="vol-dialog__panel">
+      <div class="vol-console__handle" aria-hidden="true"></div>
+
       <div class="vol-dialog__header">
-        <div>
-          <p class="vol-dialog__kicker">Online Shift Registration</p>
-          <h2 id="volRegDialogTitle" class="vol-dialog__title">Register for Volunteer Shift</h2>
+        <div class="vol-console__title-group">
+          <div class="vol-console__meta-bar">
+            <span class="vol-console__tag vol-mono">SHIFT-PASS &middot; LIVE</span>
+            <span class="vol-console__req vol-mono" id="regPassCode">SHIFT-0000</span>
+            <span class="vol-console__pill vol-mono" id="regStatusPill">
+              <span class="vol-console__pill-dot" aria-hidden="true"></span>
+              <span>DRAFT</span>
+            </span>
+          </div>
+          <h2 id="volRegDialogTitle" class="vol-dialog__title">CLAIM VOLUNTEER SHIFT</h2>
         </div>
+
         <button
           type="button"
           class="vol-dialog__close"
@@ -995,15 +1154,26 @@ require __DIR__ . '/includes/header.php';
       </div>
 
       <div class="vol-dialog__session-summary" id="regSessionSummary">
-        <h3 id="regEventTitle" class="vol-dialog__event-title">Volunteer Session</h3>
-        <p class="vol-dialog__event-meta">
-          <span id="regEventDateTime" class="vol-mono"></span>
-          <span> · </span>
-          <span id="regEventLocation"></span>
-        </p>
-        <p class="vol-dialog__event-seats">
-          Remaining seats: <strong id="regEventSeats" class="vol-mono"></strong>
-        </p>
+        <div class="vol-console__telemetry-row">
+          <div class="vol-console__telemetry-cell">
+            <span class="vol-console__label vol-mono">SESSION</span>
+            <h3 id="regEventTitle" class="vol-dialog__event-title">Volunteer Session</h3>
+          </div>
+          <div class="vol-console__telemetry-cell">
+            <span class="vol-console__label vol-mono">REMAINING SEATS</span>
+            <p class="vol-dialog__event-seats"><strong id="regEventSeats" class="vol-mono"></strong></p>
+          </div>
+        </div>
+        <div class="vol-console__telemetry-row">
+          <div class="vol-console__telemetry-cell">
+            <span class="vol-console__label vol-mono">WINDOW (CT)</span>
+            <p class="vol-dialog__event-meta"><span id="regEventDateTime" class="vol-mono"></span></p>
+          </div>
+          <div class="vol-console__telemetry-cell">
+            <span class="vol-console__label vol-mono">LOCATION</span>
+            <p class="vol-dialog__event-meta"><span id="regEventLocation"></span></p>
+          </div>
+        </div>
       </div>
 
       <form id="volunteerSignupForm" class="vol-form" novalidate>
@@ -1015,83 +1185,125 @@ require __DIR__ . '/includes/header.php';
           <input type="text" id="regWebsiteUrl" name="website_url" tabindex="-1" autocomplete="off">
         </div>
 
-        <div class="vol-field">
-          <label for="regName">Full Name <span class="vol-req" aria-hidden="true">*</span></label>
-          <span id="regNameHint" class="vol-hint">Required · Up to 120 characters</span>
-          <input
-            type="text"
-            id="regName"
-            name="name"
-            required
-            maxlength="120"
-            autocomplete="name"
-            enterkeyhint="next"
-            aria-invalid="false"
-            aria-describedby="regNameHint"
-            data-error="regNameError"
-            autofocus
-          >
-          <div id="regNameError" class="vol-field-error">
-            <?= erc_icon('circle-alert', ['class' => 'vol-icon-xs']) ?>
-            <span>Error: Please enter your full name (1–120 characters).</span>
+        <div class="vol-form__row">
+          <div class="vol-field">
+            <label for="regName">FULL NAME <span class="vol-req" aria-hidden="true">*</span></label>
+            <span id="regNameHint" class="vol-hint">Required &middot; Up to 120 characters</span>
+            <input
+              type="text"
+              id="regName"
+              name="name"
+              required
+              maxlength="120"
+              autocomplete="name"
+              placeholder="Jane Volunteer"
+              enterkeyhint="next"
+              aria-invalid="false"
+              aria-describedby="regNameHint"
+              data-error="regNameError"
+              autofocus
+            >
+            <div id="regNameError" class="vol-field-error">
+              <?= erc_icon('circle-alert', ['class' => 'vol-icon-xs']) ?>
+              <span>Error: Please enter your full name (1&ndash;120 characters).</span>
+            </div>
+          </div>
+
+          <div class="vol-field">
+            <label for="regEmail">EMAIL ADDRESS <span class="vol-req" aria-hidden="true">*</span></label>
+            <span id="regEmailHint" class="vol-hint">Confirmation sent here</span>
+            <input
+              type="email"
+              id="regEmail"
+              name="email"
+              inputmode="email"
+              required
+              maxlength="254"
+              autocomplete="email"
+              placeholder="you@example.com"
+              autocorrect="off"
+              autocapitalize="none"
+              spellcheck="false"
+              enterkeyhint="next"
+              aria-invalid="false"
+              aria-describedby="regEmailHint"
+              data-error="regEmailError"
+            >
+            <div id="regEmailError" class="vol-field-error">
+              <?= erc_icon('circle-alert', ['class' => 'vol-icon-xs']) ?>
+              <span>Error: Enter a valid email address (you@example.com).</span>
+            </div>
           </div>
         </div>
 
-        <div class="vol-field">
-          <label for="regEmail">Email Address <span class="vol-req" aria-hidden="true">*</span></label>
-          <span id="regEmailHint" class="vol-hint">Format: you@example.com — confirmation details sent here</span>
-          <input
-            type="email"
-            id="regEmail"
-            name="email"
-            inputmode="email"
-            required
-            maxlength="254"
-            autocomplete="email"
-            autocorrect="off"
-            autocapitalize="none"
-            spellcheck="false"
-            enterkeyhint="next"
-            aria-invalid="false"
-            aria-describedby="regEmailHint"
-            data-error="regEmailError"
-          >
-          <div id="regEmailError" class="vol-field-error">
-            <?= erc_icon('circle-alert', ['class' => 'vol-icon-xs']) ?>
-            <span>Error: Enter a valid email address in the format you@example.com.</span>
+        <div class="vol-form__row">
+          <div class="vol-field">
+            <label for="regPhone">PHONE NUMBER <span class="vol-opt">(optional)</span></label>
+            <span id="regPhoneHint" class="vol-hint">Format: (817) 555-0199</span>
+            <input
+              type="tel"
+              id="regPhone"
+              name="phone"
+              inputmode="tel"
+              maxlength="40"
+              autocomplete="tel"
+              placeholder="(817) 555-0199"
+              enterkeyhint="next"
+              aria-invalid="false"
+              aria-describedby="regPhoneHint"
+              data-error="regPhoneError"
+            >
+            <div id="regPhoneError" class="vol-field-error">
+              <?= erc_icon('circle-alert', ['class' => 'vol-icon-xs']) ?>
+              <span>Error: Phone number must be 40 characters or fewer.</span>
+            </div>
+          </div>
+
+          <div class="vol-field">
+            <label for="regCount">VOLUNTEER SEATS</label>
+            <span id="regCountHint" class="vol-hint">1 online seat per email (groups up to 20 via PDF)</span>
+            <input
+              type="number"
+              id="regCount"
+              name="count"
+              min="1"
+              max="20"
+              step="1"
+              value="1"
+              inputmode="numeric"
+              autocomplete="off"
+              enterkeyhint="done"
+              aria-invalid="false"
+              aria-describedby="regCountHint"
+              data-error="regCountError"
+            >
+            <div id="regCountError" class="vol-field-error">
+              <?= erc_icon('circle-alert', ['class' => 'vol-icon-xs']) ?>
+              <span>Error: Enter a seat count between 1 and 20.</span>
+            </div>
           </div>
         </div>
 
-        <div class="vol-field">
-          <label for="regPhone">Phone Number <span class="vol-opt">(optional)</span></label>
-          <span id="regPhoneHint" class="vol-hint">Format: (817) 555-0199 — optional contact for schedule updates</span>
-          <input
-            type="tel"
-            id="regPhone"
-            name="phone"
-            inputmode="tel"
-            maxlength="40"
-            autocomplete="tel"
-            enterkeyhint="done"
-            aria-invalid="false"
-            aria-describedby="regPhoneHint"
-            data-error="regPhoneError"
-          >
-          <div id="regPhoneError" class="vol-field-error">
-            <?= erc_icon('circle-alert', ['class' => 'vol-icon-xs']) ?>
-            <span>Error: Phone number must be 40 characters or fewer.</span>
-          </div>
-        </div>
+        <p id="regCountGroupNote" class="vol-console__group-note" hidden>
+          Online dispatch reserves <strong>1 seat per email address</strong>. For groups of 2&ndash;20, register each volunteer individually or submit <a href="/files/Group-Volunteer-Form.pdf" download>Group-Volunteer-Form.pdf</a>.
+        </p>
 
         <div id="regFormStatus" class="vol-form-status" role="status" aria-live="polite" hidden></div>
 
         <div class="vol-dialog__footer">
-          <button type="submit" id="regSubmitBtn" class="vol-btn vol-btn--primary">
+          <button type="submit" id="regSubmitBtn" class="vol-console-submit">
             <span class="vol-spinner" id="regSpinner" aria-hidden="true" hidden></span>
-            <span id="regSubmitText">Confirm Registration</span>
+            <span id="regSubmitText">CONFIRM SHIFT</span>
+            <span class="vol-console-submit__orb" aria-hidden="true">
+              <?= erc_icon('arrow-right', ['class' => 'vol-icon-xs']) ?>
+            </span>
           </button>
-          <button type="button" class="vol-btn vol-btn--secondary" data-dialog-close>Cancel</button>
+          <button type="button" class="btn btn--secondary vol-console-cancel" data-dialog-close>Cancel</button>
         </div>
+
+        <p class="vol-console__footnote vol-mono">
+          5621 BUNKER BLVD &middot; EAST-SIDE WOODEN WALKWAY TO REAR ENTRANCE
+        </p>
       </form>
 
       <!-- Post-Signup Confirmation State -->
@@ -1099,28 +1311,29 @@ require __DIR__ . '/includes/header.php';
         <div class="vol-reg-success__banner">
           <?= erc_icon('circle-check-big', ['class' => 'vol-icon-lg']) ?>
           <div>
-            <h3 id="regSuccessHeading" tabindex="-1">You're Registered!</h3>
+            <h3 id="regSuccessHeading" tabindex="-1">SHIFT CONFIRMED!</h3>
             <p id="regSuccessMessage"></p>
           </div>
         </div>
 
-        <div class="vol-walkway-callout">
+        <div class="vol-walkway-callout vol-walkway-callout--console">
           <?= erc_icon('navigation', ['class' => 'vol-icon-sm']) ?>
           <p>
-            <strong>Arrival Reminder:</strong> Free parking at 5621 Bunker Blvd, Watauga. Follow the <strong>wooden walkway along the east side of the building</strong> to the rear entrance.
+            <strong>Arrival Reminder:</strong> Free parking at 5621 Bunker Blvd, Watauga. Follow the
+            <strong>wooden walkway along the east side of the building</strong> to the rear entrance.
           </p>
         </div>
 
         <div class="vol-reg-success__actions">
-          <button type="button" id="regSuccessIcsBtn" class="vol-btn vol-btn--primary">
+          <button type="button" id="regSuccessIcsBtn" class="btn btn--primary">
             <?= erc_icon('download', ['class' => 'vol-icon-sm']) ?>
             <span>Download .ics Reminder</span>
           </button>
-          <a id="regSuccessGcalLink" href="#" target="_blank" rel="noopener noreferrer" class="vol-btn vol-btn--secondary">
+          <a id="regSuccessGcalLink" href="#" target="_blank" rel="noopener noreferrer" class="btn btn--secondary">
             <?= erc_icon('calendar-plus', ['class' => 'vol-icon-sm']) ?>
             <span>Add to Google Calendar</span>
           </a>
-          <button type="button" class="vol-btn vol-btn--ghost" data-dialog-close>Done</button>
+          <button type="button" class="btn btn--ghost" data-dialog-close>Done</button>
         </div>
       </div>
     </div>
@@ -1130,7 +1343,7 @@ require __DIR__ . '/includes/header.php';
   <dialog id="volunteerLightbox" class="vol-lightbox" closedby="any" aria-labelledby="lightboxCaption">
     <div class="vol-lightbox__shell">
       <div class="vol-lightbox__topbar">
-        <p class="vol-lightbox__counter vol-mono" id="lightboxCounter" aria-live="polite">1 of <?= count($galleryItems) ?></p>
+        <p class="vol-lightbox__counter vol-mono" id="lightboxCounter" aria-live="polite">FRM-01 / <?= sprintf('%02d', count($galleryItems)) ?></p>
         <h2 class="vol-lightbox__caption" id="lightboxCaption">Gallery Photo</h2>
         <button
           type="button"

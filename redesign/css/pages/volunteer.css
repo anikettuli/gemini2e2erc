@@ -1,35 +1,23 @@
-/* Lions District 2-E2 ERC — Volunteer & Events Hub Styles */
+/* Lions District 2-E2 ERC — v2 Volunteer & Shift Dispatch Page Styles */
 @layer pages {
   /* =========================================================
-     Layout Shell & Typography Helpers
+     Page Shell, Wrap & Typography Helpers
      ========================================================= */
   .vol-page {
-    color: var(--ink-primary);
-    background-color: var(--bg-canvas);
+    color: var(--fg);
+    background-color: var(--bg);
     font-family: var(--font-sans);
     overflow-wrap: anywhere;
   }
 
-  .vol-page :is(h1, h2, h3, h4) {
-    font-family: var(--font-display);
-    font-optical-sizing: auto;
-    text-wrap: balance;
-    color: var(--ink-primary);
-    letter-spacing: -0.015em;
-  }
-
-  .vol-page :is(p, li) {
-    text-wrap: pretty;
+  .vol-wrap {
+    inline-size: min(100% - clamp(1.5rem, 4vw, 4rem), var(--container-max, 78rem));
+    margin-inline: auto;
   }
 
   .vol-mono {
     font-family: var(--font-mono);
     font-variant-numeric: tabular-nums;
-  }
-
-  .vol-wrap {
-    inline-size: min(100% - clamp(2rem, 5vw, 4rem), 76rem);
-    margin-inline: auto;
   }
 
   .vol-visually-hidden:where(:not(:focus-within, :active)) {
@@ -69,13 +57,21 @@
   }
 
   .vol-section {
-    padding-block: clamp(2.75rem, 5vw, 4.5rem);
-    scroll-margin-top: 5.5rem;
+    padding-block: clamp(2.75rem, 5.5vw, 4.75rem);
+    scroll-margin-top: calc(var(--header-height, 4.5rem) + 1rem);
   }
 
   .vol-section--band {
-    background-color: var(--bg-subtle);
-    border-block: 1px solid var(--border-subtle);
+    background-color: var(--bg-2);
+    border-block: 1px solid var(--rule);
+  }
+
+  .vol-section--arrival {
+    padding-block: clamp(2.25rem, 4vw, 3.5rem);
+  }
+
+  .vol-section__display {
+    margin: 0.65rem 0 0.75rem;
   }
 
   .vol-section__header {
@@ -89,192 +85,82 @@
     flex-wrap: wrap;
     align-items: flex-end;
     justify-content: space-between;
-    gap: 1rem 2rem;
+    gap: 1.25rem 2rem;
   }
 
   .vol-section__header--split > div:first-child {
-    max-inline-size: 66ch;
-  }
-
-  .vol-section__kicker {
-    margin: 0 0 0.45rem;
-    font-size: 0.875rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--brand-primary);
-  }
-
-  .vol-section__title {
-    margin: 0 0 0.65rem;
-    font-size: clamp(1.75rem, 2.8vw, 2.35rem);
-    line-height: 1.18;
+    max-inline-size: 56ch;
+    min-inline-size: 0;
   }
 
   .vol-section__desc {
     margin: 0;
-    color: var(--ink-secondary);
-    font-size: 1.05rem;
-    line-height: 1.6;
+    color: var(--fg-2);
+    font-size: clamp(1rem, 1.2vw, 1.1rem);
+    line-height: 1.62;
   }
 
   .vol-subhead {
     margin: 1.5rem 0 0.75rem;
-    font-family: var(--font-sans);
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: var(--ink-primary);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
   }
 
   /* =========================================================
-     Buttons & Interactive Controls (WCAG 2.5.8 / 2.5.5)
-     ========================================================= */
-  .vol-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    min-block-size: 44px;
-    padding: 0.65rem 1.15rem;
-    border-radius: 0.65rem;
-    border: 1.5px solid transparent;
-    font-family: var(--font-sans);
-    font-size: 0.975rem;
-    font-weight: 600;
-    line-height: 1.25;
-    text-decoration: none;
-    cursor: pointer;
-    touch-action: manipulation;
-    transition: background-color 0.16s ease, color 0.16s ease, border-color 0.16s ease, transform 0.12s ease;
-  }
-
-  .vol-btn:focus-visible,
-  .vol-icon-btn:focus-visible,
-  .vol-seg-btn:focus-visible,
-  .vol-chip:focus-visible,
-  .vol-month-jump:focus-visible,
-  .vol-cal-day:focus-visible,
-  .vol-link-btn:focus-visible,
-  .vol-cal-popover__item:focus-visible,
-  .vol-gallery-card:focus-visible,
-  .vol-dialog__close:focus-visible,
-  .vol-lightbox__close:focus-visible,
-  .vol-lightbox__nav:focus-visible,
-  .vol-inline-link:focus-visible {
-    outline: 3px solid var(--focus-ring);
-    outline-offset: 2px;
-  }
-
-  .vol-btn--primary {
-    background-color: var(--brand-primary);
-    color: var(--on-brand-primary);
-    border-color: var(--brand-primary);
-  }
-
-  .vol-btn--primary:hover:not(:disabled) {
-    background-color: var(--brand-primary-hover);
-    border-color: var(--brand-primary-hover);
-  }
-
-  .vol-btn--secondary {
-    background-color: var(--bg-surface);
-    color: var(--ink-primary);
-    border-color: var(--border-strong);
-  }
-
-  .vol-btn--secondary:hover:not(:disabled) {
-    background-color: var(--bg-tint);
-    border-color: var(--brand-primary);
-  }
-
-  .vol-btn--ghost {
-    background-color: transparent;
-    color: var(--brand-primary);
-    border-color: transparent;
-    padding-inline: 0.75rem;
-  }
-
-  .vol-btn--ghost:hover:not(:disabled) {
-    background-color: var(--bg-tint);
-  }
-
-  .vol-btn:disabled {
-    opacity: 0.62;
-    cursor: not-allowed;
-  }
-
-  .vol-btn:active:not(:disabled) {
-    transform: translateY(1px);
-  }
-
-  .vol-link-btn {
-    display: inline-flex;
-    align-items: center;
-    min-block-size: 44px;
-    padding: 0.35rem 0.65rem;
-    border: 0;
-    border-radius: 0.45rem;
-    background: transparent;
-    color: var(--brand-primary);
-    font: inherit;
-    font-size: 0.925rem;
-    font-weight: 600;
-    text-decoration: underline;
-    text-underline-offset: 0.2em;
-    cursor: pointer;
-    touch-action: manipulation;
-  }
-
-  .vol-link-btn:hover {
-    background-color: var(--bg-tint);
-  }
-
-  /* =========================================================
-     1. Hero & Saturday Arrival Card
+     1. Monumental Poster Header & Watauga Arrival Card
      ========================================================= */
   .vol-hero {
-    padding-block: clamp(2.25rem, 4.5vw, 3.75rem);
-    scroll-margin-top: 5.5rem;
+    padding-block: clamp(1.75rem, 4vw, 3.25rem) clamp(2.5rem, 5vw, 4rem);
+    border-block-end: 1px solid var(--rule);
+    scroll-margin-top: calc(var(--header-height, 4.5rem) + 1rem);
+  }
+
+  .vol-hero__eyebrow {
+    margin-block-end: clamp(1.15rem, 2.5vw, 1.75rem);
+  }
+
+  .vol-hero__eyebrow .v2-telemetry.is-live-open {
+    color: var(--brand-emerald);
   }
 
   .vol-hero__grid {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: clamp(1.75rem, 4vw, 3rem);
     align-items: start;
   }
 
-  @media (min-width: 60rem) {
+  @media (min-width: 62rem) {
     .vol-hero__grid {
-      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.95fr);
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.9fr);
     }
   }
 
-  .vol-eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    margin: 0 0 0.85rem;
-    padding: 0.35rem 0.75rem;
-    border-radius: 999px;
-    background-color: var(--bg-tint);
-    border: 1px solid var(--border-subtle);
-    color: var(--brand-primary);
-    font-size: 0.875rem;
-    font-weight: 700;
+  .vol-hero__copy {
+    min-inline-size: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
-  .vol-hero__title {
-    margin: 0 0 1rem;
-    font-size: clamp(2.1rem, 4.1vw, 3.1rem);
-    line-height: 1.12;
+  .vol-hero__display {
+    margin: 0 0 0.95rem;
+  }
+
+  .vol-hero__note {
+    margin: 0 0 1.25rem;
+    flex-wrap: wrap;
   }
 
   .vol-hero__lead {
     margin: 0 0 1.5rem;
     max-inline-size: 62ch;
-    color: var(--ink-secondary);
-    font-size: clamp(1.05rem, 1.4vw, 1.18rem);
+    color: var(--fg-2);
+    font-size: clamp(1.04rem, 1.35vw, 1.16rem);
     line-height: 1.62;
   }
 
@@ -285,46 +171,81 @@
     margin-block-end: 1.75rem;
   }
 
-  .vol-quick-facts {
+  .vol-telemetry-grid {
+    inline-size: 100%;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
-    gap: 0.85rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 11.5rem), 1fr));
+    gap: 0.75rem;
     margin: 0;
   }
 
-  .vol-quick-fact {
+  .vol-telemetry-cell {
+    min-inline-size: 0;
     padding: 0.9rem 1rem;
-    border-radius: 0.75rem;
-    background-color: var(--bg-surface);
-    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background-color: var(--surface);
+    border: 1px solid var(--rule);
     box-shadow: var(--shadow-sm);
   }
 
-  .vol-quick-fact dt {
-    font-size: 0.825rem;
+  .vol-telemetry-cell dt {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
     font-weight: 600;
-    color: var(--ink-muted);
-    margin-block-end: 0.2rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-block-end: 0.25rem;
   }
 
-  .vol-quick-fact dd {
+  .vol-telemetry-cell dd {
     margin: 0;
     font-size: 1rem;
     font-weight: 700;
-    color: var(--ink-primary);
+    color: var(--fg);
+  }
+
+  .vol-telemetry-cell dd.vol-telemetry-sub {
+    margin-block-start: 0.2rem;
+    font-size: 0.84rem;
+    font-weight: 500;
+    color: var(--fg-2);
   }
 
   .vol-arrival-card {
-    background-color: var(--bg-surface);
-    border: 1px solid var(--border-subtle);
-    border-radius: 1rem;
+    min-inline-size: 0;
+    background-color: var(--surface);
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius-card);
     overflow: hidden;
     box-shadow: var(--shadow-md);
   }
 
+  .vol-arrival-card__topbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.7rem 1rem;
+    background-color: var(--bg-2);
+    border-block-end: 1px solid var(--rule);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+
+  .vol-arrival-badge {
+    padding: 0.2rem 0.55rem;
+    border-radius: var(--radius-pill);
+    background-color: var(--status-success-bg);
+    color: var(--status-success-ink);
+    font-weight: 700;
+  }
+
   .vol-arrival-card__media {
     aspect-ratio: 16 / 10;
-    background-color: var(--bg-subtle);
+    background-color: var(--bg-2);
     overflow: hidden;
   }
 
@@ -337,53 +258,21 @@
   }
 
   .vol-arrival-card__body {
-    padding: clamp(1.15rem, 2.5vw, 1.6rem);
+    padding: clamp(1.15rem, 2.4vw, 1.55rem);
     display: flex;
     flex-direction: column;
-    gap: 0.85rem;
-  }
-
-  .vol-arrival-card__status-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .vol-status-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.35rem 0.75rem;
-    border-radius: 999px;
-    background-color: var(--status-success-bg);
-    color: var(--status-success-ink);
-    font-size: 0.875rem;
-    font-weight: 700;
-  }
-
-  .vol-status-pill.is-live-open {
-    background-color: var(--brand-gold-fill);
-    color: var(--on-brand-gold);
+    gap: 0.9rem;
   }
 
   .vol-arrival-card__heading {
     margin: 0;
-    font-size: 1.4rem;
-    line-height: 1.25;
-  }
-
-  .vol-arrival-card__address {
-    margin: 0;
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
-    color: var(--ink-primary);
-    line-height: 1.5;
-  }
-
-  .vol-arrival-card__address svg {
-    margin-block-start: 0.2rem;
-    color: var(--brand-primary);
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(1.35rem, 2vw, 1.65rem);
+    line-height: 1.04;
+    letter-spacing: var(--tracking-display);
+    text-transform: uppercase;
+    color: var(--fg);
   }
 
   .vol-walkway-callout {
@@ -391,36 +280,61 @@
     align-items: flex-start;
     gap: 0.65rem;
     padding: 0.85rem 1rem;
-    border-radius: 0.75rem;
-    background-color: var(--bg-tint);
-    border: 1px solid var(--border-subtle);
-    border-inline-start: 4px solid var(--brand-primary);
+    border-radius: var(--radius-md);
+    background-color: var(--bg-2);
+    border: 1px solid var(--rule);
+    border-inline-start: 4px solid var(--accent);
   }
 
   .vol-walkway-callout svg {
     margin-block-start: 0.15rem;
-    color: var(--brand-primary);
+    color: var(--accent-ink);
   }
 
   .vol-walkway-callout p {
     margin: 0;
-    font-size: 0.95rem;
+    font-size: 0.94rem;
     line-height: 1.55;
-    color: var(--ink-primary);
+    color: var(--fg);
   }
 
-  .vol-arrival-card__hours {
+  .vol-hours-ledger {
     margin: 0;
-    font-size: 0.95rem;
-    color: var(--ink-secondary);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+
+  .vol-hours-ledger__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.55rem 0.9rem;
+    background-color: var(--bg-2);
+    font-size: 0.9rem;
+  }
+
+  .vol-hours-ledger__row + .vol-hours-ledger__row {
+    border-block-start: 1px solid var(--rule);
+  }
+
+  .vol-hours-ledger__row dt {
+    font-weight: 600;
+    color: var(--fg);
+  }
+
+  .vol-hours-ledger__row dd {
+    margin: 0;
+    color: var(--fg-2);
   }
 
   .vol-arrival-card__links {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem 1rem;
+    gap: 0.35rem 1rem;
     padding-block-start: 0.35rem;
-    border-block-start: 1px solid var(--border-subtle);
+    border-block-start: 1px solid var(--rule);
   }
 
   .vol-inline-link {
@@ -428,144 +342,52 @@
     align-items: center;
     gap: 0.35rem;
     min-block-size: 44px;
-    padding-inline: 0.25rem;
-    border-radius: 0.4rem;
-    color: var(--brand-primary);
-    font-size: 0.95rem;
+    padding-inline: 0.35rem;
+    border-radius: var(--radius-sm);
+    color: var(--accent-ink);
+    font-size: 0.92rem;
     font-weight: 600;
     text-decoration: underline;
-    text-underline-offset: 0.2em;
+    text-underline-offset: 0.22em;
   }
 
   .vol-inline-link:hover {
-    color: var(--brand-primary-hover);
+    color: var(--accent-hot);
   }
 
-  /* =========================================================
-     2. Volunteer Workstations
-     ========================================================= */
-  .vol-stations-layout {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.75rem;
-    align-items: start;
-  }
-
-  @media (min-width: 64rem) {
-    .vol-stations-layout {
-      grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.85fr);
-    }
-  }
-
-  .vol-stations-grid {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 17.5rem), 1fr));
-    gap: 1rem;
-  }
-
-  .vol-station-card {
-    background-color: var(--bg-surface);
-    border: 1px solid var(--border-subtle);
-    border-radius: 0.9rem;
-    padding: 1.15rem 1.2rem;
-    box-shadow: var(--shadow-sm);
-    display: flex;
-    flex-direction: column;
-    gap: 0.55rem;
-  }
-
-  .vol-station-card__top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem;
-  }
-
-  .vol-station-num {
-    font-size: 0.85rem;
-    font-weight: 700;
-    padding: 0.2rem 0.55rem;
-    border-radius: 0.45rem;
-    background-color: var(--bg-tint);
-    color: var(--brand-primary);
-  }
-
-  .vol-station-icon {
+  .vol-link-btn {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    inline-size: 2.35rem;
-    block-size: 2.35rem;
-    border-radius: 0.6rem;
-    background-color: var(--bg-subtle);
-    color: var(--brand-primary);
-  }
-
-  .vol-station-card__title {
-    margin: 0.15rem 0 0;
-    font-size: 1.2rem;
-    line-height: 1.28;
-  }
-
-  .vol-station-card__body {
-    margin: 0;
-    font-size: 0.96rem;
-    line-height: 1.6;
-    color: var(--ink-secondary);
-  }
-
-  .vol-stations-photos {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
-    gap: 1rem;
-  }
-
-  @media (min-width: 64rem) {
-    .vol-stations-photos {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  .vol-station-photo {
-    margin: 0;
-    background-color: var(--bg-surface);
-    border: 1px solid var(--border-subtle);
-    border-radius: 0.9rem;
-    overflow: hidden;
-    box-shadow: var(--shadow-sm);
-  }
-
-  .vol-station-photo__frame {
-    inline-size: 100%;
-    background-color: var(--bg-subtle);
-  }
-
-  .vol-station-photo__frame--plain {
-    aspect-ratio: 4 / 3;
-    overflow: hidden;
-  }
-
-  .vol-station-photo__frame--plain img {
-    display: block;
-    inline-size: 100%;
-    block-size: 100%;
-    object-fit: cover;
-    image-orientation: from-image;
-  }
-
-  .vol-station-photo figcaption {
-    padding: 0.75rem 1rem;
+    min-block-size: 44px;
+    padding: 0.35rem 0.65rem;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--accent-ink);
+    font: inherit;
     font-size: 0.9rem;
-    line-height: 1.45;
-    color: var(--ink-secondary);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
+  .vol-link-btn:hover {
+    background-color: var(--surface-2);
   }
 
   /* =========================================================
-     3. Schedule Controls, Calendar & Event Cards
+     2. Schedule Controls, Calendar Matrix & .v2-ticket Grid
      ========================================================= */
+  .vol-section--schedule {
+    background-color: var(--bg);
+  }
+
+  .vol-schedule-note {
+    margin: 0;
+  }
+
   .vol-controls {
     display: flex;
     flex-direction: column;
@@ -585,9 +407,9 @@
     flex-wrap: wrap;
     gap: 0.35rem;
     padding: 0.3rem;
-    border-radius: 0.75rem;
-    background-color: var(--bg-subtle);
-    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-pill);
+    background-color: var(--surface);
+    border: 1px solid var(--rule);
   }
 
   .vol-seg-btn {
@@ -595,27 +417,29 @@
     align-items: center;
     gap: 0.45rem;
     min-block-size: 44px;
-    padding: 0.45rem 0.9rem;
+    padding: 0.45rem 0.95rem;
     border: 0;
-    border-radius: 0.5rem;
+    border-radius: var(--radius-pill);
     background: transparent;
-    color: var(--ink-secondary);
-    font: inherit;
-    font-size: 0.935rem;
+    color: var(--fg-2);
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
     font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     cursor: pointer;
     touch-action: manipulation;
     transition: background-color 0.15s ease, color 0.15s ease;
   }
 
-  .vol-seg-btn[aria-pressed="true"] {
-    background-color: var(--brand-primary);
-    color: var(--on-brand-primary);
+  .vol-seg-btn[aria-pressed='true'] {
+    background-color: var(--accent);
+    color: var(--on-accent);
   }
 
-  .vol-seg-btn[aria-pressed="true"] .vol-count-pill {
-    background-color: oklch(99% 0.005 90 / 0.22);
-    color: inherit;
+  .vol-seg-btn[aria-pressed='true'] .vol-count-pill {
+    background-color: color-mix(in srgb, var(--on-accent) 18%, transparent);
+    color: var(--on-accent);
   }
 
   .vol-count-pill {
@@ -623,11 +447,11 @@
     align-items: center;
     justify-content: center;
     min-inline-size: 1.65rem;
-    padding: 0.1rem 0.4rem;
-    border-radius: 999px;
-    background-color: var(--bg-surface);
-    color: var(--ink-primary);
-    font-size: 0.82rem;
+    padding: 0.1rem 0.45rem;
+    border-radius: var(--radius-pill);
+    background-color: var(--bg-2);
+    color: var(--fg);
+    font-size: 0.76rem;
     font-weight: 700;
   }
 
@@ -641,22 +465,22 @@
     display: inline-flex;
     align-items: center;
     min-block-size: 44px;
-    padding: 0.4rem 0.9rem;
-    border-radius: 999px;
-    border: 1.5px solid var(--border-strong);
-    background-color: var(--bg-surface);
-    color: var(--ink-primary);
-    font: inherit;
+    padding: 0.4rem 0.95rem;
+    border-radius: var(--radius-pill);
+    border: 1.5px solid var(--rule-strong);
+    background-color: var(--surface);
+    color: var(--fg);
+    font-family: var(--font-sans);
     font-size: 0.92rem;
     font-weight: 600;
     cursor: pointer;
     touch-action: manipulation;
   }
 
-  .vol-chip[aria-pressed="true"] {
-    background-color: var(--bg-tint);
-    border-color: var(--brand-primary);
-    color: var(--brand-primary);
+  .vol-chip[aria-pressed='true'] {
+    background-color: var(--surface-2);
+    border-color: var(--accent-ink);
+    color: var(--accent-ink);
   }
 
   .vol-search-box {
@@ -667,10 +491,10 @@
 
   .vol-search-box__icon {
     position: absolute;
-    inset-inline-start: 0.85rem;
+    inset-inline-start: 0.9rem;
     inset-block-start: 50%;
     transform: translateY(-50%);
-    color: var(--ink-muted);
+    color: var(--muted);
     pointer-events: none;
     display: inline-flex;
   }
@@ -678,19 +502,13 @@
   .vol-search-input {
     inline-size: 100%;
     min-block-size: 44px;
-    padding: 0.55rem 0.9rem 0.55rem 2.5rem;
-    border-radius: 0.65rem;
-    border: 1.5px solid var(--border-strong);
-    background-color: var(--bg-surface);
-    color: var(--ink-primary);
+    padding: 0.55rem 0.9rem 0.55rem 2.55rem;
+    border-radius: var(--radius-pill);
+    border: 1.5px solid var(--rule-strong);
+    background-color: var(--surface);
+    color: var(--fg);
     font: inherit;
     font-size: max(1rem, 1em);
-  }
-
-  .vol-search-input:focus-visible {
-    outline: 3px solid var(--focus-ring);
-    outline-offset: 2px;
-    border-color: var(--brand-primary);
   }
 
   .vol-notice-banner {
@@ -698,17 +516,18 @@
     align-items: flex-start;
     gap: 0.65rem;
     padding: 0.85rem 1rem;
-    border-radius: 0.75rem;
-    background-color: var(--bg-tint);
-    border: 1px solid var(--border-subtle);
-    color: var(--ink-primary);
-    font-size: 0.95rem;
+    border-radius: var(--radius-md);
+    background-color: var(--surface);
+    border: 1px solid var(--rule);
+    border-inline-start: 4px solid var(--cyan);
+    color: var(--fg-2);
+    font-size: 0.94rem;
     line-height: 1.55;
   }
 
   .vol-notice-banner svg {
     margin-block-start: 0.2rem;
-    color: var(--brand-primary);
+    color: var(--cyan);
   }
 
   .vol-notice-banner p {
@@ -717,31 +536,45 @@
 
   .vol-schedule-layout {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 1.75rem;
     align-items: start;
   }
 
-  @media (min-width: 62rem) {
+  @media (min-width: 64rem) {
     .vol-schedule-layout {
-      grid-template-columns: minmax(min(22.5rem, 42%), 25.5rem) minmax(0, 1fr);
+      grid-template-columns: minmax(22rem, 25.5rem) minmax(0, 1fr);
     }
   }
 
-  /* Monthly Calendar */
+  /* Sleek Obsidian/Mist Monthly Calendar Matrix (>= 44x44px at 375px & 393px) */
   .vol-calendar-panel {
     min-inline-size: 0;
-    background-color: var(--bg-surface);
-    border: 1px solid var(--border-subtle);
-    border-radius: 1rem;
-    padding: 1.15rem;
+    background-color: var(--surface);
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius-card);
+    padding: 1.1rem;
     box-shadow: var(--shadow-sm);
   }
 
   @media (max-width: 47.999rem) {
     .vol-calendar-panel {
-      padding: 0.85rem min(0.375rem, 6px);
+      padding: 0.85rem 0.375rem;
     }
+  }
+
+  .vol-calendar-panel__eyebrow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding-inline: 0.25rem;
+    padding-block-end: 0.65rem;
+    margin-block-end: 0.75rem;
+    border-block-end: 1px solid var(--rule);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
   }
 
   .vol-calendar-header {
@@ -754,8 +587,13 @@
 
   .vol-calendar-title {
     margin: 0;
-    font-size: 1.25rem;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 1.45rem;
+    letter-spacing: var(--tracking-display);
+    text-transform: uppercase;
     text-align: center;
+    color: var(--fg);
   }
 
   .vol-icon-btn {
@@ -764,64 +602,59 @@
     justify-content: center;
     min-inline-size: 44px;
     min-block-size: 44px;
-    border-radius: 0.6rem;
-    border: 1.5px solid var(--border-strong);
-    background-color: var(--bg-surface);
-    color: var(--ink-primary);
+    border-radius: var(--radius-pill);
+    border: 1.5px solid var(--rule-strong);
+    background-color: var(--bg-2);
+    color: var(--fg);
     cursor: pointer;
     touch-action: manipulation;
   }
 
   .vol-icon-btn:hover {
-    background-color: var(--bg-tint);
-    border-color: var(--brand-primary);
+    background-color: var(--surface-2);
+    border-color: var(--accent-ink);
   }
 
   .vol-calendar-jumps {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.45rem;
-    margin-block-end: 0.95rem;
+    gap: 0.4rem;
+    margin-block-end: 0.9rem;
+    padding-inline: 0.15rem;
   }
 
   .vol-month-jump {
     display: inline-flex;
     align-items: center;
     gap: 0.3rem;
-    min-block-size: 38px;
-    padding: 0.3rem 0.65rem;
-    border-radius: 999px;
-    border: 1px solid var(--border-strong);
-    background-color: var(--bg-subtle);
-    color: var(--ink-secondary);
-    font: inherit;
+    min-block-size: 44px;
+    padding: 0.35rem 0.75rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--rule-strong);
+    background-color: var(--bg-2);
+    color: var(--fg-2);
+    font-family: var(--font-sans);
     font-size: 0.84rem;
     font-weight: 600;
     cursor: pointer;
     touch-action: manipulation;
   }
 
-  @media (pointer: coarse) {
-    .vol-month-jump {
-      min-block-size: 44px;
-    }
-  }
-
   .vol-month-jump.is-active,
-  .vol-month-jump[aria-pressed="true"] {
-    background-color: var(--brand-primary);
-    border-color: var(--brand-primary);
-    color: var(--on-brand-primary);
+  .vol-month-jump[aria-pressed='true'] {
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent);
   }
 
   .vol-calendar-grid-wrap {
-    overflow-x: auto;
+    overflow-x: visible;
   }
 
   .vol-calendar-table {
     inline-size: 100%;
     border-collapse: separate;
-    border-spacing: 0.25rem;
+    border-spacing: 3px;
     table-layout: fixed;
   }
 
@@ -833,9 +666,12 @@
 
   .vol-calendar-table th {
     padding-block: 0.35rem;
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: var(--ink-muted);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
     text-align: center;
   }
 
@@ -855,65 +691,67 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.1rem;
+    gap: 0.12rem;
     inline-size: 100%;
     min-inline-size: 44px;
     min-block-size: 44px;
-    padding: 0.25rem;
-    border-radius: 0.55rem;
+    padding: 0.2rem;
+    border-radius: var(--radius-sm);
     border: 1px solid transparent;
     background-color: transparent;
-    color: var(--ink-muted);
+    color: var(--muted);
     font: inherit;
-    font-size: 0.92rem;
+    font-size: 0.88rem;
     font-weight: 600;
     cursor: default;
     touch-action: manipulation;
   }
 
   .vol-cal-day.is-saturday {
-    background-color: var(--bg-subtle);
-    color: var(--ink-secondary);
+    background-color: var(--bg-2);
+    color: var(--fg-2);
   }
 
   .vol-cal-day.has-events {
-    background-color: var(--bg-tint);
-    border-color: var(--brand-primary);
-    color: var(--ink-primary);
+    background-color: var(--surface-2);
+    border-color: var(--accent-ink);
+    color: var(--fg);
     cursor: pointer;
     font-weight: 700;
   }
 
   .vol-cal-day.has-events:hover {
-    background-color: var(--brand-primary);
-    color: var(--on-brand-primary);
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent);
   }
 
-  .vol-cal-day[aria-pressed="true"] {
-    background-color: var(--brand-primary);
-    border-color: var(--brand-primary);
-    color: var(--on-brand-primary);
+  .vol-cal-day[aria-pressed='true'] {
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent);
   }
 
   .vol-cal-day__dot {
     font-family: var(--font-mono);
-    font-size: 0.72rem;
+    font-size: 0.68rem;
     line-height: 1;
     padding: 0.1rem 0.32rem;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     background-color: var(--brand-gold-fill);
     color: var(--on-brand-gold);
-    font-weight: 800;
+    font-weight: 700;
   }
 
   .vol-cal-day.is-today {
-    box-shadow: inset 0 0 0 2px var(--brand-gold-ink);
+    box-shadow: inset 0 0 0 2px var(--cyan);
   }
 
   .vol-calendar-footer {
-    margin-block-start: 0.95rem;
+    margin-block-start: 0.9rem;
     padding-block-start: 0.85rem;
-    border-block-start: 1px solid var(--border-subtle);
+    padding-inline: 0.25rem;
+    border-block-start: 1px solid var(--rule);
     display: flex;
     flex-direction: column;
     gap: 0.65rem;
@@ -923,8 +761,8 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.6rem 1rem;
-    font-size: 0.85rem;
-    color: var(--ink-secondary);
+    font-size: 0.84rem;
+    color: var(--fg-2);
   }
 
   .vol-legend-item {
@@ -937,16 +775,16 @@
     inline-size: 0.85rem;
     block-size: 0.85rem;
     border-radius: 0.25rem;
-    border: 1px solid var(--border-strong);
+    border: 1px solid var(--rule-strong);
   }
 
   .vol-legend-swatch--event {
-    background-color: var(--bg-tint);
-    border-color: var(--brand-primary);
+    background-color: var(--surface-2);
+    border-color: var(--accent-ink);
   }
 
   .vol-legend-swatch--sat {
-    background-color: var(--bg-subtle);
+    background-color: var(--bg-2);
   }
 
   .vol-calendar-filter-bar {
@@ -962,19 +800,19 @@
     align-items: center;
     gap: 0.5rem;
     min-block-size: 44px;
-    font-size: 0.92rem;
+    font-size: 0.9rem;
     font-weight: 600;
-    color: var(--ink-primary);
+    color: var(--fg);
     cursor: pointer;
   }
 
-  .vol-checkbox-label input[type="checkbox"] {
+  .vol-checkbox-label input[type='checkbox'] {
     inline-size: 1.2rem;
     block-size: 1.2rem;
-    accent-color: var(--brand-primary);
+    accent-color: var(--accent);
   }
 
-  /* Event Cards Column */
+  /* Perforated .v2-ticket Dispatch Pass Cards */
   .vol-events-column {
     min-inline-size: 0;
   }
@@ -985,106 +823,113 @@
 
   .vol-events-summary {
     margin: 0;
-    font-size: 0.95rem;
+    font-size: 0.78rem;
     font-weight: 600;
-    color: var(--ink-secondary);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
   }
 
   .vol-events-list {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.15rem;
   }
 
   .vol-event-item {
-    container: event-card / inline-size;
+    container-type: inline-size;
   }
 
   .vol-event-item[hidden] {
     display: none;
   }
 
-  .vol-event-card {
-    background-color: var(--bg-surface);
-    border: 1px solid var(--border-subtle);
-    border-radius: 1rem;
-    overflow: hidden;
+  .vol-ticket {
+    --ticket-accent: var(--accent);
+    --ticket-notch-bg: var(--bg);
+    --ticket-bg: color-mix(in srgb, var(--ticket-accent) 7%, var(--surface));
     box-shadow: var(--shadow-sm);
-    display: grid;
-    grid-template-columns: 1fr;
+    border-color: color-mix(in srgb, var(--ticket-accent) 28%, var(--rule));
+    border-inline-start: 4px solid var(--ticket-accent);
   }
 
-  .vol-event-card__media {
-    aspect-ratio: 16 / 9;
-    background-color: var(--bg-subtle);
-    overflow: hidden;
-    border-block-end: 1px solid var(--border-subtle);
+  .vol-ticket--open {
+    --ticket-accent: var(--accent);
   }
 
-  .vol-event-card__media img {
-    display: block;
-    inline-size: 100%;
-    block-size: 100%;
-    object-fit: cover;
-    image-orientation: from-image;
+  .vol-ticket--ncl {
+    --ticket-accent: var(--cyan);
   }
 
-  .vol-event-card__media.is-logo {
-    background-color: var(--bg-surface);
-    padding: 0.75rem;
+  .vol-ticket--lions {
+    --ticket-accent: var(--brand-gold-fill);
   }
 
-  .vol-event-card__media.is-logo img {
-    object-fit: contain;
+  .vol-ticket--board {
+    --ticket-accent: var(--brand-emerald);
   }
 
-  .vol-event-card__body {
-    padding: 1.15rem 1.25rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    min-inline-size: 0;
+  .vol-ticket--partner {
+    --ticket-accent: var(--accent-ink);
   }
 
-  @container event-card (min-width: 34rem) {
-    .vol-event-card {
-      grid-template-columns: 11.5rem minmax(0, 1fr);
-    }
-
-    .vol-event-card__media {
-      aspect-ratio: auto;
-      block-size: 100%;
-      min-block-size: 12rem;
-      border-block-end: 0;
-      border-inline-end: 1px solid var(--border-subtle);
-    }
+  .vol-ticket.is-full {
+    --ticket-accent: var(--status-danger-ink);
   }
 
-  .vol-event-card__badges {
+  .vol-ticket.is-past {
+    --ticket-bg: var(--surface);
+  }
+
+  .vol-ticket__main {
+    gap: 0.85rem;
+  }
+
+  .vol-ticket__admit {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: var(--fg);
+    font-weight: 600;
+  }
+
+  .vol-ticket__accent-dot {
+    inline-size: 0.55rem;
+    block-size: 0.55rem;
+    border-radius: 999px;
+    background-color: var(--ticket-accent);
+    flex-shrink: 0;
+  }
+
+  .vol-ticket__badges {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 0.45rem;
+    gap: 0.4rem;
   }
 
   .vol-date-badge {
     display: inline-flex;
     align-items: center;
-    padding: 0.25rem 0.6rem;
-    border-radius: 0.45rem;
-    background-color: var(--bg-subtle);
-    color: var(--ink-primary);
-    font-size: 0.84rem;
+    padding: 0.22rem 0.58rem;
+    border-radius: var(--radius-sm);
+    background-color: var(--bg-2);
+    border: 1px solid var(--rule);
+    color: var(--fg);
+    font-size: 0.76rem;
     font-weight: 700;
   }
 
   .vol-state-badge {
     display: inline-flex;
     align-items: center;
-    padding: 0.25rem 0.65rem;
-    border-radius: 999px;
-    font-size: 0.82rem;
+    padding: 0.22rem 0.62rem;
+    border-radius: var(--radius-pill);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
     font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
 
   .vol-state-badge--open {
@@ -1103,15 +948,54 @@
   }
 
   .vol-state-badge--past {
-    background-color: var(--bg-subtle);
-    color: var(--ink-muted);
-    border: 1px solid var(--border-subtle);
+    background-color: var(--bg-2);
+    color: var(--muted);
+    border: 1px solid var(--rule);
   }
 
-  .vol-event-card__title {
+  .vol-ticket__headline-row {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    min-inline-size: 0;
+  }
+
+  .vol-ticket__thumb {
+    inline-size: 3.75rem;
+    block-size: 3.75rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--rule);
+    background-color: var(--bg-2);
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .vol-ticket__thumb img {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    image-orientation: from-image;
+  }
+
+  .vol-ticket__thumb.is-logo {
+    background-color: var(--surface-2);
+    padding: 0.25rem;
+  }
+
+  .vol-ticket__thumb.is-logo img {
+    object-fit: contain;
+  }
+
+  .vol-ticket__headline-copy {
+    min-inline-size: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .vol-ticket__title {
     margin: 0;
-    font-size: 1.35rem;
-    line-height: 1.24;
   }
 
   .vol-event-meta {
@@ -1120,9 +1004,9 @@
     padding: 0;
     display: flex;
     flex-wrap: wrap;
-    gap: 0.45rem 1.15rem;
-    color: var(--ink-secondary);
-    font-size: 0.935rem;
+    gap: 0.35rem 1rem;
+    color: var(--fg-2);
+    font-size: 0.88rem;
   }
 
   .vol-event-meta li {
@@ -1133,17 +1017,27 @@
 
   .vol-event-meta svg {
     margin-block-start: 0.18rem;
-    color: var(--brand-primary);
+    color: var(--accent-ink);
   }
 
   .vol-event-card__desc {
     margin: 0;
-    color: var(--ink-secondary);
-    font-size: 0.96rem;
+    color: var(--fg-2);
+    font-size: 0.94rem;
     line-height: 1.55;
   }
 
+  .vol-ticket__bottom-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 0.85rem 1.25rem;
+  }
+
   .vol-capacity {
+    flex: 1 1 13rem;
+    min-inline-size: min(100%, 12rem);
     display: flex;
     flex-direction: column;
     gap: 0.35rem;
@@ -1155,25 +1049,28 @@
     align-items: baseline;
     justify-content: space-between;
     gap: 0.5rem;
-    font-size: 0.88rem;
+    font-size: 0.82rem;
   }
 
   .vol-capacity__label {
-    color: var(--ink-muted);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    color: var(--muted);
     font-weight: 600;
   }
 
   .vol-capacity__value {
-    color: var(--ink-primary);
+    color: var(--fg);
     font-weight: 700;
   }
 
   .vol-meter {
     inline-size: 100%;
-    block-size: 0.5rem;
-    border-radius: 999px;
-    background-color: var(--bg-subtle);
-    border: 1px solid var(--border-subtle);
+    block-size: 0.45rem;
+    border-radius: var(--radius-pill);
+    background-color: var(--bg-2);
+    border: 1px solid var(--rule);
     overflow: hidden;
   }
 
@@ -1186,16 +1083,16 @@
     transition: inline-size 0.25s ease;
   }
 
-  .vol-event-card.is-full .vol-meter__fill {
+  .vol-ticket.is-full .vol-meter__fill {
     background-color: var(--status-danger-ink);
   }
 
-  .vol-event-card__actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.65rem;
-    padding-block-start: 0.25rem;
+  .vol-ticket__stub {
+    gap: 0.85rem;
+  }
+
+  .vol-claim-btn {
+    white-space: nowrap;
   }
 
   /* Calendar Export Popover */
@@ -1205,10 +1102,10 @@
 
   .vol-cal-popover {
     padding: 0.45rem;
-    border-radius: 0.75rem;
-    border: 1px solid var(--border-strong);
-    background-color: var(--bg-surface);
-    color: var(--ink-primary);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--rule-strong);
+    background-color: var(--surface);
+    color: var(--fg);
     box-shadow: var(--shadow-md);
     min-inline-size: 14.5rem;
   }
@@ -1237,11 +1134,11 @@
     min-block-size: 44px;
     padding: 0.5rem 0.75rem;
     border: 0;
-    border-radius: 0.5rem;
+    border-radius: var(--radius-sm);
     background: transparent;
-    color: var(--ink-primary);
+    color: var(--fg);
     font: inherit;
-    font-size: 0.935rem;
+    font-size: 0.92rem;
     font-weight: 600;
     text-align: start;
     text-decoration: none;
@@ -1250,14 +1147,14 @@
   }
 
   .vol-cal-popover__item:hover {
-    background-color: var(--bg-tint);
-    color: var(--brand-primary);
+    background-color: var(--surface-2);
+    color: var(--accent-ink);
   }
 
   .vol-empty-card {
-    background-color: var(--bg-surface);
-    border: 1px dashed var(--border-strong);
-    border-radius: 1rem;
+    background-color: var(--surface);
+    border: 1px dashed var(--rule-strong);
+    border-radius: var(--radius-card);
     padding: 2rem 1.5rem;
     text-align: center;
     display: flex;
@@ -1266,19 +1163,15 @@
     gap: 0.75rem;
   }
 
-  .vol-empty-card[hidden] {
-    display: none;
-  }
-
   .vol-empty-card h3 {
     margin: 0;
-    font-size: 1.35rem;
+    font-size: 1.45rem;
   }
 
   .vol-empty-card p {
     margin: 0;
     max-inline-size: 54ch;
-    color: var(--ink-secondary);
+    color: var(--fg-2);
   }
 
   .vol-empty-card__actions {
@@ -1290,11 +1183,143 @@
   }
 
   /* =========================================================
-     4. Group Volunteer Days
+     3. Volunteer Workstations & Group Volunteer Days
      ========================================================= */
+  .vol-stations-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.75rem;
+    align-items: start;
+  }
+
+  @media (min-width: 64rem) {
+    .vol-stations-layout {
+      grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.85fr);
+    }
+  }
+
+  .vol-stations-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+    gap: 1rem;
+  }
+
+  .vol-station-card {
+    min-inline-size: 0;
+    background-color: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    padding: 1.2rem;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+
+  .vol-station-card__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .vol-station-num {
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 0.22rem 0.58rem;
+    border-radius: var(--radius-sm);
+    background-color: var(--bg-2);
+    border: 1px solid var(--rule);
+    color: var(--accent-ink);
+  }
+
+  .vol-station-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 2.35rem;
+    block-size: 2.35rem;
+    border-radius: var(--radius-sm);
+    background-color: var(--bg-2);
+    color: var(--accent-ink);
+  }
+
+  .vol-station-card__title {
+    margin: 0.15rem 0 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 1.35rem;
+    line-height: 1.05;
+    letter-spacing: var(--tracking-display);
+    text-transform: uppercase;
+    color: var(--fg);
+  }
+
+  .vol-station-card__body {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.58;
+    color: var(--fg-2);
+  }
+
+  .vol-stations-photos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    gap: 1rem;
+  }
+
+  @media (min-width: 64rem) {
+    .vol-stations-photos {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .vol-station-photo {
+    margin: 0;
+    background-color: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .vol-station-photo__frame {
+    inline-size: 100%;
+    background-color: var(--bg-2);
+  }
+
+  .vol-station-photo__frame--plain {
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+  }
+
+  .vol-station-photo__frame--plain img {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    image-orientation: from-image;
+  }
+
+  .vol-station-photo figcaption {
+    padding: 0.75rem 1rem;
+    font-size: 0.88rem;
+    line-height: 1.45;
+    color: var(--fg-2);
+  }
+
+  .vol-group-panel {
+    margin-block-start: clamp(2.5rem, 5vw, 4rem);
+    padding-block-start: clamp(2.25rem, 4.5vw, 3.5rem);
+    border-block-start: 1px solid var(--rule);
+  }
+
   .vol-group-grid {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: clamp(1.5rem, 3.5vw, 2.75rem);
     align-items: start;
   }
@@ -1307,9 +1332,9 @@
 
   .vol-group-lead {
     margin: 0;
-    font-size: 1.05rem;
+    font-size: 1.04rem;
     line-height: 1.62;
-    color: var(--ink-secondary);
+    color: var(--fg-2);
   }
 
   .vol-group-tags {
@@ -1323,18 +1348,19 @@
 
   .vol-group-tags li {
     padding: 0.42rem 0.85rem;
-    border-radius: 999px;
-    background-color: var(--bg-surface);
-    border: 1px solid var(--border-subtle);
-    color: var(--ink-primary);
-    font-size: 0.92rem;
+    border-radius: var(--radius-pill);
+    background-color: var(--surface);
+    border: 1px solid var(--rule);
+    color: var(--fg);
+    font-size: 0.9rem;
     font-weight: 600;
   }
 
   .vol-group-card {
-    background-color: var(--bg-surface);
-    border: 1px solid var(--border-subtle);
-    border-radius: 1rem;
+    min-inline-size: 0;
+    background-color: var(--surface);
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius-card);
     padding: clamp(1.25rem, 3vw, 1.85rem);
     box-shadow: var(--shadow-md);
     display: flex;
@@ -1342,9 +1368,27 @@
     gap: 1rem;
   }
 
+  .vol-group-card__head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    padding-block-end: 0.65rem;
+    border-block-end: 1px solid var(--rule);
+  }
+
   .vol-group-card__title {
     margin: 0;
-    font-size: 1.45rem;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 1.65rem;
+    line-height: 1;
+    letter-spacing: var(--tracking-display);
+    text-transform: uppercase;
+    color: var(--fg);
   }
 
   .vol-group-steps {
@@ -1353,12 +1397,12 @@
     display: flex;
     flex-direction: column;
     gap: 0.65rem;
-    color: var(--ink-secondary);
+    color: var(--fg-2);
     line-height: 1.55;
   }
 
   .vol-group-steps a {
-    color: var(--brand-primary);
+    color: var(--accent-ink);
     font-weight: 600;
   }
 
@@ -1368,51 +1412,53 @@
     gap: 0.75rem;
   }
 
-  .vol-group-card__contact {
-    margin: 0;
-    padding-block-start: 0.75rem;
-    border-block-start: 1px solid var(--border-subtle);
-    font-size: 0.95rem;
-    color: var(--ink-secondary);
-  }
-
-  .vol-group-card__contact a {
-    color: var(--brand-primary);
-    font-weight: 600;
-  }
-
   /* =========================================================
-     5. Community Photo Gallery
+     4. .v2-sheet Contrast Stage — Workshop Contact Sheet / Filmstrip
      ========================================================= */
+  .vol-gallery-sheet {
+    margin-block: clamp(2rem, 4vw, 3.5rem);
+  }
+
+  .vol-gallery-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .vol-gallery-note {
+    margin: 0;
+  }
+
   .vol-gallery-status {
     margin: 0 0 1rem;
-    font-size: 0.95rem;
-    color: var(--ink-secondary);
+    font-size: 0.94rem;
+    color: var(--fg-2);
   }
 
-  .vol-gallery-grid {
+  .vol-filmstrip-grid {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 15.5rem), 1fr));
-    gap: 1rem;
+    gap: 1.15rem;
   }
 
-  .vol-gallery-item {
+  .vol-filmstrip-item {
     display: flex;
+    min-inline-size: 0;
   }
 
-  .vol-gallery-card {
+  .vol-frame-card {
     display: flex;
     flex-direction: column;
     inline-size: 100%;
-    padding: 0;
-    border-radius: 0.9rem;
-    border: 1px solid var(--border-subtle);
-    background-color: var(--bg-surface);
-    color: var(--ink-primary);
-    overflow: hidden;
+    padding: 0.6rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--rule-strong);
+    background-color: var(--surface);
+    color: var(--fg);
     text-align: start;
     cursor: pointer;
     box-shadow: var(--shadow-sm);
@@ -1420,54 +1466,88 @@
     transition: border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
   }
 
-  .vol-gallery-card:hover {
-    border-color: var(--brand-primary);
+  .vol-frame-card:hover {
+    border-color: var(--accent);
     box-shadow: var(--shadow-md);
     transform: translateY(-2px);
   }
 
-  .vol-gallery-card__media {
+  .vol-frame-card__sprockets {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-block-end: 0.45rem;
+  }
+
+  .vol-frame-card__serial {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--accent-ink);
+  }
+
+  .vol-frame-card__perf {
+    flex: 1 1 auto;
+    block-size: 0.35rem;
+    background-image: repeating-linear-gradient(
+      to right,
+      var(--rule-strong) 0 6px,
+      transparent 6px 12px
+    );
+    opacity: 0.65;
+  }
+
+  .vol-frame-card__zoom {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+  }
+
+  .vol-frame-card__media {
     position: relative;
     display: block;
     inline-size: 100%;
     aspect-ratio: 4 / 3;
-    background-color: var(--bg-subtle);
+    border-radius: var(--radius-sm);
+    background-color: var(--bg);
     overflow: hidden;
   }
 
-  .vol-gallery-card__media img {
+  /* EXIF-upright guarantee: never double-rotate gallery/lensometers.jpg */
+  .vol-frame-card__media img {
     display: block;
     inline-size: 100%;
     block-size: 100%;
     object-fit: cover;
     image-orientation: from-image;
+    transform: none;
   }
 
-  .vol-gallery-card__zoom {
-    position: absolute;
-    inset-inline-end: 0.55rem;
-    inset-block-end: 0.55rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    inline-size: 2.15rem;
-    block-size: 2.15rem;
-    border-radius: 999px;
-    background-color: oklch(15% 0.02 254 / 0.78);
-    color: oklch(98% 0.005 90);
-    border: 1px solid oklch(98% 0.005 90 / 0.28);
+  .vol-frame-card__footer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: 0.65rem 0.2rem 0.2rem;
   }
 
-  .vol-gallery-card__caption {
-    padding: 0.75rem 0.9rem;
-    font-size: 0.935rem;
+  .vol-frame-card__caption {
+    font-size: 0.92rem;
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--fg);
+  }
+
+  .vol-frame-card__note {
+    font-family: var(--font-hand);
+    font-size: 1.15rem;
     font-weight: 600;
-    line-height: 1.4;
-    color: var(--ink-primary);
+    line-height: 1.1;
+    color: var(--accent-ink);
   }
 
   /* =========================================================
-     6. Arrival & Next Steps Strip
+     5. Watauga Arrival Strip
      ========================================================= */
   .vol-arrival-strip {
     display: flex;
@@ -1483,7 +1563,7 @@
 
   .vol-arrival-strip__main p:last-child {
     margin: 0;
-    color: var(--ink-secondary);
+    color: var(--fg-2);
     line-height: 1.6;
   }
 
@@ -1494,7 +1574,7 @@
   }
 
   /* =========================================================
-     Native <dialog closedby="any"> Modals & Lightbox
+     6. Dark Obsidian Shift Registration Console & Lightbox
      ========================================================= */
   dialog.vol-dialog:modal,
   dialog.vol-lightbox:modal {
@@ -1505,10 +1585,10 @@
   dialog.vol-lightbox::backdrop {
     overflow: hidden;
     overscroll-behavior: contain;
-    background-color: oklch(12% 0.02 254 / 0);
-    backdrop-filter: blur(2px);
+    background-color: rgba(4, 8, 12, 0);
+    backdrop-filter: blur(4px);
     transition-property: background-color, display, overlay;
-    transition-duration: 0.24s;
+    transition-duration: 0.22s;
     transition-timing-function: ease-out;
     transition-behavior: allow-discrete;
   }
@@ -1517,31 +1597,51 @@
   dialog.vol-lightbox {
     margin: auto;
     padding: 0;
-    border-radius: 1rem;
-    border: 1px solid var(--border-strong);
-    background-color: var(--bg-surface);
-    color: var(--ink-primary);
-    box-shadow: var(--shadow-md);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-lg);
     opacity: 0;
     transition-property: opacity, transform, display, overlay;
-    transition-duration: 0.24s;
+    transition-duration: 0.22s;
     transition-timing-function: ease-out;
     transition-behavior: allow-discrete;
+  }
+
+  /* Visheshb.com-inspired dark obsidian console palette (5.09:1 --on-accent on --accent) */
+  dialog.vol-console-dialog {
+    --bg: var(--p-bg-dark, #0b1117);
+    --bg-2: var(--p-bg-2-dark, #121b24);
+    --surface: var(--p-surface-dark, #17212b);
+    --surface-2: var(--p-surface-2-dark, #1e2b38);
+    --fg: var(--p-fg-dark, #e8eef5);
+    --fg-2: var(--p-fg-2-dark, #b4c0cc);
+    --muted: var(--p-muted-dark, #8b9bb0);
+    --rule: var(--p-rule-dark, rgba(232, 238, 245, 0.14));
+    --rule-strong: var(--p-rule-strong-dark, rgba(232, 238, 245, 0.28));
+    --accent: var(--p-accent-dark, #e5533a);
+    --accent-hot: var(--p-accent-hot-dark, #ff6a4d);
+    --accent-ink: var(--p-accent-hot-dark, #ff6a4d);
+    --on-accent: var(--p-on-accent-dark, #0b1117);
+    --focus-ring: var(--p-focus-ring-dark, #ff6a4d);
+    --status-danger-bg: var(--p-danger-bg-dark, #2b1414);
+    --status-danger-ink: var(--p-danger-ink-dark, #ff8570);
+    --status-success-bg: var(--p-success-bg-dark, #12261c);
+    --status-success-ink: var(--p-success-ink-dark, #4ade80);
+
+    --_dialog-top-gap: clamp(0.75rem, 4dvh, 3rem);
+    margin-block: var(--_dialog-top-gap) auto;
+    inline-size: min(94dvw, 37rem);
+    max-block-size: calc(100dvh - var(--_dialog-top-gap) - 0.75rem);
+    overflow-y: auto;
+    border: 1px solid var(--rule-strong);
+    background-color: var(--bg-2);
+    color: var(--fg);
+    color-scheme: dark;
   }
 
   @media (prefers-reduced-motion: no-preference) {
     dialog.vol-dialog,
     dialog.vol-lightbox {
-      transform: scale(0.96) translateY(0.5rem);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    dialog.vol-dialog,
-    dialog.vol-lightbox,
-    dialog.vol-dialog::backdrop,
-    dialog.vol-lightbox::backdrop {
-      transition: none;
+      transform: scale(0.97) translateY(0.5rem);
     }
   }
 
@@ -1558,41 +1658,40 @@
       transform: scale(1) translateY(0);
 
       @starting-style {
-        transform: scale(0.96) translateY(0.5rem);
+        transform: scale(0.97) translateY(0.5rem);
       }
     }
   }
 
   dialog.vol-dialog[open]:where(:not([data-closing]))::backdrop {
-    background-color: oklch(14% 0.02 254 / 0.65);
+    background-color: rgba(4, 8, 12, 0.72);
 
     @starting-style {
-      background-color: oklch(14% 0.02 254 / 0);
+      background-color: rgba(4, 8, 12, 0);
     }
   }
 
   dialog.vol-lightbox[open]:where(:not([data-closing]))::backdrop {
-    background-color: oklch(8% 0.02 254 / 0.88);
+    background-color: rgba(4, 8, 12, 0.88);
 
     @starting-style {
-      background-color: oklch(8% 0.02 254 / 0);
+      background-color: rgba(4, 8, 12, 0);
     }
   }
 
-  /* Registration Modal Specifics */
-  dialog.vol-dialog {
-    --_dialog-top-gap: clamp(0.75rem, 4dvh, 3rem);
-    margin-block: var(--_dialog-top-gap) auto;
-    inline-size: min(94dvw, 35rem);
-    max-block-size: calc(100dvh - var(--_dialog-top-gap) - 0.75rem);
-    overflow-y: auto;
-  }
-
   .vol-dialog__panel {
-    padding: clamp(1.1rem, 2.8vw, 1.65rem);
+    padding: 0.85rem clamp(1.1rem, 2.8vw, 1.65rem) clamp(1.2rem, 2.8vw, 1.65rem);
     display: flex;
     flex-direction: column;
     gap: 1rem;
+  }
+
+  .vol-console__handle {
+    align-self: center;
+    inline-size: 2.75rem;
+    block-size: 0.25rem;
+    border-radius: 999px;
+    background-color: var(--rule-strong);
   }
 
   .vol-dialog__header {
@@ -1600,21 +1699,62 @@
     align-items: flex-start;
     justify-content: space-between;
     gap: 1rem;
+    padding-block-end: 0.75rem;
+    border-block-end: 1px solid var(--rule);
   }
 
-  .vol-dialog__kicker {
-    margin: 0 0 0.2rem;
-    font-size: 0.8rem;
+  .vol-console__title-group {
+    min-inline-size: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .vol-console__meta-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.55rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+  }
+
+  .vol-console__tag {
+    color: var(--accent-ink);
     font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--brand-primary);
+  }
+
+  .vol-console__req {
+    color: var(--muted);
+  }
+
+  .vol-console__pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.16rem 0.55rem;
+    border-radius: 999px;
+    border: 1px solid var(--rule-strong);
+    background-color: var(--surface);
+    color: var(--fg-2);
+    font-size: 0.68rem;
+  }
+
+  .vol-console__pill-dot {
+    inline-size: 0.42rem;
+    block-size: 0.42rem;
+    border-radius: 999px;
+    background-color: var(--brand-emerald);
   }
 
   .vol-dialog__title {
     margin: 0;
-    font-size: 1.45rem;
-    line-height: 1.2;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(1.5rem, 2.5vw, 1.9rem);
+    line-height: 0.98;
+    letter-spacing: var(--tracking-display);
+    color: var(--fg);
   }
 
   .vol-dialog__close {
@@ -1623,46 +1763,94 @@
     justify-content: center;
     min-inline-size: 44px;
     min-block-size: 44px;
-    border-radius: 0.6rem;
-    border: 1.5px solid var(--border-strong);
-    background-color: var(--bg-surface);
-    color: var(--ink-primary);
+    border-radius: var(--radius-pill);
+    border: 1.5px solid var(--rule-strong);
+    background-color: var(--surface);
+    color: var(--fg);
     cursor: pointer;
     flex-shrink: 0;
     touch-action: manipulation;
   }
 
   .vol-dialog__close:hover {
-    background-color: var(--bg-tint);
-    border-color: var(--brand-primary);
+    background-color: var(--surface-2);
+    border-color: var(--accent-ink);
   }
 
   .vol-dialog__session-summary {
-    padding: 0.85rem 1rem;
-    border-radius: 0.75rem;
-    background-color: var(--bg-subtle);
-    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background-color: var(--surface);
+    border: 1px solid var(--rule);
+    overflow: hidden;
+  }
+
+  .vol-console__telemetry-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+    padding: 0.75rem 0.95rem;
+  }
+
+  @media (min-width: 30rem) {
+    .vol-console__telemetry-row {
+      grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    }
+  }
+
+  .vol-console__telemetry-row + .vol-console__telemetry-row {
+    border-block-start: 1px solid var(--rule);
+  }
+
+  .vol-console__telemetry-cell {
+    min-inline-size: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.2rem;
+  }
+
+  .vol-console__label {
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
   }
 
   .vol-dialog__event-title {
     margin: 0;
-    font-size: 1.12rem;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--fg);
   }
 
   .vol-dialog__event-meta,
   .vol-dialog__event-seats {
     margin: 0;
-    font-size: 0.92rem;
-    color: var(--ink-secondary);
+    font-size: 0.88rem;
+    color: var(--fg-2);
+    line-height: 1.4;
+  }
+
+  .vol-dialog__event-seats strong {
+    color: var(--fg);
   }
 
   .vol-form {
     display: flex;
     flex-direction: column;
-    gap: 0.95rem;
+    gap: 0.9rem;
+  }
+
+  .vol-form__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.9rem;
+  }
+
+  @media (min-width: 30rem) {
+    .vol-form__row {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
 
   .vol-honeypot {
@@ -1675,50 +1863,57 @@
   }
 
   .vol-field {
+    min-inline-size: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
+    gap: 0.28rem;
   }
 
   .vol-field label {
-    font-size: 0.96rem;
-    font-weight: 700;
-    color: var(--ink-primary);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--fg);
   }
 
   .vol-req {
-    color: var(--status-danger-ink);
+    color: var(--accent-ink);
   }
 
   .vol-opt {
     font-weight: 400;
-    color: var(--ink-muted);
-    font-size: 0.88rem;
+    color: var(--muted);
+    font-size: 0.7rem;
   }
 
   .vol-hint {
-    font-size: 0.85rem;
-    color: var(--ink-muted);
-    line-height: 1.35;
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.3;
   }
 
   .vol-field input {
     inline-size: 100%;
     min-block-size: 46px;
-    padding: 0.65rem 0.85rem;
-    border-radius: 0.6rem;
-    border: 1.5px solid var(--border-strong);
-    background-color: var(--bg-surface);
-    color: var(--ink-primary);
+    padding: 0.6rem 0.85rem;
+    border-radius: var(--radius-md);
+    border: 1.5px solid var(--rule-strong);
+    background-color: var(--bg);
+    color: var(--fg);
     font: inherit;
     font-size: max(1rem, 1em);
     box-sizing: border-box;
   }
 
+  .vol-field input::placeholder {
+    color: var(--muted);
+  }
+
   .vol-field input:focus-visible {
     outline: 3px solid var(--focus-ring);
     outline-offset: 2px;
-    border-color: var(--brand-primary);
+    border-color: var(--accent-ink);
   }
 
   .vol-field input:is(:user-invalid, .user-invalid-fallback) {
@@ -1726,16 +1921,12 @@
     background-color: var(--status-danger-bg);
   }
 
-  .vol-field input:is(:user-valid, .user-valid-fallback):not([value=""]) {
-    border-color: var(--status-success-ink);
-  }
-
   .vol-field-error {
     display: none;
     align-items: flex-start;
     gap: 0.4rem;
     color: var(--status-danger-ink);
-    font-size: 0.88rem;
+    font-size: 0.84rem;
     font-weight: 600;
     line-height: 1.4;
   }
@@ -1748,16 +1939,32 @@
     display: flex;
   }
 
+  .vol-console__group-note {
+    margin: 0;
+    padding: 0.75rem 0.9rem;
+    border-radius: var(--radius-md);
+    background-color: var(--surface);
+    border: 1px solid var(--rule-strong);
+    font-size: 0.88rem;
+    line-height: 1.45;
+    color: var(--fg-2);
+  }
+
+  .vol-console__group-note a {
+    color: var(--accent-ink);
+    font-weight: 600;
+  }
+
   .vol-form-status {
     display: flex;
     align-items: flex-start;
     gap: 0.55rem;
     padding: 0.8rem 0.95rem;
-    border-radius: 0.65rem;
+    border-radius: var(--radius-md);
     background-color: var(--status-danger-bg);
     color: var(--status-danger-ink);
     border: 1px solid var(--status-danger-ink);
-    font-size: 0.92rem;
+    font-size: 0.9rem;
     font-weight: 600;
     line-height: 1.45;
   }
@@ -1769,8 +1976,59 @@
   .vol-dialog__footer {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.65rem;
-    padding-block-start: 0.35rem;
+    align-items: center;
+    gap: 0.75rem;
+    padding-block-start: 0.25rem;
+  }
+
+  /* Visheshb.com signature vermilion pill CTA with dark orb arrow */
+  .vol-console-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    min-block-size: 48px;
+    padding: 0.45rem 0.55rem 0.45rem 1.35rem;
+    border-radius: var(--radius-pill);
+    border: 0;
+    background-color: var(--accent);
+    color: var(--on-accent);
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    cursor: pointer;
+    touch-action: manipulation;
+    transition: background-color 0.15s ease, transform 0.12s ease;
+  }
+
+  .vol-console-submit:hover:not(:disabled) {
+    background-color: var(--accent-hot);
+  }
+
+  .vol-console-submit:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+
+  .vol-console-submit__orb {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 2.15rem;
+    block-size: 2.15rem;
+    border-radius: 999px;
+    background-color: var(--on-accent);
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .vol-console__footnote {
+    margin: 0;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    color: var(--muted);
   }
 
   .vol-spinner {
@@ -1780,12 +2038,6 @@
     border-inline-end-color: transparent;
     border-radius: 999px;
     animation: vol-spin 0.7s linear infinite;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .vol-spinner {
-      animation: none;
-    }
   }
 
   .vol-spinner[hidden] {
@@ -1813,7 +2065,7 @@
     align-items: flex-start;
     gap: 0.75rem;
     padding: 1rem;
-    border-radius: 0.75rem;
+    border-radius: var(--radius-md);
     background-color: var(--status-success-bg);
     color: var(--status-success-ink);
   }
@@ -1821,13 +2073,18 @@
   .vol-reg-success__banner h3 {
     margin: 0 0 0.25rem;
     color: inherit;
-    font-size: 1.25rem;
+    font-family: var(--font-display);
+    font-size: 1.35rem;
   }
 
   .vol-reg-success__banner p {
     margin: 0;
-    font-size: 0.95rem;
+    font-size: 0.94rem;
     line-height: 1.5;
+  }
+
+  .vol-walkway-callout--console {
+    background-color: var(--surface);
   }
 
   .vol-reg-success__actions {
@@ -1836,7 +2093,7 @@
     gap: 0.65rem;
   }
 
-  /* Lightbox Specifics (Responsive across 375x667 & 852x393 landscape) */
+  /* Lightbox Specifics */
   dialog.vol-lightbox[open]:where(:not([data-closing])) {
     display: grid;
   }
@@ -1845,7 +2102,9 @@
     inline-size: min(96dvw, 72rem);
     max-block-size: calc(100dvh - 1.5rem);
     overflow: hidden;
-    background-color: var(--bg-surface);
+    border: 1px solid var(--rule-strong);
+    background-color: var(--surface);
+    color: var(--fg);
   }
 
   .vol-lightbox__shell {
@@ -1861,19 +2120,19 @@
     grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
     gap: 0.75rem;
-    padding: 0.55rem 0.85rem;
-    border-block-end: 1px solid var(--border-subtle);
-    background-color: var(--bg-surface);
+    padding: 0.6rem 0.9rem;
+    border-block-end: 1px solid var(--rule);
+    background-color: var(--surface);
   }
 
   .vol-lightbox__counter {
     margin: 0;
-    font-size: 0.88rem;
+    font-size: 0.78rem;
     font-weight: 700;
-    padding: 0.25rem 0.6rem;
-    border-radius: 999px;
-    background-color: var(--bg-subtle);
-    color: var(--ink-primary);
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--radius-pill);
+    background-color: var(--bg-2);
+    color: var(--accent-ink);
     white-space: nowrap;
   }
 
@@ -1886,6 +2145,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    color: var(--fg);
   }
 
   .vol-lightbox__close {
@@ -1894,17 +2154,17 @@
     justify-content: center;
     min-inline-size: 44px;
     min-block-size: 44px;
-    border-radius: 0.6rem;
-    border: 1.5px solid var(--border-strong);
-    background-color: var(--bg-surface);
-    color: var(--ink-primary);
+    border-radius: var(--radius-pill);
+    border: 1.5px solid var(--rule-strong);
+    background-color: var(--bg-2);
+    color: var(--fg);
     cursor: pointer;
     touch-action: manipulation;
   }
 
   .vol-lightbox__close:hover {
-    background-color: var(--bg-tint);
-    border-color: var(--brand-primary);
+    background-color: var(--surface-2);
+    border-color: var(--accent-ink);
   }
 
   .vol-lightbox__stage {
@@ -1915,7 +2175,7 @@
     padding: 0.65rem 0.75rem;
     min-block-size: 0;
     overflow: hidden;
-    background-color: var(--bg-subtle);
+    background-color: var(--bg-2);
   }
 
   .vol-lightbox__figure {
@@ -1936,8 +2196,9 @@
     inline-size: auto;
     block-size: auto;
     object-fit: contain;
-    border-radius: 0.5rem;
+    border-radius: var(--radius-sm);
     image-orientation: from-image;
+    transform: none;
   }
 
   .vol-lightbox__nav {
@@ -1946,19 +2207,19 @@
     justify-content: center;
     min-inline-size: 44px;
     min-block-size: 44px;
-    border-radius: 999px;
-    border: 1.5px solid var(--border-strong);
-    background-color: var(--bg-surface);
-    color: var(--ink-primary);
+    border-radius: var(--radius-pill);
+    border: 1.5px solid var(--rule-strong);
+    background-color: var(--surface);
+    color: var(--fg);
     cursor: pointer;
     touch-action: manipulation;
     box-shadow: var(--shadow-sm);
   }
 
   .vol-lightbox__nav:hover {
-    background-color: var(--brand-primary);
-    border-color: var(--brand-primary);
-    color: var(--on-brand-primary);
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent);
   }
 
   @media (max-width: 36rem) {
@@ -1991,20 +2252,46 @@
   }
 
   /* =========================================================
-     Windows Forced Colors Mode (High Contrast)
+     Reduced Motion Guard (0s on spinners, dialogs, cards)
+     ========================================================= */
+  @media (prefers-reduced-motion: reduce) {
+    .vol-spinner,
+    dialog.vol-dialog,
+    dialog.vol-lightbox,
+    dialog.vol-dialog::backdrop,
+    dialog.vol-lightbox::backdrop,
+    .vol-frame-card,
+    .vol-seg-btn,
+    .vol-console-submit,
+    .vol-meter__fill {
+      animation: none !important;
+      animation-duration: 0s !important;
+      transition: none !important;
+      transition-duration: 0s !important;
+    }
+
+    .vol-frame-card:hover {
+      transform: none;
+    }
+  }
+
+  /* =========================================================
+     Windows High Contrast / Forced Colors Mode
      ========================================================= */
   @media (forced-colors: active) {
-    .vol-quick-fact,
+    .vol-telemetry-cell,
     .vol-arrival-card,
+    .vol-calendar-panel,
     .vol-station-card,
     .vol-station-photo,
-    .vol-calendar-panel,
-    .vol-event-card,
     .vol-group-card,
-    .vol-gallery-card,
+    .vol-frame-card,
     .vol-cal-popover,
     dialog.vol-dialog,
+    dialog.vol-console-dialog,
     dialog.vol-lightbox {
+      background-color: Canvas;
+      color: CanvasText;
       border: 1px solid CanvasText;
     }
 
@@ -2016,10 +2303,11 @@
       background-color: Highlight;
     }
 
-    .vol-seg-btn[aria-pressed="true"],
-    .vol-chip[aria-pressed="true"],
-    .vol-month-jump[aria-pressed="true"],
-    .vol-cal-day[aria-pressed="true"] {
+    .vol-seg-btn[aria-pressed='true'],
+    .vol-chip[aria-pressed='true'],
+    .vol-month-jump[aria-pressed='true'],
+    .vol-cal-day[aria-pressed='true'],
+    .vol-console-submit {
       background-color: Highlight;
       color: HighlightText;
       border-color: Highlight;
