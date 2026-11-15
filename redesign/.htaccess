@@ -1,0 +1,85 @@
+# Lions District 2-E2 ERC — Apache Production Configuration
+Options -Indexes
+DirectoryIndex index.php
+
+<IfModule mod_mime.c>
+    AddType text/javascript .mjs
+    AddType image/webp .webp
+    AddType font/woff2 .woff2
+</IfModule>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Forward Authorization header to PHP under CGI/FastCGI/PHP-FPM
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Force HTTPS in production (skip localhost/127.0.0.1 previews)
+    RewriteCond %{HTTPS} off
+    RewriteCond %{HTTP:X-Forwarded-Proto} !https [NC]
+    RewriteCond %{HTTP_HOST} !^(?:localhost|127\.0\.0\.1)(?::[0-9]+)?$ [NC]
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    # Legacy SPA entrypoint redirect (preserves #hash fragments in browsers)
+    RewriteRule ^index\.html$ / [R=301,L,NC]
+
+    # Block direct web access to internal PHP includes, PHPMailer, docs, and tooling scripts
+    RewriteRule ^(?:includes|vendor/phpmailer|docs|scripts)(?:/|$) - [F,L,NC]
+
+    # Block dotfiles and hidden directories (except .well-known)
+    RewriteRule (^|/)\.(?!well-known/) - [F,L]
+
+    # Content-negotiated WebP delivery when browser accepts image/webp and sibling .webp exists
+    RewriteCond %{HTTP_ACCEPT} image/webp [NC]
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} ^(.+)\.(?:jpe?g|png)$ [NC]
+    RewriteCond %{DOCUMENT_ROOT}%1.webp -f
+    RewriteRule ^(.+)\.(?:jpe?g|png)$ $1.webp [T=image/webp,E=accept:1,L]
+
+    # Extensionless clean URL routes
+    RewriteRule ^admin/?$ admin-view.php [L,NC]
+    RewriteRule ^(donate|locations|volunteer|missions|about|contact)/?$ $1.php [L,NC]
+</IfModule>
+
+# Deny direct access to internal config/helpers, dotfiles, logs, locks, temps, and markdown docs
+<FilesMatch "(?:^\.|~$|\.(?:log|lock|md|bak|sql|swp)$|\.tmp\.)">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+<FilesMatch "^(?:config|mail-utils|router)\.php$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+<IfModule mod_headers.c>
+    Header append Vary Accept env=REDIRECT_accept
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "camera=(), geolocation=(self), microphone=()"
+    Header always set Cross-Origin-Opener-Policy "same-origin-allow-popups"
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://tiles.openfreemap.org; font-src 'self' data:; img-src 'self' data: blob: https://tiles.openfreemap.org; connect-src 'self' https://tiles.openfreemap.org; worker-src 'self' blob:; child-src 'self' blob:; frame-ancestors 'self'; base-uri 'self'; object-src 'none'; form-action 'self'"
+</IfModule>
+
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType text/javascript "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType image/webp "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/svg+xml "access plus 1 month"
+</IfModule>
