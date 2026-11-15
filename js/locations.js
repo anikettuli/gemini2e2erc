@@ -1,148 +1,254 @@
-// Global variable to store locations
+// Lazy Drop-Off Locations Directory & MapLibre GL Loader
 let allLocations = [];
+let locationsLoaded = false;
+let locationsLoadingPromise = null;
 let mapInitialized = false;
 let mapInstance = null;
+let mapLibreLoadPromise = null;
 
-// Map Styles
 const MAP_STYLE_LIGHT = 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json';
 const MAP_STYLE_DARK = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
 
-// Function to fetch locations
-async function loadLocations() {
-  try {
-    // Fetch from PHP script which handles caching and geocoding
-    const response = await fetch('get-locations.php');
-    allLocations = await response.json();
-    renderLocationsList();
+const MAPLIBRE_CSS_URL = 'https://cdn.jsdelivr.net/npm/maplibre-gl@4.0.0/dist/maplibre-gl.css';
+const MAPLIBRE_CSS_SRI = 'sha384-lwiCiEXwjwuSiTeYhtgeL/ADQBiUjDsQkKHCwT0j+8iKuBrb7skjKQAYQ+cpZspI';
+const MAPLIBRE_JS_URL = 'https://cdn.jsdelivr.net/npm/maplibre-gl@4.0.0/dist/maplibre-gl.js';
+const MAPLIBRE_JS_SRI = 'sha384-C8SvKhT0WT55AOw5pvwVG699JuuZgN0KFt/4wtpRPhSl+TzRYqDUravAfuy13vJK';
 
-    // Try to init map if we are already on the locations tab
-    checkAndInitMap();
-  } catch (error) {
-    console.error('Error loading locations:', error);
-    const container = document.getElementById('locations-list');
-    if (container) {
-      container.innerHTML = '<p style="text-align:center; padding: 2rem;">Error loading locations. Please try refreshing the page.</p>';
-    }
+function loadMapLibreAssets() {
+  if (window.maplibregl) {
+    return Promise.resolve(window.maplibregl);
   }
+  if (mapLibreLoadPromise) {
+    return mapLibreLoadPromise;
+  }
+
+  mapLibreLoadPromise = new Promise((resolve, reject) => {
+    if (!document.querySelector(`link[href="${MAPLIBRE_CSS_URL}"]`)) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = MAPLIBRE_CSS_URL;
+      link.integrity = MAPLIBRE_CSS_SRI;
+      link.crossOrigin = 'anonymous';
+      document.head.appendChild(link);
+    }
+
+    const script = document.createElement('script');
+    script.src = MAPLIBRE_JS_URL;
+    script.integrity = MAPLIBRE_JS_SRI;
+    script.crossOrigin = 'anonymous';
+    script.defer = true;
+    script.onload = () => resolve(window.maplibregl);
+    script.onerror = () => {
+      mapLibreLoadPromise = null;
+      reject(new Error('Failed to load MapLibre GL'));
+    };
+    document.head.appendChild(script);
+  });
+
+  return mapLibreLoadPromise;
 }
 
-// Function to render the list
+async function loadLocations() {
+  if (locationsLoaded) {
+    checkAndInitMap();
+    return;
+  }
+  if (locationsLoadingPromise) {
+    return locationsLoadingPromise;
+  }
+
+  locationsLoadingPromise = (async () => {
+    try {
+      const response = await fetch('get-locations.php', { cache: 'no-cache' });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json();
+      allLocations = Array.isArray(data) ? data : [];
+      locationsLoaded = true;
+      renderLocationsList();
+      checkAndInitMap();
+    } catch (error) {
+      console.error('Error loading locations:', error);
+      const container = document.getElementById('locations-list');
+      if (container) {
+        const p = document.createElement('p');
+        p.className = 'text-center p-2';
+        p.textContent = 'Error loading locations. Please try refreshing the page.';
+        container.replaceChildren(p);
+      }
+    } finally {
+      locationsLoadingPromise = null;
+    }
+  })();
+
+  return locationsLoadingPromise;
+}
+
 function renderLocationsList() {
   const container = document.getElementById('locations-list');
   const azContainer = document.getElementById('az-directory');
   if (!container || !azContainer) return;
 
-  container.innerHTML = '';
-  azContainer.innerHTML = '';
+  container.replaceChildren();
+  azContainer.replaceChildren();
 
-  // Sort locations alphabetically by name
-  allLocations.sort((a, b) => a.name.localeCompare(b.name));
+  allLocations.sort((a, b) => String(a.name || '').localeCompare(String(b.name || '')));
 
   const firstLetters = new Set();
+  const listFragment = document.createDocumentFragment();
+  const azFragment = document.createDocumentFragment();
 
   allLocations.forEach(loc => {
-    // Generate links dynamically
-    const phoneDigits = loc.phone.replace(/\D/g, '');
-    const phoneLink = `tel:+1${phoneDigits}`;
-    const directionsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc.address)}`;
+    const locName = String(loc.name || '').trim();
+    const locAddress = String(loc.address || '').trim();
+    const locPhone = String(loc.phone || '').trim();
+    const phoneDigits = locPhone.replace(/\D/g, '');
+    const directionsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(locAddress)}`;
 
-    // Grouping by letter logic
-    const firstChar = loc.name.charAt(0).toUpperCase();
-    const isNewLetter = !firstLetters.has(firstChar);
+    const firstChar = (locName.charAt(0) || '#').toUpperCase();
+    const isNewLetter = /^[A-Z0-9]$/.test(firstChar) && !firstLetters.has(firstChar);
 
     const row = document.createElement('div');
     row.className = 'location-row';
 
     if (isNewLetter) {
       firstLetters.add(firstChar);
-      // Give this row the anchor ID for scrolling
       row.id = `loc-letter-${firstChar}`;
 
-      // Add the A-Z quick link to the directory container
       const azLink = document.createElement('a');
       azLink.href = `#loc-letter-${firstChar}`;
       azLink.textContent = firstChar;
-      azLink.className = 'btn btn-outline';
-      azLink.style = 'padding: 5px 12px; font-weight: bold; font-size: 0.9rem; text-decoration: none; display: inline-block;';
+      azLink.setAttribute('aria-label', `Jump to locations starting with ${firstChar}`);
       azLink.addEventListener('click', (e) => {
         e.preventDefault();
         const target = document.getElementById(`loc-letter-${firstChar}`);
         if (target) {
           const headerHeight = document.querySelector('header')?.offsetHeight || 70;
           const top = target.getBoundingClientRect().top + window.scrollY - headerHeight - 12;
-          window.scrollTo({ top, behavior: 'smooth' });
+          const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          window.scrollTo({ top, behavior: prefersReduced ? 'auto' : 'smooth' });
         }
       });
-      azContainer.appendChild(azLink);
+      azFragment.appendChild(azLink);
     }
 
-    row.innerHTML = `
-            <div class="location-name">${loc.name}</div>
-            <div class="location-address">${loc.address}</div>
-            <div class="location-phone"><a href="${phoneLink}">${loc.phone}</a></div>
-            <div class="location-link"><a href="${directionsLink}" target="_blank">Directions</a></div>
-        `;
-    container.appendChild(row);
+    const nameCell = document.createElement('div');
+    nameCell.className = 'location-name';
+    nameCell.textContent = locName;
+
+    const addressCell = document.createElement('div');
+    addressCell.className = 'location-address';
+    addressCell.textContent = locAddress;
+
+    const phoneCell = document.createElement('div');
+    phoneCell.className = 'location-phone';
+    if (phoneDigits.length >= 7) {
+      const phoneAnchor = document.createElement('a');
+      phoneAnchor.href = phoneDigits.length === 11 && phoneDigits.startsWith('1')
+        ? `tel:+${phoneDigits}`
+        : `tel:+1${phoneDigits}`;
+      phoneAnchor.textContent = locPhone;
+      phoneCell.appendChild(phoneAnchor);
+    } else if (locPhone !== '') {
+      phoneCell.textContent = locPhone;
+    } else {
+      const dash = document.createElement('span');
+      dash.className = 'text-dim';
+      dash.textContent = '—';
+      phoneCell.appendChild(dash);
+    }
+
+    const linkCell = document.createElement('div');
+    linkCell.className = 'location-link';
+    const dirAnchor = document.createElement('a');
+    dirAnchor.href = directionsLink;
+    dirAnchor.target = '_blank';
+    dirAnchor.rel = 'noopener noreferrer';
+    dirAnchor.textContent = 'Directions';
+    dirAnchor.setAttribute('aria-label', `Directions to ${locName}`);
+    linkCell.appendChild(dirAnchor);
+
+    row.append(nameCell, addressCell, phoneCell, linkCell);
+    listFragment.appendChild(row);
   });
+
+  azContainer.appendChild(azFragment);
+  container.appendChild(listFragment);
 }
 
-// Get current appropriate map style
 function getMapStyle() {
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
   return isDark ? MAP_STYLE_DARK : MAP_STYLE_LIGHT;
 }
 
-// Initialize map
 async function initializeMap() {
   const mapContainer = document.getElementById('allLocationsMap');
   if (!mapContainer) return;
 
-  // Initialize MapLibre GL map
+  try {
+    await loadMapLibreAssets();
+  } catch (error) {
+    console.error('Error loading map library:', error);
+    mapInitialized = false;
+    const msg = document.createElement('p');
+    msg.className = 'text-center p-2 text-dim';
+    msg.textContent = 'Interactive map unavailable. Please browse the directory below.';
+    mapContainer.replaceChildren(msg);
+    return;
+  }
+
   mapInstance = new maplibregl.Map({
     container: 'allLocationsMap',
     style: getMapStyle(),
-    center: [-97.2, 32.75], // Default center (DFW)
+    center: [-97.2, 32.75],
     zoom: 9
   });
 
-  // Add navigation controls
   mapInstance.addControl(new maplibregl.NavigationControl());
 
   const bounds = new maplibregl.LngLatBounds();
   let hasValidLocation = false;
 
-  // Process locations
   allLocations.forEach(loc => {
-    // Coordinates are now provided by the server (get-locations.php)
-    if (loc.lat && loc.lng) {
+    const lat = Number(loc.lat);
+    const lng = Number(loc.lng);
+    if (Number.isFinite(lat) && Number.isFinite(lng) && (lat !== 0 || lng !== 0)) {
       hasValidLocation = true;
       const el = document.createElement('div');
       el.className = 'marker';
-      el.style.backgroundImage = 'url(\'images/marker-icon.svg\')';
+      el.style.backgroundImage = "url('images/marker-icon.svg')";
       el.style.backgroundSize = '100%';
       el.style.width = '30px';
       el.style.height = '30px';
       el.style.cursor = 'pointer';
+      el.setAttribute('role', 'button');
+      el.setAttribute('aria-label', String(loc.name || 'Drop-off location'));
 
-      // Check if we need to invert marker color for dark mode (though usually SVG handles it, 
-      // but if it's an image, we might want a different one. 
-      // For now keeping same marker as it is likely high contrast).
+      const popupContent = document.createElement('div');
+      const popupTitle = document.createElement('div');
+      popupTitle.className = 'map-popup-title';
+      popupTitle.textContent = String(loc.name || '');
 
-      const directionsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc.address)}`;
-      const popup = new maplibregl.Popup({ offset: 25 })
-        .setHTML(`
-          <div style="font-weight: bold; color: #0fbe7c; margin-bottom: 5px;">${loc.name}</div>
-          <div style="font-size: 0.9em; color: #333; margin-bottom: 8px;">${loc.address}</div>
-          <a href="${directionsLink}" target="_blank" style="display: inline-block; background-color: #0fbe7c; color: white; padding: 5px 10px; border-radius: 4px; text-decoration: none; font-size: 0.85em; transition: background-color 0.2s;">Get Directions</a>
-        `);
-      // Force dark text in popup as map styles might affect it, or ensure popup css is robust.
+      const popupAddr = document.createElement('div');
+      popupAddr.className = 'map-popup-address';
+      popupAddr.textContent = String(loc.address || '');
+
+      const popupLink = document.createElement('a');
+      popupLink.className = 'map-popup-btn';
+      popupLink.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(String(loc.address || ''))}`;
+      popupLink.target = '_blank';
+      popupLink.rel = 'noopener noreferrer';
+      popupLink.textContent = 'Get Directions';
+
+      popupContent.append(popupTitle, popupAddr, popupLink);
+
+      const popup = new maplibregl.Popup({ offset: 25 }).setDOMContent(popupContent);
 
       new maplibregl.Marker(el)
-        .setLngLat([loc.lng, loc.lat])
+        .setLngLat([lng, lat])
         .setPopup(popup)
         .addTo(mapInstance);
 
-      bounds.extend([loc.lng, loc.lat]);
+      bounds.extend([lng, lat]);
     }
   });
 
@@ -151,56 +257,31 @@ async function initializeMap() {
   }
 }
 
-const checkAndInitMap = () => {
+function checkAndInitMap() {
   const locationsTab = document.getElementById('locations');
-  const mapContainer = document.getElementById('allLocationsMap');
-
-  // Check if locations tab is active/visible and we have data
   if (locationsTab && locationsTab.classList.contains('active') && allLocations.length > 0) {
     if (!mapInitialized) {
       mapInitialized = true;
-      // distinct visual break for the user to see map loading
-      setTimeout(initializeMap, 100);
+      setTimeout(initializeMap, 50);
     } else if (mapInstance) {
-      // If already initialized, trigger a resize in case it was hidden
       mapInstance.resize();
     }
   }
-};
+}
 
-// Update map style when theme changes
-const updateMapTheme = () => {
+function updateMapTheme() {
   if (mapInstance && mapInitialized) {
     mapInstance.setStyle(getMapStyle());
   }
-};
+}
 
-// Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-  loadLocations();
-
-  // Listen for hash changes (handled by app.js router)
-  window.addEventListener('hashchange', () => {
-    setTimeout(checkAndInitMap, 100); // Small delay to allow tab switch to complete
-  });
-
-  // Also listen for tab clicks directly to be safe, though hashchange should cover it
-  const tabButtons = document.querySelectorAll('.tab-button, .js-tab-trigger');
-  tabButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      if (button.getAttribute('data-tab') === 'locations') {
-        setTimeout(checkAndInitMap, 100);
-      }
-    });
-  });
-
-  // Observe theme changes
   const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
+    for (const mutation of mutations) {
       if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
         updateMapTheme();
       }
-    });
+    }
   });
 
   observer.observe(document.documentElement, {
@@ -208,3 +289,5 @@ document.addEventListener('DOMContentLoaded', () => {
     attributeFilter: ['data-theme']
   });
 });
+
+window.ensureLocationsLoaded = loadLocations;

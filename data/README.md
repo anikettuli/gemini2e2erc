@@ -1,40 +1,22 @@
-# How to Update Website Content
+# Website Data Directory (`data/`)
 
-This folder contains the data files that power the dynamic content on the website.
+This folder stores the JSON files that power dynamic content and form submissions on `2e2erc.org`.
 
-## 1. Events (`events.json`)
-This file controls the calendar and upcoming events list.
-- **Format:** List of event objects.
-- **Fields:** `id`, `title`, `date` (YYYY-MM-DD), `time`, `location`, `description`, `image`, `people` (current count), `maxPeople`.
+> **Important:** `data/*.json` is excluded from GitHub Actions FTP deployments so live volunteer signups and Admin Dashboard changes on GoDaddy cPanel are never overwritten when code updates are deployed.
 
-## 2. Board Members (`board.json`)
-This file controls the "Board of Directors" section on the About page.
-- **Format:** List of objects.
-- **Fields:**
-    - `name`: Name of the board member.
-    - `image`: Path to their photo (e.g., "images/board/Jim-Cook.jpg").
+## Public Content Files (`0644`)
+Served to the frontend or read by public endpoints:
+- **`events.json`**: Volunteer calendar events (`id`, `title`, `date` in `YYYY-MM-DD`, `time`, `people`, `maxPeople`, `location`, `image`, `description`, `contact`).
+- **`board.json`**: Board of Directors profiles (`name`, `image`, `tag` = `"current"` or `"previous"`).
+- **`partners.json`**: Array of partner organization names displayed on `#get-involved`.
+- **`testimonials.json`**: Mission partner quotes (`text`, `author`, `organization`) displayed on `#home`.
+- **`locations.json`**: Drop-off locations (`name`, `address`, `phone`, optional `lat`/`lng`), merged with `geo_cache.json` by `get-locations.php`.
+- **`geo_cache.json`**: Cached latitude/longitude lookups keyed by street address. Automatically updated when saving a location in `admin-view.php` (or via `php tools/warm-cache.php`).
 
-## 3. Partners (`partners.json`)
-This file controls the "Our Partners & Friends" list on the Get Involved page.
-- **Format:** Simple list of strings.
-- **Example:** `["Partner A", "Partner B", "Partner C"]`
-
-## 4. Testimonials (`testimonials.json`)
-This file controls the testimonials section on the Home page.
-- **Format:** List of objects.
-- **Fields:**
-    - `text`: The quote itself.
-    - `author`: Name of the person.
-    - `organization`: Their organization or title.
-
-## 5. Locations (`locations.json`)
-This file controls the "Drop-Off Locations" map and list.
-- **Format:** List of objects.
-- **Fields:**
-    - `name`: Name of the location (e.g., "Advanced Vision Care").
-    - `address`: Full address (e.g., "4919 South Hulen Street, Fort Worth, TX 76132").
-    - `phone`: Phone number (e.g., "(817) 370-2100").
-- **Note:** You do NOT need to provide coordinates (`lat`/`lng`). The website automatically calculates them using the address (via US Census Bureau API).
-
-## Signups File
-- **Do NOT edit `signups.json`**. This file is automatically updated when people sign up on the website.
+## Protected Server-Only Files (`0600`)
+Blocked from direct HTTP access via `data/.htaccess` (`signups.json`, `admin-auth.json`, `site-config.json`, `*.lock`, `*.log`):
+- **`signups.json`**: Volunteer event registrations managed atomically by `register-volunteer.php` and `admin-view.php`. Do not edit manually while the site is live.
+- **`site-config.json`**: Optional global `email` and `phone` overrides saved from `admin-view.php` (read by `config.php` and `get-config.php`).
+- **`admin-auth.json`**: Optional bcrypt admin credential file written when rotating the admin password in `admin-view.php`.
+- **`write.lock`**: Persistent advisory lockfile used by `erc_with_storage_lock()`.
+- **`email_errors.log`**: Operational SMTP error log written by `mail-utils.php`.
