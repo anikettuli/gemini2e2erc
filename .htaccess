@@ -1,25 +1,66 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
+  # Pass HTTP Basic Auth headers through Apache CGI/FastCGI/PHP-FPM on cPanel
+  RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
   # Force HTTPS
   RewriteCond %{HTTPS} off
   RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-  # Check if browser supports WebP
+  # Serve companion .webp image automatically when supported and present on disk
   RewriteCond %{HTTP_ACCEPT} image/webp
-
-  # Check if the .webp version actually exists on the server
-  RewriteCond %{DOCUMENT_ROOT}/$1.webp -f
-
-  # If both true, silently serve the WebP file instead of the JPG/PNG
-  RewriteRule ^(.+)\.(jpe?g|png)$ $1.webp [T=image/webp,E=accept:1]
+  RewriteCond %{REQUEST_FILENAME} ^(.+)\.(jpe?g|png)$ [NC]
+  RewriteCond %1.webp -f
+  RewriteRule ^(.+)\.(jpe?g|png)$ $1.webp [NC,T=image/webp,E=accept:1]
 </IfModule>
 
+# Block direct HTTP access to dotfiles (.env, .git), logs, lockfiles, temp files, docs, and internal PHP includes
+<FilesMatch "(^\.[a-zA-Z0-9_-]|\.log$|\.lock$|\.tmp\.|\.md$|^(config|mail-utils)\.php$)">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order Allow,Deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
 <IfModule mod_headers.c>
-  # Tell caches that this URL serves different content based on browser support
+  # Vary cache on Accept when WebP content negotiation is active
   Header append Vary Accept env=REDIRECT_accept
+
+  # Baseline security headers across all responses
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), geolocation=(), microphone=()"
+  Header always set Cross-Origin-Opener-Policy "same-origin-allow-popups"
+
+  # Document-level CSP (scoped to HTML/PHP so browser built-in PDF viewers are unaffected)
+  <FilesMatch "\.(html?|php)$">
+    Header always set Content-Security-Policy "frame-ancestors 'self'; base-uri 'self'; object-src 'none'; form-action 'self'"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/javascript application/javascript application/json image/svg+xml
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType application/json "access plus 0 seconds"
+  ExpiresByType text/css "access plus 7 days"
+  ExpiresByType application/javascript "access plus 7 days"
+  ExpiresByType text/javascript "access plus 7 days"
+  ExpiresByType image/webp "access plus 30 days"
+  ExpiresByType image/jpeg "access plus 30 days"
+  ExpiresByType image/png "access plus 30 days"
+  ExpiresByType image/gif "access plus 30 days"
+  ExpiresByType image/svg+xml "access plus 30 days"
+  ExpiresByType image/x-icon "access plus 30 days"
 </IfModule>
 
 # Prevent directory listing
 Options -Indexes
-

@@ -1,9 +1,20 @@
-# Protect data directory from direct web access
-Deny from all
+# Deny direct HTTP access to all files in data/ by default (Apache 2.4 + 2.2 compatible)
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Order Allow,Deny
+    Deny from all
+</IfModule>
 
-# Allow specific public JSON files
+# Allow direct read access only to public content feeds
 <FilesMatch "^(board|events|partners|testimonials)\.json$">
-    Order Deny,Allow
-    Allow from all
-    Satisfy Any
+    <IfModule mod_authz_core.c>
+        Require all granted
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order Deny,Allow
+        Allow from all
+        Satisfy Any
+    </IfModule>
 </FilesMatch>

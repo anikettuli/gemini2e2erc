@@ -1,90 +1,169 @@
-// Hash-based routing for persisting tab state
+// Hash-based Accessible Tab Router + Lazy Tab Resource Activation
+const PAGE_TITLES = {
+  home: 'Lions District 2-E2 Eyeglass Recycling Center',
+  about: 'About Us | Lions District 2-E2 ERC',
+  services: 'Our Services | Lions District 2-E2 ERC',
+  'get-involved': 'Volunteer & Get Involved | Lions District 2-E2 ERC',
+  locations: 'Drop-Off Locations | Lions District 2-E2 ERC',
+  contact: 'Contact Us | Lions District 2-E2 ERC'
+};
+
 class Router {
-  constructor() {
+  constructor(galleryManager) {
     this.tabs = ['home', 'about', 'services', 'get-involved', 'locations', 'contact'];
+    this.galleryManager = galleryManager;
     this.mobileNav = document.getElementById('mobileNav');
+    this.mobileMenuTrigger = document.getElementById('mobileMenuTrigger');
     this.dropdownArrow = document.querySelector('.dropdown-arrow');
     this.currentPageName = document.querySelector('.current-page-name');
+    this.initialLoad = true;
     this.init();
   }
 
   init() {
-    // Handle initial load
     this.navigateToHash();
+    this.initialLoad = false;
 
-    // Handle hash changes
     window.addEventListener('hashchange', () => this.navigateToHash());
 
-    // Setup tab buttons
     document.querySelectorAll('.tab-button, .js-tab-trigger').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
         const tab = btn.getAttribute('data-tab');
-        // Use pushState to prevent default browser scrolling to anchor
-        history.pushState(null, null, '#' + tab);
-        window.dispatchEvent(new Event('hashchange'));
+        if (tab && this.tabs.includes(tab)) {
+          if (window.location.hash !== '#' + tab) {
+            history.pushState(null, '', '#' + tab);
+          }
+          this.switchTab(tab, true);
+        }
       });
     });
 
-    // Setup Mobile Menu
-    const mobileMenuTrigger = document.getElementById('mobileMenuTrigger');
-    if (mobileMenuTrigger && this.mobileNav) {
-      mobileMenuTrigger.addEventListener('click', () => {
-        this.mobileNav.classList.toggle('open');
-        if (this.dropdownArrow) this.dropdownArrow.classList.toggle('open');
+    // Keyboard arrow navigation for desktop ARIA tablist
+    const desktopTablist = document.querySelector('.tab-nav[role="tablist"]');
+    if (desktopTablist) {
+      const desktopTabs = Array.from(desktopTablist.querySelectorAll('[role="tab"]'));
+      desktopTablist.addEventListener('keydown', (e) => {
+        const currentIndex = desktopTabs.indexOf(document.activeElement);
+        if (currentIndex === -1) return;
+
+        let nextIndex = -1;
+        if (e.key === 'ArrowRight') {
+          nextIndex = (currentIndex + 1) % desktopTabs.length;
+        } else if (e.key === 'ArrowLeft') {
+          nextIndex = (currentIndex - 1 + desktopTabs.length) % desktopTabs.length;
+        } else if (e.key === 'Home') {
+          nextIndex = 0;
+        } else if (e.key === 'End') {
+          nextIndex = desktopTabs.length - 1;
+        }
+
+        if (nextIndex !== -1) {
+          e.preventDefault();
+          const targetBtn = desktopTabs[nextIndex];
+          const tab = targetBtn.getAttribute('data-tab');
+          targetBtn.focus();
+          if (tab) {
+            history.pushState(null, '', '#' + tab);
+            this.switchTab(tab, false);
+          }
+        }
       });
     }
+
+    if (this.mobileMenuTrigger && this.mobileNav) {
+      this.mobileMenuTrigger.addEventListener('click', () => {
+        const isOpen = this.mobileNav.classList.toggle('open');
+        this.mobileMenuTrigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        if (this.dropdownArrow) this.dropdownArrow.classList.toggle('open', isOpen);
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!this.mobileNav.classList.contains('open')) return;
+        if (!this.mobileNav.contains(e.target) && !this.mobileMenuTrigger.contains(e.target)) {
+          this.closeMobileMenu();
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && this.mobileNav.classList.contains('open')) {
+          const focusInside = this.mobileNav.contains(document.activeElement);
+          this.closeMobileMenu();
+          if (focusInside) this.mobileMenuTrigger.focus();
+        }
+      });
+    }
+  }
+
+  closeMobileMenu() {
+    if (!this.mobileNav) return;
+    this.mobileNav.classList.remove('open');
+    if (this.mobileMenuTrigger) this.mobileMenuTrigger.setAttribute('aria-expanded', 'false');
+    if (this.dropdownArrow) this.dropdownArrow.classList.remove('open');
   }
 
   navigateToHash() {
     let tab = window.location.hash.slice(1) || 'home';
-
-    // Validate tab
     if (!this.tabs.includes(tab)) {
       tab = 'home';
-      window.location.hash = tab;
+      history.replaceState(null, '', '#home');
     }
-
-    this.switchTab(tab);
+    this.switchTab(tab, !this.initialLoad);
   }
 
-  switchTab(tab) {
-    // Hide all tabs
+  switchTab(tab, shouldScroll = true) {
     document.querySelectorAll('.tab-content').forEach(el => {
-      el.classList.remove('active');
+      const isActive = el.id === tab;
+      el.classList.toggle('active', isActive);
+      el.hidden = !isActive;
     });
 
-    // Remove active from all buttons
-    document.querySelectorAll('.tab-button').forEach(btn => {
-      btn.classList.remove('active');
-    });
-
-    // Show selected tab
-    const tabContent = document.getElementById(tab);
-    if (tabContent) {
-      tabContent.classList.add('active');
-    }
-
-    // Activate button
-    const tabBtn = document.querySelector(`[data-tab="${tab}"]`);
-    if (tabBtn) {
-      tabBtn.classList.add('active');
-      // Update mobile menu text
-      if (this.currentPageName) {
-        this.currentPageName.textContent = tabBtn.textContent;
+    document.querySelectorAll('.tab-nav [role="tab"]').forEach(btn => {
+      const isActive = btn.getAttribute('data-tab') === tab;
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      btn.setAttribute('tabindex', isActive ? '0' : '-1');
+      if (isActive && this.currentPageName) {
+        this.currentPageName.textContent = btn.textContent.trim();
       }
+    });
+
+    document.querySelectorAll('.mobile-nav .tab-button').forEach(btn => {
+      const isActive = btn.getAttribute('data-tab') === tab;
+      btn.classList.toggle('active', isActive);
+      if (isActive) {
+        btn.setAttribute('aria-current', 'page');
+      } else {
+        btn.removeAttribute('aria-current');
+      }
+    });
+
+    if (PAGE_TITLES[tab]) {
+      document.title = PAGE_TITLES[tab];
     }
 
-    // Close mobile menu
-    if (this.mobileNav) {
-      this.mobileNav.classList.remove('open');
-      if (this.dropdownArrow) this.dropdownArrow.classList.remove('open');
-    }
+    this.closeMobileMenu();
 
-    // Scroll to top
-    setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, 10);
+    this.activateTabResources(tab);
+
+    if (shouldScroll) {
+      const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({ top: 0, behavior: prefersReduced ? 'auto' : 'smooth' });
+    }
+  }
+
+  activateTabResources(tab) {
+    if (tab === 'home') {
+      if (typeof window.ensureTestimonialsLoaded === 'function') window.ensureTestimonialsLoaded();
+    } else if (tab === 'about') {
+      if (typeof window.ensureBoardLoaded === 'function') window.ensureBoardLoaded();
+    } else if (tab === 'get-involved') {
+      if (this.galleryManager) this.galleryManager.ensureLoaded();
+      if (typeof window.ensureCalendarLoaded === 'function') window.ensureCalendarLoaded();
+      if (typeof window.ensurePartnersLoaded === 'function') window.ensurePartnersLoaded();
+    } else if (tab === 'locations') {
+      if (typeof window.ensureLocationsLoaded === 'function') window.ensureLocationsLoaded();
+    }
   }
 }
 
@@ -94,145 +173,181 @@ class ThemeManager {
     this.themeToggleDesktop = document.getElementById('themeToggleDesktop');
     this.themeIconMobile = document.getElementById('themeIcon');
     this.themeIconDesktop = document.getElementById('themeIconDesktop');
+    this.metaColorScheme = document.querySelector('meta[name="color-scheme"]');
     this.htmlElement = document.documentElement;
+    this.mediaQuery = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
     this.init();
   }
 
+  getStoredOverride() {
+    try {
+      const stored = localStorage.getItem('color-scheme') || localStorage.getItem('theme');
+      if (stored === 'light' || stored === 'dark') {
+        return stored;
+      }
+    } catch (e) {
+      // Ignore storage access restrictions
+    }
+    return null;
+  }
+
+  getSystemScheme() {
+    return this.mediaQuery && this.mediaQuery.matches ? 'dark' : 'light';
+  }
+
   init() {
-    // Priority: localStorage → system preference → dark fallback
-    const sysDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const savedTheme = localStorage.getItem('theme') || (window.matchMedia ? (sysDark ? 'dark' : 'light') : 'dark');
+    this.syncUI();
 
-    this.setTheme(savedTheme);
-
-    // Add click listeners
     if (this.themeToggleMobile) {
       this.themeToggleMobile.addEventListener('click', () => this.toggleTheme());
     }
     if (this.themeToggleDesktop) {
       this.themeToggleDesktop.addEventListener('click', () => this.toggleTheme());
     }
+
+    if (this.mediaQuery && typeof this.mediaQuery.addEventListener === 'function') {
+      this.mediaQuery.addEventListener('change', () => {
+        if (!this.getStoredOverride()) {
+          this.syncUI();
+        }
+      });
+    }
+
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'color-scheme' || e.key === 'theme' || e.key === null) {
+        this.syncUI();
+      }
+    });
   }
 
-  setTheme(theme) {
-    const icon = theme === 'dark' ? '🌙' : '☀️';
-    if (theme === 'dark') {
-      this.htmlElement.setAttribute('data-theme', 'dark');
-    } else {
-      this.htmlElement.removeAttribute('data-theme');
+  syncUI() {
+    const stored = this.getStoredOverride();
+    const resolved = stored || this.getSystemScheme();
+
+    if (this.metaColorScheme) {
+      this.metaColorScheme.content = stored || 'light dark';
     }
+
+    this.htmlElement.setAttribute('data-theme', resolved);
+
+    const icon = resolved === 'dark' ? '🌙' : '☀️';
+    const isDark = resolved === 'dark';
 
     if (this.themeIconMobile) this.themeIconMobile.textContent = icon;
     if (this.themeIconDesktop) this.themeIconDesktop.textContent = icon;
+    if (this.themeToggleMobile) this.themeToggleMobile.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+    if (this.themeToggleDesktop) this.themeToggleDesktop.setAttribute('aria-pressed', isDark ? 'true' : 'false');
   }
 
   toggleTheme() {
-    const currentTheme = this.htmlElement.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    const currentRendered = this.htmlElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    const target = currentRendered === 'dark' ? 'light' : 'dark';
+    const systemScheme = this.getSystemScheme();
 
-    this.setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
+    try {
+      localStorage.removeItem('theme');
+      if (target === systemScheme) {
+        // Returning to system preference removes explicit override so OS changes apply again
+        localStorage.removeItem('color-scheme');
+      } else {
+        localStorage.setItem('color-scheme', target);
+      }
+    } catch (e) {
+      // Apply in-memory even if persistence is unavailable
+    }
+
+    if (this.metaColorScheme) {
+      this.metaColorScheme.content = target === systemScheme ? 'light dark' : target;
+    }
+    this.htmlElement.setAttribute('data-theme', target);
+
+    const icon = target === 'dark' ? '🌙' : '☀️';
+    const isDark = target === 'dark';
+    if (this.themeIconMobile) this.themeIconMobile.textContent = icon;
+    if (this.themeIconDesktop) this.themeIconDesktop.textContent = icon;
+    if (this.themeToggleMobile) this.themeToggleMobile.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+    if (this.themeToggleDesktop) this.themeToggleDesktop.setAttribute('aria-pressed', isDark ? 'true' : 'false');
   }
 }
 
 class GalleryManager {
   constructor() {
     this.galleryTrack = document.querySelector('.gallery-track');
-    this.init();
+    this.loaded = false;
   }
 
-  async init() {
-    if (!this.galleryTrack) return;
+  async ensureLoaded() {
+    if (this.loaded || !this.galleryTrack) return;
+    this.loaded = true;
 
     try {
-      const response = await fetch('get-gallery-images.php');
+      const response = await fetch('get-gallery-images.php', { cache: 'no-cache' });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const images = await response.json();
-      this.renderGallery(images);
+      this.renderGallery(Array.isArray(images) ? images : []);
     } catch (error) {
+      this.loaded = false;
       console.error('Error loading gallery images:', error);
+      const p = document.createElement('p');
+      p.className = 'text-center w-full p-2 text-dim';
+      p.textContent = 'Unable to load gallery images.';
+      this.galleryTrack.replaceChildren(p);
     }
   }
 
   renderGallery(images) {
-    this.galleryTrack.innerHTML = ''; // Clear existing content
-    this.originalImages = images; // Store for cloning
+    this.galleryTrack.replaceChildren();
 
     if (images.length === 0) {
-      this.galleryTrack.innerHTML = '<p>No images found.</p>';
+      const p = document.createElement('p');
+      p.textContent = 'No images found.';
+      this.galleryTrack.appendChild(p);
       return;
     }
 
-    // Create image elements and track loading
-    const imageElements = [];
-    let loadedCount = 0;
+    const fragment = document.createDocumentFragment();
 
-    images.forEach(imagePath => {
+    images.forEach((imagePath, index) => {
       const img = document.createElement('img');
-      img.src = imagePath;
-      img.alt = 'Gallery Image';
-      img.loading = 'eager'; // Load images immediately for carousel
-      imageElements.push(img);
-      this.galleryTrack.appendChild(img);
-
-      // Track when each image loads
-      img.onload = () => {
-        loadedCount++;
-        if (loadedCount === images.length) {
-          // All images loaded, now setup controls and clone for infinite scroll
-          this.setupInfiniteScroll();
-          this.setupGalleryControls();
-        }
-      };
-
-      // Handle error case - count as loaded to not block forever
-      img.onerror = () => {
-        loadedCount++;
-        if (loadedCount === images.length) {
-          this.setupInfiniteScroll();
-          this.setupGalleryControls();
-        }
-      };
-    });
-
-    // Fallback: if images don't load within 3 seconds, start anyway
-    setTimeout(() => {
-      if (!this._controlsInitialized) {
-        this.setupInfiniteScroll();
-        this.setupGalleryControls();
+      img.src = String(imagePath);
+      img.alt = `Volunteers processing donated eyeglasses (${index + 1} of ${images.length})`;
+      img.height = 300;
+      img.decoding = 'async';
+      if (index < 3) {
+        img.loading = 'eager';
+      } else {
+        img.loading = 'lazy';
+        img.fetchPriority = 'low';
       }
-    }, 3000);
-  }
-
-  setupInfiniteScroll() {
-    // Clone all images for a seamless CSS loop
-    if (!this.originalImages || this.originalImages.length === 0) return;
-
-    this.originalImages.forEach(src => {
-      const img = document.createElement('img');
-      img.src = src;
-      img.alt = 'Gallery Image';
-      img.classList.add('gallery-clone');
-      this.galleryTrack.appendChild(img);
+      fragment.appendChild(img);
     });
-  }
 
-  setupGalleryControls() {
-    if (this._controlsInitialized) return; // Only setup once
-    this._controlsInitialized = true;
+    // Clone track items for seamless CSS loop (marked decorative for assistive tech)
+    images.forEach(imagePath => {
+      const clone = document.createElement('img');
+      clone.src = String(imagePath);
+      clone.alt = '';
+      clone.setAttribute('aria-hidden', 'true');
+      clone.height = 300;
+      clone.loading = 'lazy';
+      clone.decoding = 'async';
+      clone.fetchPriority = 'low';
+      clone.classList.add('gallery-clone');
+      fragment.appendChild(clone);
+    });
 
-    // Use the performant CSS animation class defined in styles.css
+    this.galleryTrack.appendChild(fragment);
     this.galleryTrack.classList.add('animate-scroll');
   }
 }
 
-/**
- * Toast Notification System
- */
 function showToast(message, type = 'info', title = '') {
   let container = document.getElementById('toast-container');
   if (!container) {
     container = document.createElement('div');
     container.id = 'toast-container';
+    container.setAttribute('role', 'status');
+    container.setAttribute('aria-live', 'polite');
     document.body.appendChild(container);
   }
 
@@ -240,12 +355,19 @@ function showToast(message, type = 'info', title = '') {
   const allowedTypes = ['success', 'error', 'info', 'warning'];
   const safeType = allowedTypes.includes(type) ? type : 'info';
   toast.className = `toast toast-${safeType}`;
-  
-  const icon = safeType === 'success' ? '✓' : (safeType === 'error' ? '✕' : 'ℹ');
+
+  const iconMap = {
+    success: '✓\uFE0E',
+    error: '✕\uFE0E',
+    warning: '!\uFE0E',
+    info: 'ℹ\uFE0E'
+  };
+  const icon = iconMap[safeType] || iconMap.info;
   const defaultTitle = safeType.charAt(0).toUpperCase() + safeType.slice(1);
 
   const iconEl = document.createElement('div');
   iconEl.className = 'toast-icon';
+  iconEl.setAttribute('aria-hidden', 'true');
   iconEl.textContent = icon;
 
   const contentEl = document.createElement('div');
@@ -259,82 +381,119 @@ function showToast(message, type = 'info', title = '') {
   messageEl.className = 'toast-message';
   messageEl.textContent = message;
 
-  contentEl.appendChild(titleEl);
-  contentEl.appendChild(messageEl);
-  toast.appendChild(iconEl);
-  toast.appendChild(contentEl);
-
+  contentEl.append(titleEl, messageEl);
+  toast.append(iconEl, contentEl);
   container.appendChild(toast);
 
-  // Animate in
   setTimeout(() => toast.classList.add('show'), 10);
 
-  // Remove after 5 seconds
   setTimeout(() => {
     toast.classList.remove('show');
     setTimeout(() => toast.remove(), 500);
   }, 5000);
 }
 
-// Initialize app when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-  new Router();
-  new ThemeManager();
-  new GalleryManager();
+  document.querySelectorAll('img[data-fallback-src]').forEach(img => {
+    const applyFallback = () => {
+      if (!img.dataset.fallbackApplied && img.dataset.fallbackSrc) {
+        img.dataset.fallbackApplied = 'true';
+        img.src = img.dataset.fallbackSrc;
+      }
+    };
+    img.addEventListener('error', applyFallback);
+    if (img.complete && img.naturalWidth === 0) {
+      applyFallback();
+    }
+  });
 
-  // Check for email status from PHP redirection
+  const yearEl = document.getElementById('currentYear');
+  if (yearEl) {
+    yearEl.textContent = String(new Date().getFullYear());
+  }
+
+  const galleryManager = new GalleryManager();
+  new ThemeManager();
+  new Router(galleryManager);
+
+  // Handle contact form status redirect query parameters
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('status') === 'success') {
     showToast('Your message has been sent successfully.', 'success', 'Message Sent');
-    // Clean the URL but keep the hash if present
-    const newUrl = window.location.pathname + window.location.hash;
-    window.history.replaceState({}, document.title, newUrl);
+    window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
   } else if (urlParams.get('status') === 'error') {
     const reason = urlParams.get('reason') || '';
     let msg = 'There was an error sending your message. Please try again.';
-    if (reason === 'invalid_input') msg = 'Please check your information and try again.';
+    if (reason === 'invalid_input') {
+      msg = 'Please check your information and try again.';
+    } else if (reason === 'rate_limited') {
+      msg = 'Too many messages sent recently. Please wait a few minutes and try again.';
+    }
     showToast(msg, 'error', 'Error');
-    // Clean URL
-    const newUrl = window.location.pathname + window.location.hash;
-    window.history.replaceState({}, document.title, newUrl);
+    window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
   }
 
-  // Modal Logic
+  // Prevent double-submission on the Contact Us form after valid submit click
+  const contactForm = document.querySelector('.contact-form');
+  if (contactForm) {
+    contactForm.addEventListener('submit', () => {
+      if (contactForm.checkValidity()) {
+        const btn = contactForm.querySelector('button[type="submit"]');
+        if (btn) {
+          btn.disabled = true;
+          btn.textContent = 'Sending...';
+        }
+      }
+    });
+  }
+
+  // Native <dialog> modal logic + Safari closedby="any" light-dismiss fallback
   const modal = document.getElementById('signupModal');
-  const closeBtn = document.querySelector('.close-modal');
+  const closeBtn = modal ? modal.querySelector('.close-modal') : null;
   const signupForm = document.getElementById('volunteerSignupForm');
 
-  if (closeBtn) {
-    closeBtn.onclick = () => modal.style.display = "none";
-  }
+  if (modal) {
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => modal.close());
+    }
+    modal.addEventListener('close', () => {
+      modal.returnValue = '';
+    });
 
-  window.onclick = (event) => {
-    if (event.target == modal) {
-      modal.style.display = "none";
+    if (typeof HTMLDialogElement !== 'undefined' && !('closedBy' in HTMLDialogElement.prototype)) {
+      const outside = (e, dialog) => {
+        const r = dialog.getBoundingClientRect();
+        return e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom;
+      };
+      for (const dialog of document.querySelectorAll('dialog[closedby="any"]')) {
+        let pressedOutside = false;
+        dialog.addEventListener('pointerdown', (e) => { pressedOutside = outside(e, dialog); });
+        dialog.addEventListener('pointerup', (e) => { if (pressedOutside && outside(e, dialog)) dialog.close(); });
+      }
     }
   }
 
-  if (signupForm) {
+  if (signupForm && modal) {
     signupForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const submitBtn = signupForm.querySelector('button[type="submit"]');
-      const originalText = submitBtn.innerText;
-      submitBtn.innerText = "Registering...";
+      const originalText = submitBtn.textContent;
+      submitBtn.textContent = 'Registering...';
       submitBtn.disabled = true;
 
+      const honeypotEl = document.getElementById('signupWebsiteUrl');
       const formData = {
         eventId: document.getElementById('signupEventId').value,
         name: document.getElementById('signupName').value,
         email: document.getElementById('signupEmail').value,
-        phone: document.getElementById('signupPhone').value
+        phone: document.getElementById('signupPhone').value,
+        website_url: honeypotEl ? honeypotEl.value : ''
       };
 
       try {
         const response = await fetch('register-volunteer.php', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(formData)
         });
 
@@ -342,45 +501,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (result.success) {
           showToast('Registration successful! Check your email for confirmation.', 'success', 'Registered');
-          modal.style.display = "none";
+          modal.close();
           signupForm.reset();
-          // Reload events to update count
+
           if (window.eventCalendar) {
             await window.eventCalendar.loadEvents();
             window.eventCalendar.renderCalendar();
             window.eventCalendar.renderUpcomingEvents();
-
-            // Reset the day view to ensure no stale data is shown
-            const eventsDisplay = document.getElementById('eventsDisplay');
-            if (eventsDisplay) {
-              eventsDisplay.innerHTML = `
-                                <div class="events-display-empty">
-                                    <p style="font-size: 1.1rem; margin: 0;">📅</p>
-                                    <p>Select a date to view events</p>
-                                </div>
-                            `;
+            if (window.eventCalendar.selectedDate) {
+              window.eventCalendar.showDayEvents(window.eventCalendar.selectedDate);
             }
           }
         } else {
-          showToast(result.message, 'error', 'Registration Failed');
+          showToast(result.message || 'Registration failed.', 'error', 'Registration Failed');
         }
       } catch (error) {
         console.error('Error:', error);
         showToast('An error occurred. Please try again.', 'error', 'Connection Error');
       } finally {
-        submitBtn.innerText = originalText;
+        submitBtn.textContent = originalText;
         submitBtn.disabled = false;
       }
     });
   }
 });
 
-
-// Global function to open modal (called from calendar.js)
 window.openSignupModal = function (eventId, title, date, time) {
   const modal = document.getElementById('signupModal');
-  document.getElementById('signupEventId').value = eventId;
-  document.getElementById('modalEventTitle').innerText = "Sign Up: " + title;
-  document.getElementById('modalEventDetails').innerText = `${date} • ${time}`;
-  modal.style.display = "block";
-}
+  if (!modal) return;
+  document.getElementById('signupEventId').value = String(eventId);
+  document.getElementById('modalEventTitle').textContent = 'Sign Up: ' + title;
+  document.getElementById('modalEventDetails').textContent = `${date} • ${time}`;
+  if (typeof modal.showModal === 'function') {
+    if (!modal.open) modal.showModal();
+  } else {
+    modal.setAttribute('open', '');
+  }
+};

@@ -1,93 +1,84 @@
 # Lions District 2-E2 Eyeglass Recycling Center (ERC) Website
 
-A modern, responsive, and accessible website for the District 2-E2 Eyeglass Recycling Center. This project serves as the digital hub for volunteer coordination, donation information, and event management.
+A responsive, accessible single-page website and lightweight PHP administration portal for the Lions District 2-E2 Eyeglass Recycling Center (`2e2erc.org`).
 
-This project has been pushed to the public website.
-
-## 🛠 Technical Stack
+## Technical Stack
 
 ### Frontend
-- **HTML5**: Semantic markup with accessibility (WCAG AAA) in mind.
-- **CSS3**: Custom styling with CSS Variables for theming (Light/Dark mode).
-- **JavaScript (ES6+)**: Vanilla JS for DOM manipulation, routing, and dynamic content loading.
-- **MapLibre GL JS**: Open-source mapping library for displaying drop-off locations.
+- **HTML5**: Semantic landmarks, ARIA tablist/tabpanel navigation, native `<dialog closedby="any">` volunteer registration modal, and explicit responsive image dimensions.
+- **CSS3**: Custom design tokens with two-state Light/Dark `color-scheme` support, `:focus-visible` keyboard rings, `:user-invalid` validation states, and `prefers-reduced-motion` support.
+- **Vanilla JavaScript (ES6+)**: Zero-build modular scripts (`defer`-loaded) using safe DOM construction (`createElement` / `textContent`) and per-tab lazy data hydration.
+- **MapLibre GL JS**: Lazily loaded with SHA-384 Subresource Integrity (SRI) only when a visitor opens the `#locations` tab.
 
-### Backend
-- **PHP**: Server-side scripting for form processing and administrative functions.
-    - `register-volunteer.php`: Handles volunteer signups and stores data in JSON.
-    - `send-email.php`: Processes contact form submissions.
-    - `admin-view.php`: Protected interface for viewing volunteer data.
-- **JSON**: Flat-file database structure for storing content and form submissions.
+### Backend (GoDaddy cPanel / Apache + PHP 7.4+/8.x)
+- `config.php`: Shared `.env` parser, re-entrant `flock()` storage lock (`data/write.lock`), atomic temp-file-plus-rename JSON persistence, `.webp`-aware gallery scanner, and per-IP sliding-window rate limiter.
+- `mail-utils.php`: Shared HTML email template renderer, protected mail error logger (`data/email_errors.log`), and RFC 5321-hardened `SimpleSMTP` client (CRLF header sanitization + DATA dot-stuffing).
+- `send-email.php`: Contact Us form processor with honeypot and per-IP rate limiting.
+- `register-volunteer.php`: Transactional volunteer signup endpoint updating `data/signups.json` and `data/events.json` atomically under lock.
+- `get-config.php`, `get-locations.php`, `get-gallery-images.php`: Lightweight JSON endpoints for global contact info, geocoded drop-off locations, and gallery photos.
+- `admin-view.php`: HTTP Basic + CSRF-protected administration dashboard with bcrypt password rotation (`data/admin-auth.json`), Post/Redirect/Get (`303`) form handling, GD image optimization + `.webp` sidecars, and automatic Nominatim/US Census geocoding when saving locations.
 
-### Data Architecture
-Content is decoupled from the HTML structure and stored in the `data/` directory:
-- `events.json`: Calendar events.
-- `board.json`: Board of Directors profiles.
-- `partners.json`: Mission partners.
-- `signups.json`: Volunteer registration database (generated).
-
-## 📂 Project Structure
+## Project Structure
 
 ```text
-├── admin-view.php          # Admin dashboard for volunteer management
-├── config.php              # Server-side configuration
-├── index.html              # Single Page Application (SPA) entry point
-├── register-volunteer.php  # Volunteer form processor
+├── .htaccess               # Apache security headers, WebP negotiation, caching, dotfile/helper protection
+├── admin-view.php          # Admin dashboard (events, signups, board, partners, locations, gallery, files, settings)
+├── config.php              # Shared env, locking, atomic JSON, gallery scan, and rate-limit helpers
+├── get-config.php          # Public site contact configuration endpoint
+├── get-gallery-images.php  # Dynamic gallery directory endpoint (deduplicates .webp sidecars)
+├── get-locations.php       # Merges data/locations.json with data/geo_cache.json
+├── index.html              # SPA entry point
+├── mail-utils.php          # Branded email template + SimpleSMTP client
+├── register-volunteer.php  # Volunteer registration processor
 ├── send-email.php          # Contact form processor
 ├── css/
-│   └── styles.css          # Main stylesheet (includes Dark Mode)
-├── data/                   # JSON data stores
-│   ├── board.json
-│   ├── events.json
-│   └── signups.json        # Writable file for volunteer data
+│   └── styles.css          # Main stylesheet
+├── data/                   # Flat-file JSON data store (preserved across FTP deployments)
+├── files/                  # Downloadable PDF brochures & forms
+├── gallery/                # Volunteer gallery photos (preserved across FTP deployments)
+├── images/                 # Static UI icons, placeholders, board/ & events/ uploads
 ├── js/
-│   ├── app.js              # Core logic: Routing, Theme, UI
-│   ├── calendar.js         # Event calendar rendering logic
-│   ├── config.js           # Client-side configuration (Email, Phone)
-│   ├── dynamic-content.js  # JSON fetcher and renderer
-│   └── locations.js        # MapLibre configuration and location data
-└── images/                 # Optimized assets
+│   ├── app.js              # Hash router, theme manager, gallery carousel, dialog & toast handlers
+│   ├── calendar.js         # Accessible calendar & volunteer event cards
+│   ├── config.js           # Hydrates phone/email links from get-config.php
+│   ├── dynamic-content.js  # Lazy board, partners, and testimonials renderers
+│   └── locations.js        # Lazy MapLibre GL loader + A-Z drop-off directory
+├── tests/
+│   └── smoke.php           # CLI smoke test suite (run automatically in CI prior to FTP deploy)
+└── tools/
+    └── warm-cache.php      # Optional CLI utility to pre-populate data/geo_cache.json
 ```
 
-## 🌟 Key Functionality
+## Configuration (`.env`)
 
-### 1. Hash-Based Routing
-The site uses a lightweight SPA architecture. Navigation is handled via URL hashes (e.g., `#home`, `#get-involved`). `app.js` listens for hash changes to toggle visibility of content sections without full page reloads.
+Create a `.env` file in the webroot on GoDaddy cPanel (never committed to Git):
 
-### 2. Dynamic Content Loading
-To allow non-technical updates, content sections like the Board of Directors, Partners, and Events are fetched from JSON files in the `data/` folder and rendered client-side by `dynamic-content.js`.
+```ini
+SMTP_HOST=p3plzcpnl507374.prod.phx3.secureserver.net
+SMTP_PORT=465
+SMTP_USER=noreply@2e2erc.org
+SMTP_PASS=your_smtp_password
+ADMIN_USER=admin
+# Generate a bcrypt hash via Admin Dashboard -> General Settings -> Admin Credentials,
+# or set ADMIN_PASS_HASH / ADMIN_PASS here:
+ADMIN_PASS_HASH=$2y$12$...
+```
 
-### 3. Volunteer Management System
-- **Registration**: Users submit the volunteer form (`#get-involved`).
-- **Processing**: `register-volunteer.php` validates inputs and appends the entry to `data/signups.json`.
-- **Administration**: `admin-view.php` provides a table view of all signups. *Note: Ensure this file is secured in production.*
+> **Note:** Changing the password inside `admin-view.php` ("Admin Credentials") writes a bcrypt hash to `data/admin-auth.json` (`0600`), which takes precedence without requiring SSH/cPanel file edits.
 
-### 4. Interactive Map
-The Locations tab features an interactive map powered by MapLibre GL. It renders markers for drop-off locations defined in `js/locations.js`.
+## Local Development & Testing
 
-### 5. Dark Mode
-A system-aware theme toggle allows users to switch between Light and Dark modes. Preferences are persisted in `localStorage`.
+```bash
+# Run syntax checks and automated smoke tests
+php tests/smoke.php
 
-## 🚀 Setup & Deployment
+# Start local development server
+php -S localhost:8000
+```
 
-### Prerequisites
-- A web server with **PHP 7.4+** support (Apache/Nginx).
-- Write permissions for the `data/` directory (for `signups.json`).
+## Deployment (GoDaddy cPanel)
 
-### Local Development
-1. Clone the repository.
-2. Start a local PHP server:
-   ```bash
-   php -S localhost:8000
-   ```
-3. Open `http://localhost:8000` in your browser.
-
-### Production Deployment
-1. Upload all files to the public web directory.
-2. **Security**: Ensure `data/signups.json` is protected from direct public access via `.htaccess` or server config, while remaining writable by the PHP script.
-3. **Permissions**: Set write permissions (chmod 664 or 775) on `data/signups.json` so the server can save volunteer registrations.
-
-## ⚙️ Configuration
-
-- **Client-side**: Edit `js/config.js` to update global contact info (Email, Phone).
-- **Server-side**: Edit `config.php` for email sending settings (SMTP, headers).
+Pushes to `main` trigger `.github/workflows/deploy.yml`, which:
+1. Lints all PHP scripts (`php -l`) and runs `php tests/smoke.php`.
+2. Generates `.webp` companions for any changed `.jpg`/`.jpeg`/`.png` assets.
+3. Syncs application code via FTP while **excluding** live mutable directories (`data/*.json`, `gallery/*`, `images/events/*`, `images/board/*`) so admin edits and volunteer signups on GoDaddy are never overwritten.

@@ -4,8 +4,11 @@
 
 // Ensure we are running in CLI
 if (php_sapi_name() !== 'cli') {
-    die("This script must be run from the command line.");
+    http_response_code(403);
+    exit("This script must be run from the command line.\n");
 }
+
+require_once dirname(__DIR__) . '/config.php';
 
 echo "Starting Geo Cache Warmup...\n";
 
@@ -127,13 +130,13 @@ foreach ($locations as $loc) {
     
     // Save periodically to avoid total data loss on crash
     if ($processedCount % 5 === 0) {
-        file_put_contents($cacheFile, json_encode($cache, JSON_PRETTY_PRINT));
+        erc_save_json_atomic($cacheFile, $cache);
     }
 }
 
 // 4. Final Save
 if ($updated) {
-    file_put_contents($cacheFile, json_encode($cache, JSON_PRETTY_PRINT));
+    erc_save_json_atomic($cacheFile, $cache);
     echo "Cache updated. Saved to $cacheFile.\n";
 } else {
     echo "Cache already up to date.\n";

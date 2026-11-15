@@ -31,7 +31,7 @@
         "people": 0,
         "maxPeople": 15,
         "location": "Main Center - 5621 Bunker Blvd, Watauga, TX 76148",
-        "image": "images/events/lions-pdg.jpg",
+        "image": "images/placeholder-event.svg",
         "description": "Lions 2E2 Past District Governors Service Day - experienced Lions Club members volunteer their time.",
         "contact": "2e2erc1854@gmail.com"
     },
@@ -79,7 +79,7 @@
         "people": 0,
         "maxPeople": 12,
         "location": "Main Center - 5621 Bunker Blvd, Watauga, TX 76148",
-        "image": "images/events/board-meeting.jpg",
+        "image": "images/placeholder-event.svg",
         "description": "ERC Board of Directors quarterly meeting. Board members and volunteers welcome.",
         "contact": "2e2erc1854@gmail.com"
     },
