@@ -4,43 +4,17 @@
  * live location filtering, password visibility toggles, and native <dialog> delete confirmation.
  */
 
-function initFallbackThemeToggle() {
-  const toggleBtn = document.getElementById('themeToggle');
-  const meta = document.querySelector('meta[name="color-scheme"]');
-  if (!toggleBtn || !meta) return;
+function prefersReducedMotion() {
+  return Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
+}
 
-  // Defer to /js/theme.js when present (ES module resolves from module cache);
-  // only attach the local toggle when /js/theme.js is unavailable.
-  import('../theme.js').catch(() => {
-    const getResolved = () => {
-      if (meta.content === 'dark' || meta.content === 'light') return meta.content;
-      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    };
-
-    const syncAria = () => {
-      const resolved = getResolved();
-      toggleBtn.setAttribute('aria-pressed', resolved === 'dark' ? 'true' : 'false');
-    };
-
-    syncAria();
-    toggleBtn.addEventListener('click', () => {
-      const osScheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      const target = getResolved() === 'dark' ? 'light' : 'dark';
-      try {
-        if (target === osScheme) {
-          localStorage.removeItem('erc-color-scheme');
-          meta.content = 'light dark';
-        } else {
-          localStorage.setItem('erc-color-scheme', target);
-          meta.content = target;
-        }
-      } catch {
-        meta.content = target;
-      }
-      syncAria();
-      document.dispatchEvent(new CustomEvent('erc:themechange', { detail: { theme: target } }));
-    });
+function scrollIntoFocusView(element) {
+  if (!element) return;
+  element.scrollIntoView({
+    behavior: prefersReducedMotion() ? 'auto' : 'smooth',
+    block: 'center',
   });
+  element.focus();
 }
 
 function initTabs() {
@@ -206,8 +180,7 @@ function initEventEditor() {
         if (existingLabel) existingLabel.textContent = existingImgInput.value;
         if (heading) heading.textContent = `Editing Session #${ev.id}`;
         if (submitBtn) submitBtn.textContent = 'Update Session';
-        titleInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        titleInput.focus();
+        scrollIntoFocusView(titleInput);
       } catch {
         // ignore invalid payload
       }
@@ -250,8 +223,7 @@ function initLocationDirectory() {
         if (phoneInput) phoneInput.value = loc.phone || '';
         if (heading) heading.textContent = 'Editing Drop-Off Bin';
         if (submitBtn) submitBtn.textContent = 'Update Location';
-        nameInput?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        nameInput?.focus();
+        scrollIntoFocusView(nameInput);
       } catch {
         // ignore
       }
@@ -361,7 +333,6 @@ function initPasswordToggles() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  initFallbackThemeToggle();
   initTabs();
   initAlerts();
   initDeleteConfirmationDialog();

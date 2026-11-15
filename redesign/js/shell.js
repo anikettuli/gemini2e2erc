@@ -169,8 +169,13 @@ function initHeaderOverflowGuard() {
 
   const observer = new ResizeObserver(scheduleCheck);
   observer.observe(headerInner);
+  observer.observe(nav);
+  observer.observe(brand);
+  observer.observe(controls);
+  observer.observe(document.documentElement);
   window.addEventListener('resize', scheduleCheck, { passive: true });
-  scheduleCheck();
+  document.fonts?.ready?.then(scheduleCheck);
+  checkOverflow();
 }
 
 function initImageFallbacks() {

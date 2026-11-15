@@ -1423,7 +1423,7 @@ function initVolunteerPage() {
 
   regFields.forEach((field) => {
     field.addEventListener('blur', () => {
-      if (field.value.trim() !== '' || touchedFields.has(field)) {
+      if (field.required || field.value.trim() !== '' || touchedFields.has(field)) {
         touchedFields.add(field);
         const valid = syncFieldValidationUI(field, true);
         if (!valid) {
@@ -1533,7 +1533,7 @@ function initVolunteerPage() {
           ev.people = Math.max(0, body.newCount);
           updateEventCardCapacity(ev);
           updateModalSessionHeader(ev);
-        } else if (response.status === 400 && /full/i.test(errMsg) && ev.maxPeople > 0) {
+        } else if ((response.status === 409 || response.status === 400) && /(?:full|capacity)/i.test(errMsg) && ev.maxPeople > 0) {
           ev.people = ev.maxPeople;
           updateEventCardCapacity(ev);
           updateModalSessionHeader(ev);

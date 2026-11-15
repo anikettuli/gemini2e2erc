@@ -134,6 +134,7 @@
     line-height: var(--leading-tight);
     color: var(--ink-primary);
     text-wrap: balance;
+    overflow-wrap: anywhere;
     letter-spacing: -0.012em;
   }
 
@@ -402,7 +403,7 @@
     text-decoration: none;
     box-shadow: var(--shadow-md);
     transform: translateY(-200%);
-    transition: transform var(--duration-fast) var(--ease-out);
+    transition: none;
   }
 
   .skip-link:focus,
@@ -456,11 +457,18 @@
     text-decoration: none;
     text-align: center;
     white-space: normal;
+    max-inline-size: 100%;
+    overflow-wrap: anywhere;
     transition:
       background-color var(--duration-fast) var(--ease-out),
       border-color var(--duration-fast) var(--ease-out),
       color var(--duration-fast) var(--ease-out),
       box-shadow var(--duration-fast) var(--ease-out);
+  }
+
+  .btn > * {
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
   }
 
   .btn--sm {
@@ -579,6 +587,7 @@
     display: inline-flex;
     align-items: center;
     gap: var(--space-1);
+    max-inline-size: 100%;
     padding: 0.25rem 0.6875rem;
     border-radius: var(--radius-pill);
     border: 1px solid var(--border-subtle);
@@ -588,6 +597,8 @@
     font-weight: 700;
     line-height: 1.3;
     letter-spacing: 0.02em;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 
   .badge--brand {
@@ -625,7 +636,7 @@
     background-color: var(--bg-surface);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-lg);
-    padding: clamp(var(--space-5), 2.5vw, var(--space-6));
+    padding: min(var(--space-6), 5vw);
     box-shadow: var(--shadow-sm);
     min-inline-size: 0;
   }
@@ -1149,5 +1160,15 @@
 
   .mb-4 {
     margin-block-end: var(--space-4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
   }
 }

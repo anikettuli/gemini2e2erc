@@ -44,7 +44,7 @@
     block-size: 2.75rem;
     border-radius: var(--radius-md);
     object-fit: contain;
-    background-color: #ffffff;
+    background-color: oklch(100% 0 0);
     padding: 0.125rem;
     border: 1px solid var(--border-subtle);
     flex-shrink: 0;
@@ -93,12 +93,15 @@
     display: none;
     align-items: center;
     gap: var(--space-2);
+    min-inline-size: 0;
   }
 
   .site-nav__list {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 0.25rem;
+    min-inline-size: 0;
   }
 
   .site-nav__link {
@@ -346,6 +349,10 @@
     border-block-end: 1px solid var(--border-subtle);
   }
 
+  .site-footer__grid > * {
+    min-inline-size: 0;
+  }
+
   @media (min-width: 44rem) {
     .site-footer__grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -362,7 +369,21 @@
     display: flex;
     align-items: center;
     gap: var(--space-3);
+    min-inline-size: 0;
     margin-block-end: var(--space-3);
+  }
+
+  .site-footer__brand > * {
+    min-inline-size: 0;
+    max-inline-size: 100%;
+  }
+
+  .site-footer__brand .site-brand__title,
+  .site-footer__brand .site-brand__subtitle {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    overflow-wrap: anywhere;
   }
 
   .site-footer__heading {
@@ -379,15 +400,33 @@
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
+    min-inline-size: 0;
+  }
+
+  .site-footer__list > * {
+    min-inline-size: 0;
+    max-inline-size: 100%;
   }
 
   .site-footer__link {
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
+    min-inline-size: 2.75rem;
     min-block-size: 2.25rem;
+    max-inline-size: 100%;
+    overflow-wrap: anywhere;
     color: var(--ink-secondary);
     text-decoration: none;
+  }
+
+  .site-footer__link .erc-icon {
+    flex-shrink: 0;
+  }
+
+  .site-footer__link span {
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
   }
 
   .site-footer__link:hover {
@@ -420,10 +459,16 @@
   .site-footer__legal-links {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-4);
+    gap: var(--space-3) var(--space-4);
   }
 
   .site-footer__legal-links a {
+    display: inline-flex;
+    align-items: center;
+    min-inline-size: 2.75rem;
+    min-block-size: 2.75rem;
+    max-inline-size: 100%;
+    overflow-wrap: anywhere;
     color: var(--ink-muted);
     text-decoration: none;
   }
@@ -434,7 +479,9 @@
   }
 
   @media (pointer: coarse) {
-    .site-footer__link {
+    .site-footer__link,
+    .site-footer__legal-links a {
+      min-inline-size: 2.75rem;
       min-block-size: 2.75rem;
     }
   }

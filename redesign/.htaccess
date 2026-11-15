@@ -36,6 +36,10 @@ DirectoryIndex index.php
     RewriteCond %{DOCUMENT_ROOT}%1.webp -f
     RewriteRule ^(.+)\.(?:jpe?g|png)$ $1.webp [T=image/webp,E=accept:1,L]
 
+    # Serve favicon cleanly when /favicon.ico is requested and no .ico file exists
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^favicon\.ico$ e2e2rc_LOGO.png [L,NC]
+
     # Extensionless clean URL routes
     RewriteRule ^admin/?$ admin-view.php [L,NC]
     RewriteRule ^(donate|locations|volunteer|missions|about|contact)/?$ $1.php [L,NC]

@@ -171,6 +171,17 @@ if ($relPath !== '') {
     ) {
         $resolved = $resolveStaticInBase($parentReal, $relPath);
     }
+    if ($resolved === null && $relPath === 'favicon.ico') {
+        $resolved = $resolveStaticInBase($rootReal, 'e2e2rc_LOGO.png');
+        if (
+            $resolved === null
+            && $parentReal !== false
+            && $parentReal !== $rootReal
+            && basename($rootReal) === 'redesign'
+        ) {
+            $resolved = $resolveStaticInBase($parentReal, 'e2e2rc_LOGO.png');
+        }
+    }
 }
 
 if ($resolved === null) {

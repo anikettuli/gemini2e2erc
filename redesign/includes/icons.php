@@ -100,12 +100,6 @@ function erc_icon_registry(): array
     return $icons;
 }
 
-function erc_icon_exists(string $name): bool
-{
-    $icons = erc_icon_registry();
-    return isset($icons[$name]);
-}
-
 /**
  * Render an inline Lucide v1.73.0 SVG icon.
  *

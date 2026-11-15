@@ -240,6 +240,7 @@ function initLocationsDirectory() {
     emptyEl: document.getElementById('loc-empty'),
     mapPanel: document.getElementById('loc-map-panel'),
     mapContainer: document.getElementById('locations-map'),
+    selectedCard: document.getElementById('loc-selected-card'),
     mapFallback: document.getElementById('loc-map-fallback'),
     mapFallbackMsg: document.getElementById('loc-map-fallback-msg'),
     mapRetryBtn: document.getElementById('loc-map-retry'),
@@ -767,35 +768,159 @@ function initLocationsDirectory() {
     return wrapper;
   }
 
+  function buildCompactPopupDom(locationsAtPoint) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'loc-popup loc-popup--compact';
+
+    const primary = locationsAtPoint[0];
+    const title = document.createElement('h3');
+    title.className = 'loc-popup-title';
+    title.textContent =
+      locationsAtPoint.length > 1
+        ? `${primary.name} (+${locationsAtPoint.length - 1} more)`
+        : primary.name;
+    wrapper.appendChild(title);
+
+    const hint = document.createElement('p');
+    hint.className = 'loc-popup-hint';
+    hint.textContent = 'Full details and Directions below map.';
+    wrapper.appendChild(hint);
+
+    return wrapper;
+  }
+
+  function clearSelectedLocation() {
+    state.selectedLocId = null;
+    document.querySelectorAll('.loc-card.is-selected').forEach((el) => el.classList.remove('is-selected'));
+    if (state.activePopup) {
+      state.activePopup.remove();
+      state.activePopup = null;
+    }
+    if (els.selectedCard) {
+      els.selectedCard.hidden = true;
+      els.selectedCard.textContent = '';
+    }
+  }
+
+  function renderSelectedCard(venues) {
+    if (!els.selectedCard || !Array.isArray(venues) || venues.length === 0) return;
+
+    els.selectedCard.textContent = '';
+
+    const header = document.createElement('div');
+    header.className = 'loc-selected-card__head';
+
+    const kicker = document.createElement('span');
+    kicker.className = 'loc-selected-card__kicker';
+    kicker.textContent =
+      venues.length > 1 ? `${venues.length} Drop-Off Locations Selected` : 'Selected Drop-Off Location';
+
+    const closeBtn = document.createElement('button');
+    closeBtn.type = 'button';
+    closeBtn.className = 'loc-selected-card__close';
+    closeBtn.setAttribute('aria-label', 'Close selected location details');
+    const closeGlyph = document.createElement('span');
+    closeGlyph.setAttribute('aria-hidden', 'true');
+    closeGlyph.textContent = '×';
+    closeBtn.appendChild(closeGlyph);
+    closeBtn.addEventListener('click', clearSelectedLocation);
+
+    header.append(kicker, closeBtn);
+    els.selectedCard.appendChild(header);
+
+    const body = buildPopupDom(venues);
+    body.classList.add('loc-selected-card__body');
+    els.selectedCard.appendChild(body);
+    els.selectedCard.hidden = false;
+  }
+
+  function nudgePopupIntoView() {
+    if (!state.map || !state.activePopup || !els.mapContainer) return;
+    const popupEl = state.activePopup.getElement?.();
+    if (!popupEl) return;
+
+    const frameRect = els.mapContainer.getBoundingClientRect();
+    const pRect = popupEl.getBoundingClientRect();
+    if (frameRect.width <= 0 || frameRect.height <= 0 || pRect.width <= 0 || pRect.height <= 0) {
+      return;
+    }
+
+    const pad = 10;
+    let dx = 0;
+    let dy = 0;
+
+    if (pRect.left < frameRect.left + pad) {
+      dx = pRect.left - (frameRect.left + pad);
+    } else if (pRect.right > frameRect.right - pad) {
+      dx = pRect.right - (frameRect.right - pad);
+    }
+
+    if (pRect.top < frameRect.top + pad) {
+      dy = pRect.top - (frameRect.top + pad);
+    } else if (pRect.bottom > frameRect.bottom - pad) {
+      dy = pRect.bottom - (frameRect.bottom - pad);
+    }
+
+    if ((Math.abs(dx) > 1 || Math.abs(dy) > 1) && typeof state.map.panBy === 'function') {
+      state.map.panBy([dx, dy], { duration: 0 });
+    }
+  }
+
+  function getPopupMapPadding(containerHeight) {
+    const topPad =
+      containerHeight < 300
+        ? Math.min(115, Math.round(containerHeight * 0.56))
+        : Math.min(260, Math.round(containerHeight * 0.62));
+    return { top: topPad, bottom: 24, left: 16, right: 16 };
+  }
+
   function openPopupForLocation(loc, allSameCoord = null) {
-    if (!state.map || !loc?.geocoded) return;
+    if (!loc?.geocoded) return;
 
     state.selectedLocId = loc.id;
     document.querySelectorAll('.loc-card.is-selected').forEach((el) => el.classList.remove('is-selected'));
     const card = document.querySelector(`.loc-card[data-loc-id="${loc.id}"]`);
     if (card) card.classList.add('is-selected');
 
+    const venues =
+      allSameCoord && allSameCoord.length > 0
+        ? allSameCoord
+        : state.filteredLocations.filter((item) => item.geocoded && item.coordKey === loc.coordKey);
+    const resolvedVenues = venues.length > 0 ? venues : [loc];
+
+    renderSelectedCard(resolvedVenues);
+
+    if (!state.map) return;
+
     if (state.activePopup) {
       state.activePopup.remove();
       state.activePopup = null;
     }
 
-    const venues =
-      allSameCoord && allSameCoord.length > 0
-        ? allSameCoord
-        : state.filteredLocations.filter((item) => item.geocoded && item.coordKey === loc.coordKey);
-
-    const domContent = buildPopupDom(venues.length > 0 ? venues : [loc]);
+    const containerHeight = els.mapContainer?.clientHeight || 400;
+    const isShortCanvas = containerHeight < 300;
+    const domContent = isShortCanvas
+      ? buildCompactPopupDom(resolvedVenues)
+      : buildPopupDom(resolvedVenues);
 
     state.activePopup = new maplibregl.Popup({
       closeButton: true,
       closeOnClick: true,
+      anchor: 'bottom',
       offset: loc.isMainCenter ? 16 : 12,
       maxWidth: '340px',
     })
       .setLngLat([loc.lng, loc.lat])
       .setDOMContent(domContent)
       .addTo(state.map);
+
+    const popupContent = state.activePopup.getElement()?.querySelector('.maplibregl-popup-content');
+    if (popupContent) {
+      popupContent.style.maxBlockSize = `${Math.max(100, containerHeight - (isShortCanvas ? 56 : 84))}px`;
+      popupContent.style.overflowY = 'auto';
+    }
+
+    window.requestAnimationFrame(() => nudgePopupIntoView());
   }
 
   function fitMapToFiltered() {
@@ -1061,10 +1186,11 @@ function initLocationsDirectory() {
           if (selected && selected.geocoded) {
             if (state.pendingFocusId === selected.id) {
               state.pendingFocusId = null;
-              map.flyTo({
+              const containerHeight = els.mapContainer?.clientHeight || 400;
+              map.jumpTo({
                 center: [selected.lng, selected.lat],
                 zoom: selected.isMainCenter ? 14.5 : 14,
-                duration: prefersReducedMotion() ? 0 : 600,
+                padding: getPopupMapPadding(containerHeight),
               });
             }
             openPopupForLocation(selected);
@@ -1126,14 +1252,18 @@ function initLocationsDirectory() {
 
     if (state.map && state.styleLoaded) {
       state.pendingFocusId = null;
-      state.map.flyTo({
+      const containerHeight = els.mapContainer?.clientHeight || 400;
+      state.map.jumpTo({
         center: [loc.lng, loc.lat],
         zoom: loc.isMainCenter ? 14.5 : 14,
-        duration: prefersReducedMotion() ? 0 : 600,
+        padding: getPopupMapPadding(containerHeight),
       });
       openPopupForLocation(loc);
     } else if (state.map) {
       state.pendingFocusId = loc.id;
+      openPopupForLocation(loc);
+    } else {
+      openPopupForLocation(loc);
     }
   }
 

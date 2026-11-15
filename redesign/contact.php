@@ -283,6 +283,7 @@ require __DIR__ . '/includes/header.php';
                     name="email"
                     required
                     maxlength="254"
+                    inputmode="email"
                     autocomplete="email"
                     aria-describedby="contactEmailHint"
                     data-error="contactEmailError"
@@ -307,6 +308,7 @@ require __DIR__ . '/includes/header.php';
                     id="contactPhone"
                     name="phone"
                     maxlength="40"
+                    inputmode="tel"
                     autocomplete="tel"
                     aria-describedby="contactPhoneHint"
                     data-error="contactPhoneError"
@@ -355,6 +357,7 @@ require __DIR__ . '/includes/header.php';
                 <span class="form-hint" id="contactMessageHint">
                   Share preferred dates, group headcount, drop-off items, or questions (up to 5,000 characters).
                 </span>
+                <div class="field__meta" id="contactMessageCount">0 / 5,000 characters</div>
                 <textarea
                   class="field__control"
                   id="contactMessage"
@@ -366,7 +369,6 @@ require __DIR__ . '/includes/header.php';
                   data-error="contactMessageError"
                   aria-invalid="false"
                 ></textarea>
-                <div class="field__meta" id="contactMessageCount">0 / 5,000 characters</div>
                 <div class="field__error" id="contactMessageError" hidden>
                   <?= erc_icon('alert-triangle', ['width' => '16', 'height' => '16']) ?>
                   <span data-error-text></span>

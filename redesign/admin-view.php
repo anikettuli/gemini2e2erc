@@ -154,6 +154,7 @@ function erc_render_admin_gate(int $statusCode, string $heading, string $message
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light dark">
     <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/png" href="<?= e(erc_media_url('e2e2rc_LOGO.png')) ?>">
     <title><?= e($heading) ?> | Lions District 2-E2 ERC Admin</title>
     <link rel="stylesheet" href="/fonts/fonts.css">
     <link rel="stylesheet" href="/css/tokens.css">
@@ -1483,6 +1484,7 @@ $isCoexistence = erc_is_coexistence_mode();
     <meta name="color-scheme" content="light dark">
     <meta name="theme-color" content="#f9f7f2">
     <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/png" href="<?= e(erc_media_url('e2e2rc_LOGO.png')) ?>">
     <title>Admin Operations Console | Lions District 2-E2 ERC</title>
     <script>
         try {
@@ -1663,7 +1665,7 @@ $isCoexistence = erc_is_coexistence_mode();
                                 </div>
                                 <div class="field">
                                     <label for="ev_contact">Organizer Email</label>
-                                    <input type="email" id="ev_contact" name="contact" maxlength="254" value="<?= e($siteConfig['email']) ?>">
+                                    <input type="email" id="ev_contact" name="contact" maxlength="254" inputmode="email" autocomplete="email" value="<?= e($siteConfig['email']) ?>">
                                 </div>
                             </div>
 
@@ -1851,7 +1853,7 @@ $isCoexistence = erc_is_coexistence_mode();
 
                             <div class="field">
                                 <label for="loc_phone">Phone (optional)</label>
-                                <input type="tel" id="loc_phone" name="phone" maxlength="40" placeholder="(817) 555-0100">
+                                <input type="tel" id="loc_phone" name="phone" maxlength="40" inputmode="tel" autocomplete="tel" placeholder="(817) 555-0100">
                             </div>
 
                             <div class="form-actions">
@@ -2226,13 +2228,13 @@ $isCoexistence = erc_is_coexistence_mode();
                             <div class="field">
                                 <label for="global_email">Contact &amp; Inbound Notification Email <span aria-hidden="true">*</span></label>
                                 <p id="global_email_hint" class="field-hint">Displayed publicly on the website and used as the destination for contact inquiries and volunteer signup alerts.</p>
-                                <input type="email" id="global_email" name="global_email" required maxlength="254" value="<?= e($siteConfig['email']) ?>" aria-describedby="global_email_hint">
+                                <input type="email" id="global_email" name="global_email" required maxlength="254" inputmode="email" autocomplete="email" value="<?= e($siteConfig['email']) ?>" aria-describedby="global_email_hint">
                             </div>
 
                             <div class="field">
                                 <label for="global_phone">Public Phone Number <span aria-hidden="true">*</span></label>
                                 <p id="global_phone_hint" class="field-hint">Current normalized tel link: <span class="mono-num"><?= e($siteConfig['phoneLink']) ?></span></p>
-                                <input type="tel" id="global_phone" name="global_phone" required maxlength="40" value="<?= e($siteConfig['phone']) ?>" aria-describedby="global_phone_hint">
+                                <input type="tel" id="global_phone" name="global_phone" required maxlength="40" inputmode="tel" autocomplete="tel" value="<?= e($siteConfig['phone']) ?>" aria-describedby="global_phone_hint">
                             </div>
 
                             <div class="form-actions">

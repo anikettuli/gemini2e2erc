@@ -612,6 +612,14 @@ require __DIR__ . '/includes/header.php';
             </div>
           </div>
 
+          <section
+            id="loc-selected-card"
+            class="loc-selected-card"
+            aria-label="Selected drop-off location details"
+            aria-live="polite"
+            hidden
+          ></section>
+
           <ul class="loc-legend" aria-label="Map marker key">
             <li class="loc-legend-item">
               <span class="loc-legend-swatch loc-legend-swatch--hq" aria-hidden="true"></span>

@@ -88,6 +88,7 @@
     letter-spacing: -0.015em;
     color: var(--ink-primary);
     text-wrap: balance;
+    overflow-wrap: anywhere;
     margin-block: 0 1rem;
   }
 
@@ -100,6 +101,7 @@
     letter-spacing: -0.01em;
     color: var(--ink-primary);
     text-wrap: balance;
+    overflow-wrap: anywhere;
     margin-block: 0 0.75rem;
   }
 
@@ -111,6 +113,7 @@
     line-height: 1.25;
     color: var(--ink-primary);
     text-wrap: balance;
+    overflow-wrap: anywhere;
     margin-block: 0 0.5rem;
   }
 
@@ -193,7 +196,8 @@
     justify-content: center;
     gap: 0.5rem;
     min-block-size: 2.75rem;
-    padding: 0.625rem 1.25rem;
+    max-inline-size: 100%;
+    padding: 0.625rem min(1.25rem, 4vw);
     border-radius: var(--ed-radius-sm);
     border: 1.5px solid transparent;
     font-family: var(--font-sans);
@@ -203,8 +207,14 @@
     text-decoration: none;
     text-align: center;
     white-space: normal;
+    overflow-wrap: anywhere;
     cursor: pointer;
     touch-action: manipulation;
+  }
+
+  .ed-btn > * {
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
   }
 
   .ed-btn .erc-icon {
@@ -270,6 +280,14 @@
     color: var(--brand-primary-hover);
   }
 
+  .ed-dl dd .ed-inline-link {
+    display: inline-flex;
+    align-items: center;
+    min-inline-size: 2.75rem;
+    min-block-size: 2.75rem;
+    max-inline-size: 100%;
+  }
+
   .ed-page :is(a, button, summary, input, select, [tabindex="0"]):focus-visible {
     outline: 3px solid var(--focus-ring);
     outline-offset: 2px;
@@ -307,7 +325,7 @@
 
   @media (min-width: 56rem) {
     .ed-masthead__grid--split {
-      grid-template-columns: minmax(0, 1.35fr) minmax(17rem, 0.85fr);
+      grid-template-columns: minmax(0, 1.35fr) minmax(min(17rem, 42%), 0.85fr);
     }
   }
 
@@ -613,7 +631,7 @@
     background-color: var(--bg-surface);
     border: 1px solid var(--border-subtle);
     border-radius: var(--ed-radius-md);
-    padding: 1.375rem;
+    padding: min(1.375rem, 5vw);
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
@@ -880,10 +898,11 @@
 
   .ed-process-step {
     container-type: inline-size;
+    min-inline-size: 0;
     background-color: var(--bg-surface);
     border: 1px solid var(--border-subtle);
     border-radius: var(--ed-radius-md);
-    padding: 1.25rem;
+    padding: min(1.25rem, 5vw);
     display: flex;
     flex-direction: column;
     gap: 0.625rem;
@@ -893,6 +912,12 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    min-inline-size: 0;
+  }
+
+  .ed-step-head > * {
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
   }
 
   .ed-step-num {

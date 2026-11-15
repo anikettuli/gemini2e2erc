@@ -141,10 +141,11 @@
     display: flex;
     align-items: flex-start;
     gap: var(--space-3);
-    padding: var(--space-3);
+    padding: min(var(--space-3), 4vw);
     border-radius: var(--radius-md);
     background-color: var(--bg-subtle);
     border: 1px solid var(--border-subtle);
+    min-inline-size: 0;
   }
 
   .channel-item__icon {
@@ -164,7 +165,9 @@
     display: flex;
     flex-direction: column;
     gap: 0.125rem;
+    flex: 1 1 0%;
     min-inline-size: 0;
+    max-inline-size: 100%;
   }
 
   .channel-item__label {
@@ -173,10 +176,21 @@
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: var(--ink-muted);
+    overflow-wrap: anywhere;
   }
 
   .channel-item__value {
     font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  a.channel-item__value {
+    display: inline-grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: center;
+    min-inline-size: 2.75rem;
+    min-block-size: 2.75rem;
+    max-inline-size: 100%;
     overflow-wrap: anywhere;
   }
 
@@ -214,9 +228,11 @@
 
   .pdf-card__top {
     display: flex;
+    flex-wrap: wrap;
     align-items: flex-start;
     justify-content: space-between;
     gap: var(--space-3);
+    min-inline-size: 0;
   }
 
   .pdf-card__icon {
@@ -236,6 +252,7 @@
     flex-direction: column;
     gap: var(--space-2);
     flex: 1 0 auto;
+    min-inline-size: 0;
   }
 
   .pdf-card__title {
