@@ -1,7 +1,7 @@
 /**
- * Global shell behaviors: native <dialog closedby="any"> mobile drawer,
+ * Global v2 shell behaviors: native <dialog closedby="any"> mobile drawer,
  * Safari pointer-drag-safe light-dismiss fallback, zoom/overflow nav collapse guard,
- * and CSP-safe image fallbacks.
+ * CSP-safe image fallbacks, live Central Time ticker, and optical swatch easter egg.
  */
 
 let cachedTopLayerSupport;
@@ -119,12 +119,12 @@ function initMobileNavDrawer() {
 
 function initHeaderOverflowGuard() {
   const header = document.getElementById('siteHeader');
-  const headerInner = header ? header.querySelector('.site-header__inner') : null;
+  const capsule = header ? header.querySelector('.site-header__capsule') : null;
   const brand = header ? header.querySelector('.site-brand') : null;
   const nav = header ? header.querySelector('.site-nav') : null;
   const controls = header ? header.querySelector('.site-header__controls') : null;
 
-  if (!header || !headerInner || !brand || !nav || !controls || typeof ResizeObserver === 'undefined') {
+  if (!header || !capsule || !brand || !nav || !controls || typeof ResizeObserver === 'undefined') {
     return;
   }
 
@@ -147,7 +147,7 @@ function initHeaderOverflowGuard() {
         requiredNavWidth = Math.max(requiredNavWidth, nav.scrollWidth);
         const overflows =
           nav.scrollWidth > nav.clientWidth + 1 ||
-          headerInner.scrollWidth > headerInner.clientWidth + 1;
+          capsule.scrollWidth > capsule.clientWidth + 1;
         if (overflows) {
           header.setAttribute('data-nav-collapsed', 'true');
         }
@@ -156,7 +156,7 @@ function initHeaderOverflowGuard() {
     }
 
     const availableWidth =
-      headerInner.clientWidth - brand.getBoundingClientRect().width - controls.getBoundingClientRect().width - 48;
+      capsule.clientWidth - brand.getBoundingClientRect().width - controls.getBoundingClientRect().width - 48;
     if (requiredNavWidth > 0 && availableWidth > requiredNavWidth + 24) {
       header.removeAttribute('data-nav-collapsed');
     }
@@ -168,7 +168,7 @@ function initHeaderOverflowGuard() {
   };
 
   const observer = new ResizeObserver(scheduleCheck);
-  observer.observe(headerInner);
+  observer.observe(capsule);
   observer.observe(nav);
   observer.observe(brand);
   observer.observe(controls);
@@ -193,10 +193,84 @@ function initImageFallbacks() {
   );
 }
 
+function initCentralTimeTicker() {
+  const footerTicker = document.getElementById('footerLiveTicker');
+  const customClocks = document.querySelectorAll('[data-ct-clock]');
+  if (!footerTicker && customClocks.length === 0) return;
+
+  const updateTicker = () => {
+    try {
+      const now = new Date();
+      const partsFmt = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'America/Chicago',
+        weekday: 'short',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: false,
+      });
+      const parts = Object.fromEntries(partsFmt.formatToParts(now).map((p) => [p.type, p.value]));
+      const timeText = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'America/Chicago',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+      }).format(now);
+
+      const hour24 = Number.parseInt(parts.hour || '0', 10);
+      const isSat = (parts.weekday || '').toLowerCase() === 'sat';
+      const isOpen = isSat && hour24 >= 9 && hour24 < 15;
+      const status = isOpen ? 'OPEN NOW (SAT 9AM\u20133PM)' : 'SAT 9AM\u20133PM \u00B7 MON\u2013FRI BY APPT';
+
+      if (footerTicker) {
+        footerTicker.textContent = `WATAUGA TX \u00B7 ${timeText} CT \u00B7 ${status}`;
+      }
+      customClocks.forEach((el) => {
+        el.textContent = `WATAUGA TX ${timeText} CT`;
+      });
+    } catch {
+      // Keep static server-rendered fallback if Intl timeZone is unavailable.
+    }
+  };
+
+  updateTicker();
+  window.setInterval(updateTicker, 30000);
+}
+
+function initOpticalSwatchEasterEgg() {
+  const eggBtn = document.getElementById('opticalSwatchEgg');
+  if (!eggBtn) return;
+
+  const textEl = eggBtn.querySelector('.v2-easter-egg__text');
+  eggBtn.addEventListener('click', () => {
+    const nextUnlocked = eggBtn.getAttribute('aria-pressed') !== 'true';
+    eggBtn.setAttribute('aria-pressed', nextUnlocked ? 'true' : 'false');
+    eggBtn.classList.toggle('is-unlocked', nextUnlocked);
+    if (textEl) {
+      textEl.textContent = nextUnlocked ? '#7CFC06 \u00B7 20/20 SIGHT UNLOCKED' : '20/20 CALIBRATION';
+    }
+  });
+}
+
+function initBackToTopLinks() {
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  document.querySelectorAll('[data-scroll-top]').forEach((link) => {
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: reduceMotion.matches ? 'auto' : 'smooth',
+      });
+    });
+  });
+}
+
 function initShell() {
   initMobileNavDrawer();
   initHeaderOverflowGuard();
   initImageFallbacks();
+  initCentralTimeTicker();
+  initOpticalSwatchEasterEgg();
+  initBackToTopLinks();
 }
 
 if (document.readyState === 'loading') {

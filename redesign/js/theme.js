@@ -1,12 +1,13 @@
 /**
- * Dual light/dark theme manager matching BUILD_SPEC.md Section 2 & head.php FOUC bootstrap.
- * Uses localStorage key "erc-color-scheme" only when the user overrides the OS preference.
+ * v2 Dual-Theme & 3-State Cycler Manager (AUTO / LIGHT / DARK).
+ * Synchronizes localStorage['erc-color-scheme'], <meta name="color-scheme">,
+ * <html data-theme="...">, <meta name="theme-color">, and `erc:themechange`.
  */
 
 const STORAGE_KEY = 'erc-color-scheme';
 const THEME_COLORS = {
-  light: '#faf8f3',
-  dark: '#0d1522',
+  light: '#eaf0f8',
+  dark: '#0b1117',
 };
 
 const osDarkQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -36,10 +37,22 @@ function getOsTheme() {
   return osDarkQuery.matches ? 'dark' : 'light';
 }
 
-export function getResolvedTheme() {
+export function getThemePreference() {
   const stored = readStoredPreference();
   if (stored) {
     return stored;
+  }
+  const attr = document.documentElement.getAttribute('data-theme');
+  if (attr === 'light' || attr === 'dark') {
+    return attr;
+  }
+  return 'auto';
+}
+
+export function getResolvedTheme() {
+  const pref = getThemePreference();
+  if (pref === 'light' || pref === 'dark') {
+    return pref;
   }
   const metaScheme = document.querySelector('meta[name="color-scheme"]');
   const content = metaScheme ? metaScheme.getAttribute('content') : null;
@@ -49,12 +62,12 @@ export function getResolvedTheme() {
   return getOsTheme();
 }
 
-function syncThemeColorMeta(preference, resolved) {
+function syncThemeColorMeta(normalizedPref, resolved) {
   const metaLight = document.getElementById('metaThemeColorLight');
   const metaDark = document.getElementById('metaThemeColorDark');
   const genericThemeMeta = document.querySelector('meta[name="theme-color"]:not([media])');
 
-  if (preference === 'light' || preference === 'dark') {
+  if (normalizedPref === 'light' || normalizedPref === 'dark') {
     const hex = THEME_COLORS[resolved];
     if (metaLight) metaLight.setAttribute('content', hex);
     if (metaDark) metaDark.setAttribute('content', hex);
@@ -66,26 +79,48 @@ function syncThemeColorMeta(preference, resolved) {
   }
 }
 
-function syncToggleButton(resolved) {
+function syncToggleButton(prefMode, resolved) {
   const btn = document.getElementById('themeToggle');
   if (!btn) return;
-  const label = resolved === 'dark' ? 'Switch to light theme' : 'Switch to dark theme';
-  btn.setAttribute('aria-label', label);
-  btn.setAttribute('title', label);
+
+  const labelEl = document.getElementById('themeToggleLabel');
+  const glyphEl = btn.querySelector('.theme-toggle__glyph');
+
+  const modeUpper = prefMode === 'light' ? 'LIGHT' : prefMode === 'dark' ? 'DARK' : 'AUTO';
+  const nextUpper = prefMode === 'auto' ? 'LIGHT' : prefMode === 'light' ? 'DARK' : 'AUTO';
+
+  if (labelEl) {
+    labelEl.textContent = modeUpper;
+  }
+  if (glyphEl) {
+    glyphEl.textContent = prefMode === 'light' ? '\u2600' : prefMode === 'dark' ? '\u263E' : '\u25D0';
+  }
+
+  const ariaLabel = `Color theme: ${modeUpper} (${resolved}). Click to switch to ${nextUpper}.`;
+  btn.setAttribute('aria-label', ariaLabel);
+  btn.setAttribute('title', `Theme: ${modeUpper} — Click for ${nextUpper}`);
+  btn.setAttribute('data-theme-pref', prefMode);
   btn.setAttribute('data-resolved-theme', resolved);
 }
 
 export function applyColorScheme(preference, { dispatch = true } = {}) {
   const normalizedPref = preference === 'light' || preference === 'dark' ? preference : 'light dark';
-  const resolved = normalizedPref === 'light dark' ? getOsTheme() : normalizedPref;
+  const prefMode = normalizedPref === 'light dark' ? 'auto' : normalizedPref;
+  const resolved = prefMode === 'auto' ? getOsTheme() : prefMode;
 
   const metaScheme = document.querySelector('meta[name="color-scheme"]');
   if (metaScheme) {
     metaScheme.setAttribute('content', normalizedPref);
   }
 
+  if (prefMode === 'light' || prefMode === 'dark') {
+    document.documentElement.setAttribute('data-theme', prefMode);
+  } else {
+    document.documentElement.removeAttribute('data-theme');
+  }
+
   syncThemeColorMeta(normalizedPref, resolved);
-  syncToggleButton(resolved);
+  syncToggleButton(prefMode, resolved);
 
   if (dispatch) {
     window.dispatchEvent(
@@ -93,6 +128,7 @@ export function applyColorScheme(preference, { dispatch = true } = {}) {
         detail: {
           resolved,
           preference: normalizedPref,
+          mode: prefMode,
         },
       })
     );
@@ -100,15 +136,24 @@ export function applyColorScheme(preference, { dispatch = true } = {}) {
 }
 
 export function setThemePreference(nextTheme) {
-  const target = nextTheme === 'dark' ? 'dark' : 'light';
-  const osTheme = getOsTheme();
-
-  if (target === osTheme) {
+  if (nextTheme === 'auto' || nextTheme === 'light dark') {
     writeStoredPreference(null);
     applyColorScheme('light dark');
+    return;
+  }
+  const target = nextTheme === 'dark' ? 'dark' : 'light';
+  writeStoredPreference(target);
+  applyColorScheme(target);
+}
+
+function cycleThemePreference() {
+  const current = getThemePreference();
+  if (current === 'auto') {
+    setThemePreference('light');
+  } else if (current === 'light') {
+    setThemePreference('dark');
   } else {
-    writeStoredPreference(target);
-    applyColorScheme(target);
+    setThemePreference('auto');
   }
 }
 
@@ -118,11 +163,7 @@ function initThemeToggle() {
 
   const toggleBtn = document.getElementById('themeToggle');
   if (toggleBtn) {
-    toggleBtn.addEventListener('click', () => {
-      const currentResolved = getResolvedTheme();
-      const next = currentResolved === 'dark' ? 'light' : 'dark';
-      setThemePreference(next);
-    });
+    toggleBtn.addEventListener('click', cycleThemePreference);
   }
 
   osDarkQuery.addEventListener('change', () => {

@@ -161,3 +161,106 @@ function erc_icon(string $name, array $attrs = []): string
 
     return '<svg ' . implode(' ', $attrParts) . '>' . $icons[$name] . '</svg>';
 }
+
+/**
+ * Render an inline curved hand-drawn SVG arrow for pairing with `.v2-note` annotations.
+ *
+ * @param 'down-left'|'down-right'|'up-right'|'up-left' $direction
+ * @param array<string, string|int|float|bool|null> $attrs
+ */
+function erc_curved_arrow(string $direction = 'down-left', array $attrs = []): string
+{
+    $paths = [
+        'down-left'  => '<path d="M40 6 C26 6, 14 14, 9 30" /><path d="M5 23 L8.5 31.5 L17 27.5" />',
+        'down-right' => '<path d="M6 6 C20 6, 32 14, 37 30" /><path d="M29 27.5 L37.5 31.5 L41 23" />',
+        'up-right'   => '<path d="M6 32 C18 30, 30 22, 37 8" /><path d="M29 10 L37.5 6.5 L40 15.5" />',
+        'up-left'    => '<path d="M40 32 C28 30, 16 22, 9 8" /><path d="M6 15.5 L8.5 6.5 L17 10" />',
+    ];
+    $body = $paths[$direction] ?? $paths['down-left'];
+
+    $baseClass = 'v2-note__arrow v2-note__arrow--' . preg_replace('/[^a-z-]/', '', $direction);
+    if (isset($attrs['class']) && is_string($attrs['class']) && trim($attrs['class']) !== '') {
+        $attrs['class'] = $baseClass . ' ' . trim($attrs['class']);
+    } else {
+        $attrs['class'] = $baseClass;
+    }
+
+    $defaults = [
+        'xmlns'           => 'http://www.w3.org/2000/svg',
+        'width'           => '46',
+        'height'          => '38',
+        'viewBox'         => '0 0 46 38',
+        'fill'            => 'none',
+        'stroke'          => 'currentColor',
+        'stroke-width'    => '2',
+        'stroke-linecap'  => 'round',
+        'stroke-linejoin' => 'round',
+        'aria-hidden'     => 'true',
+        'focusable'       => 'false',
+    ];
+    $merged = array_merge($defaults, $attrs);
+
+    $attrParts = [];
+    foreach ($merged as $key => $value) {
+        if ($value === null || $value === false) {
+            continue;
+        }
+        $cleanKey = preg_replace('/[^a-zA-Z0-9:_-]/', '', (string) $key);
+        if ($cleanKey === '') {
+            continue;
+        }
+        $strVal = $value === true ? 'true' : (string) $value;
+        $attrParts[] = $cleanKey . '="' . htmlspecialchars($strVal, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '"';
+    }
+
+    return '<svg ' . implode(' ', $attrParts) . '>' . $body . '</svg>';
+}
+
+/**
+ * Render the optical lens reticle ring SVG used inside the `2E2` monogram badge.
+ *
+ * @param array<string, string|int|float|bool|null> $attrs
+ */
+function erc_optical_reticle(array $attrs = []): string
+{
+    $baseClass = 'v2-reticle-svg';
+    if (isset($attrs['class']) && is_string($attrs['class']) && trim($attrs['class']) !== '') {
+        $attrs['class'] = $baseClass . ' ' . trim($attrs['class']);
+    } else {
+        $attrs['class'] = $baseClass;
+    }
+
+    $defaults = [
+        'xmlns'       => 'http://www.w3.org/2000/svg',
+        'width'       => '36',
+        'height'      => '36',
+        'viewBox'     => '0 0 36 36',
+        'fill'        => 'none',
+        'aria-hidden' => 'true',
+        'focusable'   => 'false',
+    ];
+    $merged = array_merge($defaults, $attrs);
+
+    $attrParts = [];
+    foreach ($merged as $key => $value) {
+        if ($value === null || $value === false) {
+            continue;
+        }
+        $cleanKey = preg_replace('/[^a-zA-Z0-9:_-]/', '', (string) $key);
+        if ($cleanKey === '') {
+            continue;
+        }
+        $strVal = $value === true ? 'true' : (string) $value;
+        $attrParts[] = $cleanKey . '="' . htmlspecialchars($strVal, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '"';
+    }
+
+    $svgBody = '<circle cx="18" cy="18" r="16" stroke="currentColor" stroke-width="1.35" stroke-opacity="0.72" />'
+        . '<circle cx="18" cy="18" r="11.5" stroke="currentColor" stroke-width="0.9" stroke-dasharray="2.5 3" stroke-opacity="0.45" />'
+        . '<line x1="18" y1="0.5" x2="18" y2="5" stroke="currentColor" stroke-width="1.25" />'
+        . '<line x1="18" y1="31" x2="18" y2="35.5" stroke="currentColor" stroke-width="1.25" />'
+        . '<line x1="0.5" y1="18" x2="5" y2="18" stroke="currentColor" stroke-width="1.25" />'
+        . '<line x1="31" y1="18" x2="35.5" y2="18" stroke="currentColor" stroke-width="1.25" />'
+        . '<circle cx="29.5" cy="8.5" r="2.1" fill="var(--accent)" />';
+
+    return '<svg ' . implode(' ', $attrParts) . '>' . $svgBody . '</svg>';
+}

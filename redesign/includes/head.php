@@ -90,13 +90,13 @@ if (!empty($pageMeta['json_ld']) && is_array($pageMeta['json_ld'])) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" id="top">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="light dark">
-  <meta name="theme-color" id="metaThemeColorLight" content="#faf8f3" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" id="metaThemeColorDark" content="#0d1522" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" id="metaThemeColorLight" content="#eaf0f8" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" id="metaThemeColorDark" content="#0b1117" media="(prefers-color-scheme: dark)">
   <script<?= $inlineNonceAttr ?>>
   (function () {
     try {
@@ -104,11 +104,16 @@ if (!empty($pageMeta['json_ld']) && is_array($pageMeta['json_ld'])) {
       var metaScheme = document.querySelector('meta[name="color-scheme"]');
       var metaLight = document.getElementById('metaThemeColorLight');
       var metaDark = document.getElementById('metaThemeColorDark');
-      if (metaScheme && (pref === 'light' || pref === 'dark')) {
-        metaScheme.setAttribute('content', pref);
-        var resolvedHex = pref === 'dark' ? '#0d1522' : '#faf8f3';
+      if (pref === 'light' || pref === 'dark') {
+        document.documentElement.setAttribute('data-theme', pref);
+        if (metaScheme) {
+          metaScheme.setAttribute('content', pref);
+        }
+        var resolvedHex = pref === 'dark' ? '#0b1117' : '#eaf0f8';
         if (metaLight) { metaLight.setAttribute('content', resolvedHex); }
         if (metaDark) { metaDark.setAttribute('content', resolvedHex); }
+      } else {
+        document.documentElement.removeAttribute('data-theme');
       }
     } catch (e) {}
 <?php if ($slug === 'home'): ?>
@@ -152,8 +157,9 @@ if (!empty($pageMeta['json_ld']) && is_array($pageMeta['json_ld'])) {
   <meta name="twitter:image" content="<?= $headEscape($ogImageUrl) ?>">
   <link rel="icon" type="image/png" href="<?= $headEscape($mediaUrl('e2e2rc_LOGO.png')) ?>">
   <link rel="expect" href="#main-content" blocking="render">
-  <link rel="preload" href="/fonts/newsreader-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="/fonts/atkinson-hyperlegible-next-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/anton-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/inter-tight-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/martian-mono-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <?php if ($preloadImg !== ''): ?>
   <link rel="preload" href="<?= $headEscape($preloadImg) ?>" as="image" fetchpriority="high">
 <?php endif; ?>
