@@ -173,6 +173,13 @@ function initHeaderOverflowGuard() {
   observer.observe(brand);
   observer.observe(controls);
   observer.observe(document.documentElement);
+  if (typeof MutationObserver !== 'undefined') {
+    const rootStyleObserver = new MutationObserver(scheduleCheck);
+    rootStyleObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['style', 'class'],
+    });
+  }
   window.addEventListener('resize', scheduleCheck, { passive: true });
   document.fonts?.ready?.then(scheduleCheck);
   checkOverflow();

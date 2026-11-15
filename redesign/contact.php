@@ -64,7 +64,33 @@ $subjectCatalog = [
     ],
 ];
 
-$requestedSubject = trim((string) ($_GET['subject'] ?? $_GET['topic'] ?? ''));
+$subjectAliases = [
+    'volunteer' => 'volunteer',
+    'solo' => 'volunteer',
+    'group' => 'group-volunteer',
+    'groups' => 'group-volunteer',
+    'group-volunteer' => 'group-volunteer',
+    'donate' => 'donation-items',
+    'items' => 'donation-items',
+    'donation-items' => 'donation-items',
+    'money' => 'donation-money',
+    'donate-money' => 'donation-money',
+    'donation-money' => 'donation-money',
+    'bins' => 'need-collection-boxes',
+    'boxes' => 'need-collection-boxes',
+    'collection-boxes' => 'need-collection-boxes',
+    'need-collection-boxes' => 'need-collection-boxes',
+    'partnership' => 'partnership',
+    'partner' => 'partnership',
+    'mission' => 'partnership',
+    'missions' => 'partnership',
+    'awards' => 'partnership',
+    'question' => 'question',
+    'other' => 'other',
+];
+
+$requestedRaw = strtolower(trim((string) ($_GET['subject'] ?? $_GET['topic'] ?? '')));
+$requestedSubject = $subjectAliases[$requestedRaw] ?? $requestedRaw;
 $selectedSubject = array_key_exists($requestedSubject, $subjectCatalog) ? $requestedSubject : 'question';
 $initialRouteLabel = $subjectCatalog[$selectedSubject]['route'];
 
