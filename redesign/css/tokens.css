@@ -1,0 +1,360 @@
+@layer reset, tokens, base, layout, components, pages, utilities;
+
+@layer tokens {
+  :root {
+    /* Baseline dual color-scheme declaration: never hardcode light or dark as default */
+    color-scheme: light dark;
+
+    /* Typography */
+    --font-display: 'Newsreader Variable', Georgia, 'Times New Roman', serif;
+    --font-sans: 'Atkinson Hyperlegible Next Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-mono: 'Atkinson Hyperlegible Mono Variable', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+    /* Fluid accessible type scale (>= 16px body) */
+    --text-xs: 0.8125rem;
+    --text-sm: 0.875rem;
+    --text-base: 1rem;
+    --text-md: 1.125rem;
+    --text-lg: clamp(1.1875rem, 1.1rem + 0.45vw, 1.4375rem);
+    --text-xl: clamp(1.375rem, 1.2rem + 0.9vw, 1.875rem);
+    --text-2xl: clamp(1.75rem, 1.45rem + 1.5vw, 2.5rem);
+    --text-3xl: clamp(2.125rem, 1.65rem + 2.3vw, 3.25rem);
+
+    --leading-tight: 1.15;
+    --leading-snug: 1.32;
+    --leading-normal: 1.6;
+    --leading-relaxed: 1.72;
+
+    /* Spacing scale (4px rhythm) */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.25rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+    --space-10: 2.5rem;
+    --space-12: 3rem;
+    --space-16: 4rem;
+    --space-20: 5rem;
+
+    /* Layout & Radii */
+    --container-max: 76rem;
+    --container-narrow: 54rem;
+    --prose-max: 66ch;
+    --header-height: 4.75rem;
+    --gutter: clamp(1rem, 3vw, 2rem);
+
+    --radius-sm: 0.375rem;
+    --radius-md: 0.625rem;
+    --radius-lg: 1rem;
+    --radius-xl: 1.5rem;
+    --radius-pill: 9999px;
+
+    /* Motion */
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    --duration-fast: 150ms;
+    --duration-base: 240ms;
+    --duration-slow: 340ms;
+
+    /* Raw OKLCH Light & Dark Palette Pairs (BUILD_SPEC.md Section 2) */
+    --p-bg-canvas-light: oklch(98.4% 0.006 85);
+    --p-bg-canvas-dark: oklch(15.5% 0.022 254);
+
+    --p-bg-surface-light: oklch(99.7% 0.002 90);
+    --p-bg-surface-dark: oklch(20.5% 0.026 254);
+
+    --p-bg-subtle-light: oklch(95.4% 0.011 85);
+    --p-bg-subtle-dark: oklch(24.5% 0.028 254);
+
+    --p-bg-tint-light: oklch(94.2% 0.024 246);
+    --p-bg-tint-dark: oklch(25.5% 0.048 250);
+
+    --p-ink-primary-light: oklch(20.5% 0.024 252);
+    --p-ink-primary-dark: oklch(95.5% 0.008 90);
+
+    --p-ink-secondary-light: oklch(36.0% 0.026 250);
+    --p-ink-secondary-dark: oklch(83.0% 0.015 248);
+
+    --p-ink-muted-light: oklch(45.0% 0.022 250);
+    --p-ink-muted-dark: oklch(73.0% 0.018 248);
+
+    --p-border-subtle-light: oklch(86.5% 0.014 248);
+    --p-border-subtle-dark: oklch(34.5% 0.024 252);
+
+    --p-border-strong-light: oklch(60.0% 0.025 250);
+    --p-border-strong-dark: oklch(58.0% 0.028 250);
+
+    --p-brand-primary-light: oklch(38.0% 0.145 256);
+    --p-brand-primary-dark: oklch(75.0% 0.125 245);
+
+    --p-brand-primary-hover-light: oklch(32.0% 0.145 256);
+    --p-brand-primary-hover-dark: oklch(81.0% 0.120 245);
+
+    --p-on-brand-primary-light: oklch(99.2% 0.004 90);
+    --p-on-brand-primary-dark: oklch(15.0% 0.030 254);
+
+    --p-brand-gold-fill-light: oklch(82.0% 0.145 86);
+    --p-brand-gold-fill-dark: oklch(79.0% 0.140 86);
+
+    --p-on-brand-gold-light: oklch(20.0% 0.035 70);
+    --p-on-brand-gold-dark: oklch(17.5% 0.035 70);
+
+    --p-brand-gold-ink-light: oklch(43.5% 0.120 72);
+    --p-brand-gold-ink-dark: oklch(82.5% 0.135 84);
+
+    --p-brand-emerald-light: oklch(43.0% 0.125 162);
+    --p-brand-emerald-dark: oklch(73.0% 0.130 162);
+
+    --p-on-brand-emerald-light: oklch(99.0% 0.005 160);
+    --p-on-brand-emerald-dark: oklch(15.5% 0.030 162);
+
+    --p-status-success-bg-light: oklch(94.5% 0.035 152);
+    --p-status-success-bg-dark: oklch(24.0% 0.045 152);
+
+    --p-status-success-ink-light: oklch(36.5% 0.125 152);
+    --p-status-success-ink-dark: oklch(81.0% 0.130 152);
+
+    --p-status-warn-bg-light: oklch(95.5% 0.045 84);
+    --p-status-warn-bg-dark: oklch(25.0% 0.045 75);
+
+    --p-status-warn-ink-light: oklch(41.5% 0.130 70);
+    --p-status-warn-ink-dark: oklch(83.5% 0.135 80);
+
+    --p-status-danger-bg-light: oklch(95.0% 0.032 25);
+    --p-status-danger-bg-dark: oklch(25.0% 0.055 25);
+
+    --p-status-danger-ink-light: oklch(44.0% 0.185 25);
+    --p-status-danger-ink-dark: oklch(79.0% 0.155 25);
+
+    --p-focus-ring-light: oklch(42.0% 0.175 256);
+    --p-focus-ring-dark: oklch(82.0% 0.145 86);
+
+    /* Semantic Tokens via light-dark() */
+    --bg-canvas: light-dark(var(--p-bg-canvas-light), var(--p-bg-canvas-dark));
+    --bg-surface: light-dark(var(--p-bg-surface-light), var(--p-bg-surface-dark));
+    --bg-subtle: light-dark(var(--p-bg-subtle-light), var(--p-bg-subtle-dark));
+    --bg-tint: light-dark(var(--p-bg-tint-light), var(--p-bg-tint-dark));
+
+    --ink-primary: light-dark(var(--p-ink-primary-light), var(--p-ink-primary-dark));
+    --ink-secondary: light-dark(var(--p-ink-secondary-light), var(--p-ink-secondary-dark));
+    --ink-muted: light-dark(var(--p-ink-muted-light), var(--p-ink-muted-dark));
+
+    --border-subtle: light-dark(var(--p-border-subtle-light), var(--p-border-subtle-dark));
+    --border-strong: light-dark(var(--p-border-strong-light), var(--p-border-strong-dark));
+
+    --brand-primary: light-dark(var(--p-brand-primary-light), var(--p-brand-primary-dark));
+    --brand-primary-hover: light-dark(var(--p-brand-primary-hover-light), var(--p-brand-primary-hover-dark));
+    --on-brand-primary: light-dark(var(--p-on-brand-primary-light), var(--p-on-brand-primary-dark));
+
+    --brand-gold-fill: light-dark(var(--p-brand-gold-fill-light), var(--p-brand-gold-fill-dark));
+    --on-brand-gold: light-dark(var(--p-on-brand-gold-light), var(--p-on-brand-gold-dark));
+    --brand-gold-ink: light-dark(var(--p-brand-gold-ink-light), var(--p-brand-gold-ink-dark));
+
+    --brand-emerald: light-dark(var(--p-brand-emerald-light), var(--p-brand-emerald-dark));
+    --on-brand-emerald: light-dark(var(--p-on-brand-emerald-light), var(--p-on-brand-emerald-dark));
+
+    --status-success-bg: light-dark(var(--p-status-success-bg-light), var(--p-status-success-bg-dark));
+    --status-success-ink: light-dark(var(--p-status-success-ink-light), var(--p-status-success-ink-dark));
+
+    --status-warn-bg: light-dark(var(--p-status-warn-bg-light), var(--p-status-warn-bg-dark));
+    --status-warn-ink: light-dark(var(--p-status-warn-ink-light), var(--p-status-warn-ink-dark));
+
+    --status-danger-bg: light-dark(var(--p-status-danger-bg-light), var(--p-status-danger-bg-dark));
+    --status-danger-ink: light-dark(var(--p-status-danger-ink-light), var(--p-status-danger-ink-dark));
+
+    --focus-ring: light-dark(var(--p-focus-ring-light), var(--p-focus-ring-dark));
+
+    /* Elevation color components (color-only inside light-dark()) */
+    --shadow-sm-ambient: light-dark(oklch(20.5% 0.024 252 / 0.06), oklch(5% 0.02 254 / 0.45));
+    --shadow-sm-key: light-dark(oklch(20.5% 0.024 252 / 0.08), oklch(5% 0.02 254 / 0.35));
+    --shadow-md-ambient: light-dark(oklch(20.5% 0.024 252 / 0.09), oklch(5% 0.02 254 / 0.6));
+    --shadow-md-key: light-dark(oklch(20.5% 0.024 252 / 0.05), oklch(5% 0.02 254 / 0.4));
+    --shadow-hairline: light-dark(oklch(100% 0 0 / 0), oklch(95.5% 0.008 90 / 0.07));
+    --backdrop-scrim: light-dark(oklch(15.5% 0.022 254 / 0.48), oklch(6% 0.02 254 / 0.72));
+
+    --shadow-sm: 0 1px 2px var(--shadow-sm-ambient), 0 1px 3px var(--shadow-sm-key), inset 0 1px 0 var(--shadow-hairline);
+    --shadow-md: 0 8px 20px -4px var(--shadow-md-ambient), 0 2px 6px var(--shadow-md-key), inset 0 1px 0 var(--shadow-hairline);
+    --shadow-lg: 0 18px 40px -8px var(--shadow-md-ambient), 0 4px 12px var(--shadow-md-key), inset 0 1px 0 var(--shadow-hairline);
+  }
+
+  /* Explicit scheme override driven by <meta name="color-scheme"> */
+  :root:has(> head > meta[name="color-scheme"][content="dark"]) {
+    color-scheme: dark;
+  }
+
+  :root:has(> head > meta[name="color-scheme"][content="light"]) {
+    color-scheme: light;
+  }
+
+  /* Fallback for clients lacking CSS light-dark() */
+  @supports not (color: light-dark(white, black)) {
+    :root {
+      --bg-canvas: var(--p-bg-canvas-light);
+      --bg-surface: var(--p-bg-surface-light);
+      --bg-subtle: var(--p-bg-subtle-light);
+      --bg-tint: var(--p-bg-tint-light);
+      --ink-primary: var(--p-ink-primary-light);
+      --ink-secondary: var(--p-ink-secondary-light);
+      --ink-muted: var(--p-ink-muted-light);
+      --border-subtle: var(--p-border-subtle-light);
+      --border-strong: var(--p-border-strong-light);
+      --brand-primary: var(--p-brand-primary-light);
+      --brand-primary-hover: var(--p-brand-primary-hover-light);
+      --on-brand-primary: var(--p-on-brand-primary-light);
+      --brand-gold-fill: var(--p-brand-gold-fill-light);
+      --on-brand-gold: var(--p-on-brand-gold-light);
+      --brand-gold-ink: var(--p-brand-gold-ink-light);
+      --brand-emerald: var(--p-brand-emerald-light);
+      --on-brand-emerald: var(--p-on-brand-emerald-light);
+      --status-success-bg: var(--p-status-success-bg-light);
+      --status-success-ink: var(--p-status-success-ink-light);
+      --status-warn-bg: var(--p-status-warn-bg-light);
+      --status-warn-ink: var(--p-status-warn-ink-light);
+      --status-danger-bg: var(--p-status-danger-bg-light);
+      --status-danger-ink: var(--p-status-danger-ink-light);
+      --focus-ring: var(--p-focus-ring-light);
+      --shadow-sm-ambient: oklch(20.5% 0.024 252 / 0.06);
+      --shadow-sm-key: oklch(20.5% 0.024 252 / 0.08);
+      --shadow-md-ambient: oklch(20.5% 0.024 252 / 0.09);
+      --shadow-md-key: oklch(20.5% 0.024 252 / 0.05);
+      --shadow-hairline: oklch(100% 0 0 / 0);
+      --backdrop-scrim: oklch(15.5% 0.022 254 / 0.48);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-canvas: var(--p-bg-canvas-dark);
+        --bg-surface: var(--p-bg-surface-dark);
+        --bg-subtle: var(--p-bg-subtle-dark);
+        --bg-tint: var(--p-bg-tint-dark);
+        --ink-primary: var(--p-ink-primary-dark);
+        --ink-secondary: var(--p-ink-secondary-dark);
+        --ink-muted: var(--p-ink-muted-dark);
+        --border-subtle: var(--p-border-subtle-dark);
+        --border-strong: var(--p-border-strong-dark);
+        --brand-primary: var(--p-brand-primary-dark);
+        --brand-primary-hover: var(--p-brand-primary-hover-dark);
+        --on-brand-primary: var(--p-on-brand-primary-dark);
+        --brand-gold-fill: var(--p-brand-gold-fill-dark);
+        --on-brand-gold: var(--p-on-brand-gold-dark);
+        --brand-gold-ink: var(--p-brand-gold-ink-dark);
+        --brand-emerald: var(--p-brand-emerald-dark);
+        --on-brand-emerald: var(--p-on-brand-emerald-dark);
+        --status-success-bg: var(--p-status-success-bg-dark);
+        --status-success-ink: var(--p-status-success-ink-dark);
+        --status-warn-bg: var(--p-status-warn-bg-dark);
+        --status-warn-ink: var(--p-status-warn-ink-dark);
+        --status-danger-bg: var(--p-status-danger-bg-dark);
+        --status-danger-ink: var(--p-status-danger-ink-dark);
+        --focus-ring: var(--p-focus-ring-dark);
+        --shadow-sm-ambient: oklch(5% 0.02 254 / 0.45);
+        --shadow-sm-key: oklch(5% 0.02 254 / 0.35);
+        --shadow-md-ambient: oklch(5% 0.02 254 / 0.6);
+        --shadow-md-key: oklch(5% 0.02 254 / 0.4);
+        --shadow-hairline: oklch(95.5% 0.008 90 / 0.07);
+        --backdrop-scrim: oklch(6% 0.02 254 / 0.72);
+      }
+    }
+
+    :root:has(> head > meta[name="color-scheme"][content="dark"]) {
+      --bg-canvas: var(--p-bg-canvas-dark);
+      --bg-surface: var(--p-bg-surface-dark);
+      --bg-subtle: var(--p-bg-subtle-dark);
+      --bg-tint: var(--p-bg-tint-dark);
+      --ink-primary: var(--p-ink-primary-dark);
+      --ink-secondary: var(--p-ink-secondary-dark);
+      --ink-muted: var(--p-ink-muted-dark);
+      --border-subtle: var(--p-border-subtle-dark);
+      --border-strong: var(--p-border-strong-dark);
+      --brand-primary: var(--p-brand-primary-dark);
+      --brand-primary-hover: var(--p-brand-primary-hover-dark);
+      --on-brand-primary: var(--p-on-brand-primary-dark);
+      --brand-gold-fill: var(--p-brand-gold-fill-dark);
+      --on-brand-gold: var(--p-on-brand-gold-dark);
+      --brand-gold-ink: var(--p-brand-gold-ink-dark);
+      --brand-emerald: var(--p-brand-emerald-dark);
+      --on-brand-emerald: var(--p-on-brand-emerald-dark);
+      --status-success-bg: var(--p-status-success-bg-dark);
+      --status-success-ink: var(--p-status-success-ink-dark);
+      --status-warn-bg: var(--p-status-warn-bg-dark);
+      --status-warn-ink: var(--p-status-warn-ink-dark);
+      --status-danger-bg: var(--p-status-danger-bg-dark);
+      --status-danger-ink: var(--p-status-danger-ink-dark);
+      --focus-ring: var(--p-focus-ring-dark);
+      --shadow-sm-ambient: oklch(5% 0.02 254 / 0.45);
+      --shadow-sm-key: oklch(5% 0.02 254 / 0.35);
+      --shadow-md-ambient: oklch(5% 0.02 254 / 0.6);
+      --shadow-md-key: oklch(5% 0.02 254 / 0.4);
+      --shadow-hairline: oklch(95.5% 0.008 90 / 0.07);
+      --backdrop-scrim: oklch(6% 0.02 254 / 0.72);
+    }
+
+    :root:has(> head > meta[name="color-scheme"][content="light"]) {
+      --bg-canvas: var(--p-bg-canvas-light);
+      --bg-surface: var(--p-bg-surface-light);
+      --bg-subtle: var(--p-bg-subtle-light);
+      --bg-tint: var(--p-bg-tint-light);
+      --ink-primary: var(--p-ink-primary-light);
+      --ink-secondary: var(--p-ink-secondary-light);
+      --ink-muted: var(--p-ink-muted-light);
+      --border-subtle: var(--p-border-subtle-light);
+      --border-strong: var(--p-border-strong-light);
+      --brand-primary: var(--p-brand-primary-light);
+      --brand-primary-hover: var(--p-brand-primary-hover-light);
+      --on-brand-primary: var(--p-on-brand-primary-light);
+      --brand-gold-fill: var(--p-brand-gold-fill-light);
+      --on-brand-gold: var(--p-on-brand-gold-light);
+      --brand-gold-ink: var(--p-brand-gold-ink-light);
+      --brand-emerald: var(--p-brand-emerald-light);
+      --on-brand-emerald: var(--p-on-brand-emerald-light);
+      --status-success-bg: var(--p-status-success-bg-light);
+      --status-success-ink: var(--p-status-success-ink-light);
+      --status-warn-bg: var(--p-status-warn-bg-light);
+      --status-warn-ink: var(--p-status-warn-ink-light);
+      --status-danger-bg: var(--p-status-danger-bg-light);
+      --status-danger-ink: var(--p-status-danger-ink-light);
+      --focus-ring: var(--p-focus-ring-light);
+      --shadow-sm-ambient: oklch(20.5% 0.024 252 / 0.06);
+      --shadow-sm-key: oklch(20.5% 0.024 252 / 0.08);
+      --shadow-md-ambient: oklch(20.5% 0.024 252 / 0.09);
+      --shadow-md-key: oklch(20.5% 0.024 252 / 0.05);
+      --shadow-hairline: oklch(100% 0 0 / 0);
+      --backdrop-scrim: oklch(15.5% 0.022 254 / 0.48);
+    }
+  }
+
+  /* Windows High Contrast / Forced Colors Mode */
+  @media (forced-colors: active) {
+    :root {
+      --bg-canvas: Canvas;
+      --bg-surface: Canvas;
+      --bg-subtle: Canvas;
+      --bg-tint: Canvas;
+      --ink-primary: CanvasText;
+      --ink-secondary: CanvasText;
+      --ink-muted: CanvasText;
+      --border-subtle: CanvasText;
+      --border-strong: CanvasText;
+      --brand-primary: LinkText;
+      --brand-primary-hover: Highlight;
+      --on-brand-primary: HighlightText;
+      --brand-gold-fill: Highlight;
+      --on-brand-gold: HighlightText;
+      --brand-gold-ink: LinkText;
+      --brand-emerald: Highlight;
+      --on-brand-emerald: HighlightText;
+      --status-success-bg: Canvas;
+      --status-success-ink: CanvasText;
+      --status-warn-bg: Canvas;
+      --status-warn-ink: CanvasText;
+      --status-danger-bg: Canvas;
+      --status-danger-ink: CanvasText;
+      --focus-ring: Highlight;
+      --shadow-sm: none;
+      --shadow-md: none;
+      --shadow-lg: none;
+    }
+  }
+}
