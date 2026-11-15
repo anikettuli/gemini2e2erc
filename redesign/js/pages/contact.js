@@ -1,9 +1,11 @@
 /**
  * Progressive enhancement for /contact:
- * - Attaches accessible blur/submit validation via forms.js
- * - Handles dual-mode /send-email.php responses (JSON or followed PRG redirect)
- * - Prevents double-submit and preserves inputs on error
- * - Live message character counter and Watauga address copy helper
+ * - Accessible blur/submit validation via forms.js
+ * - Dual-mode /send-email.php responses (JSON or followed PRG redirect)
+ * - 8-category pill selector synced to dynamic routing telemetry + REQ-2E2 status badge
+ * - Live message character counter above textarea#contactMessage
+ * - One-click address & email copy helpers
+ * - Interactive "BEFORE YOU ASK" FAQ review queue with STAMP ALL + UNDO
  */
 
 import { initFormValidation, validateForm } from '/js/forms.js';
@@ -34,7 +36,7 @@ function renderAlert(alertEl, { type, title, message }) {
   if (iconSlot) {
     const tplId = isSuccess ? 'tplContactIconSuccess' : 'tplContactIconError';
     const tpl = document.getElementById(tplId);
-    iconSlot.innerHTML = '';
+    iconSlot.textContent = '';
     if (tpl instanceof HTMLTemplateElement) {
       iconSlot.appendChild(tpl.content.cloneNode(true));
     }
@@ -60,19 +62,20 @@ function initMessageCounter(textarea, counterEl) {
   update();
 }
 
-function initCopyAddress() {
-  const btn = document.getElementById('copyCenterAddressBtn');
-  const feedback = document.getElementById('copyCenterFeedback');
+function bindCopyButton(btnId, feedbackId, copiedLabel, fallbackPrefix) {
+  const btn = document.getElementById(btnId);
+  const feedback = document.getElementById(feedbackId);
   if (!btn || !feedback) return;
 
-  const address = btn.getAttribute('data-copy-text') || '5621 Bunker Blvd, Watauga, TX 76148';
+  const text = btn.getAttribute('data-copy-text') || '';
+  if (!text) return;
   let timer = 0;
 
   btn.addEventListener('click', async () => {
     let copied = false;
     if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
       try {
-        await navigator.clipboard.writeText(address);
+        await navigator.clipboard.writeText(text);
         copied = true;
       } catch {
         copied = false;
@@ -80,17 +83,163 @@ function initCopyAddress() {
     }
 
     if (timer) window.clearTimeout(timer);
-    feedback.textContent = copied
-      ? 'Address copied to clipboard.'
-      : 'Copy unavailable; select 5621 Bunker Blvd, Watauga, TX 76148 above.';
+    feedback.textContent = copied ? copiedLabel : `${fallbackPrefix} ${text}`;
     timer = window.setTimeout(() => {
       feedback.textContent = '';
     }, 4500);
   });
 }
 
+function initTopicRouting(form) {
+  const routingEl = document.getElementById('dispatchRoutingValue');
+  if (!form || !routingEl) return;
+
+  const syncRoute = () => {
+    const checked = form.querySelector('input[name="subject"]:checked');
+    if (checked instanceof HTMLInputElement) {
+      const route = checked.getAttribute('data-route-label');
+      if (route) {
+        routingEl.textContent = route;
+      }
+    }
+  };
+
+  form.addEventListener('change', (event) => {
+    const target = event.target;
+    if (target instanceof HTMLInputElement && target.name === 'subject') {
+      syncRoute();
+    }
+  });
+
+  syncRoute();
+}
+
+function setConsoleState(stateText) {
+  const badge = document.getElementById('dispatchStateBadge');
+  const label = document.getElementById('dispatchStateText');
+  if (!badge || !label) return;
+  label.textContent = stateText;
+  badge.classList.toggle('is-sent', stateText === 'SENT');
+}
+
+function initFaqReviewQueue() {
+  const list = document.getElementById('faqQueueList');
+  const clearedEl = document.getElementById('faqClearedCount');
+  const pendingEl = document.getElementById('faqPendingCount');
+  const stampBtn = document.getElementById('faqStampAllBtn');
+  const stampLabel = document.getElementById('faqStampAllLabel');
+  const toastEl = document.getElementById('faqStampToast');
+  const toastMsg = document.getElementById('faqStampToastMsg');
+  const undoBtn = document.getElementById('faqUndoBtn');
+
+  if (!list || !clearedEl || !pendingEl) return;
+
+  const items = Array.from(list.querySelectorAll('details.faq-item'));
+  if (items.length === 0) return;
+
+  let previousSnapshot = null;
+
+  const padTwo = (n) => String(n).padStart(2, '0');
+
+  const syncQueueCounters = () => {
+    let clearedCount = 0;
+    for (const item of items) {
+      const isCleared = item.dataset.cleared === 'true';
+      if (isCleared) clearedCount += 1;
+      const badge = item.querySelector('[data-faq-status]');
+      if (badge) {
+        badge.textContent = isCleared ? 'CLEARED' : 'PENDING';
+      }
+    }
+    const pendingCount = items.length - clearedCount;
+    clearedEl.textContent = padTwo(clearedCount);
+    pendingEl.textContent = padTwo(pendingCount);
+
+    if (stampLabel && stampBtn) {
+      const allCleared = pendingCount === 0;
+      stampLabel.textContent = allCleared ? 'ALL CLEARED' : 'STAMP ALL';
+      stampBtn.setAttribute('aria-pressed', allCleared ? 'true' : 'false');
+    }
+  };
+
+  items.forEach((item) => {
+    item.addEventListener('toggle', () => {
+      if (item.open && item.dataset.cleared !== 'true') {
+        item.dataset.cleared = 'true';
+        syncQueueCounters();
+      }
+    });
+  });
+
+  if (stampBtn) {
+    stampBtn.addEventListener('click', () => {
+      const allAlreadyCleared = items.every((item) => item.dataset.cleared === 'true');
+      if (allAlreadyCleared) {
+        items.forEach((item) => {
+          item.dataset.cleared = 'false';
+          item.classList.remove('is-stamped');
+        });
+        if (toastEl) toastEl.hidden = true;
+        previousSnapshot = null;
+        syncQueueCounters();
+        return;
+      }
+
+      previousSnapshot = items.map((item) => item.dataset.cleared === 'true');
+      items.forEach((item) => {
+        item.dataset.cleared = 'true';
+        item.classList.remove('is-stamped');
+        void item.offsetWidth;
+        item.classList.add('is-stamped');
+      });
+      syncQueueCounters();
+
+      if (toastMsg) {
+        toastMsg.textContent = `RUBBER STAMP DETECTED: all ${items.length} questions cleared in one click.`;
+      }
+      if (toastEl) {
+        toastEl.hidden = false;
+      }
+    });
+  }
+
+  if (undoBtn) {
+    undoBtn.addEventListener('click', () => {
+      if (Array.isArray(previousSnapshot)) {
+        items.forEach((item, idx) => {
+          item.dataset.cleared = previousSnapshot[idx] ? 'true' : 'false';
+          item.classList.remove('is-stamped');
+        });
+      } else {
+        items.forEach((item) => {
+          item.dataset.cleared = item.open ? 'true' : 'false';
+          item.classList.remove('is-stamped');
+        });
+      }
+      previousSnapshot = null;
+      if (toastEl) toastEl.hidden = true;
+      syncQueueCounters();
+      stampBtn?.focus();
+    });
+  }
+
+  syncQueueCounters();
+}
+
 function initContactPage() {
-  initCopyAddress();
+  bindCopyButton(
+    'copyCenterAddressBtn',
+    'copyCenterFeedback',
+    'Address copied: 5621 Bunker Blvd, Watauga, TX 76148.',
+    'Select:'
+  );
+  bindCopyButton(
+    'copyEmailAddressBtn',
+    'copyEmailFeedback',
+    'Copied!',
+    'Email:'
+  );
+  initFaqReviewQueue();
 
   const form = document.getElementById('contactForm');
   const alertEl = document.getElementById('contactFormAlert');
@@ -103,9 +252,14 @@ function initContactPage() {
 
   initFormValidation(form);
   initMessageCounter(messageField, counterEl);
+  initTopicRouting(form);
+
+  if (alertEl && !alertEl.hidden && alertEl.classList.contains('callout--success')) {
+    setConsoleState('SENT');
+  }
 
   let isSubmitting = false;
-  const defaultLabel = submitLabel ? submitLabel.textContent : 'Send Inquiry';
+  const defaultLabel = submitLabel ? submitLabel.textContent : 'SEND DISPATCH';
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -116,12 +270,13 @@ function initContactPage() {
     }
 
     isSubmitting = true;
+    setConsoleState('SENDING');
     if (submitBtn) {
       submitBtn.disabled = true;
       submitBtn.setAttribute('aria-busy', 'true');
     }
     if (submitLabel) {
-      submitLabel.textContent = 'Sending inquiry…';
+      submitLabel.textContent = 'TRANSMITTING...';
     }
 
     try {
@@ -148,9 +303,10 @@ function initContactPage() {
       if (contentType.includes('application/json')) {
         const data = await response.json();
         if (response.ok && data && data.success) {
+          setConsoleState('SENT');
           renderAlert(alertEl, {
             type: 'success',
-            title: 'Inquiry sent',
+            title: 'Dispatch transmitted',
             message:
               data.message ||
               'Thank you for reaching out. Our volunteers usually respond within 24 hours.',
@@ -163,13 +319,15 @@ function initContactPage() {
           if (messageField && counterEl) {
             messageField.dispatchEvent(new Event('input'));
           }
+          initTopicRouting(form);
           return;
         }
 
+        setConsoleState('DRAFT');
         const reason = data && typeof data.reason === 'string' ? data.reason : '';
         renderAlert(alertEl, {
           type: 'error',
-          title: 'Could not send inquiry',
+          title: 'Dispatch not delivered',
           message:
             (data && data.message) ||
             REASON_MESSAGES[reason] ||
@@ -178,17 +336,16 @@ function initContactPage() {
         return;
       }
 
-      // PRG redirect fallback handled cleanly when fetch follows 302/303 to ?status=...
       const resolvedUrl = new URL(response.url || window.location.href, window.location.href);
       const status = resolvedUrl.searchParams.get('status');
       const reason = resolvedUrl.searchParams.get('reason') || '';
 
       if (status === 'success') {
+        setConsoleState('SENT');
         renderAlert(alertEl, {
           type: 'success',
-          title: 'Inquiry sent',
-          message:
-            'Thank you for reaching out. Our volunteers usually respond within 24 hours.',
+          title: 'Dispatch transmitted',
+          message: 'Thank you for reaching out. Our volunteers usually respond within 24 hours.',
         });
         form.reset();
         form.querySelectorAll('[aria-invalid]').forEach((el) => {
@@ -198,15 +355,18 @@ function initContactPage() {
         if (messageField && counterEl) {
           messageField.dispatchEvent(new Event('input'));
         }
+        initTopicRouting(form);
       } else if (status === 'error') {
+        setConsoleState('DRAFT');
         renderAlert(alertEl, {
           type: 'error',
-          title: 'Could not send inquiry',
+          title: 'Dispatch not delivered',
           message:
             REASON_MESSAGES[reason] ||
             'We could not send your message. Please verify your entries or contact us directly.',
         });
       } else if (!response.ok) {
+        setConsoleState('DRAFT');
         renderAlert(alertEl, {
           type: 'error',
           title: 'Unable to send message',
@@ -214,14 +374,17 @@ function initContactPage() {
             'The server could not process your request right now. Please contact us directly by phone or email.',
         });
       } else {
+        setConsoleState('SENT');
         renderAlert(alertEl, {
           type: 'success',
-          title: 'Inquiry submitted',
+          title: 'Dispatch submitted',
           message: 'Thank you for contacting the District 2-E2 Eyeglass Recycling Center.',
         });
         form.reset();
+        initTopicRouting(form);
       }
     } catch {
+      setConsoleState('DRAFT');
       renderAlert(alertEl, {
         type: 'error',
         title: 'Connection error',

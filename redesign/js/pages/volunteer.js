@@ -604,7 +604,7 @@ function initVolunteerPage() {
     }
     img.dataset.fallbackApplied = '1';
     img.src = fallback;
-    const mediaBox = img.closest('.vol-event-card__media');
+    const mediaBox = img.closest('.vol-ticket__thumb, .vol-event-card__media');
     if (mediaBox) {
       mediaBox.classList.add('is-logo');
     }
@@ -1132,7 +1132,7 @@ function initVolunteerPage() {
     if (!wrapper) {
       return;
     }
-    const card = wrapper.querySelector('.vol-event-card');
+    const card = wrapper.querySelector('.vol-ticket, .vol-event-card');
     const isFull = ev.maxPeople > 0 && ev.people >= ev.maxPeople;
     const past = isEventPast(ev);
     const remaining = ev.maxPeople > 0 ? Math.max(0, ev.maxPeople - ev.people) : null;
@@ -1166,7 +1166,7 @@ function initVolunteerPage() {
       badge.className = 'vol-state-badge';
       if (isFull) {
         badge.classList.add('vol-state-badge--full');
-        badge.textContent = 'Event Full';
+        badge.textContent = 'Shift Full';
       } else if (remaining !== null && remaining <= 3) {
         badge.classList.add('vol-state-badge--warn');
         badge.textContent = 'Filling Fast';
@@ -1179,13 +1179,13 @@ function initVolunteerPage() {
     const regBtn = wrapper.querySelector('button[data-action="open-register"]');
     if (regBtn instanceof HTMLButtonElement) {
       regBtn.disabled = isFull;
-      const iconName = isFull ? 'circle-alert' : 'user-plus';
-      const labelText = isFull ? 'Event Full' : 'Register';
+      const iconName = isFull ? 'circle-alert' : 'arrow-right';
+      const labelText = isFull ? 'SHIFT FULL' : 'CLAIM SHIFT';
       const labelSpan = document.createElement('span');
       labelSpan.textContent = labelText;
       regBtn.replaceChildren(
-        ercIconElement(iconName, { class: 'vol-icon-xs' }),
-        labelSpan
+        labelSpan,
+        ercIconElement(iconName, { class: 'vol-icon-xs' })
       );
     }
   }
@@ -1238,11 +1238,15 @@ function initVolunteerPage() {
   const regNameInput = document.getElementById('regName');
   const regEmailInput = document.getElementById('regEmail');
   const regPhoneInput = document.getElementById('regPhone');
+  const regCountInput = document.getElementById('regCount');
+  const regCountGroupNote = document.getElementById('regCountGroupNote');
   const regFormStatus = document.getElementById('regFormStatus');
   const regSubmitBtn = document.getElementById('regSubmitBtn');
   const regSpinner = document.getElementById('regSpinner');
   const regSubmitText = document.getElementById('regSubmitText');
 
+  const regPassCodeEl = document.getElementById('regPassCode');
+  const regStatusPillEl = document.getElementById('regStatusPill');
   const regEventTitleEl = document.getElementById('regEventTitle');
   const regEventDateTimeEl = document.getElementById('regEventDateTime');
   const regEventLocationEl = document.getElementById('regEventLocation');
@@ -1258,10 +1262,19 @@ function initVolunteerPage() {
   let announceTimer = null;
   let suppressFieldBlurValidation = false;
   let suppressBlurResetTimer = null;
-  const regFields = [regNameInput, regEmailInput, regPhoneInput].filter(
+  const regFields = [regNameInput, regEmailInput, regPhoneInput, regCountInput].filter(
     (el) => el instanceof HTMLInputElement
   );
   const touchedFields = new Set();
+
+  function syncRegCountGroupNote() {
+    if (!regCountGroupNote || !(regCountInput instanceof HTMLInputElement)) {
+      return;
+    }
+    const raw = regCountInput.value.trim();
+    const parsed = Number(raw);
+    regCountGroupNote.hidden = !(Number.isInteger(parsed) && parsed > 1);
+  }
 
   function clearSuppressBlurValidation() {
     suppressFieldBlurValidation = false;
@@ -1374,6 +1387,13 @@ function initVolunteerPage() {
     if (field === regPhoneInput) {
       return value.length <= 40;
     }
+    if (field === regCountInput) {
+      if (value === '' || !/^\d+$/.test(value)) {
+        return false;
+      }
+      const n = Number(value);
+      return Number.isInteger(n) && n >= 1 && n <= 20;
+    }
     return field.checkValidity();
   }
 
@@ -1422,7 +1442,7 @@ function initVolunteerPage() {
       regSpinner.hidden = !submitting;
     }
     if (regSubmitText) {
-      regSubmitText.textContent = submitting ? 'Submitting...' : 'Confirm Registration';
+      regSubmitText.textContent = submitting ? 'SUBMITTING...' : 'CONFIRM SHIFT';
     }
   }
 
@@ -1436,6 +1456,7 @@ function initVolunteerPage() {
     if (regSuccessView) {
       regSuccessView.hidden = true;
     }
+    syncRegCountGroupNote();
     regFields.forEach((field) => syncFieldValidationUI(field, false));
     setFormStatus('');
     setSubmittingState(false);
@@ -1444,6 +1465,20 @@ function initVolunteerPage() {
   function updateModalSessionHeader(ev) {
     if (regEventIdInput) {
       regEventIdInput.value = String(ev.id);
+    }
+    if (regPassCodeEl) {
+      regPassCodeEl.textContent =
+        typeof ev.passCode === 'string' && ev.passCode.trim() !== ''
+          ? ev.passCode
+          : `SHIFT-${String(ev.id).padStart(4, '0')}`;
+    }
+    if (regStatusPillEl) {
+      const labelSpan = regStatusPillEl.querySelector('span:last-child');
+      const isFull = ev.maxPeople > 0 && ev.people >= ev.maxPeople;
+      const past = isEventPast(ev);
+      if (labelSpan) {
+        labelSpan.textContent = past ? 'PAST' : isFull ? 'FULL' : 'LIVE';
+      }
     }
     if (regEventTitleEl) {
       regEventTitleEl.textContent = ev.title;
@@ -1508,6 +1543,9 @@ function initVolunteerPage() {
     });
 
     field.addEventListener('input', () => {
+      if (field === regCountInput) {
+        syncRegCountGroupNote();
+      }
       if (touchedFields.has(field)) {
         syncFieldValidationUI(field, true);
       }
@@ -1716,7 +1754,7 @@ function initVolunteerPage() {
     const item = galleryItems[normalized];
 
     if (lightboxCounter) {
-      lightboxCounter.textContent = `${normalized + 1} of ${total}`;
+      lightboxCounter.textContent = `FRM-${String(normalized + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
     }
     if (lightboxCaption) {
       lightboxCaption.textContent = item.caption;
@@ -1753,12 +1791,18 @@ function initVolunteerPage() {
   lightboxPrevBtn?.addEventListener('click', () => stepLightbox(-1));
   lightboxNextBtn?.addEventListener('click', () => stepLightbox(1));
 
+  const existingNotesByPath = new Map(
+    galleryItems
+      .filter((item) => item && typeof item.path === 'string' && typeof item.note === 'string')
+      .map((item) => [item.path, item.note])
+  );
+
   galleryGrid?.addEventListener('click', (event) => {
     const target = event.target;
     if (!(target instanceof Element)) {
       return;
     }
-    const cardBtn = target.closest('.vol-gallery-card[data-gallery-index]');
+    const cardBtn = target.closest('.vol-frame-card[data-gallery-index]');
     if (!(cardBtn instanceof HTMLButtonElement)) {
       return;
     }
@@ -1775,19 +1819,39 @@ function initVolunteerPage() {
     const fragment = document.createDocumentFragment();
 
     items.forEach((item, idx) => {
+      const frameId = item.frameId || `FRM-${String(idx + 1).padStart(2, '0')}`;
+      const noteText = item.note || 'workshop archive';
+
       const li = document.createElement('li');
-      li.className = 'vol-gallery-item';
+      li.className = 'vol-filmstrip-item';
 
       const btn = document.createElement('button');
       btn.type = 'button';
-      btn.className = 'vol-gallery-card';
+      btn.className = 'vol-frame-card';
       btn.dataset.galleryIndex = String(idx);
       btn.dataset.gallerySrc = item.url;
       btn.dataset.galleryCaption = item.caption;
-      btn.setAttribute('aria-label', `Open photo: ${item.caption}`);
+      btn.setAttribute('aria-label', `Open frame ${frameId}: ${item.caption}`);
+
+      const sprockets = document.createElement('span');
+      sprockets.className = 'vol-frame-card__sprockets';
+      sprockets.setAttribute('aria-hidden', 'true');
+
+      const serialSpan = document.createElement('span');
+      serialSpan.className = 'vol-frame-card__serial vol-mono';
+      serialSpan.textContent = frameId;
+
+      const perfSpan = document.createElement('span');
+      perfSpan.className = 'vol-frame-card__perf';
+
+      const zoom = document.createElement('span');
+      zoom.className = 'vol-frame-card__zoom';
+      zoom.appendChild(ercIconElement('zoom-in', { class: 'vol-icon-xs' }));
+
+      sprockets.append(serialSpan, perfSpan, zoom);
 
       const media = document.createElement('span');
-      media.className = 'vol-gallery-card__media';
+      media.className = 'vol-frame-card__media';
 
       const img = document.createElement('img');
       img.src = item.url;
@@ -1797,18 +1861,22 @@ function initVolunteerPage() {
       img.width = 640;
       img.height = 480;
 
-      const zoom = document.createElement('span');
-      zoom.className = 'vol-gallery-card__zoom';
-      zoom.setAttribute('aria-hidden', 'true');
-      zoom.appendChild(ercIconElement('zoom-in', { class: 'vol-icon-sm' }));
+      media.appendChild(img);
 
-      media.append(img, zoom);
+      const footer = document.createElement('span');
+      footer.className = 'vol-frame-card__footer';
 
       const captionSpan = document.createElement('span');
-      captionSpan.className = 'vol-gallery-card__caption';
+      captionSpan.className = 'vol-frame-card__caption';
       captionSpan.textContent = item.caption;
 
-      btn.append(media, captionSpan);
+      const noteSpan = document.createElement('span');
+      noteSpan.className = 'vol-frame-card__note';
+      noteSpan.textContent = noteText;
+
+      footer.append(captionSpan, noteSpan);
+
+      btn.append(sprockets, media, footer);
       li.appendChild(btn);
       fragment.appendChild(li);
     });
@@ -1853,9 +1921,11 @@ function initVolunteerPage() {
         .filter((p) => p !== '')
         .map((relPath, idx) => ({
           index: idx,
+          frameId: `FRM-${String(idx + 1).padStart(2, '0')}`,
           path: relPath,
           url: `/${relPath}`,
           caption: formatGalleryCaption(relPath),
+          note: existingNotesByPath.get(relPath) || 'workshop archive',
         }));
 
       if (normalized.length > 0) {

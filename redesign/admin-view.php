@@ -1482,17 +1482,31 @@ $isCoexistence = erc_is_coexistence_mode();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light dark">
-    <meta name="theme-color" content="#f9f7f2">
+    <meta name="theme-color" id="metaThemeColorLight" content="#eaf0f8" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" id="metaThemeColorDark" content="#0b1117" media="(prefers-color-scheme: dark)">
     <meta name="robots" content="noindex, nofollow">
     <link rel="icon" type="image/png" href="<?= e(erc_media_url('e2e2rc_LOGO.png')) ?>">
     <title>Admin Operations Console | Lions District 2-E2 ERC</title>
     <script>
-        try {
-            var s = localStorage.getItem('erc-color-scheme');
-            if (s === 'light' || s === 'dark') {
-                document.querySelector('meta[name="color-scheme"]').content = s;
-            }
-        } catch (e) {}
+        (function () {
+            try {
+                var pref = localStorage.getItem('erc-color-scheme');
+                var metaScheme = document.querySelector('meta[name="color-scheme"]');
+                var metaLight = document.getElementById('metaThemeColorLight');
+                var metaDark = document.getElementById('metaThemeColorDark');
+                if (pref === 'light' || pref === 'dark') {
+                    document.documentElement.setAttribute('data-theme', pref);
+                    if (metaScheme) {
+                        metaScheme.setAttribute('content', pref);
+                    }
+                    var resolvedHex = pref === 'dark' ? '#0b1117' : '#eaf0f8';
+                    if (metaLight) { metaLight.setAttribute('content', resolvedHex); }
+                    if (metaDark) { metaDark.setAttribute('content', resolvedHex); }
+                } else {
+                    document.documentElement.removeAttribute('data-theme');
+                }
+            } catch (e) {}
+        })();
     </script>
     <link rel="stylesheet" href="/fonts/fonts.css">
     <link rel="stylesheet" href="/css/tokens.css">
@@ -1507,8 +1521,12 @@ $isCoexistence = erc_is_coexistence_mode();
     <header class="admin-header">
         <div class="admin-header__inner">
             <div class="admin-brand">
-                <img src="/e2e2rc_LOGO.png" alt="Lions District 2-E2 ERC emblem" width="44" height="44" class="admin-brand__logo">
-                <div>
+                <img src="<?= e(erc_media_url('e2e2rc_LOGO.png')) ?>" alt="Lions District 2-E2 ERC emblem" width="44" height="44" class="admin-brand__logo">
+                <div class="admin-brand__copy">
+                    <div class="admin-brand__kicker">
+                        <span class="v2-pulse v2-pulse--live" aria-hidden="true"></span>
+                        <span>2E2 OPS // WATAUGA HQ</span>
+                    </div>
                     <h1 class="admin-brand__title">Admin Operations Console</h1>
                     <p class="admin-brand__subtitle">
                         Signed in as <strong><?= e($authConfig['user']) ?></strong>
@@ -1524,12 +1542,13 @@ $isCoexistence = erc_is_coexistence_mode();
                 <button
                     type="button"
                     id="themeToggle"
-                    class="btn btn-secondary btn-icon"
-                    aria-label="Toggle color theme"
-                    aria-pressed="false"
+                    class="theme-toggle"
+                    aria-label="Color theme: Auto. Click to cycle Auto, Light, or Dark."
+                    title="Cycle color theme (Auto / Light / Dark)"
+                    data-theme-pref="auto"
                 >
-                    <span class="theme-icon-light"><?= erc_icon('moon', ['width' => 18, 'height' => 18]) ?></span>
-                    <span class="theme-icon-dark"><?= erc_icon('sun', ['width' => 18, 'height' => 18]) ?></span>
+                    <span class="theme-toggle__glyph" aria-hidden="true">&#9680;</span>
+                    <span class="theme-toggle__label" id="themeToggleLabel">AUTO</span>
                 </button>
             </div>
         </div>
@@ -1612,6 +1631,7 @@ $isCoexistence = erc_is_coexistence_mode();
                         id="tab-btn-<?= e($slug) ?>"
                         class="admin-tab"
                         data-tab="<?= e($slug) ?>"
+                        aria-controls="panel-<?= e($slug) ?>"
                         aria-selected="<?= $isSelected ? 'true' : 'false' ?>"
                         tabindex="<?= $isSelected ? '0' : '-1' ?>"
                     >
