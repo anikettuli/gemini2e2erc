@@ -438,7 +438,8 @@
   }
 
   .vol-seg-btn[aria-pressed='true'] .vol-count-pill {
-    background-color: color-mix(in srgb, var(--on-accent) 18%, transparent);
+    background-color: transparent;
+    border: 1px solid color-mix(in srgb, var(--on-accent) 45%, transparent);
     color: var(--on-accent);
   }
 

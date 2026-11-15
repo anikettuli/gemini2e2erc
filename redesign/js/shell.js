@@ -128,7 +128,8 @@ function initHeaderOverflowGuard() {
     return;
   }
 
-  let requiredNavWidth = 0;
+  let collapsedAtFontSize = 0;
+  let collapsedAtCapsuleWidth = 0;
   let rafId = 0;
   const desktopQuery = window.matchMedia('(min-width: 68rem)');
 
@@ -136,29 +137,41 @@ function initHeaderOverflowGuard() {
     rafId = 0;
     if (!desktopQuery.matches) {
       header.removeAttribute('data-nav-collapsed');
+      collapsedAtFontSize = 0;
+      collapsedAtCapsuleWidth = 0;
       return;
     }
 
+    const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
     const currentlyCollapsed = header.getAttribute('data-nav-collapsed') === 'true';
 
-    if (!currentlyCollapsed) {
-      const navStyle = getComputedStyle(nav);
-      if (navStyle.display !== 'none') {
-        requiredNavWidth = Math.max(requiredNavWidth, nav.scrollWidth);
-        const overflows =
-          nav.scrollWidth > nav.clientWidth + 1 ||
-          capsule.scrollWidth > capsule.clientWidth + 1;
-        if (overflows) {
-          header.setAttribute('data-nav-collapsed', 'true');
+    if (currentlyCollapsed) {
+      const fontShrank = rootFontSize < collapsedAtFontSize - 0.1;
+      const widthGrew = capsule.clientWidth > collapsedAtCapsuleWidth + 16;
+      if (!fontShrank && !widthGrew) {
+        if (rootFontSize > collapsedAtFontSize) {
+          collapsedAtFontSize = rootFontSize;
         }
+        return;
       }
-      return;
+      header.removeAttribute('data-nav-collapsed');
     }
 
-    const availableWidth =
-      capsule.clientWidth - brand.getBoundingClientRect().width - controls.getBoundingClientRect().width - 48;
-    if (requiredNavWidth > 0 && availableWidth > requiredNavWidth + 24) {
-      header.removeAttribute('data-nav-collapsed');
+    const navStyle = getComputedStyle(nav);
+    if (navStyle.display !== 'none') {
+      const overflows =
+        nav.scrollWidth > nav.clientWidth + 1 ||
+        capsule.scrollWidth > capsule.clientWidth + 1;
+      if (overflows) {
+        header.setAttribute('data-nav-collapsed', 'true');
+        collapsedAtFontSize = rootFontSize;
+        collapsedAtCapsuleWidth = capsule.clientWidth;
+      } else {
+        collapsedAtFontSize = 0;
+        collapsedAtCapsuleWidth = 0;
+      }
+    } else if (currentlyCollapsed) {
+      header.setAttribute('data-nav-collapsed', 'true');
     }
   };
 
@@ -181,7 +194,11 @@ function initHeaderOverflowGuard() {
     });
   }
   window.addEventListener('resize', scheduleCheck, { passive: true });
-  document.fonts?.ready?.then(scheduleCheck);
+  document.fonts?.ready?.then(() => {
+    collapsedAtFontSize = 0;
+    collapsedAtCapsuleWidth = 0;
+    scheduleCheck();
+  });
   checkOverflow();
 }
 

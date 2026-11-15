@@ -433,11 +433,13 @@ function initMissionGlobe() {
   function focusCoordinates(lat, lng) {
     const nextY = -lng * DEG2RAD;
     const nextX = Math.max(-1.05, Math.min(1.05, lat * DEG2RAD));
-    if (isReducedMotion) {
+    if (isReducedMotion || isPaused) {
       rotY = nextY;
       rotX = nextX;
       targetRotY = null;
       targetRotX = null;
+      velY = 0;
+      velX = 0;
       drawFrame(0);
     } else {
       targetRotY = nextY;
@@ -749,10 +751,27 @@ function initMissionGlobe() {
     return null;
   }
 
+  function stopLoop() {
+    if (rafId) {
+      window.cancelAnimationFrame(rafId);
+      rafId = 0;
+    }
+  }
+
   function loop(now) {
+    rafId = 0;
+    if (isPaused || isReducedMotion) {
+      return;
+    }
     const dt = Math.min(0.05, Math.max(0, (now - lastTime) / 1000));
     lastTime = now;
     drawFrame(dt);
+    rafId = window.requestAnimationFrame(loop);
+  }
+
+  function startLoop() {
+    if (rafId || isPaused || isReducedMotion) return;
+    lastTime = performance.now();
     rafId = window.requestAnimationFrame(loop);
   }
 
@@ -832,6 +851,8 @@ function initMissionGlobe() {
       }
     }
     if (isPaused || isReducedMotion) {
+      velY = 0;
+      velX = 0;
       drawFrame(0);
     }
   };
@@ -859,7 +880,15 @@ function initMissionGlobe() {
         // Explicit user opt-in overrides initial reduced-motion pause cleanly for this session
         isReducedMotion = false;
       }
-      drawFrame(0);
+      if (isPaused) {
+        stopLoop();
+        velY = 0;
+        velX = 0;
+        drawFrame(0);
+      } else {
+        drawFrame(0);
+        startLoop();
+      }
     });
   }
 
@@ -931,6 +960,9 @@ function initMissionGlobe() {
     isReducedMotion = event.matches;
     if (isReducedMotion) {
       isPaused = true;
+      stopLoop();
+      velY = 0;
+      velX = 0;
     }
     syncToggleUI();
     drawFrame(0);
@@ -953,11 +985,9 @@ function initMissionGlobe() {
   resizeCanvas();
   applyDirectoryFilters();
   drawFrame(0);
-  rafId = window.requestAnimationFrame(loop);
+  startLoop();
 
-  window.addEventListener('pagehide', () => {
-    if (rafId) window.cancelAnimationFrame(rafId);
-  });
+  window.addEventListener('pagehide', stopLoop);
 }
 
 function initShippingTelemetry() {

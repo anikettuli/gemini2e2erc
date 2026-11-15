@@ -2648,23 +2648,9 @@
 
   /* Interactive Inspection Stamp Queue inside .v2-sheet */
   .v2-sheet {
-    --q-accept-ink: #15803d;
-    --q-recycle-ink: #92400e;
+    --q-accept-ink: var(--status-success-ink);
+    --q-recycle-ink: var(--status-warn-ink);
     --q-skip-ink: var(--accent);
-  }
-
-  :root[data-theme='light'] .v2-sheet {
-    --q-accept-ink: #4ade80;
-    --q-recycle-ink: #fbbf24;
-    --q-skip-ink: var(--accent);
-  }
-
-  @media (prefers-color-scheme: light) {
-    :root:not([data-theme='dark']) .v2-sheet {
-      --q-accept-ink: #4ade80;
-      --q-recycle-ink: #fbbf24;
-      --q-skip-ink: var(--accent);
-    }
   }
 
   .v2-queue-rule {

@@ -239,6 +239,7 @@
     --status-danger-ink: #ff8570;
 
     position: relative;
+    color-scheme: dark;
     background-color: var(--bg);
     color: var(--fg);
     border: 1px solid var(--rule-strong);

@@ -153,14 +153,14 @@
     --p-gold-ink-light: #854d0e;
 
     --p-emerald-dark: #4ade80;
-    --p-emerald-light: #15803d;
+    --p-emerald-light: #136f34;
     --p-on-emerald-dark: #0b1117;
     --p-on-emerald-light: #ffffff;
 
     --p-success-bg-dark: #12261c;
     --p-success-bg-light: #dcfce7;
     --p-success-ink-dark: #4ade80;
-    --p-success-ink-light: #15803d;
+    --p-success-ink-light: #136f34;
 
     --p-warn-bg-dark: #261d0d;
     --p-warn-bg-light: #fef3c7;
@@ -199,15 +199,25 @@
     --on-signal: light-dark(var(--p-on-signal-light), var(--p-on-signal-dark));
     --cyan: light-dark(var(--p-cyan-light), var(--p-cyan-dark));
 
-    /* Alternating Contrast Sheet Semantic Tokens */
-    --contrast-bg: light-dark(var(--p-contrast-bg-light), var(--p-contrast-bg-dark));
-    --contrast-surface: light-dark(var(--p-contrast-surface-light), var(--p-contrast-surface-dark));
-    --contrast-fg: light-dark(var(--p-contrast-fg-light), var(--p-contrast-fg-dark));
-    --contrast-fg-2: light-dark(var(--p-contrast-fg-2-light), var(--p-contrast-fg-2-dark));
-    --contrast-muted: light-dark(var(--p-contrast-muted-light), var(--p-contrast-muted-dark));
-    --contrast-accent: light-dark(var(--p-contrast-accent-light), var(--p-contrast-accent-dark));
-    --contrast-on-accent: light-dark(var(--p-contrast-on-accent-light), var(--p-contrast-on-accent-dark));
-    --contrast-rule: light-dark(var(--p-contrast-rule-light), var(--p-contrast-rule-dark));
+    /* Alternating Contrast Sheet Semantic Tokens (resolved by page theme, never double-inverted by sheet color-scheme) */
+    --contrast-bg: var(--p-contrast-bg-light);
+    --contrast-surface: var(--p-contrast-surface-light);
+    --contrast-fg: var(--p-contrast-fg-light);
+    --contrast-fg-2: var(--p-contrast-fg-2-light);
+    --contrast-muted: var(--p-contrast-muted-light);
+    --contrast-accent: var(--p-contrast-accent-light);
+    --contrast-on-accent: var(--p-contrast-on-accent-light);
+    --contrast-rule: var(--p-contrast-rule-light);
+    --contrast-cyan: var(--p-cyan-dark);
+    --contrast-gold-ink: var(--p-gold-ink-dark);
+    --contrast-emerald: var(--p-emerald-dark);
+    --contrast-on-emerald: var(--p-on-emerald-dark);
+    --contrast-success-bg: var(--p-success-bg-dark);
+    --contrast-success-ink: var(--p-success-ink-dark);
+    --contrast-warn-bg: var(--p-warn-bg-dark);
+    --contrast-warn-ink: var(--p-warn-ink-dark);
+    --contrast-danger-bg: var(--p-danger-bg-dark);
+    --contrast-danger-ink: var(--p-danger-ink-dark);
 
     /* ========================================================================
        Backward-Compatible v1 Semantic Token Aliases (Zero Broken Selectors)
@@ -259,15 +269,75 @@
     --shadow-lg: 0 22px 48px -10px var(--shadow-md-ambient), 0 6px 16px var(--shadow-md-key), inset 0 1px 0 var(--shadow-hairline);
   }
 
+  /* Contrast sheet tokens follow page polarity directly so setting color-scheme on .v2-sheet does not double-invert light-dark() */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) {
+      --contrast-bg: var(--p-contrast-bg-dark);
+      --contrast-surface: var(--p-contrast-surface-dark);
+      --contrast-fg: var(--p-contrast-fg-dark);
+      --contrast-fg-2: var(--p-contrast-fg-2-dark);
+      --contrast-muted: var(--p-contrast-muted-dark);
+      --contrast-accent: var(--p-contrast-accent-dark);
+      --contrast-on-accent: var(--p-contrast-on-accent-dark);
+      --contrast-rule: var(--p-contrast-rule-dark);
+      --contrast-cyan: var(--p-cyan-light);
+      --contrast-gold-ink: var(--p-gold-ink-light);
+      --contrast-emerald: var(--p-emerald-light);
+      --contrast-on-emerald: var(--p-on-emerald-light);
+      --contrast-success-bg: var(--p-success-bg-light);
+      --contrast-success-ink: var(--p-success-ink-light);
+      --contrast-warn-bg: var(--p-warn-bg-light);
+      --contrast-warn-ink: var(--p-warn-ink-light);
+      --contrast-danger-bg: var(--p-danger-bg-light);
+      --contrast-danger-ink: var(--p-danger-ink-light);
+    }
+  }
+
   /* Explicit scheme override driven by <meta name="color-scheme"> or [data-theme] */
   :root[data-theme='dark'],
   :root:has(> head > meta[name='color-scheme'][content='dark']) {
     color-scheme: dark;
+    --contrast-bg: var(--p-contrast-bg-dark);
+    --contrast-surface: var(--p-contrast-surface-dark);
+    --contrast-fg: var(--p-contrast-fg-dark);
+    --contrast-fg-2: var(--p-contrast-fg-2-dark);
+    --contrast-muted: var(--p-contrast-muted-dark);
+    --contrast-accent: var(--p-contrast-accent-dark);
+    --contrast-on-accent: var(--p-contrast-on-accent-dark);
+    --contrast-rule: var(--p-contrast-rule-dark);
+    --contrast-cyan: var(--p-cyan-light);
+    --contrast-gold-ink: var(--p-gold-ink-light);
+    --contrast-emerald: var(--p-emerald-light);
+    --contrast-on-emerald: var(--p-on-emerald-light);
+    --contrast-success-bg: var(--p-success-bg-light);
+    --contrast-success-ink: var(--p-success-ink-light);
+    --contrast-warn-bg: var(--p-warn-bg-light);
+    --contrast-warn-ink: var(--p-warn-ink-light);
+    --contrast-danger-bg: var(--p-danger-bg-light);
+    --contrast-danger-ink: var(--p-danger-ink-light);
   }
 
   :root[data-theme='light'],
   :root:has(> head > meta[name='color-scheme'][content='light']) {
     color-scheme: light;
+    --contrast-bg: var(--p-contrast-bg-light);
+    --contrast-surface: var(--p-contrast-surface-light);
+    --contrast-fg: var(--p-contrast-fg-light);
+    --contrast-fg-2: var(--p-contrast-fg-2-light);
+    --contrast-muted: var(--p-contrast-muted-light);
+    --contrast-accent: var(--p-contrast-accent-light);
+    --contrast-on-accent: var(--p-contrast-on-accent-light);
+    --contrast-rule: var(--p-contrast-rule-light);
+    --contrast-cyan: var(--p-cyan-dark);
+    --contrast-gold-ink: var(--p-gold-ink-dark);
+    --contrast-emerald: var(--p-emerald-dark);
+    --contrast-on-emerald: var(--p-on-emerald-dark);
+    --contrast-success-bg: var(--p-success-bg-dark);
+    --contrast-success-ink: var(--p-success-ink-dark);
+    --contrast-warn-bg: var(--p-warn-bg-dark);
+    --contrast-warn-ink: var(--p-warn-ink-dark);
+    --contrast-danger-bg: var(--p-danger-bg-dark);
+    --contrast-danger-ink: var(--p-danger-ink-dark);
   }
 
   /* Fallback for clients lacking CSS light-dark() */
@@ -297,6 +367,16 @@
       --contrast-accent: var(--p-contrast-accent-light);
       --contrast-on-accent: var(--p-contrast-on-accent-light);
       --contrast-rule: var(--p-contrast-rule-light);
+      --contrast-cyan: var(--p-cyan-dark);
+      --contrast-gold-ink: var(--p-gold-ink-dark);
+      --contrast-emerald: var(--p-emerald-dark);
+      --contrast-on-emerald: var(--p-on-emerald-dark);
+      --contrast-success-bg: var(--p-success-bg-dark);
+      --contrast-success-ink: var(--p-success-ink-dark);
+      --contrast-warn-bg: var(--p-warn-bg-dark);
+      --contrast-warn-ink: var(--p-warn-ink-dark);
+      --contrast-danger-bg: var(--p-danger-bg-dark);
+      --contrast-danger-ink: var(--p-danger-ink-dark);
       --brand-gold-fill: var(--p-gold-fill-light);
       --on-brand-gold: var(--p-on-gold-light);
       --brand-gold-ink: var(--p-gold-ink-light);
@@ -343,6 +423,16 @@
         --contrast-accent: var(--p-contrast-accent-dark);
         --contrast-on-accent: var(--p-contrast-on-accent-dark);
         --contrast-rule: var(--p-contrast-rule-dark);
+        --contrast-cyan: var(--p-cyan-light);
+        --contrast-gold-ink: var(--p-gold-ink-light);
+        --contrast-emerald: var(--p-emerald-light);
+        --contrast-on-emerald: var(--p-on-emerald-light);
+        --contrast-success-bg: var(--p-success-bg-light);
+        --contrast-success-ink: var(--p-success-ink-light);
+        --contrast-warn-bg: var(--p-warn-bg-light);
+        --contrast-warn-ink: var(--p-warn-ink-light);
+        --contrast-danger-bg: var(--p-danger-bg-light);
+        --contrast-danger-ink: var(--p-danger-ink-light);
         --brand-gold-fill: var(--p-gold-fill-dark);
         --on-brand-gold: var(--p-on-gold-dark);
         --brand-gold-ink: var(--p-gold-ink-dark);
@@ -390,6 +480,16 @@
       --contrast-accent: var(--p-contrast-accent-dark);
       --contrast-on-accent: var(--p-contrast-on-accent-dark);
       --contrast-rule: var(--p-contrast-rule-dark);
+      --contrast-cyan: var(--p-cyan-light);
+      --contrast-gold-ink: var(--p-gold-ink-light);
+      --contrast-emerald: var(--p-emerald-light);
+      --contrast-on-emerald: var(--p-on-emerald-light);
+      --contrast-success-bg: var(--p-success-bg-light);
+      --contrast-success-ink: var(--p-success-ink-light);
+      --contrast-warn-bg: var(--p-warn-bg-light);
+      --contrast-warn-ink: var(--p-warn-ink-light);
+      --contrast-danger-bg: var(--p-danger-bg-light);
+      --contrast-danger-ink: var(--p-danger-ink-light);
       --brand-gold-fill: var(--p-gold-fill-dark);
       --on-brand-gold: var(--p-on-gold-dark);
       --brand-gold-ink: var(--p-gold-ink-dark);
@@ -436,6 +536,16 @@
       --contrast-accent: var(--p-contrast-accent-light);
       --contrast-on-accent: var(--p-contrast-on-accent-light);
       --contrast-rule: var(--p-contrast-rule-light);
+      --contrast-cyan: var(--p-cyan-dark);
+      --contrast-gold-ink: var(--p-gold-ink-dark);
+      --contrast-emerald: var(--p-emerald-dark);
+      --contrast-on-emerald: var(--p-on-emerald-dark);
+      --contrast-success-bg: var(--p-success-bg-dark);
+      --contrast-success-ink: var(--p-success-ink-dark);
+      --contrast-warn-bg: var(--p-warn-bg-dark);
+      --contrast-warn-ink: var(--p-warn-ink-dark);
+      --contrast-danger-bg: var(--p-danger-bg-dark);
+      --contrast-danger-ink: var(--p-danger-ink-dark);
       --brand-gold-fill: var(--p-gold-fill-light);
       --on-brand-gold: var(--p-on-gold-light);
       --brand-gold-ink: var(--p-gold-ink-light);
@@ -484,6 +594,16 @@
       --contrast-accent: LinkText;
       --contrast-on-accent: HighlightText;
       --contrast-rule: CanvasText;
+      --contrast-cyan: LinkText;
+      --contrast-gold-ink: LinkText;
+      --contrast-emerald: Highlight;
+      --contrast-on-emerald: HighlightText;
+      --contrast-success-bg: Canvas;
+      --contrast-success-ink: CanvasText;
+      --contrast-warn-bg: Canvas;
+      --contrast-warn-ink: CanvasText;
+      --contrast-danger-bg: Canvas;
+      --contrast-danger-ink: CanvasText;
       --brand-gold-fill: Highlight;
       --on-brand-gold: HighlightText;
       --brand-gold-ink: LinkText;

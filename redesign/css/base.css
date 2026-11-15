@@ -442,6 +442,16 @@
     --accent-ink: var(--contrast-accent);
     --on-accent: var(--contrast-on-accent);
     --focus-ring: var(--contrast-accent);
+    --cyan: var(--contrast-cyan);
+    --brand-gold-ink: var(--contrast-gold-ink);
+    --brand-emerald: var(--contrast-emerald);
+    --on-brand-emerald: var(--contrast-on-emerald);
+    --status-success-bg: var(--contrast-success-bg);
+    --status-success-ink: var(--contrast-success-ink);
+    --status-warn-bg: var(--contrast-warn-bg);
+    --status-warn-ink: var(--contrast-warn-ink);
+    --status-danger-bg: var(--contrast-danger-bg);
+    --status-danger-ink: var(--contrast-danger-ink);
 
     /* Keep backward-compatible v1 aliases synchronized inside contrast sheets */
     --bg-canvas: var(--bg);
@@ -465,6 +475,28 @@
     border: 1px solid var(--rule);
     padding: clamp(2rem, 5vw, 4.5rem) clamp(1.25rem, 4vw, 3.5rem);
     overflow-x: clip;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) .v2-sheet {
+      color-scheme: light;
+    }
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme='dark']) .v2-sheet {
+      color-scheme: dark;
+    }
+  }
+
+  :root[data-theme='dark'] .v2-sheet,
+  :root:has(> head > meta[name='color-scheme'][content='dark']) .v2-sheet {
+    color-scheme: light;
+  }
+
+  :root[data-theme='light'] .v2-sheet,
+  :root:has(> head > meta[name='color-scheme'][content='light']) .v2-sheet {
+    color-scheme: dark;
   }
 
   .v2-sheet__inner {

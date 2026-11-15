@@ -369,6 +369,8 @@
     background-color: var(--status-danger-bg);
     color: var(--status-danger-ink);
     border-color: color-mix(in srgb, var(--status-danger-ink) 45%, transparent);
+    /* Instant swap prevents mid-transition contrast dip across inverted hues */
+    transition: none;
   }
 
   .btn-danger:hover:not(:disabled) {
