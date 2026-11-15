@@ -65,7 +65,7 @@ if (!empty($pageMeta['js_modules']) && is_array($pageMeta['js_modules'])) {
           </div>
           <p class="stack--sm">
             Operating as District 2-E2 Lions Eyeglass Recycling Center Foundation, a 100% volunteer-run
-            501(c)(3) nonprofit organization founded in 2014.
+            nonprofit founded in 2013 and recognized as a 501(c)(3) organization in 2014.
           </p>
           <p class="mt-4 text-muted">
             Lion Year runs July 1 – June 30. Donated eyewear is cleaned, lensometer-verified, and sorted

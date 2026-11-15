@@ -49,6 +49,7 @@ if ($statusParam === 'success') {
     $reasonMap = [
         'rate_limited' => 'Too many inquiries were submitted recently from your connection. Please wait a few minutes or call or email us directly.',
         'invalid_input' => 'Please verify your name, valid email address, and message, then try submitting again.',
+        'send_failed' => 'We were unable to send your message right now due to an email delivery error. Please call or email us directly.',
         'mail_failed' => 'We were unable to send your message right now due to an email delivery error. Please call or email us directly.',
     ];
     $prgBanner = [
@@ -101,10 +102,10 @@ $pdfForms = [
     ],
     [
         'file' => 'Helen-Keller-Award-Application.pdf',
-        'title' => 'Helen Keller Fellow Award Application',
+        'title' => 'Helen Keller Award ("Knights of Sight") Application',
         'pages' => '1-page PDF',
         'category' => 'Awards',
-        'description' => 'Application to sponsor a Helen Keller Fellow recognition supporting the ERC Foundation.',
+        'description' => 'Application for volunteer service hours or sponsorship ($250 Benefactor, $500 Endowment, $1,000 Patron) supporting the ERC Foundation.',
     ],
     [
         'file' => 'ERC-Life-Membership-Application.pdf',
@@ -435,7 +436,7 @@ require __DIR__ . '/includes/header.php';
                 </a>
                 <a class="btn btn--ghost btn--sm" href="/locations">
                   <?= erc_icon('map', ['width' => '16', 'height' => '16']) ?>
-                  <span>80+ Drop-Off Boxes</span>
+                  <span>214 Drop-Off Bins</span>
                 </a>
               </div>
               <div class="copy-feedback" id="copyCenterFeedback" aria-live="polite"></div>
@@ -594,7 +595,7 @@ require __DIR__ . '/includes/header.php';
                 Yes. The Watauga center welcomes visitors on <strong>Saturdays from 9:00 AM to 3:00 PM</strong>
                 and is open <strong>Monday through Friday by appointment</strong> (use the inquiry form above or
                 call <a href="tel:<?= $escape($phoneLink) ?>"><?= $escape($phone) ?></a>). You can also use any of
-                more than 80 community <a href="/locations">drop-off collection boxes</a> across District 2-E2.
+                our 214 community <a href="/locations">drop-off collection bins</a> across 34 cities in District 2-E2.
               </p>
             </div>
           </details>
@@ -606,15 +607,15 @@ require __DIR__ . '/includes/header.php';
             </summary>
             <div class="accordion__panel prose">
               <p>
-                We gladly accept clean prescription glasses, reading glasses, prescription and non-prescription
-                sunglasses, safety glasses, loose lenses/frames, hearing aids, cell phones (with personal data
-                completely wiped), and <strong>Windows 11-capable laptops and tablets</strong> with chargers and
-                intact screens.
+                We gladly accept prescription eyeglasses, reading glasses, and sunglasses (even broken glasses or frames
+                missing parts), digital or analog hearing aids (functional or non-functional), wiped cell phones, and
+                <strong>Windows 11-ready or Windows 11-installed laptops and tablets</strong>.
               </p>
               <p>
-                We cannot accept desktop computers, laptops that do not support Windows 11, electronics with damaged
-                screens, non-functional keyboards, missing parts, or broken cases/accessories. If an electronic device
-                is not working properly, please dispose of it through a community electronics recycling program.
+                We cannot accept desktop computers, laptops or tablets that cannot run Windows 11, or devices with
+                damaged screens, non-functional keyboards, or missing parts. Individual partner drop-off bin
+                locations may vary in which device types they collect — check location notes or bring electronics
+                directly to our Watauga center.
               </p>
             </div>
           </details>
@@ -657,7 +658,8 @@ require __DIR__ . '/includes/header.php';
               <p>
                 Please send mailed donations and written correspondence to
                 <strong>P.O. Box 1854, Keller, TX 76244</strong>. District 2-E2 Lions Eyeglass Recycling Center
-                Foundation is a 100% volunteer-run 501(c)(3) nonprofit founded in 2014.
+                Foundation is a 100% volunteer-run nonprofit founded in 2013 and recognized as a 501(c)(3)
+                organization in 2014.
               </p>
             </div>
           </details>

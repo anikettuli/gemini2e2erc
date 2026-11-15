@@ -13,6 +13,8 @@ const REASON_MESSAGES = {
     'Too many messages were sent recently from your connection. Please wait a few minutes or call or email us directly.',
   invalid_input:
     'Please check your name, email address, and message to make sure all required details are complete.',
+  send_failed:
+    'We could not deliver your message right now due to a mail server issue. Please contact us directly by email or phone.',
   mail_failed:
     'We could not deliver your message right now due to a mail server issue. Please contact us directly by email or phone.',
 };
