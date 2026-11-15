@@ -158,8 +158,8 @@ function erc_render_admin_gate(int $statusCode, string $heading, string $message
     <title><?= e($heading) ?> | Lions District 2-E2 ERC Admin</title>
     <link rel="stylesheet" href="/fonts/fonts.css">
     <link rel="stylesheet" href="/css/tokens.css">
-    <link rel="stylesheet" href="/css/base.css">
-    <link rel="stylesheet" href="/css/pages/admin.css">
+    <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="/css/admin.css">
 </head>
 <body class="admin-gate-body">
     <main class="admin-gate-card">
@@ -1482,8 +1482,8 @@ $isCoexistence = erc_is_coexistence_mode();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light dark">
-    <meta name="theme-color" id="metaThemeColorLight" content="#eaf0f8" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" id="metaThemeColorDark" content="#0b1117" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" id="metaThemeColorLight" content="#FAF9F6" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" id="metaThemeColorDark" content="#0E141B" media="(prefers-color-scheme: dark)">
     <meta name="robots" content="noindex, nofollow">
     <link rel="icon" type="image/png" href="<?= e(erc_media_url('e2e2rc_LOGO.png')) ?>">
     <title>Admin Operations Console | Lions District 2-E2 ERC</title>
@@ -1499,7 +1499,7 @@ $isCoexistence = erc_is_coexistence_mode();
                     if (metaScheme) {
                         metaScheme.setAttribute('content', pref);
                     }
-                    var resolvedHex = pref === 'dark' ? '#0b1117' : '#eaf0f8';
+                    var resolvedHex = pref === 'dark' ? '#0E141B' : '#FAF9F6';
                     if (metaLight) { metaLight.setAttribute('content', resolvedHex); }
                     if (metaDark) { metaDark.setAttribute('content', resolvedHex); }
                 } else {
@@ -1510,10 +1510,10 @@ $isCoexistence = erc_is_coexistence_mode();
     </script>
     <link rel="stylesheet" href="/fonts/fonts.css">
     <link rel="stylesheet" href="/css/tokens.css">
-    <link rel="stylesheet" href="/css/base.css">
-    <link rel="stylesheet" href="/css/pages/admin.css">
+    <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="/css/admin.css">
     <script type="module" src="/js/theme.js"></script>
-    <script type="module" src="/js/pages/admin.js"></script>
+    <script type="module" src="/js/admin.js"></script>
 </head>
 <body class="admin-body">
     <a class="skip-link" href="#admin-main">Skip to admin workspace</a>

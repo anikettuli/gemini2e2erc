@@ -22,29 +22,25 @@ $mediaUrl = static function (string $path): string {
 };
 
 $pageMeta = isset($pageMeta) && is_array($pageMeta) ? $pageMeta : [];
-$slug = (string) ($pageMeta['slug'] ?? 'home');
-$title = (string) ($pageMeta['title'] ?? 'Lions District 2-E2 Eyeglass Recycling Center');
-$description = (string) ($pageMeta['description'] ?? 'Lions District 2-E2 Eyeglass Recycling Center collects, cleans, inspects, and sorts donated eyeglasses for humanitarian vision missions worldwide.');
+$title = (string) ($pageMeta['title'] ?? 'Lions District 2-E2 Eyeglass Recycling Center | Watauga, TX');
+$description = (string) ($pageMeta['description'] ?? '100% volunteer Lions optical recycling center in Watauga, TX collecting eyewear, hearing aids, cell phones, and Windows 11 devices to serve 40+ countries.');
 $canonicalRaw = (string) ($pageMeta['canonical'] ?? '/');
 $canonicalUrl = (str_starts_with($canonicalRaw, 'http://') || str_starts_with($canonicalRaw, 'https://'))
     ? $canonicalRaw
     : 'https://2e2erc.org' . (str_starts_with($canonicalRaw, '/') ? $canonicalRaw : '/' . $canonicalRaw);
 
-$ogImageRaw = (string) ($pageMeta['og_image'] ?? $mediaUrl('e2e2rc_LOGO.png'));
+$ogImageRaw = (string) ($pageMeta['og_image'] ?? $mediaUrl('images/our-story-group.png'));
 $ogImageUrl = (str_starts_with($ogImageRaw, 'http://') || str_starts_with($ogImageRaw, 'https://'))
     ? $ogImageRaw
     : 'https://2e2erc.org' . (str_starts_with($ogImageRaw, '/') ? $ogImageRaw : '/' . $ogImageRaw);
 
 $preloadImg = !empty($pageMeta['preload_img']) ? (string) $pageMeta['preload_img'] : '';
-$extraCss = isset($pageMeta['css']) && is_array($pageMeta['css']) ? $pageMeta['css'] : [];
 $noindex = !empty($pageMeta['noindex']);
-$omitShell = !empty($pageMeta['omit_shell']);
 $inlineNonceAttr = (function_exists('erc_csp_nonce') && ($cspNonce = (string) erc_csp_nonce()) !== '')
     ? ' nonce="' . $headEscape($cspNonce) . '"'
     : '';
 
 $orgEmail = (string) ($GLOBALS['GLOBAL_EMAIL'] ?? '2e2erc1854@gmail.com');
-$orgPhone = (string) ($GLOBALS['GLOBAL_PHONE'] ?? '(817) 710-5403');
 $orgPhoneLink = (string) ($GLOBALS['GLOBAL_PHONE_LINK'] ?? '+18177105403');
 
 $baseSchema = [
@@ -75,19 +71,6 @@ $baseSchema = [
         ],
     ],
 ];
-
-$jsonLdSchemas = [$baseSchema];
-if (!empty($pageMeta['json_ld']) && is_array($pageMeta['json_ld'])) {
-    if (isset($pageMeta['json_ld']['@type'])) {
-        $jsonLdSchemas[] = $pageMeta['json_ld'];
-    } else {
-        foreach ($pageMeta['json_ld'] as $schemaItem) {
-            if (is_array($schemaItem)) {
-                $jsonLdSchemas[] = $schemaItem;
-            }
-        }
-    }
-}
 ?>
 <!DOCTYPE html>
 <html lang="en" id="top">
@@ -95,8 +78,8 @@ if (!empty($pageMeta['json_ld']) && is_array($pageMeta['json_ld'])) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="light dark">
-  <meta name="theme-color" id="metaThemeColorLight" content="#eaf0f8" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" id="metaThemeColorDark" content="#0b1117" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" id="metaThemeColorLight" content="#FAF9F6" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" id="metaThemeColorDark" content="#0E141B" media="(prefers-color-scheme: dark)">
   <script<?= $inlineNonceAttr ?>>
   (function () {
     try {
@@ -109,34 +92,13 @@ if (!empty($pageMeta['json_ld']) && is_array($pageMeta['json_ld'])) {
         if (metaScheme) {
           metaScheme.setAttribute('content', pref);
         }
-        var resolvedHex = pref === 'dark' ? '#0b1117' : '#eaf0f8';
+        var resolvedHex = pref === 'dark' ? '#0E141B' : '#FAF9F6';
         if (metaLight) { metaLight.setAttribute('content', resolvedHex); }
         if (metaDark) { metaDark.setAttribute('content', resolvedHex); }
       } else {
         document.documentElement.removeAttribute('data-theme');
       }
     } catch (e) {}
-<?php if ($slug === 'home'): ?>
-    var rawHash = (window.location.hash || '').toLowerCase();
-    var hashRoutes = {
-      '#home': '/',
-      '#about': '/about',
-      '#services': '/donate',
-      '#get-involved': '/volunteer',
-      '#locations': '/locations',
-      '#contact': '/contact'
-    };
-    if (rawHash && Object.prototype.hasOwnProperty.call(hashRoutes, rawHash)) {
-      var target = hashRoutes[rawHash];
-      if (target === '/') {
-        if (window.history && window.history.replaceState) {
-          window.history.replaceState(null, '', '/');
-        }
-      } else {
-        window.location.replace(target);
-      }
-    }
-<?php endif; ?>
   })();
   </script>
   <title><?= $headEscape($title) ?></title>
@@ -157,31 +119,20 @@ if (!empty($pageMeta['json_ld']) && is_array($pageMeta['json_ld'])) {
   <meta name="twitter:image" content="<?= $headEscape($ogImageUrl) ?>">
   <link rel="icon" type="image/png" href="<?= $headEscape($mediaUrl('e2e2rc_LOGO.png')) ?>">
   <link rel="expect" href="#main-content" blocking="render">
-  <link rel="preload" href="/fonts/anton-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/inter-tight-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/martian-mono-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <?php if ($preloadImg !== ''): ?>
   <link rel="preload" href="<?= $headEscape($preloadImg) ?>" as="image" fetchpriority="high">
 <?php endif; ?>
   <link rel="stylesheet" href="/fonts/fonts.css">
+  <link rel="stylesheet" href="/vendor/maplibre-gl/maplibre-gl.css">
   <link rel="stylesheet" href="/css/tokens.css">
-  <link rel="stylesheet" href="/css/base.css">
-<?php if (!$omitShell): ?>
-  <link rel="stylesheet" href="/css/shell.css">
-<?php endif; ?>
-<?php foreach ($extraCss as $cssHref): ?>
-<?php
-    $hrefStr = (string) $cssHref;
-    if ($hrefStr === '') {
-        continue;
-    }
-    if (!str_starts_with($hrefStr, '/') && !str_starts_with($hrefStr, 'http://') && !str_starts_with($hrefStr, 'https://')) {
-        $hrefStr = '/' . ltrim($hrefStr, '/');
-    }
-?>
-  <link rel="stylesheet" href="<?= $headEscape($hrefStr) ?>">
-<?php endforeach; ?>
-<?php foreach ($jsonLdSchemas as $schema): ?>
-  <script type="application/ld+json"><?= json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP) ?></script>
-<?php endforeach; ?>
+  <link rel="stylesheet" href="/css/app.css">
+  <link rel="stylesheet" href="/css/sections-story.css">
+  <link rel="stylesheet" href="/css/dropoff.css">
+  <link rel="stylesheet" href="/css/volunteer-contact.css">
+  <script type="module" src="/js/theme.js"></script>
+  <script type="module" src="/js/app.js"></script>
+  <script type="module" src="/js/locations.js"></script>
+  <script type="application/ld+json"><?= json_encode($baseSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP) ?></script>
 </head>

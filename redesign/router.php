@@ -4,7 +4,8 @@ declare(strict_types=1);
 /**
  * Local PHP built-in server router (`php -S 127.0.0.1:8771 -t redesign redesign/router.php`).
  * Mirrors Apache `.htaccess` + `data/.htaccess` access rules, extensionless clean URLs,
- * WebP negotiation, `.mjs` MIME headers, and read-only coexistence fallback to parent root media.
+ * 301 legacy `.php` / `/index.html` redirects, WebP negotiation, `.mjs` MIME headers,
+ * and read-only coexistence fallback to parent root media.
  */
 
 $rootDir = __DIR__;
@@ -13,6 +14,9 @@ $parentReal = realpath(dirname($rootDir));
 
 $rawUri = $_SERVER['REQUEST_URI'] ?? '/';
 $rawPath = parse_url($rawUri, PHP_URL_PATH);
+$rawQuery = parse_url($rawUri, PHP_URL_QUERY);
+$querySuffix = (is_string($rawQuery) && $rawQuery !== '') ? ('?' . $rawQuery) : '';
+
 $uriPath = rawurldecode(is_string($rawPath) ? $rawPath : '/');
 $uriPath = str_replace('\\', '/', $uriPath);
 if ($uriPath === '' || $uriPath[0] !== '/') {
@@ -86,28 +90,36 @@ if (preg_match('#^/data(?:/|$)#i', $uriPath)) {
 
 // Legacy /index.html -> 301 /
 if (strtolower($uriPath) === '/index.html') {
-    header('Location: /', true, 301);
+    $sendBaseHeaders(false);
+    header('Location: /' . $querySuffix, true, 301);
     exit;
 }
 
-// Extensionless clean URL routes
+// Legacy standalone .php routes -> 301 clean paths (preserving query string)
+if (preg_match('#^/(donate|locations|volunteer|missions|about|contact)\.php$#i', $uriPath, $legacyPhp)) {
+    $sendBaseHeaders(false);
+    header('Location: /' . strtolower($legacyPhp[1]) . $querySuffix, true, 301);
+    exit;
+}
+
+// Unified single-scroll shell routes + admin/API endpoints
 $cleanRouteMap = [
     '/'           => 'index.php',
-    '/donate'     => 'donate.php',
-    '/locations'  => 'locations.php',
-    '/volunteer'  => 'volunteer.php',
-    '/missions'   => 'missions.php',
-    '/about'      => 'about.php',
-    '/contact'    => 'contact.php',
+    '/donate'     => 'index.php',
+    '/locations'  => 'index.php',
+    '/volunteer'  => 'index.php',
+    '/missions'   => 'index.php',
+    '/about'      => 'index.php',
+    '/contact'    => 'index.php',
     '/admin'      => 'admin-view.php',
 ];
 
-$normalizedRoute = $uriPath === '/' ? '/' : rtrim($uriPath, '/');
+$normalizedRoute = $uriPath === '/' ? '/' : strtolower(rtrim($uriPath, '/'));
 $targetPhp = null;
 
 if (isset($cleanRouteMap[$normalizedRoute])) {
     $targetPhp = $rootReal . DIRECTORY_SEPARATOR . $cleanRouteMap[$normalizedRoute];
-} elseif (preg_match('#^/(index|donate|locations|volunteer|missions|about|contact|admin-view|get-config|get-gallery-images|get-locations|register-volunteer|send-email)\.php$#', $uriPath, $m)) {
+} elseif (preg_match('#^/(index|admin-view|get-config|get-gallery-images|get-locations|register-volunteer|send-email)\.php$#', $uriPath, $m)) {
     $targetPhp = $rootReal . DIRECTORY_SEPARATOR . $m[1] . '.php';
 } elseif (str_ends_with(strtolower($uriPath), '.php')) {
     $sendBaseHeaders(false);
@@ -133,8 +145,6 @@ if ($targetPhp !== null) {
 
 // Resolve static file inside redesign/ first, then coexistence parent root media
 $relPath = ltrim($uriPath, '/');
-$servedFile = null;
-$servedExt = strtolower(pathinfo($relPath, PATHINFO_EXTENSION));
 $acceptsWebp = str_contains(strtolower((string)($_SERVER['HTTP_ACCEPT'] ?? '')), 'image/webp');
 
 $resolveStaticInBase = static function (string $baseReal, string $relative) use ($acceptsWebp): ?array {
@@ -145,7 +155,6 @@ $resolveStaticInBase = static function (string $baseReal, string $relative) use 
     }
 
     $ext = strtolower(pathinfo($candidate, PATHINFO_EXTENSION));
-    $variedWebp = false;
     if ($acceptsWebp && in_array($ext, ['jpg', 'jpeg', 'png'], true)) {
         $webpRel = preg_replace('/\.[^.]+$/', '.webp', $relative);
         if (is_string($webpRel)) {
@@ -156,7 +165,7 @@ $resolveStaticInBase = static function (string $baseReal, string $relative) use 
         }
     }
 
-    return ['path' => $candidate, 'ext' => $ext, 'vary' => $variedWebp];
+    return ['path' => $candidate, 'ext' => $ext, 'vary' => false];
 };
 
 $resolved = null;

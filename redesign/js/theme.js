@@ -1,13 +1,13 @@
 /**
- * v2 Dual-Theme & 3-State Cycler Manager (AUTO / LIGHT / DARK).
+ * v3 2-State Comfort Theme Toggle (OS Default <-> Opposite Override).
  * Synchronizes localStorage['erc-color-scheme'], <meta name="color-scheme">,
  * <html data-theme="...">, <meta name="theme-color">, and `erc:themechange`.
  */
 
 const STORAGE_KEY = 'erc-color-scheme';
 const THEME_COLORS = {
-  light: '#eaf0f8',
-  dark: '#0b1117',
+  light: '#FAF9F6',
+  dark: '#0E141B',
 };
 
 const osDarkQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -65,17 +65,14 @@ export function getResolvedTheme() {
 function syncThemeColorMeta(normalizedPref, resolved) {
   const metaLight = document.getElementById('metaThemeColorLight');
   const metaDark = document.getElementById('metaThemeColorDark');
-  const genericThemeMeta = document.querySelector('meta[name="theme-color"]:not([media])');
 
   if (normalizedPref === 'light' || normalizedPref === 'dark') {
     const hex = THEME_COLORS[resolved];
     if (metaLight) metaLight.setAttribute('content', hex);
     if (metaDark) metaDark.setAttribute('content', hex);
-    if (genericThemeMeta) genericThemeMeta.setAttribute('content', hex);
   } else {
     if (metaLight) metaLight.setAttribute('content', THEME_COLORS.light);
     if (metaDark) metaDark.setAttribute('content', THEME_COLORS.dark);
-    if (genericThemeMeta) genericThemeMeta.setAttribute('content', THEME_COLORS[resolved]);
   }
 }
 
@@ -86,19 +83,22 @@ function syncToggleButton(prefMode, resolved) {
   const labelEl = document.getElementById('themeToggleLabel');
   const glyphEl = btn.querySelector('.theme-toggle__glyph');
 
-  const modeUpper = prefMode === 'light' ? 'LIGHT' : prefMode === 'dark' ? 'DARK' : 'AUTO';
-  const nextUpper = prefMode === 'auto' ? 'LIGHT' : prefMode === 'light' ? 'DARK' : 'AUTO';
+  const isDark = resolved === 'dark';
+  const nextLabel = isDark ? 'Light' : 'Dark';
 
   if (labelEl) {
-    labelEl.textContent = modeUpper;
+    labelEl.textContent = isDark ? 'Dark' : 'Light';
   }
   if (glyphEl) {
-    glyphEl.textContent = prefMode === 'light' ? '\u2600' : prefMode === 'dark' ? '\u263E' : '\u25D0';
+    glyphEl.textContent = isDark ? '\u263E' : '\u2600';
   }
 
-  const ariaLabel = `Color theme: ${modeUpper} (${resolved}). Click to switch to ${nextUpper}.`;
-  btn.setAttribute('aria-label', ariaLabel);
-  btn.setAttribute('title', `Theme: ${modeUpper} — Click for ${nextUpper}`);
+  btn.setAttribute('aria-pressed', prefMode !== 'auto' ? 'true' : 'false');
+  btn.setAttribute(
+    'aria-label',
+    `Color theme: ${isDark ? 'Dark' : 'Light'}${prefMode === 'auto' ? ' (system)' : ''}. Switch to ${nextLabel}.`
+  );
+  btn.setAttribute('title', `Switch to ${nextLabel} theme`);
   btn.setAttribute('data-theme-pref', prefMode);
   btn.setAttribute('data-resolved-theme', resolved);
 }
@@ -146,14 +146,16 @@ export function setThemePreference(nextTheme) {
   applyColorScheme(target);
 }
 
-function cycleThemePreference() {
-  const current = getThemePreference();
-  if (current === 'auto') {
-    setThemePreference('light');
-  } else if (current === 'light') {
-    setThemePreference('dark');
-  } else {
+function toggleComfortTheme() {
+  const osTheme = getOsTheme();
+  const currentResolved = getResolvedTheme();
+  const nextTarget = currentResolved === 'dark' ? 'light' : 'dark';
+
+  // Revert cleanly to OS default (removing stored key) when clicking back to OS theme
+  if (nextTarget === osTheme) {
     setThemePreference('auto');
+  } else {
+    setThemePreference(nextTarget);
   }
 }
 
@@ -163,9 +165,10 @@ function initThemeToggle() {
 
   const toggleBtn = document.getElementById('themeToggle');
   if (toggleBtn) {
-    toggleBtn.addEventListener('click', cycleThemePreference);
+    toggleBtn.addEventListener('click', toggleComfortTheme);
   }
 
+  // Never clear localStorage when OS preference changes; only update when in OS-follow mode
   osDarkQuery.addEventListener('change', () => {
     const stored = readStoredPreference();
     if (!stored) {

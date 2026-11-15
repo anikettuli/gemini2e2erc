@@ -1,37 +1,35 @@
-@layer reset, tokens, base, layout, components, pages, utilities;
+@layer reset, tokens, base, layout, components, sections, pages, utilities;
 
 @layer tokens {
   :root {
-    /* Baseline dual color-scheme: AUTO follows OS preference; user can lock DARK or LIGHT */
     color-scheme: light dark;
 
     /* ========================================================================
-       4-Layer Self-Hosted v2 Typography System
+       2-Font Self-Hosted Editorial Typography
        ======================================================================== */
-    --font-display: 'Anton', Impact, 'Arial Narrow', sans-serif;
     --font-sans: 'Inter Tight Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
     --font-mono: 'Martian Mono Variable', ui-monospace, SFMono-Regular, Menlo, monospace;
-    --font-hand: 'Caveat Variable', 'Segoe Print', cursive;
+    --font-display: var(--font-sans);
 
-    /* Fluid Accessible Type Scale (>= 16px body) */
+    /* Fluid Accessible Type Scale (>= 16px body prose) */
     --text-xs: 0.75rem;
     --text-sm: 0.875rem;
     --text-base: 1rem;
     --text-md: 1.125rem;
-    --text-lg: clamp(1.1875rem, 1.1rem + 0.45vw, 1.4375rem);
-    --text-xl: clamp(1.375rem, 1.2rem + 0.9vw, 1.875rem);
-    --text-2xl: clamp(1.75rem, 1.45rem + 1.5vw, 2.5rem);
-    --text-3xl: clamp(2.125rem, 1.65rem + 2.3vw, 3.25rem);
+    --text-lg: clamp(1.125rem, 1.05rem + 0.35vw, 1.25rem);
+    --text-xl: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+    --text-2xl: clamp(1.75rem, 1.35rem + 1.6vw, 2.625rem);
+    --text-3xl: clamp(2.25rem, 1.5rem + 3vw, 3.75rem);
 
-    --leading-display: 0.93;
-    --leading-tight: 1.1;
-    --leading-snug: 1.32;
-    --leading-normal: 1.58;
-    --leading-relaxed: 1.7;
+    --leading-display: 1.08;
+    --leading-tight: 1.2;
+    --leading-snug: 1.38;
+    --leading-normal: 1.6;
+    --leading-relaxed: 1.72;
 
-    --tracking-display: -0.02em;
-    --tracking-sans: -0.015em;
-    --tracking-mono: 0.1em;
+    --tracking-display: -0.025em;
+    --tracking-sans: -0.01em;
+    --tracking-mono: 0.08em;
 
     /* Spacing Scale (4px rhythm) */
     --space-1: 0.25rem;
@@ -47,19 +45,18 @@
     --space-20: 5rem;
 
     /* Layout & Radii */
-    --container-max: 78rem;
-    --container-shell: 95rem; /* 1520px floating capsule cap */
+    --container-max: 80rem;
+    --container-shell: 90rem;
     --container-narrow: 54rem;
-    --prose-max: 66ch;
+    --prose-max: 64ch;
     --header-height: 4.5rem;
     --gutter: clamp(1rem, 3vw, 2.25rem);
 
     --radius-sm: 0.5rem;
     --radius-md: 0.75rem;
-    --radius-lg: 1.125rem;
-    --radius-card: 1.375rem; /* 22px schematic card radius */
-    --radius-sheet: clamp(18px, 2vw, 30px);
-    --radius-xl: 1.75rem;
+    --radius-lg: 1rem;
+    --radius-card: 1.125rem;
+    --radius-xl: 1.5rem;
     --radius-pill: 9999px;
 
     /* Motion */
@@ -70,116 +67,76 @@
     --duration-slow: 360ms;
 
     /* ========================================================================
-       Raw v2 Dark & Light Palette Pairs (WCAG 2.2 AA >= 4.5:1 Verified)
+       Raw Light ("Warm Archival Paper") & Dark ("Deep Slate Observatory")
+       WCAG 2.2 AA Verified (>= 4.5:1 normal text, >= 3.0:1 UI borders)
        ======================================================================== */
-    --p-bg-dark: #0b1117;
-    --p-bg-light: #eaf0f8;
+    --p-bg-light: #FAF9F6;
+    --p-bg-dark: #0E141B;
 
-    --p-bg-2-dark: #121b24;
-    --p-bg-2-light: #dce4ee;
+    --p-bg-alt-light: #F2F0EB;
+    --p-bg-alt-dark: #151D27;
 
-    --p-surface-dark: #17212b;
-    --p-surface-light: #f7f9fc;
+    --p-surface-light: #FFFFFF;
+    --p-surface-dark: #1B2430;
 
-    --p-surface-2-dark: #1e2b38;
-    --p-surface-2-light: #ffffff;
+    --p-surface-2-light: #F7F5F0;
+    --p-surface-2-dark: #222D3B;
 
-    --p-fg-dark: #e8eef5;
-    --p-fg-light: #14202b;
+    --p-fg-light: #141D29;
+    --p-fg-dark: #EFF2F5;
 
-    --p-fg-2-dark: #b4c0cc;
-    --p-fg-2-light: #334150;
+    --p-fg-2-light: #3B4654;
+    --p-fg-2-dark: #BCC5D1;
 
-    --p-muted-dark: #8b9bb0;
-    --p-muted-light: #4e5d6c;
+    --p-muted-light: #596574;
+    --p-muted-dark: #919EAE;
 
-    --p-rule-dark: rgba(232, 238, 245, 0.13);
-    --p-rule-light: rgba(20, 32, 43, 0.14);
+    --p-rule-light: rgba(20, 29, 41, 0.12);
+    --p-rule-dark: rgba(239, 242, 245, 0.14);
 
-    --p-rule-strong-dark: rgba(232, 238, 245, 0.28);
-    --p-rule-strong-light: rgba(20, 32, 43, 0.30);
+    --p-rule-strong-light: #7D8793;
+    --p-rule-strong-dark: #687687;
 
-    /* International Vermilion Accent + High-Contrast Text/Fill Pairs */
-    --p-accent-dark: #e5533a;
-    --p-accent-light: #b83227;
+    /* ONE Primary Optical Cobalt Accent */
+    --p-accent-light: #1D4E89;
+    --p-accent-dark: #6BA6F2;
 
-    --p-accent-hot-dark: #ff6a4d;
-    --p-accent-hot-light: #9e271d;
+    --p-accent-hover-light: #163D6B;
+    --p-accent-hover-dark: #88B8F6;
 
-    /* #0b1117 on #e5533a = 5.09:1 AA; #ffffff on #b83227 = 5.96:1 AA */
-    --p-on-accent-dark: #0b1117;
-    --p-on-accent-light: #ffffff;
+    --p-on-accent-light: #FFFFFF;
+    --p-on-accent-dark: #0B121B;
 
-    /* Signal Lime & Optical Cyan */
-    --p-signal-dark: #7cfc06;
-    --p-signal-light: #7cfc06;
-    --p-on-signal-dark: #0b1117;
-    --p-on-signal-light: #0b1117;
+    /* Lions Heritage Gold (sparingly for Helen Keller & Life Membership badges) */
+    --p-gold-light: #E6B84C;
+    --p-gold-dark: #DFB34B;
+    --p-on-gold-light: #261B07;
+    --p-on-gold-dark: #1C1404;
+    --p-gold-ink-light: #7A5300;
+    --p-gold-ink-dark: #F2C96B;
 
-    --p-cyan-dark: #22d3ee;
-    --p-cyan-light: #0e7490;
+    /* Semantic Status Tokens */
+    --p-success-bg-light: #E6F4EC;
+    --p-success-bg-dark: #10281B;
+    --p-success-ink-light: #145A32;
+    --p-success-ink-dark: #6EE7A0;
 
-    /* Alternating Contrast Sheet Tokens (inverted stage surfaces) */
-    --p-contrast-bg-dark: #eaf0f8;
-    --p-contrast-bg-light: #0e151c;
+    --p-warn-bg-light: #FEF3C7;
+    --p-warn-bg-dark: #291E0B;
+    --p-warn-ink-light: #7C4A03;
+    --p-warn-ink-dark: #FCD34D;
 
-    --p-contrast-surface-dark: #f7f9fc;
-    --p-contrast-surface-light: #17212b;
-
-    --p-contrast-fg-dark: #14202b;
-    --p-contrast-fg-light: #edf2f7;
-
-    --p-contrast-fg-2-dark: #334150;
-    --p-contrast-fg-2-light: #b4c0cc;
-
-    --p-contrast-muted-dark: #4a5968;
-    --p-contrast-muted-light: #94a3b8;
-
-    --p-contrast-accent-dark: #b83227;
-    --p-contrast-accent-light: #ff6a4d;
-
-    --p-contrast-on-accent-dark: #ffffff;
-    --p-contrast-on-accent-light: #0b1117;
-
-    --p-contrast-rule-dark: rgba(20, 32, 43, 0.14);
-    --p-contrast-rule-light: rgba(237, 242, 247, 0.14);
-
-    /* Heritage Gold & Semantic Status Pairs */
-    --p-gold-fill-dark: #fbbf24;
-    --p-gold-fill-light: #fbbf24;
-    --p-on-gold-dark: #0b1117;
-    --p-on-gold-light: #0b1117;
-    --p-gold-ink-dark: #fbbf24;
-    --p-gold-ink-light: #854d0e;
-
-    --p-emerald-dark: #4ade80;
-    --p-emerald-light: #136f34;
-    --p-on-emerald-dark: #0b1117;
-    --p-on-emerald-light: #ffffff;
-
-    --p-success-bg-dark: #12261c;
-    --p-success-bg-light: #dcfce7;
-    --p-success-ink-dark: #4ade80;
-    --p-success-ink-light: #136f34;
-
-    --p-warn-bg-dark: #261d0d;
-    --p-warn-bg-light: #fef3c7;
-    --p-warn-ink-dark: #fbbf24;
-    --p-warn-ink-light: #92400e;
-
-    --p-danger-bg-dark: #2b1414;
-    --p-danger-bg-light: #fee2e2;
-    --p-danger-ink-dark: #ff8570;
-    --p-danger-ink-light: #b91c1c;
-
-    --p-focus-ring-dark: #ff6a4d;
-    --p-focus-ring-light: #b83227;
+    --p-danger-bg-light: #FEE2E2;
+    --p-danger-bg-dark: #2D1517;
+    --p-danger-ink-light: #991B1B;
+    --p-danger-ink-dark: #FCA5A5;
 
     /* ========================================================================
-       Active v2 Semantic Tokens via light-dark()
+       Active Semantic Tokens via light-dark()
        ======================================================================== */
     --bg: light-dark(var(--p-bg-light), var(--p-bg-dark));
-    --bg-2: light-dark(var(--p-bg-2-light), var(--p-bg-2-dark));
+    --bg-alt: light-dark(var(--p-bg-alt-light), var(--p-bg-alt-dark));
+    --bg-2: var(--bg-alt);
     --surface: light-dark(var(--p-surface-light), var(--p-surface-dark));
     --surface-2: light-dark(var(--p-surface-2-light), var(--p-surface-2-dark));
 
@@ -191,59 +148,14 @@
     --rule-strong: light-dark(var(--p-rule-strong-light), var(--p-rule-strong-dark));
 
     --accent: light-dark(var(--p-accent-light), var(--p-accent-dark));
-    --accent-hot: light-dark(var(--p-accent-hot-light), var(--p-accent-hot-dark));
-    --accent-ink: light-dark(var(--p-accent-light), var(--p-accent-hot-dark));
+    --accent-hover: light-dark(var(--p-accent-hover-light), var(--p-accent-hover-dark));
+    --accent-hot: var(--accent-hover);
+    --accent-ink: var(--accent);
     --on-accent: light-dark(var(--p-on-accent-light), var(--p-on-accent-dark));
 
-    --signal: light-dark(var(--p-signal-light), var(--p-signal-dark));
-    --on-signal: light-dark(var(--p-on-signal-light), var(--p-on-signal-dark));
-    --cyan: light-dark(var(--p-cyan-light), var(--p-cyan-dark));
-
-    /* Alternating Contrast Sheet Semantic Tokens (resolved by page theme, never double-inverted by sheet color-scheme) */
-    --contrast-bg: var(--p-contrast-bg-light);
-    --contrast-surface: var(--p-contrast-surface-light);
-    --contrast-fg: var(--p-contrast-fg-light);
-    --contrast-fg-2: var(--p-contrast-fg-2-light);
-    --contrast-muted: var(--p-contrast-muted-light);
-    --contrast-accent: var(--p-contrast-accent-light);
-    --contrast-on-accent: var(--p-contrast-on-accent-light);
-    --contrast-rule: var(--p-contrast-rule-light);
-    --contrast-cyan: var(--p-cyan-dark);
-    --contrast-gold-ink: var(--p-gold-ink-dark);
-    --contrast-emerald: var(--p-emerald-dark);
-    --contrast-on-emerald: var(--p-on-emerald-dark);
-    --contrast-success-bg: var(--p-success-bg-dark);
-    --contrast-success-ink: var(--p-success-ink-dark);
-    --contrast-warn-bg: var(--p-warn-bg-dark);
-    --contrast-warn-ink: var(--p-warn-ink-dark);
-    --contrast-danger-bg: var(--p-danger-bg-dark);
-    --contrast-danger-ink: var(--p-danger-ink-dark);
-
-    /* ========================================================================
-       Backward-Compatible v1 Semantic Token Aliases (Zero Broken Selectors)
-       ======================================================================== */
-    --bg-canvas: var(--bg);
-    --bg-surface: var(--surface);
-    --bg-subtle: var(--bg-2);
-    --bg-tint: var(--surface-2);
-
-    --ink-primary: var(--fg);
-    --ink-secondary: var(--fg-2);
-    --ink-muted: var(--muted);
-
-    --border-subtle: var(--rule);
-    --border-strong: var(--rule-strong);
-
-    --brand-primary: var(--accent-ink);
-    --brand-primary-hover: var(--accent-hot);
-    --on-brand-primary: var(--on-accent);
-
-    --brand-gold-fill: light-dark(var(--p-gold-fill-light), var(--p-gold-fill-dark));
-    --on-brand-gold: light-dark(var(--p-on-gold-light), var(--p-on-gold-dark));
-    --brand-gold-ink: light-dark(var(--p-gold-ink-light), var(--p-gold-ink-dark));
-
-    --brand-emerald: light-dark(var(--p-emerald-light), var(--p-emerald-dark));
-    --on-brand-emerald: light-dark(var(--p-on-emerald-light), var(--p-on-emerald-dark));
+    --gold: light-dark(var(--p-gold-light), var(--p-gold-dark));
+    --on-gold: light-dark(var(--p-on-gold-light), var(--p-on-gold-dark));
+    --gold-ink: light-dark(var(--p-gold-ink-light), var(--p-gold-ink-dark));
 
     --status-success-bg: light-dark(var(--p-success-bg-light), var(--p-success-bg-dark));
     --status-success-ink: light-dark(var(--p-success-ink-light), var(--p-success-ink-dark));
@@ -254,97 +166,36 @@
     --status-danger-bg: light-dark(var(--p-danger-bg-light), var(--p-danger-bg-dark));
     --status-danger-ink: light-dark(var(--p-danger-ink-light), var(--p-danger-ink-dark));
 
-    --focus-ring: light-dark(var(--p-focus-ring-light), var(--p-focus-ring-dark));
+    --focus-ring: var(--accent);
 
-    /* Elevation */
-    --shadow-sm-ambient: light-dark(rgba(11, 17, 23, 0.06), rgba(0, 0, 0, 0.45));
-    --shadow-sm-key: light-dark(rgba(11, 17, 23, 0.08), rgba(0, 0, 0, 0.35));
-    --shadow-md-ambient: light-dark(rgba(11, 17, 23, 0.11), rgba(0, 0, 0, 0.62));
-    --shadow-md-key: light-dark(rgba(11, 17, 23, 0.06), rgba(0, 0, 0, 0.42));
-    --shadow-hairline: light-dark(rgba(255, 255, 255, 0.65), rgba(232, 238, 245, 0.07));
-    --backdrop-scrim: light-dark(rgba(11, 17, 23, 0.52), rgba(4, 8, 12, 0.78));
+    /* Subtle Elevation */
+    --shadow-sm-ambient: light-dark(rgba(20, 29, 41, 0.05), rgba(0, 0, 0, 0.35));
+    --shadow-sm-key: light-dark(rgba(20, 29, 41, 0.06), rgba(0, 0, 0, 0.25));
+    --shadow-md-ambient: light-dark(rgba(20, 29, 41, 0.08), rgba(0, 0, 0, 0.5));
+    --shadow-md-key: light-dark(rgba(20, 29, 41, 0.05), rgba(0, 0, 0, 0.35));
+    --backdrop-scrim: light-dark(rgba(20, 29, 41, 0.45), rgba(5, 8, 12, 0.72));
 
-    --shadow-sm: 0 1px 2px var(--shadow-sm-ambient), 0 1px 3px var(--shadow-sm-key), inset 0 1px 0 var(--shadow-hairline);
-    --shadow-md: 0 10px 26px -6px var(--shadow-md-ambient), 0 2px 8px var(--shadow-md-key), inset 0 1px 0 var(--shadow-hairline);
-    --shadow-lg: 0 22px 48px -10px var(--shadow-md-ambient), 0 6px 16px var(--shadow-md-key), inset 0 1px 0 var(--shadow-hairline);
-  }
-
-  /* Contrast sheet tokens follow page polarity directly so setting color-scheme on .v2-sheet does not double-invert light-dark() */
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme='light']) {
-      --contrast-bg: var(--p-contrast-bg-dark);
-      --contrast-surface: var(--p-contrast-surface-dark);
-      --contrast-fg: var(--p-contrast-fg-dark);
-      --contrast-fg-2: var(--p-contrast-fg-2-dark);
-      --contrast-muted: var(--p-contrast-muted-dark);
-      --contrast-accent: var(--p-contrast-accent-dark);
-      --contrast-on-accent: var(--p-contrast-on-accent-dark);
-      --contrast-rule: var(--p-contrast-rule-dark);
-      --contrast-cyan: var(--p-cyan-light);
-      --contrast-gold-ink: var(--p-gold-ink-light);
-      --contrast-emerald: var(--p-emerald-light);
-      --contrast-on-emerald: var(--p-on-emerald-light);
-      --contrast-success-bg: var(--p-success-bg-light);
-      --contrast-success-ink: var(--p-success-ink-light);
-      --contrast-warn-bg: var(--p-warn-bg-light);
-      --contrast-warn-ink: var(--p-warn-ink-light);
-      --contrast-danger-bg: var(--p-danger-bg-light);
-      --contrast-danger-ink: var(--p-danger-ink-light);
-    }
+    --shadow-sm: 0 1px 2px var(--shadow-sm-ambient), 0 1px 3px var(--shadow-sm-key);
+    --shadow-md: 0 8px 24px -6px var(--shadow-md-ambient), 0 2px 6px var(--shadow-md-key);
+    --shadow-lg: 0 18px 42px -12px var(--shadow-md-ambient), 0 4px 12px var(--shadow-md-key);
   }
 
   /* Explicit scheme override driven by <meta name="color-scheme"> or [data-theme] */
   :root[data-theme='dark'],
   :root:has(> head > meta[name='color-scheme'][content='dark']) {
     color-scheme: dark;
-    --contrast-bg: var(--p-contrast-bg-dark);
-    --contrast-surface: var(--p-contrast-surface-dark);
-    --contrast-fg: var(--p-contrast-fg-dark);
-    --contrast-fg-2: var(--p-contrast-fg-2-dark);
-    --contrast-muted: var(--p-contrast-muted-dark);
-    --contrast-accent: var(--p-contrast-accent-dark);
-    --contrast-on-accent: var(--p-contrast-on-accent-dark);
-    --contrast-rule: var(--p-contrast-rule-dark);
-    --contrast-cyan: var(--p-cyan-light);
-    --contrast-gold-ink: var(--p-gold-ink-light);
-    --contrast-emerald: var(--p-emerald-light);
-    --contrast-on-emerald: var(--p-on-emerald-light);
-    --contrast-success-bg: var(--p-success-bg-light);
-    --contrast-success-ink: var(--p-success-ink-light);
-    --contrast-warn-bg: var(--p-warn-bg-light);
-    --contrast-warn-ink: var(--p-warn-ink-light);
-    --contrast-danger-bg: var(--p-danger-bg-light);
-    --contrast-danger-ink: var(--p-danger-ink-light);
   }
 
   :root[data-theme='light'],
   :root:has(> head > meta[name='color-scheme'][content='light']) {
     color-scheme: light;
-    --contrast-bg: var(--p-contrast-bg-light);
-    --contrast-surface: var(--p-contrast-surface-light);
-    --contrast-fg: var(--p-contrast-fg-light);
-    --contrast-fg-2: var(--p-contrast-fg-2-light);
-    --contrast-muted: var(--p-contrast-muted-light);
-    --contrast-accent: var(--p-contrast-accent-light);
-    --contrast-on-accent: var(--p-contrast-on-accent-light);
-    --contrast-rule: var(--p-contrast-rule-light);
-    --contrast-cyan: var(--p-cyan-dark);
-    --contrast-gold-ink: var(--p-gold-ink-dark);
-    --contrast-emerald: var(--p-emerald-dark);
-    --contrast-on-emerald: var(--p-on-emerald-dark);
-    --contrast-success-bg: var(--p-success-bg-dark);
-    --contrast-success-ink: var(--p-success-ink-dark);
-    --contrast-warn-bg: var(--p-warn-bg-dark);
-    --contrast-warn-ink: var(--p-warn-ink-dark);
-    --contrast-danger-bg: var(--p-danger-bg-dark);
-    --contrast-danger-ink: var(--p-danger-ink-dark);
   }
 
   /* Fallback for clients lacking CSS light-dark() */
   @supports not (color: light-dark(white, black)) {
     :root {
       --bg: var(--p-bg-light);
-      --bg-2: var(--p-bg-2-light);
+      --bg-alt: var(--p-bg-alt-light);
       --surface: var(--p-surface-light);
       --surface-2: var(--p-surface-2-light);
       --fg: var(--p-fg-light);
@@ -353,54 +204,28 @@
       --rule: var(--p-rule-light);
       --rule-strong: var(--p-rule-strong-light);
       --accent: var(--p-accent-light);
-      --accent-hot: var(--p-accent-hot-light);
-      --accent-ink: var(--p-accent-light);
+      --accent-hover: var(--p-accent-hover-light);
       --on-accent: var(--p-on-accent-light);
-      --signal: var(--p-signal-light);
-      --on-signal: var(--p-on-signal-light);
-      --cyan: var(--p-cyan-light);
-      --contrast-bg: var(--p-contrast-bg-light);
-      --contrast-surface: var(--p-contrast-surface-light);
-      --contrast-fg: var(--p-contrast-fg-light);
-      --contrast-fg-2: var(--p-contrast-fg-2-light);
-      --contrast-muted: var(--p-contrast-muted-light);
-      --contrast-accent: var(--p-contrast-accent-light);
-      --contrast-on-accent: var(--p-contrast-on-accent-light);
-      --contrast-rule: var(--p-contrast-rule-light);
-      --contrast-cyan: var(--p-cyan-dark);
-      --contrast-gold-ink: var(--p-gold-ink-dark);
-      --contrast-emerald: var(--p-emerald-dark);
-      --contrast-on-emerald: var(--p-on-emerald-dark);
-      --contrast-success-bg: var(--p-success-bg-dark);
-      --contrast-success-ink: var(--p-success-ink-dark);
-      --contrast-warn-bg: var(--p-warn-bg-dark);
-      --contrast-warn-ink: var(--p-warn-ink-dark);
-      --contrast-danger-bg: var(--p-danger-bg-dark);
-      --contrast-danger-ink: var(--p-danger-ink-dark);
-      --brand-gold-fill: var(--p-gold-fill-light);
-      --on-brand-gold: var(--p-on-gold-light);
-      --brand-gold-ink: var(--p-gold-ink-light);
-      --brand-emerald: var(--p-emerald-light);
-      --on-brand-emerald: var(--p-on-emerald-light);
+      --gold: var(--p-gold-light);
+      --on-gold: var(--p-on-gold-light);
+      --gold-ink: var(--p-gold-ink-light);
       --status-success-bg: var(--p-success-bg-light);
       --status-success-ink: var(--p-success-ink-light);
       --status-warn-bg: var(--p-warn-bg-light);
       --status-warn-ink: var(--p-warn-ink-light);
       --status-danger-bg: var(--p-danger-bg-light);
       --status-danger-ink: var(--p-danger-ink-light);
-      --focus-ring: var(--p-focus-ring-light);
-      --shadow-sm-ambient: rgba(11, 17, 23, 0.06);
-      --shadow-sm-key: rgba(11, 17, 23, 0.08);
-      --shadow-md-ambient: rgba(11, 17, 23, 0.11);
-      --shadow-md-key: rgba(11, 17, 23, 0.06);
-      --shadow-hairline: rgba(255, 255, 255, 0.65);
-      --backdrop-scrim: rgba(11, 17, 23, 0.52);
+      --shadow-sm-ambient: rgba(20, 29, 41, 0.05);
+      --shadow-sm-key: rgba(20, 29, 41, 0.06);
+      --shadow-md-ambient: rgba(20, 29, 41, 0.08);
+      --shadow-md-key: rgba(20, 29, 41, 0.05);
+      --backdrop-scrim: rgba(20, 29, 41, 0.45);
     }
 
     @media (prefers-color-scheme: dark) {
       :root {
         --bg: var(--p-bg-dark);
-        --bg-2: var(--p-bg-2-dark);
+        --bg-alt: var(--p-bg-alt-dark);
         --surface: var(--p-surface-dark);
         --surface-2: var(--p-surface-2-dark);
         --fg: var(--p-fg-dark);
@@ -409,55 +234,29 @@
         --rule: var(--p-rule-dark);
         --rule-strong: var(--p-rule-strong-dark);
         --accent: var(--p-accent-dark);
-        --accent-hot: var(--p-accent-hot-dark);
-        --accent-ink: var(--p-accent-hot-dark);
+        --accent-hover: var(--p-accent-hover-dark);
         --on-accent: var(--p-on-accent-dark);
-        --signal: var(--p-signal-dark);
-        --on-signal: var(--p-on-signal-dark);
-        --cyan: var(--p-cyan-dark);
-        --contrast-bg: var(--p-contrast-bg-dark);
-        --contrast-surface: var(--p-contrast-surface-dark);
-        --contrast-fg: var(--p-contrast-fg-dark);
-        --contrast-fg-2: var(--p-contrast-fg-2-dark);
-        --contrast-muted: var(--p-contrast-muted-dark);
-        --contrast-accent: var(--p-contrast-accent-dark);
-        --contrast-on-accent: var(--p-contrast-on-accent-dark);
-        --contrast-rule: var(--p-contrast-rule-dark);
-        --contrast-cyan: var(--p-cyan-light);
-        --contrast-gold-ink: var(--p-gold-ink-light);
-        --contrast-emerald: var(--p-emerald-light);
-        --contrast-on-emerald: var(--p-on-emerald-light);
-        --contrast-success-bg: var(--p-success-bg-light);
-        --contrast-success-ink: var(--p-success-ink-light);
-        --contrast-warn-bg: var(--p-warn-bg-light);
-        --contrast-warn-ink: var(--p-warn-ink-light);
-        --contrast-danger-bg: var(--p-danger-bg-light);
-        --contrast-danger-ink: var(--p-danger-ink-light);
-        --brand-gold-fill: var(--p-gold-fill-dark);
-        --on-brand-gold: var(--p-on-gold-dark);
-        --brand-gold-ink: var(--p-gold-ink-dark);
-        --brand-emerald: var(--p-emerald-dark);
-        --on-brand-emerald: var(--p-on-emerald-dark);
+        --gold: var(--p-gold-dark);
+        --on-gold: var(--p-on-gold-dark);
+        --gold-ink: var(--p-gold-ink-dark);
         --status-success-bg: var(--p-success-bg-dark);
         --status-success-ink: var(--p-success-ink-dark);
         --status-warn-bg: var(--p-warn-bg-dark);
         --status-warn-ink: var(--p-warn-ink-dark);
         --status-danger-bg: var(--p-danger-bg-dark);
         --status-danger-ink: var(--p-danger-ink-dark);
-        --focus-ring: var(--p-focus-ring-dark);
-        --shadow-sm-ambient: rgba(0, 0, 0, 0.45);
-        --shadow-sm-key: rgba(0, 0, 0, 0.35);
-        --shadow-md-ambient: rgba(0, 0, 0, 0.62);
-        --shadow-md-key: rgba(0, 0, 0, 0.42);
-        --shadow-hairline: rgba(232, 238, 245, 0.07);
-        --backdrop-scrim: rgba(4, 8, 12, 0.78);
+        --shadow-sm-ambient: rgba(0, 0, 0, 0.35);
+        --shadow-sm-key: rgba(0, 0, 0, 0.25);
+        --shadow-md-ambient: rgba(0, 0, 0, 0.5);
+        --shadow-md-key: rgba(0, 0, 0, 0.35);
+        --backdrop-scrim: rgba(5, 8, 12, 0.72);
       }
     }
 
     :root[data-theme='dark'],
     :root:has(> head > meta[name='color-scheme'][content='dark']) {
       --bg: var(--p-bg-dark);
-      --bg-2: var(--p-bg-2-dark);
+      --bg-alt: var(--p-bg-alt-dark);
       --surface: var(--p-surface-dark);
       --surface-2: var(--p-surface-2-dark);
       --fg: var(--p-fg-dark);
@@ -466,54 +265,28 @@
       --rule: var(--p-rule-dark);
       --rule-strong: var(--p-rule-strong-dark);
       --accent: var(--p-accent-dark);
-      --accent-hot: var(--p-accent-hot-dark);
-      --accent-ink: var(--p-accent-hot-dark);
+      --accent-hover: var(--p-accent-hover-dark);
       --on-accent: var(--p-on-accent-dark);
-      --signal: var(--p-signal-dark);
-      --on-signal: var(--p-on-signal-dark);
-      --cyan: var(--p-cyan-dark);
-      --contrast-bg: var(--p-contrast-bg-dark);
-      --contrast-surface: var(--p-contrast-surface-dark);
-      --contrast-fg: var(--p-contrast-fg-dark);
-      --contrast-fg-2: var(--p-contrast-fg-2-dark);
-      --contrast-muted: var(--p-contrast-muted-dark);
-      --contrast-accent: var(--p-contrast-accent-dark);
-      --contrast-on-accent: var(--p-contrast-on-accent-dark);
-      --contrast-rule: var(--p-contrast-rule-dark);
-      --contrast-cyan: var(--p-cyan-light);
-      --contrast-gold-ink: var(--p-gold-ink-light);
-      --contrast-emerald: var(--p-emerald-light);
-      --contrast-on-emerald: var(--p-on-emerald-light);
-      --contrast-success-bg: var(--p-success-bg-light);
-      --contrast-success-ink: var(--p-success-ink-light);
-      --contrast-warn-bg: var(--p-warn-bg-light);
-      --contrast-warn-ink: var(--p-warn-ink-light);
-      --contrast-danger-bg: var(--p-danger-bg-light);
-      --contrast-danger-ink: var(--p-danger-ink-light);
-      --brand-gold-fill: var(--p-gold-fill-dark);
-      --on-brand-gold: var(--p-on-gold-dark);
-      --brand-gold-ink: var(--p-gold-ink-dark);
-      --brand-emerald: var(--p-emerald-dark);
-      --on-brand-emerald: var(--p-on-emerald-dark);
+      --gold: var(--p-gold-dark);
+      --on-gold: var(--p-on-gold-dark);
+      --gold-ink: var(--p-gold-ink-dark);
       --status-success-bg: var(--p-success-bg-dark);
       --status-success-ink: var(--p-success-ink-dark);
       --status-warn-bg: var(--p-warn-bg-dark);
       --status-warn-ink: var(--p-warn-ink-dark);
       --status-danger-bg: var(--p-danger-bg-dark);
       --status-danger-ink: var(--p-danger-ink-dark);
-      --focus-ring: var(--p-focus-ring-dark);
-      --shadow-sm-ambient: rgba(0, 0, 0, 0.45);
-      --shadow-sm-key: rgba(0, 0, 0, 0.35);
-      --shadow-md-ambient: rgba(0, 0, 0, 0.62);
-      --shadow-md-key: rgba(0, 0, 0, 0.42);
-      --shadow-hairline: rgba(232, 238, 245, 0.07);
-      --backdrop-scrim: rgba(4, 8, 12, 0.78);
+      --shadow-sm-ambient: rgba(0, 0, 0, 0.35);
+      --shadow-sm-key: rgba(0, 0, 0, 0.25);
+      --shadow-md-ambient: rgba(0, 0, 0, 0.5);
+      --shadow-md-key: rgba(0, 0, 0, 0.35);
+      --backdrop-scrim: rgba(5, 8, 12, 0.72);
     }
 
     :root[data-theme='light'],
     :root:has(> head > meta[name='color-scheme'][content='light']) {
       --bg: var(--p-bg-light);
-      --bg-2: var(--p-bg-2-light);
+      --bg-alt: var(--p-bg-alt-light);
       --surface: var(--p-surface-light);
       --surface-2: var(--p-surface-2-light);
       --fg: var(--p-fg-light);
@@ -522,48 +295,22 @@
       --rule: var(--p-rule-light);
       --rule-strong: var(--p-rule-strong-light);
       --accent: var(--p-accent-light);
-      --accent-hot: var(--p-accent-hot-light);
-      --accent-ink: var(--p-accent-light);
+      --accent-hover: var(--p-accent-hover-light);
       --on-accent: var(--p-on-accent-light);
-      --signal: var(--p-signal-light);
-      --on-signal: var(--p-on-signal-light);
-      --cyan: var(--p-cyan-light);
-      --contrast-bg: var(--p-contrast-bg-light);
-      --contrast-surface: var(--p-contrast-surface-light);
-      --contrast-fg: var(--p-contrast-fg-light);
-      --contrast-fg-2: var(--p-contrast-fg-2-light);
-      --contrast-muted: var(--p-contrast-muted-light);
-      --contrast-accent: var(--p-contrast-accent-light);
-      --contrast-on-accent: var(--p-contrast-on-accent-light);
-      --contrast-rule: var(--p-contrast-rule-light);
-      --contrast-cyan: var(--p-cyan-dark);
-      --contrast-gold-ink: var(--p-gold-ink-dark);
-      --contrast-emerald: var(--p-emerald-dark);
-      --contrast-on-emerald: var(--p-on-emerald-dark);
-      --contrast-success-bg: var(--p-success-bg-dark);
-      --contrast-success-ink: var(--p-success-ink-dark);
-      --contrast-warn-bg: var(--p-warn-bg-dark);
-      --contrast-warn-ink: var(--p-warn-ink-dark);
-      --contrast-danger-bg: var(--p-danger-bg-dark);
-      --contrast-danger-ink: var(--p-danger-ink-dark);
-      --brand-gold-fill: var(--p-gold-fill-light);
-      --on-brand-gold: var(--p-on-gold-light);
-      --brand-gold-ink: var(--p-gold-ink-light);
-      --brand-emerald: var(--p-emerald-light);
-      --on-brand-emerald: var(--p-on-emerald-light);
+      --gold: var(--p-gold-light);
+      --on-gold: var(--p-on-gold-light);
+      --gold-ink: var(--p-gold-ink-light);
       --status-success-bg: var(--p-success-bg-light);
       --status-success-ink: var(--p-success-ink-light);
       --status-warn-bg: var(--p-warn-bg-light);
       --status-warn-ink: var(--p-warn-ink-light);
       --status-danger-bg: var(--p-danger-bg-light);
       --status-danger-ink: var(--p-danger-ink-light);
-      --focus-ring: var(--p-focus-ring-light);
-      --shadow-sm-ambient: rgba(11, 17, 23, 0.06);
-      --shadow-sm-key: rgba(11, 17, 23, 0.08);
-      --shadow-md-ambient: rgba(11, 17, 23, 0.11);
-      --shadow-md-key: rgba(11, 17, 23, 0.06);
-      --shadow-hairline: rgba(255, 255, 255, 0.65);
-      --backdrop-scrim: rgba(11, 17, 23, 0.52);
+      --shadow-sm-ambient: rgba(20, 29, 41, 0.05);
+      --shadow-sm-key: rgba(20, 29, 41, 0.06);
+      --shadow-md-ambient: rgba(20, 29, 41, 0.08);
+      --shadow-md-key: rgba(20, 29, 41, 0.05);
+      --backdrop-scrim: rgba(20, 29, 41, 0.45);
     }
   }
 
@@ -571,7 +318,7 @@
   @media (forced-colors: active) {
     :root {
       --bg: Canvas;
-      --bg-2: Canvas;
+      --bg-alt: Canvas;
       --surface: Canvas;
       --surface-2: Canvas;
       --fg: CanvasText;
@@ -580,35 +327,11 @@
       --rule: CanvasText;
       --rule-strong: CanvasText;
       --accent: Highlight;
-      --accent-hot: Highlight;
-      --accent-ink: LinkText;
+      --accent-hover: Highlight;
       --on-accent: HighlightText;
-      --signal: Highlight;
-      --on-signal: HighlightText;
-      --cyan: LinkText;
-      --contrast-bg: Canvas;
-      --contrast-surface: Canvas;
-      --contrast-fg: CanvasText;
-      --contrast-fg-2: CanvasText;
-      --contrast-muted: CanvasText;
-      --contrast-accent: LinkText;
-      --contrast-on-accent: HighlightText;
-      --contrast-rule: CanvasText;
-      --contrast-cyan: LinkText;
-      --contrast-gold-ink: LinkText;
-      --contrast-emerald: Highlight;
-      --contrast-on-emerald: HighlightText;
-      --contrast-success-bg: Canvas;
-      --contrast-success-ink: CanvasText;
-      --contrast-warn-bg: Canvas;
-      --contrast-warn-ink: CanvasText;
-      --contrast-danger-bg: Canvas;
-      --contrast-danger-ink: CanvasText;
-      --brand-gold-fill: Highlight;
-      --on-brand-gold: HighlightText;
-      --brand-gold-ink: LinkText;
-      --brand-emerald: Highlight;
-      --on-brand-emerald: HighlightText;
+      --gold: Highlight;
+      --on-gold: HighlightText;
+      --gold-ink: LinkText;
       --status-success-bg: Canvas;
       --status-success-ink: CanvasText;
       --status-warn-bg: Canvas;
