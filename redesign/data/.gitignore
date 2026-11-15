@@ -1,0 +1,6 @@
+*.lock
+*.log
+*.tmp.*
+admin-auth.json
+site-config.json
+gallery-cache.json
