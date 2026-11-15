@@ -7,32 +7,32 @@ const STYLES = Object.freeze({
   dark: 'https://tiles.openfreemap.org/styles/dark',
 });
 
-// Exact sRGB equivalents of BUILD_SPEC Section 2 OKLCH tokens for WebGL shader paints
-// (MapLibre GL JS v6.18.0 parses rgb/hsl/hex rather than oklch() strings).
+// High-contrast Vermilion & Optical Cyan sRGB tokens for WebGL shader paints
+// (MapLibre GL JS v6.18.0 parses hex/rgb strings rather than oklch()).
 const MAP_THEME_PALETTE = Object.freeze({
   light: {
-    pinFill: 'rgb(18, 122, 92)',
-    pinStroke: 'rgb(255, 255, 255)',
-    clusterSmall: 'rgb(25, 62, 114)',
-    clusterMedium: 'rgb(17, 46, 88)',
-    clusterLarge: 'rgb(11, 32, 66)',
-    clusterText: 'rgb(255, 255, 255)',
-    clusterStroke: 'rgb(255, 255, 255)',
-    hqHalo: 'rgb(18, 122, 92)',
-    hqCore: 'rgb(232, 184, 52)',
-    hqStroke: 'rgb(17, 46, 88)',
+    pinFill: '#0e7490',
+    pinStroke: '#ffffff',
+    clusterSmall: '#0e7490',
+    clusterMedium: '#b83227',
+    clusterLarge: '#9e271d',
+    clusterText: '#ffffff',
+    clusterStroke: '#ffffff',
+    hqHalo: '#0e7490',
+    hqCore: '#b83227',
+    hqStroke: '#ffffff',
   },
   dark: {
-    pinFill: 'rgb(74, 204, 158)',
-    pinStroke: 'rgb(18, 24, 34)',
-    clusterSmall: 'rgb(108, 168, 255)',
-    clusterMedium: 'rgb(76, 140, 240)',
-    clusterLarge: 'rgb(232, 184, 52)',
-    clusterText: 'rgb(14, 20, 28)',
-    clusterStroke: 'rgb(18, 24, 34)',
-    hqHalo: 'rgb(74, 204, 158)',
-    hqCore: 'rgb(238, 194, 68)',
-    hqStroke: 'rgb(18, 24, 34)',
+    pinFill: '#22d3ee',
+    pinStroke: '#0b1117',
+    clusterSmall: '#22d3ee',
+    clusterMedium: '#e5533a',
+    clusterLarge: '#ff6a4d',
+    clusterText: '#0b1117',
+    clusterStroke: '#0b1117',
+    hqHalo: '#22d3ee',
+    hqCore: '#e5533a',
+    hqStroke: '#0b1117',
   },
 });
 
@@ -41,6 +41,8 @@ const SOURCE_BINS = 'dropoff-bins';
 const SOURCE_HQ = 'watauga-hq';
 
 function getResolvedTheme() {
+  const attr = (document.documentElement.getAttribute('data-theme') || '').trim().toLowerCase();
+  if (attr === 'dark' || attr === 'light') return attr;
   const meta = document.querySelector('meta[name="color-scheme"]');
   const content = (meta?.getAttribute('content') || 'light dark').trim().toLowerCase();
   if (content === 'dark') return 'dark';
@@ -136,6 +138,7 @@ function normalizeLocations(rawList, globalPhone) {
 
     const rawPhone = String(entry.phone || '').trim();
     const isMainCenter = /5621\s+Bunker\s+Blvd/i.test(rawAddress);
+    const isLionsHost = !isMainCenter && /\blions?\b|\b2-?e2\b/i.test(`${name} ${address}`);
     const isPOBox = /^\s*P\.?\s*O\.?\s*Box\b/i.test(rawAddress);
     const city = extractCity(name, address, citiesLongestFirst);
     const zip = extractZip(address);
@@ -147,9 +150,11 @@ function normalizeLocations(rawList, globalPhone) {
     const phone = isMainCenter && !rawPhone ? globalPhone : rawPhone;
     const tel = phone ? formatPhoneTel(phone) : '';
     const phoneDigits = phone.replace(/\D+/g, '');
+    const idx = normalized.length;
 
     const item = {
-      id: normalized.length,
+      id: idx,
+      serial: `BIN-${String(idx + 1).padStart(3, '0')}`,
       name,
       address,
       rawAddress,
@@ -163,6 +168,7 @@ function normalizeLocations(rawList, globalPhone) {
       geocoded,
       coordKey: geocoded ? `${latNum.toFixed(6)},${lngNum.toFixed(6)}` : '',
       isMainCenter,
+      isLionsHost,
       isPOBox,
       distanceMiles: null,
       searchText: `${name} ${address} ${city} ${zip} ${phone} ${phoneDigits}`.toLowerCase(),
@@ -220,11 +226,14 @@ function initLocationsDirectory() {
   const els = {
     filterForm: document.getElementById('loc-filter-form'),
     searchInput: document.getElementById('loc-search'),
+    searchKbd: document.getElementById('loc-search-kbd'),
     searchClear: document.getElementById('loc-search-clear'),
     citySelect: document.getElementById('loc-city-select'),
     cityChipsTrack: document.getElementById('loc-city-chips'),
-    allCitiesDrawer: document.getElementById('loc-all-cities-drawer'),
-    toggleAllCitiesBtn: document.getElementById('loc-toggle-all-cities'),
+    openCitiesDialogBtn: document.getElementById('loc-open-cities-dialog'),
+    citiesDialog: document.getElementById('loc-cities-dialog'),
+    citiesDialogClose: document.getElementById('loc-cities-dialog-close'),
+    citiesDialogList: document.getElementById('loc-cities-dialog-list'),
     nearMeBtn: document.getElementById('loc-near-me'),
     resetBtn: document.getElementById('loc-reset'),
     emptyResetBtn: document.getElementById('loc-empty-reset'),
@@ -300,6 +309,7 @@ function initLocationsDirectory() {
         { name: 'city', weight: 2.0 },
         { name: 'zip', weight: 1.8 },
         { name: 'address', weight: 1.4 },
+        { name: 'serial', weight: 1.4 },
         { name: 'phone', weight: 0.9 },
         { name: 'phoneDigits', weight: 0.9 },
         { name: 'searchText', weight: 1.6 },
@@ -346,59 +356,68 @@ function initLocationsDirectory() {
       }
     }
 
-    const topChips = new Set();
     if (els.cityChipsTrack) {
       for (const chip of els.cityChipsTrack.querySelectorAll('[data-city-chip]')) {
         const cityKey = chip.dataset.cityChip;
         if (!cityKey) continue;
-        if (cityKey === 'all') {
-          const countEl = chip.querySelector('.loc-chip-count');
-          if (countEl) countEl.textContent = String(total);
-        } else {
-          topChips.add(cityKey);
-          const countEl = chip.querySelector('.loc-chip-count');
-          if (countEl) countEl.textContent = String(state.cityCounts.get(cityKey) || 0);
-        }
+        const countEl = chip.querySelector('.loc-chip-count');
+        if (!countEl) continue;
+        countEl.textContent = cityKey === 'all' ? String(total) : String(state.cityCounts.get(cityKey) || 0);
       }
     }
 
-    if (els.allCitiesDrawer) {
-      els.allCitiesDrawer.textContent = '';
-      let extraCount = 0;
+    if (els.openCitiesDialogBtn) {
+      const label = els.openCitiesDialogBtn.querySelector('span');
+      if (label) label.textContent = `All ${cityTotal} Cities`;
+    }
+
+    if (els.citiesDialogList) {
+      els.citiesDialogList.textContent = '';
+
+      const allBtn = document.createElement('button');
+      allBtn.type = 'button';
+      allBtn.className = 'loc-dialog-city';
+      allBtn.dataset.dialogCity = 'all';
+      allBtn.setAttribute('aria-pressed', String(state.cityFilter === 'all'));
+      if (state.cityFilter === 'all') allBtn.classList.add('is-active');
+      const allLbl = document.createElement('span');
+      allLbl.textContent = 'All Cities';
+      const allCnt = document.createElement('span');
+      allCnt.className = 'loc-chip-count';
+      allCnt.textContent = String(total);
+      allBtn.append(allLbl, allCnt);
+      els.citiesDialogList.appendChild(allBtn);
+
       for (const [city, count] of state.cityCounts.entries()) {
-        if (topChips.has(city)) continue;
-        extraCount += 1;
         const btn = document.createElement('button');
         btn.type = 'button';
-        btn.className = 'loc-chip';
-        btn.dataset.cityChip = city;
-        btn.setAttribute('aria-pressed', String(state.cityFilter === city));
-        if (state.cityFilter === city) btn.classList.add('is-active');
-
-        const label = document.createElement('span');
-        label.textContent = city;
-        const badge = document.createElement('span');
-        badge.className = 'loc-chip-count';
-        badge.textContent = String(count);
-
-        btn.append(label, badge);
-        els.allCitiesDrawer.appendChild(btn);
-      }
-
-      if (els.toggleAllCitiesBtn) {
-        const toggleLabel = els.toggleAllCitiesBtn.querySelector('span');
-        if (toggleLabel) toggleLabel.textContent = `More Cities (${extraCount})`;
+        btn.className = 'loc-dialog-city';
+        btn.dataset.dialogCity = city;
+        const active = state.cityFilter === city;
+        btn.setAttribute('aria-pressed', String(active));
+        if (active) btn.classList.add('is-active');
+        const lbl = document.createElement('span');
+        lbl.textContent = city;
+        const cnt = document.createElement('span');
+        cnt.className = 'loc-chip-count';
+        cnt.textContent = String(count);
+        btn.append(lbl, cnt);
+        els.citiesDialogList.appendChild(btn);
       }
     }
   }
 
   function syncCityChipStates() {
     const active = state.cityFilter;
-    const allChips = document.querySelectorAll('[data-city-chip]');
-    for (const chip of allChips) {
+    for (const chip of document.querySelectorAll('[data-city-chip]')) {
       const match = chip.dataset.cityChip === active;
       chip.classList.toggle('is-active', match);
       chip.setAttribute('aria-pressed', String(match));
+    }
+    for (const btn of document.querySelectorAll('[data-dialog-city]')) {
+      const match = btn.dataset.dialogCity === active;
+      btn.classList.toggle('is-active', match);
+      btn.setAttribute('aria-pressed', String(match));
     }
     if (els.citySelect && els.citySelect.value !== active) {
       els.citySelect.value = active;
@@ -462,14 +481,14 @@ function initLocationsDirectory() {
 
         const matched = [];
         for (const loc of pool) {
-          const allTokensPresent = tokens.every((tok) => loc.searchText.includes(tok));
+          const allTokensPresent = tokens.every((tok) => loc.searchText.includes(tok) || loc.serial.toLowerCase().includes(tok));
           const hasDigitMatch = digitQuery.length >= 3 && (loc.zip.includes(digitQuery) || loc.phoneDigits.includes(digitQuery));
           const hasFuse = fuseScores.has(loc.id);
 
           if (!allTokensPresent && !hasDigitMatch && !hasFuse) continue;
 
           let tier = 4;
-          if (loc.city.toLowerCase() === queryLower || loc.zip === queryLower) {
+          if (loc.city.toLowerCase() === queryLower || loc.zip === queryLower || loc.serial.toLowerCase() === queryLower) {
             tier = 0;
           } else if (loc.name.toLowerCase().startsWith(queryLower)) {
             tier = 1;
@@ -524,6 +543,16 @@ function initLocationsDirectory() {
     if (state.selectedLocId === loc.id) article.classList.add('is-selected');
     article.dataset.locId = String(loc.id);
 
+    const telemetry = document.createElement('div');
+    telemetry.className = 'loc-card-telemetry';
+    const serialEl = document.createElement('span');
+    serialEl.className = 'loc-card-serial';
+    serialEl.textContent = loc.serial;
+    const cityEl = document.createElement('span');
+    cityEl.className = 'loc-card-city';
+    cityEl.textContent = loc.city;
+    telemetry.append(serialEl, cityEl);
+
     const header = document.createElement('div');
     header.className = 'loc-card-header';
 
@@ -537,7 +566,13 @@ function initLocationsDirectory() {
     if (loc.isMainCenter) {
       const b = document.createElement('span');
       b.className = 'loc-badge loc-badge--hq';
-      b.textContent = 'Main Center';
+      b.textContent = 'Watauga HQ';
+      badges.appendChild(b);
+    }
+    if (loc.isLionsHost) {
+      const b = document.createElement('span');
+      b.className = 'loc-badge loc-badge--lions';
+      b.textContent = 'Lions Club Host';
       badges.appendChild(b);
     }
     if (loc.distanceMiles !== null && Number.isFinite(loc.distanceMiles)) {
@@ -549,13 +584,13 @@ function initLocationsDirectory() {
     if (loc.isPOBox) {
       const b = document.createElement('span');
       b.className = 'loc-badge loc-badge--neutral';
-      b.textContent = 'P.O. Box / Club Contact';
+      b.textContent = 'P.O. Box';
       badges.appendChild(b);
     }
     if (!loc.geocoded) {
       const b = document.createElement('span');
-      b.className = 'loc-badge loc-badge--subtle';
-      b.textContent = 'Directory Listing';
+      b.className = 'loc-badge loc-badge--dir-only';
+      b.textContent = 'Directory Only';
       badges.appendChild(b);
     }
 
@@ -592,8 +627,8 @@ function initLocationsDirectory() {
       mapBtn.dataset.action = 'show-on-map';
       mapBtn.dataset.locId = String(loc.id);
       const mapBtnText = document.createElement('span');
-      mapBtnText.textContent = 'Show on Map';
-      mapBtn.append(iconNode('map-pin', 16), mapBtnText);
+      mapBtnText.textContent = 'Show on Radar';
+      mapBtn.append(iconNode('locate-fixed', 16), mapBtnText);
       actions.appendChild(mapBtn);
     }
 
@@ -607,10 +642,10 @@ function initLocationsDirectory() {
     const dirSr = document.createElement('span');
     dirSr.className = 'sr-only';
     dirSr.textContent = ` to ${loc.name} (opens in new tab)`;
-    dirA.append(iconNode('navigation', 16), dirLabel, dirSr);
+    dirA.append(dirLabel, iconNode('arrow-up-right', 16), dirSr);
     actions.appendChild(dirA);
 
-    article.append(header, addrP, phoneP, actions);
+    article.append(telemetry, header, addrP, phoneP, actions);
     li.appendChild(article);
     return li;
   }
@@ -640,22 +675,26 @@ function initLocationsDirectory() {
       const strong = document.createElement('strong');
       strong.textContent = String(shown.length);
       const tail = document.createTextNode(
-        ` of ${totalAll} locations · ${shownMapped} mapped pins · ${shownDirOnly} directory ${shownDirOnly === 1 ? 'listing' : 'listings'}`
+        ` of ${totalAll} locations · ${shownMapped} geocoded pins · ${shownDirOnly} directory only`
       );
       els.resultsSummary.append('Showing ', strong, tail);
     }
 
+    const hasQuery = Boolean(state.searchQuery.trim());
     if (els.resetBtn) {
-      const hasFilters = Boolean(state.searchQuery.trim() || state.cityFilter !== 'all' || state.userCoords);
+      const hasFilters = Boolean(hasQuery || state.cityFilter !== 'all' || state.userCoords);
       els.resetBtn.hidden = !hasFilters;
     }
 
     if (els.searchClear) {
-      els.searchClear.hidden = !state.searchQuery.trim();
+      els.searchClear.hidden = !hasQuery;
+    }
+    if (els.searchKbd) {
+      els.searchKbd.hidden = hasQuery;
     }
 
     announceStatus(
-      `Showing ${shown.length} of ${totalAll} drop-off locations (${shownMapped} mapped pins, ${shownDirOnly} directory listings).`
+      `Showing ${shown.length} of ${totalAll} drop-off locations (${shownMapped} geocoded pins, ${shownDirOnly} directory only).`
     );
   }
 
@@ -673,6 +712,7 @@ function initLocationsDirectory() {
         },
         properties: {
           id: loc.id,
+          serial: loc.serial,
           name: loc.name,
           address: loc.address,
           city: loc.city,
@@ -717,6 +757,11 @@ function initLocationsDirectory() {
       const entry = document.createElement('div');
       entry.className = 'loc-popup-entry';
 
+      const serial = document.createElement('p');
+      serial.className = 'loc-popup-serial';
+      serial.textContent = `${loc.serial} · ${loc.city}`;
+      entry.appendChild(serial);
+
       const title = document.createElement('h3');
       title.className = 'loc-popup-title';
       title.textContent = loc.name;
@@ -726,7 +771,7 @@ function initLocationsDirectory() {
         const hqNote = document.createElement('p');
         hqNote.className = 'loc-popup-note';
         hqNote.textContent =
-          'Main Recycling Center · Sat 9:00 AM - 3:00 PM (Mon–Fri by appt). East-side wooden walkway to rear entrance.';
+          'Watauga HQ · Sat 9:00 AM - 3:00 PM (Mon–Fri by appt). East-side wooden walkway to rear entrance.';
         entry.appendChild(hqNote);
       }
 
@@ -758,7 +803,7 @@ function initLocationsDirectory() {
       const dirSr = document.createElement('span');
       dirSr.className = 'sr-only';
       dirSr.textContent = ` to ${loc.name} (opens in new tab)`;
-      dirA.append(iconNode('navigation', 15), dirTxt, dirSr);
+      dirA.append(dirTxt, iconNode('arrow-up-right', 15), dirSr);
       actions.appendChild(dirA);
 
       entry.appendChild(actions);
@@ -773,6 +818,11 @@ function initLocationsDirectory() {
     wrapper.className = 'loc-popup loc-popup--compact';
 
     const primary = locationsAtPoint[0];
+    const serial = document.createElement('p');
+    serial.className = 'loc-popup-serial';
+    serial.textContent = `${primary.serial} · ${primary.city}`;
+    wrapper.appendChild(serial);
+
     const title = document.createElement('h3');
     title.className = 'loc-popup-title';
     title.textContent =
@@ -783,7 +833,7 @@ function initLocationsDirectory() {
 
     const hint = document.createElement('p');
     hint.className = 'loc-popup-hint';
-    hint.textContent = 'Full details and Directions below map.';
+    hint.textContent = 'Telemetry & Directions below radar.';
     wrapper.appendChild(hint);
 
     return wrapper;
@@ -813,12 +863,14 @@ function initLocationsDirectory() {
     const kicker = document.createElement('span');
     kicker.className = 'loc-selected-card__kicker';
     kicker.textContent =
-      venues.length > 1 ? `${venues.length} Drop-Off Locations Selected` : 'Selected Drop-Off Location';
+      venues.length > 1
+        ? `RADAR LOCK · ${venues.length} BINS AT COORDINATE`
+        : `RADAR LOCK · ${venues[0].serial}`;
 
     const closeBtn = document.createElement('button');
     closeBtn.type = 'button';
     closeBtn.className = 'loc-selected-card__close';
-    closeBtn.setAttribute('aria-label', 'Close selected location details');
+    closeBtn.setAttribute('aria-label', 'Close selected location telemetry');
     const closeGlyph = document.createElement('span');
     closeGlyph.setAttribute('aria-hidden', 'true');
     closeGlyph.textContent = '×';
@@ -898,7 +950,8 @@ function initLocationsDirectory() {
     }
 
     const containerHeight = els.mapContainer?.clientHeight || 400;
-    const isShortCanvas = containerHeight < 300;
+    const containerWidth = els.mapContainer?.clientWidth || 360;
+    const isShortCanvas = containerHeight < 320;
     const domContent = isShortCanvas
       ? buildCompactPopupDom(resolvedVenues)
       : buildPopupDom(resolvedVenues);
@@ -908,7 +961,7 @@ function initLocationsDirectory() {
       closeOnClick: true,
       anchor: 'bottom',
       offset: loc.isMainCenter ? 16 : 12,
-      maxWidth: '340px',
+      maxWidth: `${Math.min(312, Math.max(220, containerWidth - 24))}px`,
     })
       .setLngLat([loc.lng, loc.lat])
       .setDOMContent(domContent)
@@ -916,7 +969,7 @@ function initLocationsDirectory() {
 
     const popupContent = state.activePopup.getElement()?.querySelector('.maplibregl-popup-content');
     if (popupContent) {
-      popupContent.style.maxBlockSize = `${Math.max(100, containerHeight - (isShortCanvas ? 56 : 84))}px`;
+      popupContent.style.maxBlockSize = `${Math.max(92, containerHeight - (isShortCanvas ? 68 : 96))}px`;
       popupContent.style.overflowY = 'auto';
     }
 
@@ -963,7 +1016,7 @@ function initLocationsDirectory() {
     const map = state.map;
     if (!map) return;
 
-    const palette = MAP_THEME_PALETTE[state.currentTheme] || MAP_THEME_PALETTE.light;
+    const palette = MAP_THEME_PALETTE[state.currentTheme] || MAP_THEME_PALETTE.dark;
     const collections = buildGeoJsonCollections();
 
     if (!map.getSource(SOURCE_BINS)) {
@@ -1149,7 +1202,7 @@ function initLocationsDirectory() {
     }
 
     state.currentTheme = getResolvedTheme();
-    const initialStyle = STYLES[state.currentTheme] || STYLES.light;
+    const initialStyle = STYLES[state.currentTheme] || STYLES.dark;
 
     try {
       const map = new maplibregl.Map({
@@ -1169,7 +1222,7 @@ function initLocationsDirectory() {
       state.styleLoadTimer = window.setTimeout(() => {
         if (state.map === map && !state.styleLoaded) {
           showMapFallback(
-            'Map tiles took too long to respond or your connection is offline. Use the directory below or retry loading the map.'
+            'Map tiles took too long to respond or your connection is offline. Use the directory below or retry loading the radar.'
           );
         }
       }, 12000);
@@ -1210,7 +1263,7 @@ function initLocationsDirectory() {
       wireMapEvents(map);
     } catch {
       showMapFallback(
-        'Interactive map could not initialize in this browser context. All 214 drop-off locations and Directions links remain available.'
+        'Interactive radar could not initialize in this browser context. All 214 drop-off locations and Directions links remain available.'
       );
     }
   }
@@ -1224,11 +1277,11 @@ function initLocationsDirectory() {
     state.styleLoadTimer = window.setTimeout(() => {
       if (state.map === map && !state.styleLoaded) {
         showMapFallback(
-          'Map tiles took too long to respond while updating map theme. Use the directory below or retry.'
+          'Map tiles took too long to respond while updating radar theme. Use the directory below or retry.'
         );
       }
     }, 12000);
-    map.setStyle(STYLES[nextTheme] || STYLES.light);
+    map.setStyle(STYLES[nextTheme] || STYLES.dark);
   }
 
   function focusLocationOnMap(loc) {
@@ -1279,12 +1332,12 @@ function initLocationsDirectory() {
     if (!els.geoBanner || !els.geoMessage || !els.geoActions) return;
     els.geoBanner.classList.remove('is-warn');
     els.geoBanner.hidden = false;
-    els.geoMessage.textContent = 'Sorted nearest drop-off locations first using your current location.';
+    els.geoMessage.textContent = 'Radar sorted nearest drop-off bins first using your current coordinates.';
     els.geoActions.textContent = '';
 
     const clearBtn = document.createElement('button');
     clearBtn.type = 'button';
-    clearBtn.className = 'loc-btn loc-btn--ghost';
+    clearBtn.className = 'btn btn--secondary';
     clearBtn.textContent = 'Clear Distance Sort';
     clearBtn.addEventListener('click', () => {
       state.userCoords = null;
@@ -1325,12 +1378,12 @@ function initLocationsDirectory() {
 
     const zipBtn = document.createElement('button');
     zipBtn.type = 'submit';
-    zipBtn.className = 'loc-btn loc-btn--primary';
+    zipBtn.className = 'btn btn--primary';
     zipBtn.textContent = 'Find ZIP';
 
     const dismissBtn = document.createElement('button');
     dismissBtn.type = 'button';
-    dismissBtn.className = 'loc-btn loc-btn--ghost';
+    dismissBtn.className = 'btn btn--secondary';
     dismissBtn.textContent = 'Dismiss';
     dismissBtn.addEventListener('click', clearGeoBanner);
 
@@ -1351,13 +1404,37 @@ function initLocationsDirectory() {
     state.searchQuery = '';
     state.cityFilter = 'all';
     state.userCoords = null;
-    state.selectedLocId = null;
+    clearSelectedLocation();
 
     if (els.searchInput) els.searchInput.value = '';
     if (els.nearMeBtn) els.nearMeBtn.setAttribute('aria-pressed', 'false');
     clearGeoBanner();
     syncCityChipStates();
     applyFilters(true);
+  }
+
+  function selectCity(cityName) {
+    state.cityFilter = cityName || 'all';
+    syncCityChipStates();
+    applyFilters(true);
+  }
+
+  function openCitiesDialog() {
+    if (!els.citiesDialog) return;
+    if (typeof els.citiesDialog.showModal === 'function') {
+      els.citiesDialog.showModal();
+    } else {
+      els.citiesDialog.setAttribute('open', '');
+    }
+  }
+
+  function closeCitiesDialog() {
+    if (!els.citiesDialog) return;
+    if (typeof els.citiesDialog.close === 'function') {
+      els.citiesDialog.close();
+    } else {
+      els.citiesDialog.removeAttribute('open');
+    }
   }
 
   function bindUiEvents() {
@@ -1373,7 +1450,35 @@ function initLocationsDirectory() {
           applyFilters(false);
         }, 120);
       });
+
+      els.searchInput.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Escape' && els.searchInput.value !== '') {
+          ev.stopPropagation();
+          state.searchQuery = '';
+          els.searchInput.value = '';
+          applyFilters(false);
+        }
+      });
     }
+
+    document.addEventListener('keydown', (ev) => {
+      if (ev.key !== '/' || ev.ctrlKey || ev.metaKey || ev.altKey) return;
+      const active = document.activeElement;
+      if (
+        active instanceof HTMLElement &&
+        (active.tagName === 'INPUT' ||
+          active.tagName === 'TEXTAREA' ||
+          active.tagName === 'SELECT' ||
+          active.isContentEditable)
+      ) {
+        return;
+      }
+      if (els.searchInput) {
+        ev.preventDefault();
+        els.searchInput.focus();
+        els.searchInput.select?.();
+      }
+    });
 
     if (els.searchClear) {
       els.searchClear.addEventListener('click', () => {
@@ -1388,26 +1493,33 @@ function initLocationsDirectory() {
 
     if (els.citySelect) {
       els.citySelect.addEventListener('change', () => {
-        state.cityFilter = els.citySelect.value || 'all';
-        syncCityChipStates();
-        applyFilters(true);
+        selectCity(els.citySelect.value || 'all');
       });
     }
 
     document.addEventListener('click', (ev) => {
-      const chip = ev.target instanceof Element ? ev.target.closest('[data-city-chip]') : null;
-      if (!chip) return;
-      state.cityFilter = chip.dataset.cityChip || 'all';
-      syncCityChipStates();
-      applyFilters(true);
+      const target = ev.target instanceof Element ? ev.target : null;
+      if (!target) return;
+
+      const chip = target.closest('[data-city-chip]');
+      if (chip) {
+        selectCity(chip.dataset.cityChip || 'all');
+        return;
+      }
+
+      const dialogCity = target.closest('[data-dialog-city]');
+      if (dialogCity) {
+        selectCity(dialogCity.dataset.dialogCity || 'all');
+        closeCitiesDialog();
+      }
     });
 
-    if (els.toggleAllCitiesBtn && els.allCitiesDrawer) {
-      els.toggleAllCitiesBtn.addEventListener('click', () => {
-        const nextOpen = els.allCitiesDrawer.hidden;
-        els.allCitiesDrawer.hidden = !nextOpen;
-        els.toggleAllCitiesBtn.setAttribute('aria-expanded', String(nextOpen));
-      });
+    if (els.openCitiesDialogBtn) {
+      els.openCitiesDialogBtn.addEventListener('click', openCitiesDialog);
+    }
+
+    if (els.citiesDialogClose) {
+      els.citiesDialogClose.addEventListener('click', closeCitiesDialog);
     }
 
     if (els.nearMeBtn) {
@@ -1420,10 +1532,10 @@ function initLocationsDirectory() {
         }
 
         const labelSpan = els.nearMeBtn.querySelector('span');
-        const originalLabel = labelSpan ? labelSpan.textContent : 'Near Me';
+        const originalLabel = labelSpan ? labelSpan.textContent : 'NEAR ME';
         els.nearMeBtn.disabled = true;
         els.nearMeBtn.setAttribute('aria-busy', 'true');
-        if (labelSpan) labelSpan.textContent = 'Locating...';
+        if (labelSpan) labelSpan.textContent = 'LOCATING...';
 
         navigator.geolocation.getCurrentPosition(
           (pos) => {
