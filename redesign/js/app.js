@@ -257,46 +257,86 @@ function initScrollSpy() {
 function initInitialRouteAndLegacyHashes() {
   const legacyHashMap = {
     '#home': 'top',
-    '#services': 'impact',
-    '#get-involved': 'volunteer',
+    '#donate': 'drop-off',
     '#locations': 'drop-off',
     '#map': 'drop-off',
+    '#services': 'impact',
+    '#missions': 'impact',
+    '#get-involved': 'volunteer',
     '#about': 'about',
     '#contact': 'contact',
+    '#faq': 'faq',
   };
 
-  const rawHash = (window.location.hash || '').toLowerCase();
-  let targetId = '';
+  const drawerHashMap = {
+    '#board': { sectionId: 'about', drawerId: 'boardDrawer' },
+    '#partners': { sectionId: 'about', drawerId: 'partnersDrawer' },
+    '#ledger': { sectionId: 'impact', drawerId: 'ledgerDrawer' },
+    '#shipments': { sectionId: 'impact', drawerId: 'ledgerDrawer' },
+  };
 
-  if (rawHash && Object.prototype.hasOwnProperty.call(legacyHashMap, rawHash)) {
-    targetId = legacyHashMap[rawHash];
-  } else if (rawHash && rawHash.length > 1) {
-    const cleanHash = rawHash.slice(1);
-    if (document.getElementById(cleanHash)) {
-      targetId = cleanHash;
+  const applyHashOrInitialRoute = (fromHashChange = false) => {
+    const rawHash = (window.location.hash || '').trim().toLowerCase();
+    const drawerRoute = rawHash && Object.prototype.hasOwnProperty.call(drawerHashMap, rawHash)
+      ? drawerHashMap[rawHash]
+      : null;
+
+    let targetId = '';
+    if (drawerRoute) {
+      targetId = drawerRoute.sectionId;
+    } else if (rawHash && Object.prototype.hasOwnProperty.call(legacyHashMap, rawHash)) {
+      targetId = legacyHashMap[rawHash];
+    } else if (rawHash && rawHash.length > 1) {
+      const cleanHash = rawHash.slice(1);
+      if (document.getElementById(cleanHash)) {
+        targetId = cleanHash;
+      }
+    } else if (!fromHashChange) {
+      targetId = (document.body.dataset.initialSection || '').trim();
     }
-  } else {
-    targetId = (document.body.dataset.initialSection || '').trim();
-  }
 
-  if (!targetId) return;
+    if (!targetId) return;
 
-  if (targetId === 'top') {
-    window.scrollTo({ top: 0, behavior: 'instant' });
-    if (window.history?.replaceState && !window.location.search) {
-      window.history.replaceState(null, '', '/');
+    if (targetId === 'top') {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      if (window.history?.replaceState && !window.location.search) {
+        window.history.replaceState(null, '', '/');
+      }
+      return;
     }
-    return;
-  }
 
-  const targetEl = document.getElementById(targetId);
-  if (targetEl) {
+    const targetEl = document.getElementById(targetId);
+    if (!targetEl) return;
+
     targetEl.scrollIntoView({ behavior: 'instant', block: 'start' });
     targetEl.focus({ preventScroll: true });
+
+    if (drawerRoute) {
+      document.querySelectorAll('dialog.drawer[open]').forEach((openDlg) => {
+        if (openDlg.id !== drawerRoute.drawerId) {
+          closeTopLayer(openDlg);
+        }
+      });
+
+      const drawer = document.getElementById(drawerRoute.drawerId);
+      if (drawer instanceof HTMLDialogElement) {
+        const returnFocusEl = document.querySelector(`[data-dialog-open="${drawerRoute.drawerId}"]`);
+        attachDrawerFocusRestore(drawer);
+        openDialogWithReturnFocus(
+          drawer,
+          returnFocusEl instanceof HTMLElement ? returnFocusEl : targetEl
+        );
+      }
+      return;
+    }
+
     if (window.history?.replaceState && !window.location.search) {
       window.history.replaceState(null, '', '#' + targetId);
     }
-  }
+  };
+
+  applyHashOrInitialRoute(false);
+  window.addEventListener('hashchange', () => applyHashOrInitialRoute(true));
 }
 
 function initImageFallbacks() {
@@ -1614,6 +1654,51 @@ function interpolateArc(a, b, steps) {
   return points;
 }
 
+const GLOBE_THEME_PALETTES = Object.freeze({
+  light: {
+    sphereInner: '#222F3F',
+    sphereOuter: '#101720',
+    sphereBorder: 'rgba(188, 197, 209, 0.26)',
+    graticule: 'rgba(188, 197, 209, 0.12)',
+    landFill: 'rgba(188, 197, 209, 0.17)',
+    landStroke: 'rgba(188, 197, 209, 0.28)',
+    arcActive: 'rgba(136, 184, 246, 0.95)',
+    arcMatch: 'rgba(107, 166, 242, 0.58)',
+    arcDim: 'rgba(107, 166, 242, 0.14)',
+    nodeMatch: '#6BA6F2',
+    nodeDim: 'rgba(188, 197, 209, 0.35)',
+    label: '#EFF2F5',
+    originHalo: 'rgba(223, 179, 75, 0.65)',
+    originCore: '#DFB34B',
+  },
+  dark: {
+    sphereInner: '#1A2636',
+    sphereOuter: '#0A0F15',
+    sphereBorder: 'rgba(130, 182, 249, 0.32)',
+    graticule: 'rgba(130, 182, 249, 0.15)',
+    landFill: 'rgba(145, 174, 208, 0.22)',
+    landStroke: 'rgba(145, 174, 208, 0.36)',
+    arcActive: 'rgba(166, 203, 250, 0.98)',
+    arcMatch: 'rgba(130, 182, 249, 0.72)',
+    arcDim: 'rgba(130, 182, 249, 0.18)',
+    nodeMatch: '#82B6F9',
+    nodeDim: 'rgba(188, 197, 209, 0.38)',
+    label: '#F8FAFC',
+    originHalo: 'rgba(232, 191, 90, 0.78)',
+    originCore: '#E8BF5A',
+  },
+});
+
+function getResolvedGlobeTheme() {
+  const attr = (document.documentElement.getAttribute('data-theme') || '').trim().toLowerCase();
+  if (attr === 'dark' || attr === 'light') return attr;
+  const meta = document.querySelector('meta[name="color-scheme"]');
+  const content = (meta?.getAttribute('content') || 'light dark').trim().toLowerCase();
+  if (content === 'dark') return 'dark';
+  if (content === 'light') return 'light';
+  return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
 function initImpactGlobeAndFilters() {
   const canvas = document.getElementById('impactGlobeCanvas');
   const toggleBtn = document.getElementById('impactGlobeToggle');
@@ -1655,6 +1740,7 @@ function initImpactGlobeAndFilters() {
   let dragStartLat = rotLat;
   let rafId = 0;
   let lastFrameTime = 0;
+  let isDarkTheme = getResolvedGlobeTheme() === 'dark';
 
   const syncToggleUi = () => {
     if (!toggleBtn) return;
@@ -1663,6 +1749,7 @@ function initImpactGlobeAndFilters() {
   };
 
   const renderGlobe = () => {
+    const palette = isDarkTheme ? GLOBE_THEME_PALETTES.dark : GLOBE_THEME_PALETTES.light;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const cssWidth = canvas.clientWidth || 420;
     const cssHeight = canvas.clientHeight || 420;
@@ -1691,15 +1778,15 @@ function initImpactGlobeAndFilters() {
       cy,
       radius
     );
-    sphereGrad.addColorStop(0, '#222F3F');
-    sphereGrad.addColorStop(1, '#101720');
+    sphereGrad.addColorStop(0, palette.sphereInner);
+    sphereGrad.addColorStop(1, palette.sphereOuter);
 
     ctx.beginPath();
     ctx.arc(cx, cy, radius, 0, Math.PI * 2);
     ctx.fillStyle = sphereGrad;
     ctx.fill();
     ctx.lineWidth = 1.25;
-    ctx.strokeStyle = 'rgba(188, 197, 209, 0.26)';
+    ctx.strokeStyle = palette.sphereBorder;
     ctx.stroke();
 
     // Clip interior graticule and landmasses to sphere
@@ -1710,7 +1797,7 @@ function initImpactGlobeAndFilters() {
 
     // Subtle longitude meridians & latitude parallels
     ctx.lineWidth = 0.75;
-    ctx.strokeStyle = 'rgba(188, 197, 209, 0.12)';
+    ctx.strokeStyle = palette.graticule;
     for (let lon = -150; lon <= 180; lon += 30) {
       ctx.beginPath();
       let started = false;
@@ -1754,8 +1841,8 @@ function initImpactGlobeAndFilters() {
     }
 
     // Continent landmass silhouettes
-    ctx.fillStyle = 'rgba(188, 197, 209, 0.17)';
-    ctx.strokeStyle = 'rgba(188, 197, 209, 0.28)';
+    ctx.fillStyle = palette.landFill;
+    ctx.strokeStyle = palette.landStroke;
     ctx.lineWidth = 0.9;
     for (const poly of preparedLandmasses) {
       ctx.beginPath();
@@ -1811,10 +1898,10 @@ function initImpactGlobeAndFilters() {
         }
       }
       if (isMatch) {
-        ctx.strokeStyle = activeCountry === dest.name ? 'rgba(136, 184, 246, 0.95)' : 'rgba(107, 166, 242, 0.58)';
+        ctx.strokeStyle = activeCountry === dest.name ? palette.arcActive : palette.arcMatch;
         ctx.lineWidth = activeCountry === dest.name ? 2.2 : 1.35;
       } else {
-        ctx.strokeStyle = 'rgba(107, 166, 242, 0.14)';
+        ctx.strokeStyle = palette.arcDim;
         ctx.lineWidth = 0.8;
       }
       ctx.stroke();
@@ -1832,12 +1919,12 @@ function initImpactGlobeAndFilters() {
 
       ctx.beginPath();
       ctx.arc(sx, sy, isMatch ? (activeCountry === dest.name ? 4.8 : 3.1) : 2.1, 0, Math.PI * 2);
-      ctx.fillStyle = isMatch ? '#6BA6F2' : 'rgba(188, 197, 209, 0.35)';
+      ctx.fillStyle = isMatch ? palette.nodeMatch : palette.nodeDim;
       ctx.fill();
 
       if (activeCountry === dest.name) {
         ctx.font = '600 12px "Inter Tight Variable", system-ui, sans-serif';
-        ctx.fillStyle = '#EFF2F5';
+        ctx.fillStyle = palette.label;
         ctx.fillText(dest.name, sx + 8, sy + 4);
       }
     }
@@ -1850,17 +1937,17 @@ function initImpactGlobeAndFilters() {
 
       ctx.beginPath();
       ctx.arc(ox, oy, 7.5, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(223, 179, 75, 0.65)';
+      ctx.strokeStyle = palette.originHalo;
       ctx.lineWidth = 1.5;
       ctx.stroke();
 
       ctx.beginPath();
       ctx.arc(ox, oy, 3.8, 0, Math.PI * 2);
-      ctx.fillStyle = '#DFB34B';
+      ctx.fillStyle = palette.originCore;
       ctx.fill();
 
       ctx.font = '600 11px "Martian Mono Variable", monospace';
-      ctx.fillStyle = '#EFF2F5';
+      ctx.fillStyle = palette.label;
       ctx.fillText('Watauga, TX', ox + 10, oy - 7);
     }
 
@@ -2091,6 +2178,14 @@ function initImpactGlobeAndFilters() {
     }
   });
 
+  const handleGlobeThemeChange = (ev) => {
+    const resolved = ev?.detail?.resolved || getResolvedGlobeTheme();
+    isDarkTheme = resolved === 'dark';
+    renderGlobe();
+  };
+  window.addEventListener('erc:themechange', handleGlobeThemeChange);
+  document.addEventListener('erc:themechange', handleGlobeThemeChange);
+
   syncToggleUi();
   renderGlobe();
   startLoopIfNeeded();
@@ -2182,9 +2277,9 @@ function bootShell() {
   initMobileNavDrawer();
   initHeaderOverflowGuard();
   initScrollSpy();
+  initDrawers();
   initInitialRouteAndLegacyHashes();
   initImageFallbacks();
-  initDrawers();
   initPrefillTopicLinks();
   initImpactGlobeAndFilters();
   initLedgerTableSort();

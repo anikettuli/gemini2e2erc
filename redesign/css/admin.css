@@ -125,7 +125,7 @@
     color: var(--fg);
   }
 
-  .v2-pulse {
+  .status-pulse {
     display: inline-block;
     inline-size: 0.5rem;
     block-size: 0.5rem;
@@ -619,6 +619,13 @@
     color: var(--fg);
     font-family: var(--font-sans);
     font-size: max(1rem, 1em);
+  }
+
+  .admin-form input::placeholder,
+  .admin-form textarea::placeholder,
+  .filter-bar input[type="search"]::placeholder {
+    color: var(--muted);
+    opacity: 1;
   }
 
   .admin-form input[type="file"] {

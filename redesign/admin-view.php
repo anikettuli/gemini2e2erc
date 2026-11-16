@@ -1524,7 +1524,7 @@ $isCoexistence = erc_is_coexistence_mode();
                 <img src="<?= e(erc_media_url('e2e2rc_LOGO.png')) ?>" alt="Lions District 2-E2 ERC emblem" width="44" height="44" class="admin-brand__logo">
                 <div class="admin-brand__copy">
                     <div class="admin-brand__kicker">
-                        <span class="v2-pulse v2-pulse--live" aria-hidden="true"></span>
+                        <span class="status-pulse status-pulse--live" aria-hidden="true"></span>
                         <span>2E2 OPS // WATAUGA HQ</span>
                     </div>
                     <h1 class="admin-brand__title">Admin Operations Console</h1>

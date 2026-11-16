@@ -913,6 +913,12 @@
     min-block-size: 7.5rem;
   }
 
+  .input::placeholder,
+  .textarea::placeholder {
+    color: var(--muted);
+    opacity: 1;
+  }
+
   .input:focus-visible,
   .select:focus-visible,
   .textarea:focus-visible {
@@ -3902,6 +3908,14 @@
   .contact-faq-block {
     display: grid;
     gap: var(--space-2);
+  }
+
+  #faq {
+    scroll-margin-top: calc(var(--header-h, 76px) + 1.25rem);
+  }
+
+  #faq:focus {
+    outline: none;
   }
 
   .contact-faq-block .contact-card-title {

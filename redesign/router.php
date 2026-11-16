@@ -26,32 +26,30 @@ if ($uriPath === '' || $uriPath[0] !== '/') {
 /**
  * Send baseline security headers on every HTTP response.
  */
-$sendBaseHeaders = static function (bool $isHtml = false): void {
+$sendBaseHeaders = static function (): void {
     header('X-Content-Type-Options: nosniff');
     header('X-Frame-Options: SAMEORIGIN');
     header('Referrer-Policy: strict-origin-when-cross-origin');
     header('Permissions-Policy: camera=(), geolocation=(self), microphone=()');
     header('Cross-Origin-Opener-Policy: same-origin-allow-popups');
-    if ($isHtml) {
-        header(
-            "Content-Security-Policy: default-src 'self'; "
-            . "script-src 'self' 'unsafe-inline'; "
-            . "style-src 'self' 'unsafe-inline' https://tiles.openfreemap.org; "
-            . "font-src 'self' data:; "
-            . "img-src 'self' data: blob: https://tiles.openfreemap.org; "
-            . "connect-src 'self' https://tiles.openfreemap.org; "
-            . "worker-src 'self' blob:; "
-            . "child-src 'self' blob:; "
-            . "frame-ancestors 'self'; "
-            . "base-uri 'self'; "
-            . "object-src 'none'; "
-            . "form-action 'self'"
-        );
-    }
+    header(
+        "Content-Security-Policy: default-src 'self'; "
+        . "script-src 'self' 'unsafe-inline'; "
+        . "style-src 'self' 'unsafe-inline' https://tiles.openfreemap.org; "
+        . "font-src 'self' data:; "
+        . "img-src 'self' data: blob: https://tiles.openfreemap.org; "
+        . "connect-src 'self' https://tiles.openfreemap.org; "
+        . "worker-src 'self' blob:; "
+        . "child-src 'self' blob:; "
+        . "frame-ancestors 'self'; "
+        . "base-uri 'self'; "
+        . "object-src 'none'; "
+        . "form-action 'self'"
+    );
 };
 
 $denyForbidden = static function () use ($sendBaseHeaders): void {
-    $sendBaseHeaders(false);
+    $sendBaseHeaders();
     http_response_code(403);
     header('Content-Type: text/plain; charset=UTF-8');
     echo "403 Forbidden\n";
@@ -90,14 +88,14 @@ if (preg_match('#^/data(?:/|$)#i', $uriPath)) {
 
 // Legacy /index.html -> 301 /
 if (strtolower($uriPath) === '/index.html') {
-    $sendBaseHeaders(false);
+    $sendBaseHeaders();
     header('Location: /' . $querySuffix, true, 301);
     exit;
 }
 
 // Legacy standalone .php routes -> 301 clean paths (preserving query string)
 if (preg_match('#^/(donate|locations|volunteer|missions|about|contact)\.php$#i', $uriPath, $legacyPhp)) {
-    $sendBaseHeaders(false);
+    $sendBaseHeaders();
     header('Location: /' . strtolower($legacyPhp[1]) . $querySuffix, true, 301);
     exit;
 }
@@ -122,7 +120,7 @@ if (isset($cleanRouteMap[$normalizedRoute])) {
 } elseif (preg_match('#^/(index|admin-view|get-config|get-gallery-images|get-locations|register-volunteer|send-email)\.php$#', $uriPath, $m)) {
     $targetPhp = $rootReal . DIRECTORY_SEPARATOR . $m[1] . '.php';
 } elseif (str_ends_with(strtolower($uriPath), '.php')) {
-    $sendBaseHeaders(false);
+    $sendBaseHeaders();
     http_response_code(404);
     header('Content-Type: text/plain; charset=UTF-8');
     echo "404 Not Found\n";
@@ -131,7 +129,7 @@ if (isset($cleanRouteMap[$normalizedRoute])) {
 
 if ($targetPhp !== null) {
     if (!is_file($targetPhp)) {
-        $sendBaseHeaders(false);
+        $sendBaseHeaders();
         http_response_code(404);
         header('Content-Type: text/plain; charset=UTF-8');
         echo "404 Not Found\n";
@@ -194,7 +192,7 @@ if ($relPath !== '') {
 }
 
 if ($resolved === null) {
-    $sendBaseHeaders(false);
+    $sendBaseHeaders();
     http_response_code(404);
     header('Content-Type: text/plain; charset=UTF-8');
     echo "404 Not Found\n";
@@ -237,7 +235,7 @@ if ($contentType === '') {
     $contentType = 'application/octet-stream';
 }
 
-$sendBaseHeaders(false);
+$sendBaseHeaders();
 header('Content-Type: ' . $contentType);
 $size = filesize($filePath);
 if ($size !== false) {

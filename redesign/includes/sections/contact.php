@@ -261,7 +261,7 @@ $faqs = [
           </div>
         </article>
 
-        <div class="contact-faq-block">
+        <div id="faq" class="contact-faq-block" tabindex="-1">
           <h3 class="contact-card-title">Frequently Asked Questions</h3>
           <div class="faq-accordion">
             <?php foreach ($faqs as $faq): ?>

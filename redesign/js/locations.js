@@ -1172,6 +1172,33 @@ export function initDropoffLocator() {
       map.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'top-right');
       map.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-right');
 
+      let userToggledAttrib = false;
+      const collapseCompactAttribution = () => {
+        const attribEl = els.mapContainer?.querySelector('.maplibregl-ctrl-attrib.maplibregl-compact');
+        if (!attribEl) return;
+        attribEl.classList.remove('maplibregl-compact-show');
+        attribEl.removeAttribute('open');
+      };
+
+      const attribButton = els.mapContainer?.querySelector('.maplibregl-ctrl-attrib-button');
+      if (attribButton) {
+        attribButton.addEventListener('click', () => {
+          userToggledAttrib = true;
+        });
+      }
+
+      const collapseIfUntoggled = () => {
+        if (!userToggledAttrib) {
+          collapseCompactAttribution();
+        }
+      };
+
+      collapseCompactAttribution();
+      map.on('styledata', collapseIfUntoggled);
+      map.on('sourcedata', collapseIfUntoggled);
+      map.once('load', collapseIfUntoggled);
+      map.on('resize', collapseIfUntoggled);
+
       window.clearTimeout(state.styleLoadTimer);
       state.styleLoadTimer = window.setTimeout(() => {
         if (state.map === map && !state.styleLoaded) {

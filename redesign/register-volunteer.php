@@ -92,6 +92,8 @@ $txResult = erc_with_storage_lock(static function () use ($eventsPath, $signupsP
 
     $key = (string)$eventId;
     $eventSignups = isset($signups[$key]) && is_array($signups[$key]) ? $signups[$key] : [];
+    $priorOnlineCount = count($eventSignups);
+    $baseSeededPeople = max(0, (int)($events[$eventIdx]['people'] ?? 0) - $priorOnlineCount);
 
     // Case-insensitive duplicate email prevention
     $normalizedEmail = strtolower($email);
@@ -105,7 +107,7 @@ $txResult = erc_with_storage_lock(static function () use ($eventsPath, $signupsP
     }
 
     $maxPeople = (int)($events[$eventIdx]['maxPeople'] ?? 0);
-    $currentCount = max(count($eventSignups), (int)($events[$eventIdx]['people'] ?? 0));
+    $currentCount = max($priorOnlineCount, (int)($events[$eventIdx]['people'] ?? 0));
     if ($maxPeople > 0 && $currentCount >= $maxPeople) {
         return [
             'status'  => 409,
@@ -123,7 +125,7 @@ $txResult = erc_with_storage_lock(static function () use ($eventsPath, $signupsP
     $previousSignups = $signups;
     $eventSignups[] = $newSignup;
     $signups[$key] = $eventSignups;
-    $newCount = count($eventSignups);
+    $newCount = $baseSeededPeople + count($eventSignups);
     $events[$eventIdx]['people'] = $newCount;
 
     if (!erc_save_json_atomic($signupsPath, $signups, 0600)) {
