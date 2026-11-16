@@ -1,0 +1,21 @@
+Options -Indexes
+
+# Deny everything inside data/ by default
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+</IfModule>
+
+# Grant read-only access exclusively to public non-PII datasets
+<FilesMatch "^(?:board|events|partners|testimonials)\.json$">
+    <IfModule mod_authz_core.c>
+        Require all granted
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Allow from all
+    </IfModule>
+</FilesMatch>
